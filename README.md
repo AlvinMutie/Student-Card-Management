@@ -1,2 +1,2 @@
 # Student-Card-Management
-A school management system for teachers, parents, and admins with QR card scanning
+A student information management system for school staff and parents with QR card scanning.
