@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Students Management | Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="layoutRoot"></div>
+
+  <main class="main-content">
+    <h1>Students Management</h1>
+    <p class="muted" style="margin-bottom: 20px;">
+      Manage student records, link guardians and teachers, and track fee details.
+    </p>
+
+    <div class="flex" style="justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap:10px;">
+      <input id="studentSearchInput" placeholder="Search student by name, class or admission..." style="flex:1; min-width: 220px;">
+      <div class="flex" style="gap:10px;">
+        <button id="addStudentBtn" class="btn">+ Add Student</button>
+        <label for="studentCsvInput" class="btn ghost" style="cursor:pointer;">Import CSV</label>
+        <input type="file" id="studentCsvInput" accept=".csv" style="display:none;">
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table id="studentsTable">
+        <thead>
+          <tr>
+            <th>Admission No</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Guardian</th>
+            <th>Fee Balance</th>
+            <th>Payment Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- JS -->
+  <script src="app.js"></script>
+  <script>
+    ensureAuthRedirect();
+    injectLayout('students');
+    initStudentsPage();
+  </script>
+</body>
+</html>
