@@ -35,7 +35,6 @@
       line-height: 1.6;
     }
 
-    /* HEADER */
     header {
       width: 100%;
       padding: 1.5rem 2rem;
@@ -58,7 +57,6 @@
       color: var(--primary-dark);
     }
 
-    /* MAIN CONTENT */
     main {
       flex: 1;
       width: 100%;
@@ -68,7 +66,6 @@
       padding: 2rem 1rem;
     }
 
-    /* FORM CONTAINER */
     .form-container {
       background: var(--surface);
       border-radius: 16px;
@@ -134,7 +131,6 @@
 
     .input-group {
       margin-bottom: 1.2rem;
-      position: relative;
     }
 
     .input-group label {
@@ -145,7 +141,7 @@
       font-size: 0.95rem;
     }
 
-    .form-section input {
+    input {
       width: 100%;
       padding: 0.9rem 1rem;
       border: 1.5px solid var(--border);
@@ -156,20 +152,10 @@
       transition: all 0.2s ease;
     }
 
-    .form-section input:focus {
+    input:focus {
       border-color: var(--primary-light);
       outline: none;
       box-shadow: 0 0 0 3px rgba(180, 106, 39, 0.1);
-    }
-
-    .form-section input:valid {
-      border-color: #a0c97a;
-    }
-
-    .password-requirements {
-      font-size: 0.85rem;
-      color: var(--text-medium);
-      margin-top: 0.5rem;
     }
 
     .add-child-btn {
@@ -191,10 +177,6 @@
     .add-child-btn:hover {
       background-color: var(--primary-medium);
       transform: translateY(-2px);
-    }
-
-    .add-child-btn:active {
-      transform: translateY(0);
     }
 
     hr {
@@ -231,11 +213,6 @@
       box-shadow: 0 6px 15px rgba(74, 53, 16, 0.3);
     }
 
-    .submit-btn button:active {
-      transform: translateY(0);
-    }
-
-    /* FOOTER */
     footer {
       text-align: center;
       padding: 1.5rem;
@@ -250,53 +227,69 @@
       color: var(--primary-light);
       text-decoration: none;
       font-weight: 500;
-      transition: color 0.2s ease;
     }
 
-    footer a:hover {
-      color: var(--primary-medium);
-      text-decoration: underline;
+    /* MODAL STYLING */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
     }
 
-    /* RESPONSIVE DESIGN */
-    @media (max-width: 768px) {
-      form {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-      
-      .form-container {
-        padding: 2rem 1.5rem;
-      }
-      
-      hr, .submit-btn {
-        grid-column: 1;
-      }
-      
-      header {
-        padding: 1rem 1.5rem;
-      }
-      
-      .brand-text {
-        font-size: 1.4rem;
-      }
+    .modal-content {
+      background-color: var(--surface);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      animation: fadeIn 0.3s ease;
     }
 
-    @media (max-width: 480px) {
-      .form-container {
-        padding: 1.5rem 1rem;
-        width: 95%;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(-20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .modal-content h3 {
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+      text-align: center;
+    }
+
+    .modal-actions {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-actions button {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .save-btn {
+      background-color: var(--primary-dark);
+      color: #fff;
+    }
+
+    .cancel-btn {
+      background-color: #ccc;
+      color: #333;
     }
   </style>
 </head>
 <body>
   <header>
-    <svg class="brand-icon" viewBox="0 0 64 64" width="36" height="36" aria-hidden="true">
+    <svg class="brand-icon" viewBox="0 0 64 64">
       <g>
         <rect x="6" y="26" width="52" height="12" rx="3" fill="#7a5e2a" transform="rotate(22 32 32)" />
         <rect x="6" y="26" width="52" height="12" rx="3" fill="#7a5e2a" transform="rotate(-22 32 32)" />
@@ -312,87 +305,79 @@
       <p class="form-description">Connect with your child's educational journey. Fill in your details and link your children to get started.</p>
       
       <form id="parentAccountForm">
-        <!-- Left Section -->
         <div class="form-section">
           <h2>Your Details</h2>
-          
-          <div class="input-group">
-            <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" placeholder="Enter your full name" required>
-          </div>
-          
-          <div class="input-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" placeholder="Enter your phone number" required>
-          </div>
-          
-          <div class="input-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" placeholder="Enter your email address" required>
-          </div>
-          
-          <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Create a secure password" required>
-            <div class="password-requirements">Use at least 8 characters with a mix of letters, numbers, and symbols</div>
-          </div>
-          
-          <div class="input-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
-          </div>
+          <div class="input-group"><label>Full Name</label><input type="text" required></div>
+          <div class="input-group"><label>Phone</label><input type="tel" required></div>
+          <div class="input-group"><label>Email</label><input type="email" required></div>
+          <div class="input-group"><label>Password</label><input type="password" required></div>
+          <div class="input-group"><label>Confirm Password</label><input type="password" required></div>
         </div>
 
-        <!-- Right Section -->
         <div class="form-section">
           <h2>Link Children</h2>
-          
-          <div class="input-group">
-            <label for="studentName">Student Name</label>
-            <input type="text" id="studentName" placeholder="Enter student's full name" required>
-          </div>
-          
-          <div class="input-group">
-            <label for="class">Class</label>
-            <input type="text" id="class" placeholder="Enter class/grade" required>
-          </div>
-          
-          <div class="input-group">
-            <label for="regNumber">Registration Number</label>
-            <input type="text" id="regNumber" placeholder="Enter registration number" required>
-          </div>
-          
-          <button type="button" class="add-child-btn">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 0a1 1 0 0 1 1 1v6h6a1 1 0 1 1 0 2H9v6a1 1 0 1 1-2 0V9H1a1 1 0 0 1 0-2h6V1a1 1 0 0 1 1-1z"/>
-            </svg>
-            Add Another Child
-          </button>
+          <div class="input-group"><label>Student Name</label><input type="text" required></div>
+          <div class="input-group"><label>Class</label><input type="text" required></div>
+          <div class="input-group"><label>Registration Number</label><input type="text" required></div>
+          <button type="button" class="add-child-btn">➕ Add Another Child</button>
         </div>
 
-        <hr />
-
-        <div class="submit-btn">
-          <button type="submit">Verify & Register Account</button>
-        </div>
+        <hr>
+        <div class="submit-btn"><button type="submit">Verify & Register Account</button></div>
       </form>
     </div>
   </main>
+
+  <!-- POPUP MODAL -->
+  <div class="modal" id="childModal">
+    <div class="modal-content">
+      <h3>Add Another Child</h3>
+      <div class="input-group"><label>Student Name</label><input type="text" id="modalChildName" required></div>
+      <div class="input-group"><label>Class</label><input type="text" id="modalChildClass" required></div>
+      <div class="input-group"><label>Registration Number</label><input type="text" id="modalChildReg" required></div>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="cancelModal">Cancel</button>
+        <button class="save-btn" id="saveChild">Save</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <p>By creating an account, you agree to our <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a></p>
   </footer>
 
   <script>
-    // Form will not submit data to any backend
-    document.getElementById('parentAccountForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      alert('Form submitted successfully! (This is a frontend demo only)');
+    const modal = document.getElementById("childModal");
+    const addChildBtn = document.querySelector(".add-child-btn");
+    const cancelModal = document.getElementById("cancelModal");
+    const saveChild = document.getElementById("saveChild");
+
+    addChildBtn.addEventListener("click", () => modal.style.display = "flex");
+    cancelModal.addEventListener("click", () => modal.style.display = "none");
+
+    saveChild.addEventListener("click", () => {
+      const name = document.getElementById("modalChildName").value.trim();
+      const cls = document.getElementById("modalChildClass").value.trim();
+      const reg = document.getElementById("modalChildReg").value.trim();
+
+      if (name && cls && reg) {
+        alert(`Child Added:\nName: ${name}\nClass: ${cls}\nReg: ${reg}`);
+        modal.style.display = "none";
+        document.getElementById("modalChildName").value = "";
+        document.getElementById("modalChildClass").value = "";
+        document.getElementById("modalChildReg").value = "";
+      } else {
+        alert("Please fill in all fields.");
+      }
     });
-    
-    // Add child button functionality
-    document.querySelector('.add-child-btn').addEventListener('click', function() {
-      alert('Add Child functionality would be implemented here');
+
+    window.addEventListener("click", e => {
+      if (e.target === modal) modal.style.display = "none";
+    });
+
+    document.getElementById('parentAccountForm').addEventListener('submit', e => {
+      e.preventDefault();
+      alert('Parent account created successfully!');
     });
   </script>
 </body>

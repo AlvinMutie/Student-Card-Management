@@ -131,6 +131,11 @@
       font-size: 1.2rem;
     }
 
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
     /* DASHBOARD LAYOUT */
     .dashboard-container {
       background: var(--surface);
@@ -320,6 +325,17 @@
       color: white;
     }
 
+    .action-btn.logout {
+      background-color: transparent;
+      color: var(--primary-dark);
+      border: 2px solid var(--primary-medium);
+    }
+
+    .action-btn.logout:hover {
+      background-color: var(--primary-medium);
+      color: white;
+    }
+
     /* RESPONSIVE DESIGN */
     @media (max-width: 1024px) {
       .sidebar {
@@ -368,6 +384,11 @@
       
       .basic-info-grid {
         grid-template-columns: 1fr;
+      }
+      
+      .header-actions {
+        flex-direction: column;
+        gap: 0.5rem;
       }
     }
 
@@ -452,6 +473,9 @@
         <button class="action-btn secondary">
           <i class="fas fa-sync-alt"></i> Refresh
         </button>
+        <button class="action-btn logout" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
       </div>
     </div>
 
@@ -469,6 +493,10 @@
             <div class="info-item">
               <span class="info-label">Admission Number</span>
               <span class="info-value">ST3507</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">NEMIS Number</span>
+              <span class="info-value">NEMIS-7894561230</span>
             </div>
             <div class="info-item">
               <span class="info-label">Class</span>
@@ -627,6 +655,16 @@
     document.querySelector('.action-btn.secondary').addEventListener('click', function(e) {
       e.preventDefault();
       alert('Page refreshed!');
+    });
+
+    // Logout button functionality
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Are you sure you want to log out?')) {
+        alert('Logging out...');
+        // In a real application, this would redirect to logout endpoint
+        // window.location.href = '/logout';
+      }
     });
   </script>
 </body>
