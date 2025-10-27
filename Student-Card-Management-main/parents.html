@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parents Management | Admin Dashboard</title>
+  <link rel="stylesheet" href="adminstyle.css">
+</head>
+<body>
+  <div id="layoutRoot"></div>
+
+  <main class="main-content">
+    <h1>Parents Management</h1>
+    <p class="muted" style="margin-bottom: 20px;">
+      Manage parent or guardian information and their linked students.
+    </p>
+
+    <div class="flex" style="justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap:10px;">
+      <input id="parentSearchInput" placeholder="Search parent by name, email or phone..." style="flex:1; min-width: 220px;">
+      <div class="flex" style="gap:10px;">
+        <button id="addParentBtn" class="btn">+ Add Parent</button>
+        <button id="exportParentsBtn" class="btn ghost">Export CSV</button>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table id="parentsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Relationship</th>
+            <th>Linked Students</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- JS -->
+  <script src="app.js"></script>
+  <script>
+    ensureAuthRedirect();
+    injectLayout('parents');
+    initParentsPage();
+  </script>
+</body>
+</html>

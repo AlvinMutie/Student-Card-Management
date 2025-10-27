@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Management | Admin Dashboard</title>
+  <link rel="stylesheet" href="adminstyle.css">
+</head>
+<body>
+  <div id="layoutRoot"></div>
+
+  <main class="main-content">
+    <h1>Staff Management</h1>
+    <p class="muted" style="margin-bottom: 20px;">
+      Manage teachers and administrative staff information, their approval status, and linked students.
+    </p>
+
+    <div class="flex" style="justify-content: space-between; margin-bottom: 20px; flex-wrap: wrap; gap:10px;">
+      <input id="staffSearchInput" placeholder="Search staff by name, number or role..." style="flex:1; min-width: 220px;">
+      <div class="flex" style="gap:10px;">
+        <button id="addStaffBtn" class="btn">+ Add Staff</button>
+        <button id="exportStaffBtn" class="btn ghost">Export CSV</button>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table id="staffTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Staff No</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Linked Students</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- JS -->
+  <script src="app.js"></script>
+  <script>
+    ensureAuthRedirect();
+    injectLayout('staff');
+    initStaffPage();
+  </script>
+</body>
+</html>

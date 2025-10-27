@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Login — Student Viewer</title>
+  <link rel="stylesheet" href="adminstyle.css">
+</head>
+<body class="center-page">
+  <div class="login-card">
+    <div class="brand">
+      <div class="logo-large">SV</div>
+      <h1>Student Viewer — Admin</h1>
+    </div>
+
+    <form id="loginForm" class="form">
+      <label>Email</label>
+      <input id="loginEmail" type="email" required placeholder="admin@example.com" value="admin@example.com">
+      <label>Password</label>
+      <input id="loginPw" type="password" required placeholder="password" value="admin123">
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button type="submit" class="btn">Login</button>
+        
+      </div>
+    </form>
+
+    
+  </div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  // login behavior
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const pw = document.getElementById('loginPw').value.trim();
+    // MOCK auth: replace with real API call later
+    if (email && pw) {
+      localStorage.setItem('sv_admin_token', 'mock-token');
+      localStorage.setItem('sv_admin_email', email);
+      location.href = 'admindashboard.html';
+    }
+  });
+  document.getElementById('demoBtn').addEventListener('click', () => {
+    document.getElementById('loginEmail').value = 'admin@example.com';
+    document.getElementById('loginPw').value = 'admin123';
+  });
+</script>
+</body>
+</html>

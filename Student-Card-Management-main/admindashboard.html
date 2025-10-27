@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Student Viewer</title>
+  <link rel="stylesheet" href="adminstyle.css">
+</head>
+<body>
+  <!-- Shared sidebar injected by app.js helper -->
+  <div id="layoutRoot"></div>
+
+  <main class="main-content">
+    <div class="top-row">
+      <h2>Dashboard</h2>
+      <div id="adminInfo" class="muted"></div>
+    </div>
+
+    <div class="grid-two">
+      <div class="stat-card">
+        <div class="stat-number" id="statParents">0</div>
+        <div class="stat-label">Parents</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statStaff">0</div>
+        <div class="stat-label">Staff</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statStudents">0</div>
+        <div class="stat-label">Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="statPending">0</div>
+        <div class="stat-label">Pending Approvals</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Recent Activity</h3>
+      <ul id="recentList" class="muted"></ul>
+    </div>
+  </main>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  ensureAuthRedirect();          // redirect to login if not authenticated
+  injectLayout('dashboard');     // adds sidebar + header
+  initDashboard();               // populate stats & recent activity
+</script>
+</body>
+</html>
