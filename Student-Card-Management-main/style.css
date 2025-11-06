@@ -340,12 +340,14 @@ body {
   justify-content: center;
   gap: 12px;
 }
-
 .brand-icon {
-  width: 36px;
-  height: 36px;
-  fill: var(--white);
+  width: 60px;      /* change the size here */
+  height: 60px;
+  object-fit: contain;
+  border-radius: 10px;
 }
+
+
 
 .brand-text {
   color: var(--white);
@@ -614,3 +616,31 @@ body {
   color: var(--dark-brown);
   text-decoration: underline;
 }
+
+/* === Brand Logo and Text === */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-logo {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
+}
+
+.brand-text {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #fff; /* or adjust to match your theme */
+  font-size: 1.5rem;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+

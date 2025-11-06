@@ -18,6 +18,10 @@
       --text-medium: #6e5631;
       --shadow: rgba(59, 42, 0, 0.15);
       --sidebar-width: 250px;
+      --success-light: #e8f5e8;
+      --success-dark: #2d8c2d;
+      --warning-light: #fff8e1;
+      --warning-dark: #ff9800;
     }
 
     * {
@@ -221,13 +225,18 @@
     }
 
     .status-active {
-      background: #e8f5e8;
-      color: #2d8c2d;
+      background: var(--success-light);
+      color: var(--success-dark);
     }
 
     .fee-paid {
-      background: #e8f5e8;
-      color: #2d8c2d;
+      background: var(--success-light);
+      color: var(--success-dark);
+    }
+
+    .fee-pending {
+      background: var(--warning-light);
+      color: var(--warning-dark);
     }
 
     /* MAIN CONTENT SECTIONS */
@@ -279,6 +288,54 @@
     .info-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    /* FEE BREAKDOWN STYLES */
+    .fee-breakdown {
+      margin-top: 1.5rem;
+    }
+
+    .fee-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .fee-table th,
+    .fee-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .fee-table th {
+      background-color: var(--background);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .fee-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .fee-table .total-row {
+      background-color: var(--background);
+      font-weight: 700;
+    }
+
+    .fee-table .amount {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .fee-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .fee-status-icon {
+      font-size: 0.8rem;
     }
 
     /* QUICK ACTIONS */
@@ -390,6 +447,15 @@
         flex-direction: column;
         gap: 0.5rem;
       }
+      
+      .fee-table {
+        font-size: 0.85rem;
+      }
+      
+      .fee-table th,
+      .fee-table td {
+        padding: 0.75rem 0.5rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -414,23 +480,20 @@
       .quick-actions {
         grid-template-columns: 1fr;
       }
+      
+      .fee-table {
+        font-size: 0.8rem;
+      }
     }
   </style>
 </head>
 <body>
   <!-- SIDEBAR -->
-  <nav class="sidebar">
-    <div class="sidebar-header">
-      <svg class="brand-icon" viewBox="0 0 64 64" width="30" height="30" aria-hidden="true">
-        <g>
-          <rect x="6" y="26" width="52" height="12" rx="3" fill="white" transform="rotate(22 32 32)" />
-          <rect x="6" y="26" width="52" height="12" rx="3" fill="white" transform="rotate(-22 32 32)" />
-          <circle cx="32" cy="32" r="6" fill="white" />
-        </g>
-      </svg>
-      <div class="brand-text">Student Viewer</div>
-    </div>
-    
+  <div class="sidebar-header">
+  <img src="Hechlink_ventures_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
+  <div class="brand-text">Hechlink Ventures</div>
+</div>
+
     <ul class="sidebar-menu">
       <li class="menu-item">
         <a href="#" class="menu-link active">
@@ -600,9 +663,10 @@
               Fee Information
             </h2>
           </div>
+          
           <div class="info-grid">
             <div class="info-card">
-              <div class="info-label">Fee Balance</div>
+              <div class="info-label">Total Fee Balance</div>
               <div class="info-value">0/=</div>
               <span class="status-badge fee-paid">Fully Paid</span>
             </div>
@@ -614,6 +678,143 @@
               <div class="info-label">Payment Status</div>
               <div class="info-value">Cleared</div>
             </div>
+          </div>
+          
+          <!-- Fee Breakdown Section -->
+          <div class="fee-breakdown">
+            <h3 style="margin-bottom: 1rem; color: var(--primary-dark);">Term 3 Fee Breakdown</h3>
+            <table class="fee-table">
+              <thead>
+                <tr>
+                  <th>Fee Category</th>
+                  <th>Description</th>
+                  <th class="amount">Amount (KES)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tuition</td>
+                  <td>Academic instruction and materials</td>
+                  <td class="amount">45,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lunch Program</td>
+                  <td>Daily meals and nutrition</td>
+                  <td class="amount">12,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Transport</td>
+                  <td>School bus service</td>
+                  <td class="amount">8,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Examination Fees</td>
+                  <td>Term exams and assessments</td>
+                  <td class="amount">3,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Library</td>
+                  <td>Library access and resources</td>
+                  <td class="amount">2,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Sports & Activities</td>
+                  <td>Swimming, athletics, clubs</td>
+                  <td class="amount">5,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Educational Trips</td>
+                  <td>Field trips and excursions</td>
+                  <td class="amount">4,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Caution Fee</td>
+                  <td>Damage deposit (refundable)</td>
+                  <td class="amount">5,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Medical</td>
+                  <td>Health services and first aid</td>
+                  <td class="amount">2,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Technology</td>
+                  <td>Computer lab and digital resources</td>
+                  <td class="amount">3,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td colspan="2"><strong>Total Term Fees</strong></td>
+                  <td class="amount"><strong>91,000</strong></td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      <strong>Fully Paid</strong>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
