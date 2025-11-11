@@ -7,36 +7,38 @@ A comprehensive student information management system for schools with role-base
 ```
 Student-Card-Management/
 │
-├── admin/                      # Admin Dashboard Pages
-│   ├── admindashboard.html     # Main admin dashboard
-│   ├── adminsettings.html      # Admin settings page
-│   ├── parents.html            # Parents management
-│   ├── students.html           # Students management
-│   ├── staff.html              # Staff management
-│   ├── adminstyle.css          # Admin-specific styles
-│   └── app.js                  # Admin JavaScript logic
+├── web/                        # Web Frontend Application
+│   ├── admin/                  # Admin Dashboard Pages
+│   │   ├── admindashboard.html
+│   │   ├── adminsettings.html
+│   │   ├── parents.html
+│   │   ├── students.html
+│   │   ├── staff.html
+│   │   ├── adminstyle.css
+│   │   ├── shared-admin-styles.css
+│   │   └── app-api.js
+│   ├── parent/                 # Parent Pages
+│   │   ├── parent_login_page.html
+│   │   ├── parent_registration_page.html
+│   │   └── student_info_page.html
+│   ├── staff/                  # Staff Pages
+│   │   └── staff_registration_page.html
+│   ├── public/                 # Public/Landing Pages
+│   │   ├── index.html
+│   │   ├── landingpage.html
+│   │   └── style.css
+│   └── shared/                 # Shared Resources
+│       ├── api-client.js
+│       ├── Hechlink_logo.png
+│       ├── logo.png
+│       ├── background.mp4
+│       └── data.js
 │
-├── parent/                     # Parent Pages
-│   ├── parent_login_page.html  # Parent login
-│   ├── parent_registration_page.html  # Parent registration
-│   └── student_info_page.html  # Parent dashboard (student info)
+├── mobile/                     # Mobile Applications
+│   └── android/                # Android App (Kotlin)
+│       └── (Android Studio project will be created here)
 │
-├── staff/                      # Staff Pages
-│   └── staff_registration_page.html  # Staff registration
-│
-├── public/                     # Public/Landing Pages
-│   ├── index.html              # Admin login page
-│   ├── landingpage.html        # Public landing page
-│   └── style.css               # Public page styles
-│
-├── shared/                     # Shared Resources
-│   ├── api-client.js           # API client for backend communication
-│   ├── Hechlink_logo.png       # Logo image
-│   ├── logo.png                # Alternative logo
-│   ├── background.mp4          # Background video
-│   └── data.js                 # (Deprecated) Legacy data file
-│
-└── backend/                    # Backend API
+└── backend/                    # Backend API (Shared by Web & Mobile)
     ├── server.js               # Express server
     ├── config/                 # Configuration files
     │   └── database.js         # PostgreSQL connection
@@ -56,16 +58,20 @@ Student-Card-Management/
 
 ## 🚀 Quick Start
 
-### Frontend
+### Web Frontend
 
 1. **Open the landing page:**
-   - Navigate to `public/landingpage.html` in your browser
+   - Navigate to `web/public/landingpage.html` in your browser
    - Or use a local server (VS Code Live Server, Python http.server, etc.)
 
 2. **Access different sections:**
-   - **Admin**: Go to `public/index.html` (admin login)
-   - **Parent**: Go to `parent/parent_login_page.html`
-   - **Staff**: Go to `staff/staff_registration_page.html`
+   - **Admin**: Go to `web/public/index.html` (admin login)
+   - **Parent**: Go to `web/parent/parent_login_page.html`
+   - **Staff**: Go to `web/staff/staff_registration_page.html`
+
+### Android Mobile App
+
+See **[ANDROID_APP_DEVELOPMENT_GUIDE.md](./ANDROID_APP_DEVELOPMENT_GUIDE.md)** for comprehensive instructions on developing the Android app using Android Studio and Kotlin.
 
 ### Backend
 
@@ -88,99 +94,135 @@ See `BACKEND_SETUP_GUIDE.md` for detailed backend setup instructions.
    npm start
    ```
 
+### Deployment (Render + Netlify)
+
+**📖 Full Deployment Guide**: See **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** for step-by-step instructions.
+
+**⚡ Quick Reference**: See **[DEPLOYMENT_QUICK_REFERENCE.md](./DEPLOYMENT_QUICK_REFERENCE.md)** for a condensed checklist.
+
+**Summary:**
+1. **Backend (Render)**: Deploy PostgreSQL database and Node.js web service
+2. **Frontend (Netlify)**: Deploy static site with environment variable for API URL
+3. **Configure**: Set `CORS_ORIGIN` in Render and `API_BASE_URL` in Netlify
+
 ## 📂 Folder Organization
 
-### Admin (`/admin`)
-All admin dashboard pages and functionality.
-- **Files**: Dashboard, settings, management pages for students, parents, and staff
-- **Dependencies**: Uses `../shared/api-client.js` for API calls
-- **Styles**: Uses `adminstyle.css` (local)
-- **Scripts**: Uses `app.js` (local) for admin logic
+### Web (`/web`)
+Web frontend application (HTML, CSS, JavaScript).
 
-### Parent (`/parent`)
+#### Admin (`/web/admin`)
+All admin dashboard pages and functionality.
+- **Files**: Dashboard, settings, QR generator, management pages for students, parents, and staff
+- **Dependencies**: Uses `../runtime-config.js` and `../shared/api-client.js` for API calls
+- **Styles**: Uses `adminstyle.css` and `shared-admin-styles.css`
+- **Scripts**: Uses `app-api.js` (API-driven logic); `app.js` kept for legacy reference
+
+#### Parent (`/web/parent`)
 Parent-facing pages for viewing student information.
 - **Files**: Login, registration, student info dashboard
 - **Dependencies**: Uses `../shared/api-client.js` for API calls
 - **Access**: Parents can view their children's information after login
 
-### Staff (`/staff`)
+#### Staff (`/web/staff`)
 Staff registration and management.
 - **Files**: Staff registration page
 - **Dependencies**: Uses `../shared/api-client.js` for API calls
 
-### Public (`/public`)
+#### Public (`/web/public`)
 Public-facing pages and entry points.
 - **Files**: Landing page, admin login
 - **Dependencies**: Uses `../shared/` for shared resources
 
-### Shared (`/shared`)
-Common resources used across all sections.
+#### Shared (`/web/shared`)
+Common resources used across all web sections.
 - **API Client**: `api-client.js` - Handles all backend API calls
 - **Assets**: Logo images, background video
 - **Legacy**: `data.js` (deprecated, kept for reference)
 
+### Mobile (`/mobile`)
+Mobile applications directory.
+
+#### Android (`/mobile/android`)
+Android app development (Kotlin, Android Studio).
+- **Status**: Ready for Android Studio project creation
+- **Guide**: See `ANDROID_APP_DEVELOPMENT_GUIDE.md` for setup instructions
+- **Technology**: Kotlin, MVVM architecture, Retrofit for API calls
+
 ### Backend (`/backend`)
-Node.js + Express + PostgreSQL API server.
+Node.js + Express + PostgreSQL API server (shared by web and mobile).
 - **API**: RESTful API endpoints for all CRUD operations
 - **Authentication**: JWT-based authentication
 - **Database**: PostgreSQL with proper schema and migrations
+- **Usage**: Used by both web frontend and mobile app
 
 ## 🔗 Navigation Flow
 
-### Admin Flow
-1. `public/index.html` → Admin login
-2. `admin/admindashboard.html` → Admin dashboard
+### Web Application
+
+#### Admin Flow
+1. `web/public/index.html` → Admin login
+2. `web/admin/admindashboard.html` → Admin dashboard
 3. Navigate between admin pages (students, parents, staff, settings)
 
-### Parent Flow
-1. `public/landingpage.html` → Landing page
-2. `parent/parent_login_page.html` → Parent login
-3. `parent/student_info_page.html` → Parent dashboard (student info)
+#### Parent Flow
+1. `web/public/landingpage.html` → Landing page
+2. `web/parent/parent_login_page.html` → Parent login
+3. `web/parent/student_info_page.html` → Parent dashboard (student info)
 
-### Staff Flow
-1. `public/landingpage.html` → Landing page
-2. `staff/staff_registration_page.html` → Staff registration
+#### Staff Flow
+1. `web/public/landingpage.html` → Landing page
+2. `web/staff/staff_registration_page.html` → Staff registration
+
+### Mobile Application
+See `ANDROID_APP_DEVELOPMENT_GUIDE.md` for mobile app navigation flows and implementation details.
 
 ## 📝 Path Conventions
 
-### Relative Paths
+### Web Application Paths
+
+#### Relative Paths
 - **Within same folder**: Use `filename.html` or `./filename.html`
 - **To shared resources**: Use `../shared/resource.js`
 - **To other sections**: Use `../section/file.html`
 
-### Examples
+#### Examples
 ```html
-<!-- From admin/admindashboard.html to shared logo -->
+<!-- From web/admin/admindashboard.html to shared logo -->
 <img src="../shared/Hechlink_logo.png">
 
-<!-- From admin/admindashboard.html to another admin page -->
+<!-- From web/admin/admindashboard.html to another admin page -->
 <a href="students.html">
 
-<!-- From parent/student_info_page.html to shared API client -->
+<!-- From web/parent/student_info_page.html to shared API client -->
 <script src="../shared/api-client.js"></script>
 
-<!-- From public/landingpage.html to parent login -->
+<!-- From web/public/landingpage.html to parent login -->
 <a href="../parent/parent_login_page.html">
 ```
 
+### Mobile Application
+See `ANDROID_APP_DEVELOPMENT_GUIDE.md` for Android project structure and path conventions.
+
 ## 🔧 Development
 
-### Adding New Pages
+### Web Frontend Development
 
-1. **Admin pages**: Add to `admin/` folder
-2. **Parent pages**: Add to `parent/` folder
-3. **Staff pages**: Add to `staff/` folder
-4. **Public pages**: Add to `public/` folder
+#### Adding New Pages
 
-### Shared Resources
+1. **Admin pages**: Add to `web/admin/` folder
+2. **Parent pages**: Add to `web/parent/` folder
+3. **Staff pages**: Add to `web/staff/` folder
+4. **Public pages**: Add to `web/public/` folder
+
+#### Shared Resources
 
 When adding new shared resources:
-1. Place in `shared/` folder
+1. Place in `web/shared/` folder
 2. Reference using `../shared/resource.js` or `../shared/resource.png`
 
-### API Integration
+#### API Integration
 
-All API calls go through `shared/api-client.js`:
+All API calls go through `web/shared/api-client.js`:
 ```javascript
 // Example: Login
 const response = await authAPI.login(email, password);
@@ -189,12 +231,24 @@ const response = await authAPI.login(email, password);
 const students = await studentsAPI.getMyStudents();
 ```
 
+### Mobile App Development
+
+See `ANDROID_APP_DEVELOPMENT_GUIDE.md` for:
+- Android Studio setup
+- Kotlin implementation
+- API integration with Retrofit
+- MVVM architecture
+- UI/UX guidelines
+- Testing and deployment
+
 ## 📚 Documentation
 
-- **Backend Setup**: See `BACKEND_SETUP_GUIDE.md`
-- **Implementation Summary**: See `IMPLEMENTATION_SUMMARY.md`
-- **Issues Fixed**: See `FIXES_APPLIED.md`
-- **Backend Suggestions**: See `NAVIGATION_AND_BACKEND_SUGGESTIONS.md`
+- **🚀 Deployment Guide**: See `DEPLOYMENT_GUIDE.md` - Complete guide for deploying to Netlify (frontend) and Render (backend)
+- **⚡ Quick Deployment Reference**: See `DEPLOYMENT_QUICK_REFERENCE.md` - Condensed deployment checklist
+- **Android App Development**: See `ANDROID_APP_DEVELOPMENT_GUIDE.md` - Comprehensive guide for building the Android app
+- **Backend Setup**: See `backend/README.md` or `SIMPLE_BACKEND_SETUP.md`
+- **Database Guide**: See `DATABASE_VIEWER_GUIDE.md`
+- **Test Data**: See `TEST_DATA_GUIDE.md`
 
 ## 🔐 Default Credentials
 
@@ -208,10 +262,19 @@ const students = await studentsAPI.getMyStudents();
 
 ## 🛠️ Technologies
 
+### Web Application
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Node.js, Express.js
 - **Database**: PostgreSQL
 - **Authentication**: JWT (JSON Web Tokens)
+
+### Mobile Application
+- **Language**: Kotlin
+- **IDE**: Android Studio
+- **Architecture**: MVVM (Model-View-ViewModel)
+- **Networking**: Retrofit 2 + OkHttp
+- **Authentication**: JWT Token Storage
+- **Database**: Room (for local caching, optional)
 
 ## 📄 License
 

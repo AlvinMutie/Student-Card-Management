@@ -13,12 +13,49 @@ const path = require('path');
 
 // Middleware
 // CORS configuration - allow all origins in development for easier testing
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const isProduction = process.env.NODE_ENV === 'production';
 
-app.use(cors({
-  origin: isDevelopment ? true : (process.env.CORS_ORIGIN || 'http://localhost:5500'),
-  credentials: true
-}));
+const parseOrigins = (value) =>
+  (value || '')
+    .split(',')
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+const allowedOrigins = parseOrigins(
+  process.env.CORS_ORIGIN || process.env.CORS_ORIGINS || process.env.ALLOWED_ORIGINS
+);
+
+const wildcardMatch = (origin, pattern) => {
+  if (!pattern.includes('*')) {
+    return origin === pattern;
+  }
+  const regex = new RegExp(`^${pattern.replace(/\./g, '\\.').replace(/\*/g, '.*')}$`);
+  return regex.test(origin);
+};
+
+const corsOptions = {
+  origin(origin, callback) {
+    if (!isProduction || !origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.length === 0) {
+      return callback(null, true);
+    }
+
+    const isAllowed = allowedOrigins.some((allowed) => wildcardMatch(origin, allowed));
+
+    if (isAllowed) {
+      return callback(null, true);
+    }
+
+    console.warn(`CORS blocked request from origin: ${origin}`);
+    return callback(new Error(`Origin ${origin} not allowed by CORS policy`));
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

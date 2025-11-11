@@ -1,0 +1,12 @@
+[build]
+  command = "node scripts/generate-runtime-config.js"
+  publish = "web"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/"
+  to = "/public/landingpage.html"
+  status = 200
+

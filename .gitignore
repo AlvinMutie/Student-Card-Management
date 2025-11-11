@@ -51,3 +51,36 @@ coverage/
 *.pid
 *.sock
 
+# Android
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+bin/
+gen/
+out/
+release/
+.gradle/
+local.properties
+*.iml
+.idea/
+*.keystore
+!debug.keystore
+proguard/
+*.hprof
+.cxx/
+.externalNativeBuild/
+.cxx/
+app/build/
+build/
+mobile/android/.gradle/
+mobile/android/build/
+mobile/android/app/build/
+mobile/android/.idea/
+mobile/android/*.iml
+mobile/android/local.properties
+mobile/android/*.keystore
+mobile/android/.cxx/
+mobile/android/.externalNativeBuild/
+
