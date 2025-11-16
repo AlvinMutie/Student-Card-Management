@@ -6,168 +6,7 @@
   <title>Student ID Card Generator | Admin Dashboard</title>
   <link rel="stylesheet" href="shared-admin-styles.css">
   <style>
-    :root {
-      --primary-green: #2d5016;
-      --secondary-green: #4a7c2a;
-      --maroon: #800020;
-      --off-white: #fafafa;
-      --pale-green: #e8f5e1;
-      --border-radius: 12px;
-      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --transition: all 0.3s ease;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background-color: var(--off-white);
-      color: #333;
-      line-height: 1.6;
-      display: flex;
-      min-height: 100vh;
-    }
-    
-    /* Include sidebar styles from shared-admin-styles.css */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, var(--primary-green) 0%, var(--secondary-green) 100%);
-      color: white;
-      padding: 0;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-    
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 25px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-      margin-bottom: 10px;
-      background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .brand-icon {
-      width: 45px;
-      height: 45px;
-      object-fit: contain;
-      filter: brightness(0) invert(1);
-    }
-    
-    .brand h1 {
-      font-size: 1.3rem;
-      font-weight: 600;
-    }
-    
-    .nav-links {
-      list-style: none;
-      flex: 1;
-      padding: 10px 0;
-    }
-    
-    .nav-links li {
-      margin-bottom: 4px;
-      padding: 0 12px;
-    }
-    
-    .nav-links a {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
-      color: rgba(255, 255, 255, 0.85);
-      text-decoration: none;
-      transition: var(--transition);
-      border-radius: 10px;
-      font-weight: 500;
-    }
-    
-    .nav-links a:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: white;
-    }
-    
-    .nav-links a.active {
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-    }
-    
-    .nav-icon {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-    
-    .logout-section {
-      padding: 20px 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      margin-top: auto;
-      background: rgba(0, 0, 0, 0.1);
-    }
-    
-    .logout-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(239, 68, 68, 0.2);
-      color: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    
-    .logout-btn:hover {
-      background: rgba(239, 68, 68, 0.3);
-      transform: translateY(-2px);
-    }
-    
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      padding: 35px 40px;
-      overflow-y: auto;
-      margin-left: 260px;
-      background: var(--off-white);
-      min-height: 100vh;
-    }
-    
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 35px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid rgba(45, 80, 22, 0.1);
-    }
-    
-    .top-row h1 {
-      font-size: 2rem;
-      color: var(--primary-green);
-      font-weight: 700;
-    }
-    
-    .admin-section {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
+    /* Page-specific styles only - base styles are in shared-admin-styles.css */
     
     /* Controls */
     .controls {
@@ -391,17 +230,29 @@
         </svg>
         <span>Students</span>
       </a></li>
+      <li><a href="parents.html">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" />
+        </svg>
+        <span>Parents</span>
+      </a></li>
+      <li><a href="staff.html">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M21.1,12.5L22.5,13.91L15.97,20.5L12.5,17L13.9,15.59L15.97,17.67L21.1,12.5M10,17L13,20H3V18C3,15.79 6.58,14 11,14L12.89,14.11L10,17M11,4A4,4 0 0,1 15,8A4,4 0 0,1 11,12A4,4 0 0,1 7,8A4,4 0 0,1 11,4Z" />
+        </svg>
+        <span>Staff</span>
+      </a></li>
       <li><a href="student-id-generator.html" class="active">
         <svg class="nav-icon" viewBox="0 0 24 24">
           <path d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
         </svg>
         <span>ID Generator</span>
       </a></li>
-      <li><a href="qr-generator.html">
+      <li><a href="adminsettings.html">
         <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M3,11H5V13H3V11M11,5H13V9H11V5M9,11H13V15H11V13H9V11M15,11H17V13H19V11H21V13H19V15H21V19H19V21H17V19H13V21H11V17H15V15H17V13H15V11M19,19V15H17V19H19M15,13H13V15H15V13M17,9H15V11H17V9M9,4A5,5 0 0,0 4,9H6A3,3 0 0,1 9,6A3,3 0 0,1 12,9A3,3 0 0,1 9,12H4A5,5 0 0,0 9,17A5,5 0 0,0 14,12A5,5 0 0,0 9,4Z" />
+          <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
         </svg>
-        <span>QR Generator</span>
+        <span>Settings</span>
       </a></li>
     </ul>
     
@@ -516,8 +367,33 @@
       
       currentStudent = JSON.parse(selectedOption.dataset.student);
       
-      // Generate QR code (only contains admission number)
-      const qrDataString = currentStudent.adm;
+      // Fetch complete student data for QR code (should include all fields)
+      let studentData = currentStudent;
+      try {
+        studentData = await studentsAPI.getById(currentStudent.id);
+      } catch (error) {
+        console.warn('Could not fetch detailed data, using provided data:', error);
+      }
+      
+      // Generate QR code with full student data (as per client requirement)
+      // QR code should contain: Name, picture, class, stream, house, D.O.A & D.O.C, Meal card validity
+      const qrData = {
+        id: studentData.id,
+        adm: studentData.adm,
+        name: studentData.name,
+        picture: studentData.photo_url || '',
+        class: studentData.class || 'N/A',
+        stream: studentData.stream || 'N/A',
+        house: studentData.house || 'N/A',
+        date_of_admission: studentData.date_of_admission || studentData.created_at || 'N/A',
+        date_of_completion: studentData.date_of_completion || 'N/A',
+        meal_card_validity: studentData.meal_card_validity || 'N/A',
+        nemis: studentData.nemis || 'N/A',
+        parent: studentData.parent_name || 'N/A',
+        school: 'Hechlink Ventures School'
+      };
+      
+      const qrDataString = JSON.stringify(qrData);
       
       try {
         // Create temporary div for QR code
@@ -651,22 +527,49 @@
       document.getElementById('idCardContainer').style.display = 'none';
       
       for (let i = 0; i < allStudents.length; i++) {
-        const student = allStudents[i];
-        
-        try {
-          // Generate QR for admission number
-          const tempDiv = document.createElement('div');
-          tempDiv.style.cssText = 'position: absolute; left: -9999px; width: 100px; height: 100px;';
-          document.body.appendChild(tempDiv);
+          const student = allStudents[i];
           
-          const qr = new QRCode(tempDiv, {
-            text: student.adm,
-            width: 100,
-            height: 100,
-            colorDark: '#000000',
-            colorLight: '#FFFFFF',
-            correctLevel: QRCode.CorrectLevel.H
-          });
+          try {
+            // Fetch complete student data for QR code
+            let studentData = student;
+            try {
+              studentData = await studentsAPI.getById(student.id);
+            } catch (error) {
+              console.warn(`Could not fetch detailed data for ${student.name}:`, error);
+            }
+            
+            // Generate QR code with full student data
+            const qrData = {
+              id: studentData.id,
+              adm: studentData.adm,
+              name: studentData.name,
+              picture: studentData.photo_url || '',
+              class: studentData.class || 'N/A',
+              stream: studentData.stream || 'N/A',
+              house: studentData.house || 'N/A',
+              date_of_admission: studentData.date_of_admission || studentData.created_at || 'N/A',
+              date_of_completion: studentData.date_of_completion || 'N/A',
+              meal_card_validity: studentData.meal_card_validity || 'N/A',
+              nemis: studentData.nemis || 'N/A',
+              parent: studentData.parent_name || 'N/A',
+              school: 'Hechlink Ventures School'
+            };
+            
+            const qrDataString = JSON.stringify(qrData);
+            
+            // Generate QR for full data
+            const tempDiv = document.createElement('div');
+            tempDiv.style.cssText = 'position: absolute; left: -9999px; width: 100px; height: 100px;';
+            document.body.appendChild(tempDiv);
+            
+            const qr = new QRCode(tempDiv, {
+              text: qrDataString,
+              width: 100,
+              height: 100,
+              colorDark: '#000000',
+              colorLight: '#FFFFFF',
+              correctLevel: QRCode.CorrectLevel.H
+            });
           
           await new Promise(resolve => setTimeout(resolve, 200));
           

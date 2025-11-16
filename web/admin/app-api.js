@@ -189,7 +189,7 @@
                     <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" />
                   </svg>
                 </button>
-                <button class="action-btn qr-btn" data-student-id="${s.id}" title="QR Code" onclick="window.location.href='qr-generator.html?student=${s.id}'">
+                <button class="action-btn qr-btn" data-student-id="${s.id}" title="Generate ID Card" onclick="window.location.href='student-id-generator.html?student=${s.id}'">
                   <svg class="action-icon" viewBox="0 0 24 24">
                     <path d="M3,11H5V13H3V11M11,5H13V9H11V5M9,11H13V15H11V13H9V11M15,11H17V13H19V11H21V13H19V15H21V19H19V21H17V19H13V21H11V17H15V15H17V13H15V11M19,19V15H17V19H19M15,3H21V9H15V3M17,5V7H19V5H17M3,3H9V9H3V3M5,5V7H7V5H5M3,15H9V21H3V15M5,17V19H7V17H5Z" />
                   </svg>
