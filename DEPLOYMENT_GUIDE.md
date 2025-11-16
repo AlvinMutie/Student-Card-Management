@@ -86,7 +86,9 @@ You need to run the database schema on your Render database:
    - **Name**: `student-card-backend` (or your preferred name)
    - **Region**: Same as your database (recommended)
    - **Branch**: `main` (or your default branch)
-   - **Root Directory**: `backend` (important!)
+   - **⚠️ Root Directory**: `backend` ⚠️ **CRITICAL - Must be set to `backend`!**
+     - This tells Render where to find your `package.json` and `server.js`
+     - If you skip this, you'll get: `npm error enoent Could not read package.json`
    - **Runtime**: `Node`
    - **Build Command**: `npm install`
    - **Start Command**: `npm start`
@@ -265,12 +267,32 @@ If you want to populate your production database with test data:
 
 ### Backend Issues
 
+**Problem**: `npm error enoent Could not read package.json: Error: ENOENT: no such file or directory`
+- **Solution**: This means Render is looking for `package.json` in the wrong directory
+- **Fix**:
+  1. Go to your Render service dashboard
+  2. Click **"Settings"** tab
+  3. Scroll down to **"Root Directory"**
+  4. Set it to: `backend`
+  5. Click **"Save Changes"**
+  6. Render will automatically redeploy
+- **Important**: The Root Directory must be set to `backend` because that's where your `package.json` and `server.js` files are located
+
+**Problem**: "Login failed: Internal server error"
+- **Solution**: See **[TROUBLESHOOTING_LOGIN_ERROR.md](./TROUBLESHOOTING_LOGIN_ERROR.md)** for detailed step-by-step troubleshooting
+- Common causes:
+  - Database tables don't exist (need to run migrations)
+  - Database connection failing (wrong DATABASE_URL)
+  - Missing environment variables (JWT_SECRET, DATABASE_URL)
+  - Database not seeded with test users
+
 **Problem**: Backend fails to start
 - **Solution**: Check Render logs for errors
 - Common issues:
   - Missing environment variables
   - Database connection string incorrect
   - Port configuration issues
+- **Check startup logs**: You should see "✅ Database connection successful" and "✅ Users table exists"
 
 **Problem**: Database connection fails
 - **Solution**: 

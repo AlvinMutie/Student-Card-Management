@@ -7,11 +7,25 @@
   <link rel="stylesheet" href="adminstyle.css">
   <style>
     :root {
-      --primary-color: #4a3510;
-      --secondary-color: #8b6b3d;
-      --accent-color: #d4af37;
-      --light-color: #f9f5eb;
-      --beige-bg: #f8f4e9;
+      /* New Color Scheme: Light/Dark Green + White + Maroon */
+      --primary-green: #2d5016;        /* Dark green */
+      --secondary-green: #4a7c2a;      /* Medium green */
+      --light-green: #6b9f47;          /* Light green */
+      --lighter-green: #a8d08a;        /* Very light green */
+      --pale-green: #e8f5e1;           /* Pale green background */
+      --maroon: #800020;               /* Maroon accent */
+      --maroon-light: #a0334d;         /* Lighter maroon */
+      --maroon-dark: #5c0018;          /* Darker maroon */
+      --white: #ffffff;                /* White accent */
+      --off-white: #fafafa;            /* Off-white background */
+      
+      /* Legacy variables for compatibility */
+      --primary-color: var(--primary-green);
+      --secondary-color: var(--secondary-green);
+      --accent-color: var(--maroon);
+      --light-color: var(--pale-green);
+      --beige-bg: var(--off-white);
+      
       --border-radius: 12px;
       --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -30,7 +44,7 @@
     }
     
     body {
-      background-color: var(--beige-bg);
+      background-color: var(--off-white);
       color: #333;
       line-height: 1.6;
       display: flex;
@@ -40,7 +54,7 @@
     /* Sidebar Styles */
     .sidebar {
       width: 260px;
-      background: linear-gradient(180deg, var(--primary-color) 0%, #3a2a0f 100%);
+      background: linear-gradient(180deg, var(--primary-green) 0%, var(--secondary-green) 100%);
       color: white;
       padding: 0;
       transition: var(--transition);
@@ -112,7 +126,7 @@
       transform: translateY(-50%);
       width: 3px;
       height: 0;
-      background: var(--accent-color);
+      background: var(--maroon);
       border-radius: 0 3px 3px 0;
       transition: var(--transition);
     }
@@ -183,7 +197,7 @@
       padding: 35px 40px;
       overflow-y: auto;
       margin-left: 260px;
-      background: var(--beige-bg);
+      background: var(--off-white);
       min-height: 100vh;
     }
     
@@ -193,12 +207,12 @@
       align-items: center;
       margin-bottom: 35px;
       padding-bottom: 20px;
-      border-bottom: 2px solid rgba(74, 53, 16, 0.1);
+      border-bottom: 2px solid rgba(45, 80, 22, 0.1);
     }
     
     .top-row h2 {
       font-size: 2rem;
-      color: var(--primary-color);
+      color: var(--primary-green);
       font-weight: 700;
       letter-spacing: -0.5px;
     }
@@ -215,9 +229,9 @@
       border-radius: 25px;
       box-shadow: var(--box-shadow);
       font-size: 0.95rem;
-      color: var(--primary-color);
+      color: var(--primary-green);
       font-weight: 500;
-      border: 1px solid rgba(74, 53, 16, 0.1);
+      border: 1px solid rgba(45, 80, 22, 0.1);
     }
     
     .logout-btn-top {
@@ -225,7 +239,7 @@
       align-items: center;
       gap: 8px;
       padding: 10px 20px;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
       color: white;
       border: none;
       border-radius: 25px;
@@ -233,7 +247,7 @@
       font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
-      box-shadow: 0 2px 8px rgba(74, 53, 16, 0.2);
+      box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
     }
     
     .logout-btn-top:hover {
@@ -275,7 +289,7 @@
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+      background: linear-gradient(90deg, var(--secondary-green), var(--maroon));
       transform: scaleX(0);
       transform-origin: left;
       transition: var(--transition);
@@ -317,10 +331,10 @@
       width: 48px;
       height: 48px;
       fill: white;
-      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+      background: linear-gradient(135deg, var(--secondary-green), var(--maroon));
       padding: 12px;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(74, 53, 16, 0.15);
+      box-shadow: 0 4px 8px rgba(45, 80, 22, 0.15);
     }
     
     .stat-card:nth-child(1) .stat-icon {
@@ -332,7 +346,7 @@
     }
     
     .stat-card:nth-child(3) .stat-icon {
-      background: linear-gradient(135deg, var(--accent-color), #fbbf24);
+      background: linear-gradient(135deg, var(--maroon), var(--maroon-light));
     }
     
     .stat-card:nth-child(4) .stat-icon {
@@ -343,7 +357,7 @@
       font-size: 2.8rem;
       font-weight: 700;
       margin-bottom: 8px;
-      color: var(--primary-color);
+      color: var(--primary-green);
       line-height: 1;
     }
     
@@ -366,10 +380,10 @@
     
     .card h3 {
       font-size: 1.4rem;
-      color: var(--primary-color);
+      color: var(--primary-green);
       margin-bottom: 25px;
       padding-bottom: 15px;
-      border-bottom: 2px solid rgba(74, 53, 16, 0.1);
+      border-bottom: 2px solid rgba(45, 80, 22, 0.1);
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -380,7 +394,7 @@
       content: '';
       width: 4px;
       height: 24px;
-      background: linear-gradient(180deg, var(--secondary-color), var(--accent-color));
+      background: linear-gradient(180deg, var(--secondary-green), var(--maroon));
       border-radius: 2px;
     }
     
@@ -412,8 +426,88 @@
     .activity-icon {
       width: 20px;
       height: 20px;
-      fill: var(--secondary-color);
+      fill: var(--secondary-green);
       flex-shrink: 0;
+    }
+    
+    /* Charts and Infographics Section */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    
+    .chart-card {
+      background: linear-gradient(135deg, white 0%, #fefefe 100%);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      box-shadow: var(--box-shadow);
+      border: 1px solid rgba(45, 80, 22, 0.08);
+    }
+    
+    .chart-card h3 {
+      font-size: 1.2rem;
+      color: var(--primary-green);
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid rgba(45, 80, 22, 0.1);
+      font-weight: 600;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+      width: 100%;
+    }
+    
+    .fee-summary-card {
+      background: linear-gradient(135deg, white 0%, #fefefe 100%);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 30px;
+      border: 1px solid rgba(45, 80, 22, 0.08);
+      border-left: 4px solid var(--maroon);
+    }
+    
+    .fee-summary-card h3 {
+      font-size: 1.4rem;
+      color: var(--primary-green);
+      margin-bottom: 20px;
+    }
+    
+    .fee-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    
+    .fee-stat-item {
+      text-align: center;
+      padding: 15px;
+      background: var(--pale-green);
+      border-radius: 8px;
+    }
+    
+    .fee-stat-item .label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    
+    .fee-stat-item .value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-green);
+    }
+    
+    .fee-stat-item .value.positive {
+      color: var(--success-color);
+    }
+    
+    .fee-stat-item .value.negative {
+      color: var(--maroon);
     }
     
     .muted {
@@ -548,6 +642,12 @@
         </svg>
         <span>Schedule</span>
       </a></li>
+      <li><a href="student-id-generator.html">
+        <svg class="nav-icon" viewBox="0 0 24 24">
+          <path d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
+        </svg>
+        <span>ID Generator</span>
+      </a></li>
       <li><a href="qr-generator.html">
         <svg class="nav-icon" viewBox="0 0 24 24">
           <path d="M3,11H5V13H3V11M11,5H13V9H11V5M9,11H13V15H11V13H9V11M15,11H17V13H19V11H21V13H19V15H21V19H19V21H17V19H13V21H11V17H15V15H17V13H15V11M19,19V15H17V19H19M15,13H13V15H15V13M17,9H15V11H17V9M9,4A5,5 0 0,0 4,9H6A3,3 0 0,1 9,6A3,3 0 0,1 12,9A3,3 0 0,1 9,12H4A5,5 0 0,0 9,17A5,5 0 0,0 14,12A5,5 0 0,0 9,4Z" />
@@ -630,6 +730,60 @@
       </div>
     </div>
 
+    <!-- Fee Balance Summary Card -->
+    <div class="fee-summary-card">
+      <h3>💰 Fee Balance Summary</h3>
+      <div class="fee-stats" id="feeStats">
+        <div class="fee-stat-item">
+          <div class="label">Total Fee Balance</div>
+          <div class="value negative" id="totalFeeBalance">KSh 0</div>
+        </div>
+        <div class="fee-stat-item">
+          <div class="label">Fully Paid Students</div>
+          <div class="value positive" id="fullyPaidCount">0</div>
+        </div>
+        <div class="fee-stat-item">
+          <div class="label">Students with Balance</div>
+          <div class="value negative" id="withBalanceCount">0</div>
+        </div>
+        <div class="fee-stat-item">
+          <div class="label">Average Balance</div>
+          <div class="value" id="averageBalance">KSh 0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts and Infographics Section -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <h3>📊 Students by Class Distribution</h3>
+        <div class="chart-container">
+          <canvas id="classDistributionChart"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <h3>📈 Fee Payment Status</h3>
+        <div class="chart-container">
+          <canvas id="paymentStatusChart"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <h3>📉 Fee Balance Trend</h3>
+        <div class="chart-container">
+          <canvas id="feeBalanceChart"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-card">
+        <h3>👥 Staff Distribution by Department</h3>
+        <div class="chart-container">
+          <canvas id="staffDepartmentChart"></canvas>
+        </div>
+      </div>
+    </div>
+
     <div class="card">
       <h3>Recent Activity</h3>
       <ul id="recentList" class="muted">
@@ -667,18 +821,26 @@
     </div>
   </main>
 
+  <!-- Chart.js Library -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
   <script src="../runtime-config.js"></script>
   <script src="../shared/api-client.js"></script>
 <script src="app-api.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  let charts = {};
+  
+  document.addEventListener('DOMContentLoaded', async function() {
     // Authentication check
     ensureAuthRedirect();
     
     // Initialize dashboard using app-api.js
     if (typeof initDashboard === 'function') {
-      initDashboard();
+      await initDashboard();
     }
+    
+    // Load and display charts
+    await loadAndDisplayCharts();
     
     // Set admin info (app-api.js handles this, but keeping for UI consistency)
     const adminEmail = localStorage.getItem('sv_admin_email') || 'admin';
@@ -706,6 +868,217 @@
     if (sidebarLogout) sidebarLogout.addEventListener('click', logout);
     if (topLogout) topLogout.addEventListener('click', logout);
   });
+
+  // Load and display charts with real data
+  async function loadAndDisplayCharts() {
+    try {
+      const [students, staff] = await Promise.all([
+        studentsAPI.getAll().catch(() => []),
+        staffAPI.getAll().catch(() => [])
+      ]);
+
+      // Update fee balance summary
+      updateFeeSummary(students);
+
+      // Create charts
+      createClassDistributionChart(students);
+      createPaymentStatusChart(students);
+      createFeeBalanceChart(students);
+      createStaffDepartmentChart(staff);
+
+    } catch (error) {
+      console.error('Error loading data for charts:', error);
+    }
+  }
+
+  // Update fee balance summary
+  function updateFeeSummary(students) {
+    const totalBalance = students.reduce((sum, s) => sum + (parseFloat(s.fee_balance) || 0), 0);
+    const fullyPaid = students.filter(s => !s.fee_balance || parseFloat(s.fee_balance) === 0).length;
+    const withBalance = students.length - fullyPaid;
+    const averageBalance = students.length > 0 ? totalBalance / students.length : 0;
+
+    document.getElementById('totalFeeBalance').textContent = `KSh ${totalBalance.toLocaleString('en-KE', {minimumFractionDigits: 2})}`;
+    document.getElementById('fullyPaidCount').textContent = fullyPaid;
+    document.getElementById('withBalanceCount').textContent = withBalance;
+    document.getElementById('averageBalance').textContent = `KSh ${averageBalance.toLocaleString('en-KE', {minimumFractionDigits: 2})}`;
+  }
+
+  // Create class distribution chart
+  function createClassDistributionChart(students) {
+    const classCounts = {};
+    students.forEach(s => {
+      const className = s.class || 'Unknown';
+      classCounts[className] = (classCounts[className] || 0) + 1;
+    });
+
+    const ctx = document.getElementById('classDistributionChart').getContext('2d');
+    if (charts.classDistribution) charts.classDistribution.destroy();
+
+    charts.classDistribution = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(classCounts),
+        datasets: [{
+          label: 'Number of Students',
+          data: Object.values(classCounts),
+          backgroundColor: '#4a7c2a',
+          borderColor: '#2d5016',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Create payment status chart
+  function createPaymentStatusChart(students) {
+    const statusCounts = {
+      'Fully Paid': students.filter(s => !s.fee_balance || parseFloat(s.fee_balance) === 0).length,
+      'Pending': students.filter(s => parseFloat(s.fee_balance) > 0).length
+    };
+
+    const ctx = document.getElementById('paymentStatusChart').getContext('2d');
+    if (charts.paymentStatus) charts.paymentStatus.destroy();
+
+    charts.paymentStatus = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: Object.keys(statusCounts),
+        datasets: [{
+          data: Object.values(statusCounts),
+          backgroundColor: ['#10b981', '#800020'],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
+
+  // Create fee balance trend chart
+  function createFeeBalanceChart(students) {
+    // Group by class and calculate average balance
+    const classBalances = {};
+    students.forEach(s => {
+      const className = s.class || 'Unknown';
+      if (!classBalances[className]) {
+        classBalances[className] = { total: 0, count: 0 };
+      }
+      classBalances[className].total += parseFloat(s.fee_balance) || 0;
+      classBalances[className].count += 1;
+    });
+
+    const labels = Object.keys(classBalances);
+    const averages = labels.map(className => 
+      classBalances[className].count > 0 
+        ? classBalances[className].total / classBalances[className].count 
+        : 0
+    );
+
+    const ctx = document.getElementById('feeBalanceChart').getContext('2d');
+    if (charts.feeBalance) charts.feeBalance.destroy();
+
+    charts.feeBalance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Average Fee Balance',
+          data: averages,
+          borderColor: '#800020',
+          backgroundColor: 'rgba(128, 0, 32, 0.1)',
+          borderWidth: 3,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function(value) {
+                return 'KSh ' + value.toLocaleString();
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Create staff department chart
+  function createStaffDepartmentChart(staff) {
+    const deptCounts = {};
+    staff.forEach(s => {
+      const dept = s.department || 'Unassigned';
+      deptCounts[dept] = (deptCounts[dept] || 0) + 1;
+    });
+
+    const ctx = document.getElementById('staffDepartmentChart').getContext('2d');
+    if (charts.staffDepartment) charts.staffDepartment.destroy();
+
+    charts.staffDepartment = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: Object.keys(deptCounts),
+        datasets: [{
+          data: Object.values(deptCounts),
+          backgroundColor: [
+            '#4a7c2a',
+            '#6b9f47',
+            '#a8d08a',
+            '#800020',
+            '#2d5016'
+          ],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom'
+          }
+        }
+      }
+    });
+  }
 </script>
 </body>
 </html>

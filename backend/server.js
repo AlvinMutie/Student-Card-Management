@@ -165,10 +165,43 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Something went wrong!' });
 });
 
+// Test database connection on startup
+async function testDatabaseConnection() {
+  try {
+    const pool = require('./config/database');
+    const result = await pool.query('SELECT NOW()');
+    console.log('✅ Database connection successful');
+    console.log('Database time:', result.rows[0].now);
+    
+    // Check if users table exists
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      );
+    `);
+    
+    if (tableCheck.rows[0].exists) {
+      console.log('✅ Users table exists');
+    } else {
+      console.warn('⚠️  WARNING: Users table does not exist. Run migrations!');
+    }
+  } catch (error) {
+    console.error('❌ Database connection failed:', error.message);
+    console.error('Error details:', {
+      code: error.code,
+      message: error.message
+    });
+    console.error('Make sure DATABASE_URL is set correctly and database is accessible');
+  }
+}
+
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server is running on http://localhost:${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  await testDatabaseConnection();
 });
 
 module.exports = app;

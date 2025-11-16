@@ -1,11 +1,25 @@
 /* Shared Admin Styles - Apply to all admin pages */
 
 :root {
-  --primary-color: #4a3510;
-  --secondary-color: #8b6b3d;
-  --accent-color: #d4af37;
-  --light-color: #f9f5eb;
-  --beige-bg: #f8f4e9;
+  /* New Color Scheme: Light/Dark Green + White + Maroon */
+  --primary-green: #2d5016;        /* Dark green */
+  --secondary-green: #4a7c2a;      /* Medium green */
+  --light-green: #6b9f47;          /* Light green */
+  --lighter-green: #a8d08a;        /* Very light green */
+  --pale-green: #e8f5e1;           /* Pale green background */
+  --maroon: #800020;               /* Maroon accent */
+  --maroon-light: #a0334d;         /* Lighter maroon */
+  --maroon-dark: #5c0018;          /* Darker maroon */
+  --white: #ffffff;                /* White accent */
+  --off-white: #fafafa;            /* Off-white background */
+  
+  /* Legacy variables for compatibility */
+  --primary-color: var(--primary-green);
+  --secondary-color: var(--secondary-green);
+  --accent-color: var(--maroon);
+  --light-color: var(--pale-green);
+  --beige-bg: var(--off-white);
+  
   --border-radius: 12px;
   --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
@@ -24,7 +38,7 @@
 }
 
 body {
-  background-color: var(--beige-bg);
+  background-color: var(--off-white);
   color: #333;
   line-height: 1.6;
   display: flex;
@@ -34,7 +48,7 @@ body {
 /* Sidebar Styles */
 .sidebar {
   width: 260px;
-  background: linear-gradient(180deg, var(--primary-color) 0%, #3a2a0f 100%);
+  background: linear-gradient(180deg, var(--primary-green) 0%, var(--secondary-green) 100%);
   color: white;
   padding: 0;
   transition: var(--transition);
@@ -107,7 +121,7 @@ body {
   transform: translateY(-50%);
   width: 3px;
   height: 0;
-  background: var(--accent-color);
+  background: var(--maroon);
   border-radius: 0 3px 3px 0;
   transition: var(--transition);
 }
@@ -179,7 +193,7 @@ body {
   padding: 35px 40px;
   overflow-y: auto;
   margin-left: 260px;
-  background: var(--beige-bg);
+  background: var(--off-white);
   min-height: 100vh;
 }
 
@@ -195,7 +209,7 @@ body {
 .top-row h1,
 .top-row h2 {
   font-size: 2rem;
-  color: var(--primary-color);
+  color: var(--primary-green);
   font-weight: 700;
   letter-spacing: -0.5px;
 }
@@ -259,9 +273,9 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(74, 53, 16, 0.2);
+  box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
 }
 
 .btn-primary:hover {
@@ -281,12 +295,12 @@ body {
 
 .btn-secondary {
   background: white;
-  color: var(--primary-color);
-  border: 2px solid var(--primary-color);
+  color: var(--primary-green);
+  border: 2px solid var(--primary-green);
 }
 
 .btn-secondary:hover {
-  background: var(--primary-color);
+  background: var(--primary-green);
   color: white;
 }
 
@@ -302,10 +316,10 @@ body {
 
 .card h3 {
   font-size: 1.4rem;
-  color: var(--primary-color);
+  color: var(--primary-green);
   margin-bottom: 25px;
   padding-bottom: 15px;
-  border-bottom: 2px solid rgba(74, 53, 16, 0.1);
+  border-bottom: 2px solid rgba(45, 80, 22, 0.1);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -316,7 +330,7 @@ body {
   content: '';
   width: 4px;
   height: 24px;
-  background: linear-gradient(180deg, var(--secondary-color), var(--accent-color));
+  background: linear-gradient(180deg, var(--secondary-green), var(--maroon));
   border-radius: 2px;
 }
 
@@ -337,8 +351,8 @@ th, td {
 }
 
 th {
-  background: linear-gradient(135deg, var(--light-color) 0%, #f5f0e8 100%);
-  color: var(--primary-color);
+  background: linear-gradient(135deg, var(--pale-green) 0%, #d4e9c8 100%);
+  color: var(--primary-green);
   font-weight: 600;
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -374,14 +388,14 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--secondary-color);
-  box-shadow: 0 0 0 3px rgba(139, 107, 61, 0.1);
+  border-color: var(--secondary-green);
+  box-shadow: 0 0 0 3px rgba(74, 124, 42, 0.1);
 }
 
 label {
   display: block;
   margin-bottom: 8px;
-  color: var(--primary-color);
+  color: var(--primary-green);
   font-weight: 500;
   font-size: 0.95rem;
 }

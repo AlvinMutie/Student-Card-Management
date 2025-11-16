@@ -14,7 +14,7 @@
 3. **Create Web Service**
    - Render Dashboard → New + → Web Service
    - Connect GitHub repo
-   - **Root Directory**: `backend`
+   - **⚠️ Root Directory**: `backend` ⚠️ **CRITICAL!**
    - **Build**: `npm install`
    - **Start**: `npm start`
 
@@ -86,6 +86,7 @@ curl https://your-backend.onrender.com/api/health
 
 | Problem | Solution |
 |---------|----------|
+| `npm error enoent Could not read package.json` | Set **Root Directory** to `backend` in Render service settings |
 | CORS errors | Update `CORS_ORIGIN` in Render with Netlify URL |
 | API calls to localhost | Check `API_BASE_URL` in Netlify env vars |
 | Database connection fails | Use **Internal** Database URL (not External) |

@@ -98,17 +98,24 @@ router.get('/parent/my-students', authenticateToken, authorizeRole('parent'), as
 // Create student (admin only)
 router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
-    const { adm, name, nemis, class: className, fee_balance, parent_id, photo_url } = req.body;
+    const { 
+      adm, name, nemis, class: className, fee_balance, parent_id, photo_url,
+      stream, house, date_of_admission, date_of_completion, meal_card_validity
+    } = req.body;
 
     if (!adm || !name) {
       return res.status(400).json({ error: 'Admission number and name are required' });
     }
 
     const result = await pool.query(
-      `INSERT INTO students (adm, name, nemis, class, fee_balance, parent_id, photo_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
+      `INSERT INTO students (adm, name, nemis, class, fee_balance, parent_id, photo_url, 
+                             stream, house, date_of_admission, date_of_completion, meal_card_validity)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING *`,
-      [adm, name, nemis || null, className || null, fee_balance || 0, parent_id || null, photo_url || null]
+      [
+        adm, name, nemis || null, className || null, fee_balance || 0, parent_id || null, photo_url || null,
+        stream || null, house || null, date_of_admission || null, date_of_completion || null, meal_card_validity || null
+      ]
     );
 
     res.status(201).json(result.rows[0]);
@@ -125,7 +132,10 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
 router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
     const { id } = req.params;
-    const { adm, name, nemis, class: className, fee_balance, parent_id, photo_url } = req.body;
+    const { 
+      adm, name, nemis, class: className, fee_balance, parent_id, photo_url,
+      stream, house, date_of_admission, date_of_completion, meal_card_validity
+    } = req.body;
 
     const result = await pool.query(
       `UPDATE students
@@ -136,10 +146,16 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
            fee_balance = COALESCE($5, fee_balance),
            parent_id = COALESCE($6, parent_id),
            photo_url = COALESCE($7, photo_url),
+           stream = COALESCE($8, stream),
+           house = COALESCE($9, house),
+           date_of_admission = COALESCE($10, date_of_admission),
+           date_of_completion = COALESCE($11, date_of_completion),
+           meal_card_validity = COALESCE($12, meal_card_validity),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $8
+       WHERE id = $13
        RETURNING *`,
-      [adm, name, nemis, className, fee_balance, parent_id, photo_url, id]
+      [adm, name, nemis, className, fee_balance, parent_id, photo_url, 
+       stream, house, date_of_admission, date_of_completion, meal_card_validity, id]
     );
 
     if (result.rows.length === 0) {

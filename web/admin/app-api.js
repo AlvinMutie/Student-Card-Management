@@ -184,9 +184,19 @@
                     <path d="M4,5H17V12H19V5C19,3.89 18.1,3 17,3H4C2.9,3 2,3.9 2,5V19C2,20.1 2.9,21 4,21H12V19H4V5M14,18V20H22V18H14Z" />
                   </svg>
                 </button>
+                <button class="action-btn view-btn" data-student-id="${s.id}" title="View Complete Data">
+                  <svg class="action-icon" viewBox="0 0 24 24">
+                    <path d="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z" />
+                  </svg>
+                </button>
                 <button class="action-btn qr-btn" data-student-id="${s.id}" title="QR Code" onclick="window.location.href='qr-generator.html?student=${s.id}'">
                   <svg class="action-icon" viewBox="0 0 24 24">
                     <path d="M3,11H5V13H3V11M11,5H13V9H11V5M9,11H13V15H11V13H9V11M15,11H17V13H19V11H21V13H19V15H21V19H19V21H17V19H13V21H11V17H15V15H17V13H15V11M19,19V15H17V19H19M15,3H21V9H15V3M17,5V7H19V5H17M3,3H9V9H3V3M5,5V7H7V5H5M3,15H9V21H3V15M5,17V19H7V17H5Z" />
+                  </svg>
+                </button>
+                <button class="action-btn id-btn" data-student-id="${s.id}" title="Generate ID Card" onclick="window.location.href='student-id-generator.html?student=${s.id}'">
+                  <svg class="action-icon" viewBox="0 0 24 24">
+                    <path d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
                   </svg>
                 </button>
                 <button class="action-btn edit-btn" data-student-id="${s.id}" title="Edit">
@@ -226,6 +236,16 @@
           btn.addEventListener('click', function() {
             const studentId = this.getAttribute('data-student-id');
             alert('Edit functionality coming soon. Student ID: ' + studentId);
+          });
+        });
+
+        tbody.querySelectorAll('.view-btn').forEach(btn => {
+          btn.addEventListener('click', async function() {
+            const studentId = this.getAttribute('data-student-id');
+            const student = allStudents.find(s => s.id == studentId);
+            if (student) {
+              await showStudentCompleteData(student);
+            }
           });
         });
       }
@@ -482,5 +502,326 @@
     }
   };
 
-})();
+  /* ------------------ Student Complete Data View ------------------ */
+  window.showStudentCompleteData = async function(student) {
+    try {
+      // Fetch complete student data from API
+      let studentData;
+      try {
+        studentData = await studentsAPI.getById(student.id);
+      } catch (error) {
+        console.warn('Could not fetch detailed student data from API, using provided data:', error);
+        studentData = student;
+      }
+
+      // Create modal HTML with complete student data
+      const modalHTML = `
+        <div style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid #e0e0e0;">
+            <h2 style="color: var(--primary-green); font-size: 1.8rem; margin: 0;">Student Complete Data Report</h2>
+            <button id="closeCompleteDataModal" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999; padding: 0; width: 30px; height: 30px;">&times;</button>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div style="text-align: center;">
+              <img src="${studentData.photo_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyLDEyQTUuNSw1LjUgMCwwLDAgMTcuNSw2LjVBNS41LDUuNSAwLDAsMCAxMiwxQTUuNSw1LjUgMCwwLDAgNi41LDYuNUE1LjUsNS41IDAsMCwwIDEyLDEyTTEyLDE0QzcuNTgsMTQgNCwxNS43OSA0LDE4VjIwSDIwVjE4QzIwLDE1Ljc5IDE2LjQyLDE0IDEyLDE0WiIvPjwvc3ZnPg=='}" 
+                   alt="Student Photo" 
+                   style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-green); margin-bottom: 10px;">
+              <div style="font-weight: 700; font-size: 1.2rem; color: var(--primary-green); margin-top: 10px;">${escapeHtml(studentData.name || 'N/A')}</div>
+              <div style="color: #666; margin-top: 5px;">${escapeHtml(studentData.adm || 'N/A')}</div>
+            </div>
+            
+            <div style="background: var(--pale-green); padding: 20px; border-radius: 8px;">
+              <h3 style="color: var(--primary-green); margin-bottom: 15px; font-size: 1.1rem;">Quick Summary</h3>
+              <div style="display: grid; gap: 10px;">
+                <div><strong>Class:</strong> ${escapeHtml(studentData.class || 'N/A')}</div>
+                <div><strong>Stream:</strong> ${escapeHtml(studentData.stream || 'N/A')}</div>
+                <div><strong>House:</strong> ${escapeHtml(studentData.house || 'N/A')}</div>
+                <div><strong>Fee Balance:</strong> ${formatCurrency(studentData.fee_balance)}</div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div>
+              <h3 style="color: var(--primary-green); margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-green);">Personal Information</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666; width: 40%;">Name:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(studentData.name || 'N/A')}</td></tr>
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666;">Admission No:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(studentData.adm || 'N/A')}</td></tr>
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666;">NEMIS:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(studentData.nemis || 'N/A')}</td></tr>
+                <tr><td style="padding: 8px 0; font-weight: 600; color: #666;">Date of Admission:</td><td style="padding: 8px 0;">${formatDate(studentData.date_of_admission || studentData.created_at)}</td></tr>
+                <tr><td style="padding: 8px 0; font-weight: 600; color: #666;">Date of Completion:</td><td style="padding: 8px 0;">${formatDate(studentData.date_of_completion)}</td></tr>
+              </table>
+            </div>
+            
+            <div>
+              <h3 style="color: var(--primary-green); margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-green);">Academic Information</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666; width: 40%;">Class:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(studentData.class || 'N/A')}</td></tr>
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666;">Stream:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(studentData.stream || 'N/A')}</td></tr>
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666;">House:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(studentData.house || 'N/A')}</td></tr>
+              </table>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+            <div>
+              <h3 style="color: var(--primary-green); margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-green);">Fee Information</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666; width: 40%;">Fee Balance:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${formatCurrency(studentData.fee_balance)}</td></tr>
+                <tr><td style="padding: 8px 0; font-weight: 600; color: #666;">Payment Status:</td><td style="padding: 8px 0;">${getPaymentStatus(studentData.fee_balance).text}</td></tr>
+              </table>
+            </div>
+            
+            <div>
+              <h3 style="color: var(--primary-green); margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-green);">Additional Information</h3>
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666; width: 40%;">Meal Card Validity:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${formatDate(studentData.meal_card_validity)}</td></tr>
+                <tr><td style="padding: 8px 0; border-bottom: 1px solid #eee; font-weight: 600; color: #666;">Parent/Guardian:</td><td style="padding: 8px 0; border-bottom: 1px solid #eee;">${escapeHtml(studentData.parent_name || 'N/A')}</td></tr>
+                <tr><td style="padding: 8px 0; font-weight: 600; color: #666;">Registered:</td><td style="padding: 8px 0;">${formatDate(studentData.created_at)}</td></tr>
+              </table>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; padding-top: 20px; border-top: 2px solid #e0e0e0;">
+            <button id="downloadPDF" style="padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; background: #800020; color: white; transition: all 0.3s ease;">
+              📄 Download PDF Report
+            </button>
+            <button id="downloadExcel" style="padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; background: #2d5016; color: white; transition: all 0.3s ease;">
+              📊 Download Excel Report
+            </button>
+            <button id="closeModalBtn" style="padding: 12px 24px; border: 2px solid #2d5016; border-radius: 8px; cursor: pointer; font-weight: 500; background: white; color: #2d5016; transition: all 0.3s ease;">
+              Close
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Show modal using existing modal system or create new one
+      if (typeof showModal === 'function') {
+        showModal('Student Complete Data', modalHTML);
+      } else {
+        // Create modal manually
+        const modalBackdrop = document.createElement('div');
+        modalBackdrop.className = 'modal-backdrop';
+        modalBackdrop.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 9999;';
+        modalBackdrop.innerHTML = `<div class="modal" style="background: white; padding: 30px; border-radius: 12px; max-width: 950px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">${modalHTML}</div>`;
+        document.body.appendChild(modalBackdrop);
+
+        // Close modal handlers
+        const closeModal = () => {
+          document.body.removeChild(modalBackdrop);
+        };
+        
+        modalBackdrop.querySelector('#closeCompleteDataModal')?.addEventListener('click', closeModal);
+        modalBackdrop.querySelector('#closeModalBtn')?.addEventListener('click', closeModal);
+        modalBackdrop.addEventListener('click', (e) => {
+          if (e.target === modalBackdrop) closeModal();
+        });
+
+        // Download PDF
+        const pdfBtn = modalBackdrop.querySelector('#downloadPDF');
+        if (pdfBtn) {
+          pdfBtn.addEventListener('click', () => {
+            downloadStudentReportPDF(studentData);
+          });
+          pdfBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 4px 12px rgba(128, 0, 32, 0.3)';
+          });
+          pdfBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+          });
+        }
+
+        // Download Excel
+        const excelBtn = modalBackdrop.querySelector('#downloadExcel');
+        if (excelBtn) {
+          excelBtn.addEventListener('click', () => {
+            downloadStudentReportExcel(studentData);
+          });
+          excelBtn.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+            this.style.boxShadow = '0 4px 12px rgba(45, 80, 22, 0.3)';
+          });
+          excelBtn.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error showing student complete data:', error);
+      alert('Error loading student data: ' + error.message);
+    }
+  };
+
+  // Download Student Report as PDF
+  function downloadStudentReportPDF(studentData) {
+    try {
+      // Create a printable HTML content
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Student Report - ${studentData.name}</title>
+          <style>
+            @page { size: A4; margin: 20mm; }
+            body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+            .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2d5016; padding-bottom: 15px; }
+            .header h1 { color: #2d5016; margin: 0; }
+            .header p { color: #666; margin: 5px 0; }
+            .photo-section { text-align: center; margin: 20px 0; }
+            .photo-section img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid #2d5016; }
+            .section { margin: 25px 0; }
+            .section h3 { color: #2d5016; border-bottom: 2px solid #2d5016; padding-bottom: 8px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+            td { padding: 10px; border-bottom: 1px solid #eee; }
+            td:first-child { font-weight: 600; color: #666; width: 35%; }
+            .footer { margin-top: 40px; text-align: center; color: #999; font-size: 12px; border-top: 1px solid #eee; padding-top: 15px; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>HECHLINK VENTURES SCHOOL</h1>
+            <p>Student Complete Data Report</p>
+            <p>Generated on: ${new Date().toLocaleDateString('en-KE', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          </div>
+          
+          <div class="photo-section">
+            <img src="${studentData.photo_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyLDEyQTUuNSw1LjUgMCwwLDAgMTcuNSw2LjVBNS41LDUuNSAwLDAsMCAxMiwxQTUuNSw1LjUgMCwwLDAgNi41LDYuNUE1LjUsNS41IDAsMCwwIDEyLDEyTTEyLDE0QzcuNTgsMTQgNCwxNS43OSA0LDE4VjIwSDIwVjE4QzIwLDE1Ljc5IDE2LjQyLDE0IDEyLDE0WiIvPjwvc3ZnPg=='}" alt="Student Photo">
+            <h2>${escapeHtml(studentData.name || 'N/A')}</h2>
+            <p>Admission Number: ${escapeHtml(studentData.adm || 'N/A')}</p>
+          </div>
+          
+          <div class="section">
+            <h3>Personal Information</h3>
+            <table>
+              <tr><td>Full Name</td><td>${escapeHtml(studentData.name || 'N/A')}</td></tr>
+              <tr><td>Admission Number</td><td>${escapeHtml(studentData.adm || 'N/A')}</td></tr>
+              <tr><td>NEMIS Number</td><td>${escapeHtml(studentData.nemis || 'N/A')}</td></tr>
+              <tr><td>Date of Admission</td><td>${formatDate(studentData.date_of_admission || studentData.created_at)}</td></tr>
+              <tr><td>Date of Completion</td><td>${formatDate(studentData.date_of_completion)}</td></tr>
+            </table>
+          </div>
+          
+          <div class="section">
+            <h3>Academic Information</h3>
+            <table>
+              <tr><td>Class</td><td>${escapeHtml(studentData.class || 'N/A')}</td></tr>
+              <tr><td>Stream</td><td>${escapeHtml(studentData.stream || 'N/A')}</td></tr>
+              <tr><td>House</td><td>${escapeHtml(studentData.house || 'N/A')}</td></tr>
+            </table>
+          </div>
+          
+          <div class="section">
+            <h3>Fee Information</h3>
+            <table>
+              <tr><td>Fee Balance</td><td>${formatCurrency(studentData.fee_balance)}</td></tr>
+              <tr><td>Payment Status</td><td>${getPaymentStatus(studentData.fee_balance).text}</td></tr>
+            </table>
+          </div>
+          
+          <div class="section">
+            <h3>Additional Information</h3>
+            <table>
+              <tr><td>Meal Card Validity</td><td>${formatDate(studentData.meal_card_validity)}</td></tr>
+              <tr><td>Parent/Guardian</td><td>${escapeHtml(studentData.parent_name || 'N/A')}</td></tr>
+              <tr><td>Registration Date</td><td>${formatDate(studentData.created_at)}</td></tr>
+            </table>
+          </div>
+          
+          <div class="footer">
+            <p>This is a system-generated report from Hechlink Ventures School Student Management System</p>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Open print window
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      
+      // Wait for images to load, then print
+      printWindow.onload = function() {
+        setTimeout(() => {
+          printWindow.print();
+        }, 500);
+      };
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF report. Please try again.');
+    }
+  }
+
+  // Download Student Report as Excel
+  function downloadStudentReportExcel(studentData) {
+    try {
+      // Create CSV content (Excel can open CSV)
+      const csvRows = [
+        ['Student Complete Data Report'],
+        ['Hechlink Ventures School'],
+        ['Generated on: ' + new Date().toLocaleDateString('en-KE')],
+        [],
+        ['Field', 'Value'],
+        ['Full Name', studentData.name || 'N/A'],
+        ['Admission Number', studentData.adm || 'N/A'],
+        ['NEMIS Number', studentData.nemis || 'N/A'],
+        ['Class', studentData.class || 'N/A'],
+        ['Stream', studentData.stream || 'N/A'],
+        ['House', studentData.house || 'N/A'],
+        ['Date of Admission', formatDate(studentData.date_of_admission || studentData.created_at)],
+        ['Date of Completion', formatDate(studentData.date_of_completion)],
+        ['Fee Balance', formatCurrency(studentData.fee_balance)],
+        ['Payment Status', getPaymentStatus(studentData.fee_balance).text],
+        ['Meal Card Validity', formatDate(studentData.meal_card_validity)],
+        ['Parent/Guardian', studentData.parent_name || 'N/A'],
+        ['Registration Date', formatDate(studentData.created_at)],
+        ['Photo URL', studentData.photo_url || 'N/A']
+      ];
+
+      // Convert to CSV string
+      const csvContent = csvRows.map(row => {
+        return row.map(cell => {
+          // Escape commas and quotes
+          const cellStr = String(cell || '');
+          if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+            return '"' + cellStr.replace(/"/g, '""') + '"';
+          }
+          return cellStr;
+        }).join(',');
+      }).join('\n');
+
+      // Add BOM for UTF-8 (Excel compatibility)
+      const BOM = '\uFEFF';
+      const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${studentData.adm || 'student'}-complete-data-report.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error generating Excel:', error);
+      alert('Error generating Excel report. Please try again.');
+    }
+  }
+
+  function formatDate(dateString) {
+    if (!dateString || dateString === 'N/A') return 'N/A';
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-KE', { year: 'numeric', month: 'long', day: 'numeric' });
+    } catch {
+      return dateString;
+    }
+  }
+
+  })();
 

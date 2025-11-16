@@ -858,13 +858,19 @@
 
     // Display QR code
     async function displayQR(student) {
-      // Create QR code data (JSON format with student information)
+      // Create QR code data (JSON format with all required student information)
       const qrData = {
         id: student.id,
         adm: student.adm,
         name: student.name,
-        class: student.class,
-        nemis: student.nemis,
+        picture: student.photo_url || '',
+        class: student.class || 'N/A',
+        stream: student.stream || 'N/A',
+        house: student.house || 'N/A',
+        date_of_admission: student.date_of_admission || student.created_at || 'N/A',
+        date_of_completion: student.date_of_completion || 'N/A',
+        meal_card_validity: student.meal_card_validity || 'N/A',
+        nemis: student.nemis || 'N/A',
         parent: student.parent_name || 'N/A',
         school: 'Hechlink Ventures School'
       };
@@ -1063,8 +1069,14 @@
           id: student.id,
           adm: student.adm,
           name: student.name,
-          class: student.class,
-          nemis: student.nemis,
+          picture: student.photo_url || '',
+          class: student.class || 'N/A',
+          stream: student.stream || 'N/A',
+          house: student.house || 'N/A',
+          date_of_admission: student.date_of_admission || student.created_at || 'N/A',
+          date_of_completion: student.date_of_completion || 'N/A',
+          meal_card_validity: student.meal_card_validity || 'N/A',
+          nemis: student.nemis || 'N/A',
           parent: student.parent_name || 'N/A',
           school: 'Hechlink Ventures School'
         };
