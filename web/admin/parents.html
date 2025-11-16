@@ -4,262 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Parents Management | Admin Dashboard</title>
-  <link rel="stylesheet" href="adminstyle.css">
+  <link rel="stylesheet" href="shared-admin-styles.css">
   <style>
-    :root {
-      --primary-color: #4a3510;
-      --secondary-color: #8b6b3d;
-      --accent-color: #d4af37;
-      --light-color: #f9f5eb;
-      --beige-bg: #f8f4e9;
-      --border-radius: 12px;
-      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
-      --transition: all 0.3s ease;
-      --success-color: #10b981;
-      --warning-color: #f59e0b;
-      --info-color: #3b82f6;
-      --danger-color: #ef4444;
-    }
+    /* Page-specific styles only */
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    body {
-      background-color: var(--beige-bg);
-      color: #333;
-      line-height: 1.6;
-      display: flex;
-      min-height: 100vh;
-    }
-    
-    /* Sidebar Styles */
-    .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, var(--primary-color) 0%, #3a2a0f 100%);
-      color: white;
-      padding: 0;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-    
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 25px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-      margin-bottom: 10px;
-      background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .brand-icon {
-      width: 45px;
-      height: 45px;
-      object-fit: contain;
-      filter: brightness(0) invert(1);
-      transition: var(--transition);
-    }
-    
-    .brand:hover .brand-icon {
-      transform: scale(1.05);
-    }
-    
-    .brand h1 {
-      font-size: 1.3rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    
-    .nav-links {
-      list-style: none;
-      flex: 1;
-      padding: 10px 0;
-    }
-    
-    .nav-links li {
-      margin-bottom: 4px;
-      padding: 0 12px;
-    }
-    
-    .nav-links a {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
-      color: rgba(255, 255, 255, 0.85);
-      text-decoration: none;
-      transition: var(--transition);
-      border-radius: 10px;
-      font-weight: 500;
-      position: relative;
-    }
-    
-    .nav-links a::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px;
-      height: 0;
-      background: var(--accent-color);
-      border-radius: 0 3px 3px 0;
-      transition: var(--transition);
-    }
-    
-    .nav-links a:hover {
-      background: rgba(255, 255, 255, 0.12);
-      color: white;
-      transform: translateX(4px);
-    }
-    
-    .nav-links a.active {
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      font-weight: 600;
-    }
-    
-    .nav-links a.active::before {
-      height: 60%;
-    }
-    
-    .nav-icon {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-      flex-shrink: 0;
-    }
-    
-    .logout-section {
-      padding: 20px 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      margin-top: auto;
-      background: rgba(0, 0, 0, 0.1);
-    }
-    
-    .logout-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: 100%;
-      padding: 14px 16px;
-      background: rgba(239, 68, 68, 0.2);
-      color: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-    
-    .logout-btn:hover {
-      background: rgba(239, 68, 68, 0.3);
-      color: white;
-      border-color: rgba(239, 68, 68, 0.5);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
-    }
-    
-    .logout-icon {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-    
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      padding: 35px 40px;
-      overflow-y: auto;
-      margin-left: 260px;
-      background: var(--beige-bg);
-      min-height: 100vh;
-    }
-    
-    .top-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 35px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid rgba(74, 53, 16, 0.1);
-    }
-    
-    .top-row h1,
-    .top-row h2 {
-      font-size: 2rem;
-      color: var(--primary-color);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-    }
-    
-    .admin-section {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    
-    #adminInfo {
-      background: linear-gradient(135deg, white 0%, #fefefe 100%);
-      padding: 10px 20px;
-      border-radius: 25px;
-      box-shadow: var(--box-shadow);
-      font-size: 0.95rem;
-      color: var(--primary-color);
-      font-weight: 500;
-      border: 1px solid rgba(74, 53, 16, 0.1);
-    }
-    
-    .logout-btn-top {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-      color: white;
-      border: none;
-      border-radius: 25px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 2px 8px rgba(74, 53, 16, 0.2);
-    }
-    
-    .logout-btn-top:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.3);
-    }
-    
-    .logout-icon-top {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-    
-    /* Page Header */
     .page-header {
       margin-bottom: 30px;
-    }
-    
-    .page-header h1 {
-      font-size: 2rem;
-      color: var(--primary-color);
-      margin-bottom: 10px;
-      font-weight: 700;
     }
     
     .page-header .muted {
@@ -279,38 +29,11 @@
       padding: 25px;
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
-      border: 1px solid rgba(74, 53, 16, 0.08);
-    }
-    
-    .search-container {
-      position: relative;
-      flex: 1;
-      min-width: 280px;
-    }
-    
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 18px;
-      height: 18px;
-      fill: #999;
+      border: 1px solid rgba(45, 80, 22, 0.08);
     }
     
     #parentSearchInput {
-      width: 100%;
-      padding: 12px 12px 12px 40px;
-      border: 1px solid #ddd;
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      transition: var(--transition);
-    }
-    
-    #parentSearchInput:focus {
-      outline: none;
-      border-color: var(--secondary-color);
-      box-shadow: 0 0 0 2px rgba(139, 107, 61, 0.2);
+      padding-left: 42px;
     }
     
     .action-buttons {
@@ -318,92 +41,10 @@
       gap: 12px;
     }
     
-    .btn {
-      padding: 12px 20px;
-      border: none;
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .btn-primary {
-      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-      color: white;
-      box-shadow: 0 2px 8px rgba(74, 53, 16, 0.2);
-    }
-    
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.3);
-    }
-    
-    .btn-secondary {
-      background: white;
-      color: var(--primary-color);
-      border: 2px solid var(--primary-color);
-    }
-    
-    .btn-secondary:hover {
-      background: var(--primary-color);
-      color: white;
-    }
-    
     .btn-icon {
       width: 18px;
       height: 18px;
       fill: currentColor;
-    }
-    
-    /* Table Styles */
-    .table-container {
-      background: linear-gradient(135deg, white 0%, #fefefe 100%);
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      overflow: hidden;
-      border: 1px solid rgba(74, 53, 16, 0.08);
-    }
-    
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    
-    thead {
-      background: linear-gradient(135deg, var(--light-color) 0%, #f5f0e8 100%);
-    }
-    
-    th {
-      padding: 18px 16px;
-      text-align: left;
-      font-weight: 600;
-      color: var(--primary-color);
-      border-bottom: 2px solid rgba(74, 53, 16, 0.1);
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-    
-    td {
-      padding: 16px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    
-    tbody tr {
-      transition: var(--transition);
-    }
-    
-    tbody tr:hover {
-      background: var(--light-color);
-      transform: scale(1.01);
-    }
-    
-    tbody tr:last-child td {
-      border-bottom: none;
     }
     
     .student-tags {
@@ -413,8 +54,8 @@
     }
     
     .student-tag {
-      background: var(--light-color);
-      color: var(--primary-color);
+      background: var(--pale-green);
+      color: var(--primary-green);
       padding: 4px 8px;
       border-radius: 4px;
       font-size: 0.8rem;
@@ -441,7 +82,7 @@
     .action-icon {
       width: 16px;
       height: 16px;
-      fill: var(--secondary-color);
+      fill: var(--secondary-green);
     }
     
     .edit-btn:hover .action-icon {
@@ -599,11 +240,11 @@
         </svg>
         <span>Staff</span>
       </a></li>
-      <li><a href="#">
+      <li><a href="student-id-generator.html">
         <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M19,3H18V1H16V3H8V1H6V3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M19,19H5V9H19V19M19,7H5V5H19M12,10.5A2.5,2.5 0 0,0 9.5,13A2.5,2.5 0 0,0 12,15.5A2.5,2.5 0 0,0 14.5,13A2.5,2.5 0 0,0 12,10.5Z" />
+          <path d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
         </svg>
-        <span>Schedule</span>
+        <span>ID Generator</span>
       </a></li>
       <li><a href="qr-generator.html">
         <svg class="nav-icon" viewBox="0 0 24 24">
