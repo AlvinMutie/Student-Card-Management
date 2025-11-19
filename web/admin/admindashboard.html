@@ -290,7 +290,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      border: 1px solid rgba(74, 53, 16, 0.08);
+      border: 1px solid rgba(15, 42, 23, 0.08);
     }
     
     .stat-card::before {
@@ -374,7 +374,7 @@
     
     .stat-label {
       font-size: 0.95rem;
-      color: #666;
+      color: #5a665c;
       font-weight: 500;
       letter-spacing: 0.3px;
     }
@@ -386,7 +386,7 @@
       padding: 30px;
       box-shadow: var(--box-shadow);
       margin-bottom: 30px;
-      border: 1px solid rgba(74, 53, 16, 0.08);
+      border: 1px solid rgba(15, 42, 23, 0.1);
     }
     
     .card h3 {
@@ -450,26 +450,133 @@
     }
     
     .chart-card {
-      background: linear-gradient(135deg, white 0%, #fefefe 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #f8faf7 100%);
       border-radius: var(--border-radius);
-      padding: 30px;
+      padding: 28px 28px 24px;
       box-shadow: var(--box-shadow);
-      border: 1px solid rgba(15, 42, 23, 0.1);
+      border: 1px solid rgba(15, 42, 23, 0.08);
+      position: relative;
+      overflow: hidden;
     }
     
-    .chart-card h3 {
-      font-size: 1.2rem;
+    .chart-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(46, 200, 112, 0.12), transparent 45%);
+      pointer-events: none;
+    }
+    
+    .chart-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .chart-card-header h3 {
+      font-size: 1.25rem;
       color: var(--primary-green);
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 2px solid rgba(15, 42, 23, 0.12);
+      margin-bottom: 4px;
+    }
+    
+    .chart-subtitle {
+      font-size: 0.9rem;
+      color: #5a665c;
+    }
+    
+    .chart-chip {
+      background: rgba(46, 200, 112, 0.15);
+      color: var(--primary-green);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.85rem;
       font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .chart-chip::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--maroon);
+      box-shadow: 0 0 6px rgba(46, 200, 112, 0.6);
+    }
+    
+    .chart-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .insight-chip {
+      flex: 1 1 160px;
+      min-width: 140px;
+      background: rgba(15, 42, 23, 0.04);
+      border: 1px solid rgba(15, 42, 23, 0.06);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    
+    .insight-chip .label {
+      font-size: 0.8rem;
+      color: #5a665c;
+    }
+    
+    .insight-chip .value {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--primary-green);
+    }
+    
+    .insight-chip .trend {
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .insight-chip .trend.up {
+      color: var(--maroon);
+    }
+    
+    .insight-chip .trend.down {
+      color: #f43f5e;
+    }
+    
+    .insight-chip.positive {
+      background: rgba(16, 163, 74, 0.08);
+      border-color: rgba(16, 163, 74, 0.2);
+    }
+    
+    .insight-chip.warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+    
+    .insight-chip.neutral {
+      background: rgba(15, 42, 23, 0.05);
     }
     
     .chart-container {
       position: relative;
       height: 300px;
       width: 100%;
+      z-index: 1;
+    }
+    
+    .chart-container canvas {
+      filter: drop-shadow(0 10px 20px rgba(15, 42, 23, 0.08));
     }
     
     .fee-summary-card {
@@ -503,7 +610,7 @@
     
     .fee-stat-item .label {
       font-size: 0.9rem;
-      color: #666;
+      color: #5a665c;
       margin-bottom: 8px;
     }
     
@@ -522,7 +629,7 @@
     }
     
     .muted {
-      color: #666;
+      color: #5a665c;
       font-size: 0.95rem;
     }
     
@@ -755,28 +862,56 @@
     <!-- Charts and Infographics Section -->
     <div class="charts-grid">
       <div class="chart-card">
-        <h3>📊 Students by Class Distribution</h3>
+        <div class="chart-card-header">
+          <div>
+            <h3>📊 Students by Class Distribution</h3>
+            <p class="chart-subtitle">Snapshot of how learners are spread across classes</p>
+          </div>
+          <span class="chart-chip">Live</span>
+        </div>
+        <div class="chart-meta" id="classDistributionMeta"></div>
         <div class="chart-container">
           <canvas id="classDistributionChart"></canvas>
         </div>
       </div>
       
       <div class="chart-card">
-        <h3>📈 Fee Payment Status</h3>
+        <div class="chart-card-header">
+          <div>
+            <h3>📈 Fee Payment Status</h3>
+            <p class="chart-subtitle">Paid vs pending tuition for the current term</p>
+          </div>
+          <span class="chart-chip">Today</span>
+        </div>
+        <div class="chart-meta" id="paymentStatusMeta"></div>
         <div class="chart-container">
           <canvas id="paymentStatusChart"></canvas>
         </div>
       </div>
       
       <div class="chart-card">
-        <h3>📉 Fee Balance Trend</h3>
+        <div class="chart-card-header">
+          <div>
+            <h3>📉 Fee Balance Trend</h3>
+            <p class="chart-subtitle">Average outstanding balance per class</p>
+          </div>
+          <span class="chart-chip">Dynamic</span>
+        </div>
+        <div class="chart-meta" id="feeBalanceMeta"></div>
         <div class="chart-container">
           <canvas id="feeBalanceChart"></canvas>
         </div>
       </div>
       
       <div class="chart-card">
-        <h3>👥 Staff Distribution by Department</h3>
+        <div class="chart-card-header">
+          <div>
+            <h3>👥 Staff Distribution by Department</h3>
+            <p class="chart-subtitle">Team strength across academic & support units</p>
+          </div>
+          <span class="chart-chip">Updated</span>
+        </div>
+        <div class="chart-meta" id="staffDepartmentMeta"></div>
         <div class="chart-container">
           <canvas id="staffDepartmentChart"></canvas>
         </div>
@@ -828,6 +963,123 @@
 <script src="app-api.js"></script>
 <script>
   let charts = {};
+
+  const rootStyles = getComputedStyle(document.documentElement);
+  const getCssVar = (name, fallback = '#4c8a4f') =>
+    (rootStyles.getPropertyValue(name) || fallback).trim() || fallback;
+
+  const chartPalette = {
+    forestDark: getCssVar('--forest-900', '#0f2a17'),
+    forest: getCssVar('--forest-700', '#2d5633'),
+    forestLight: getCssVar('--forest-500', '#3d7442'),
+    leaf: getCssVar('--leaf-400', '#4c8a4f'),
+    accent: getCssVar('--accent-emerald', '#2ec870'),
+    accentLight: getCssVar('--accent-emerald-light', '#63dea0'),
+    accentDark: getCssVar('--accent-emerald-dark', '#1f9c55'),
+    sage: getCssVar('--sage-100', '#eef5ec'),
+    sageDark: getCssVar('--sage-200', '#dfe9dd'),
+    offWhite: getCssVar('--off-white', '#f5f4ef'),
+    muted: '#5a665c',
+    success: '#16a34a',
+    warning: '#f59e0b',
+    danger: '#f43f5e',
+    sky: '#38bdf8'
+  };
+
+  configureChartDefaults();
+
+  const doughnutLabelPlugin = {
+    id: 'doughnutLabel',
+    beforeDraw(chart, args, pluginOptions) {
+      if (!pluginOptions || !pluginOptions.text) return;
+      const { ctx, chartArea: { left, right, top, bottom } } = chart;
+      ctx.save();
+      ctx.font = `600 ${pluginOptions.fontSize || 18}px 'Inter','Segoe UI',sans-serif`;
+      ctx.fillStyle = pluginOptions.color || chartPalette.forestDark;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(
+        pluginOptions.text,
+        left + (right - left) / 2,
+        top + (bottom - top) / 2
+      );
+      ctx.restore();
+    }
+  };
+
+  Chart.register(doughnutLabelPlugin);
+
+  function configureChartDefaults() {
+    Chart.defaults.font.family = "'Inter','Segoe UI',sans-serif";
+    Chart.defaults.font.size = 13;
+    Chart.defaults.color = chartPalette.muted;
+    Chart.defaults.layout.padding = { top: 8, right: 12, bottom: 8, left: 12 };
+    Chart.defaults.plugins.legend.labels.usePointStyle = true;
+    Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
+    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 42, 23, 0.92)';
+    Chart.defaults.plugins.tooltip.titleColor = '#f8faf7';
+    Chart.defaults.plugins.tooltip.bodyColor = '#f8faf7';
+    Chart.defaults.plugins.tooltip.borderWidth = 1;
+    Chart.defaults.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.08)';
+    Chart.defaults.elements.bar.borderRadius = 10;
+    Chart.defaults.elements.point.radius = 4;
+    Chart.defaults.elements.point.hoverRadius = 6;
+  }
+
+  function createVerticalGradient(ctx, startColor, endColor) {
+    const height = ctx.canvas.parentNode?.offsetHeight || ctx.canvas.height || 320;
+    const gradient = ctx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, startColor);
+    gradient.addColorStop(1, endColor);
+    return gradient;
+  }
+
+  function hexToRgba(hex, alpha = 1) {
+    const normalized = hex.replace('#', '');
+    const bigint = parseInt(normalized.length === 3
+      ? normalized.split('').map(char => char + char).join('')
+      : normalized, 16);
+    const r = (bigint >> 16) & 255;
+    const g = (bigint >> 8) & 255;
+    const b = bigint & 255;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  function formatCurrency(value = 0) {
+    const amount = Number(value) || 0;
+    return `KSh ${amount.toLocaleString('en-KE', { minimumFractionDigits: 2 })}`;
+  }
+
+  function renderInsightChips(containerId, chips = []) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    if (!chips.length) {
+      container.innerHTML = `<div class="insight-chip neutral">
+        <span class="label">Not enough data</span>
+        <span class="value">—</span>
+      </div>`;
+      return;
+    }
+
+    container.innerHTML = chips.map(chip => {
+      const variant = chip.variant || 'neutral';
+      const trend = typeof chip.trend === 'number'
+        ? `<span class="trend ${chip.trend >= 0 ? 'up' : 'down'}">
+            ${chip.trend >= 0 ? '▲' : '▼'} ${Math.abs(chip.trend)}%
+          </span>`
+        : '';
+      return `<div class="insight-chip ${variant}">
+        <span class="label">${chip.label}</span>
+        <span class="value">${chip.value}</span>
+        ${trend}
+      </div>`;
+    }).join('');
+  }
+
+  function calculatePercentage(part = 0, total = 0) {
+    if (!total) return 0;
+    return Math.round((part / total) * 100);
+  }
   
   document.addEventListener('DOMContentLoaded', async function() {
     // Authentication check
@@ -897,10 +1149,10 @@
     const withBalance = students.length - fullyPaid;
     const averageBalance = students.length > 0 ? totalBalance / students.length : 0;
 
-    document.getElementById('totalFeeBalance').textContent = `KSh ${totalBalance.toLocaleString('en-KE', {minimumFractionDigits: 2})}`;
+    document.getElementById('totalFeeBalance').textContent = formatCurrency(totalBalance);
     document.getElementById('fullyPaidCount').textContent = fullyPaid;
     document.getElementById('withBalanceCount').textContent = withBalance;
-    document.getElementById('averageBalance').textContent = `KSh ${averageBalance.toLocaleString('en-KE', {minimumFractionDigits: 2})}`;
+    document.getElementById('averageBalance').textContent = formatCurrency(averageBalance);
   }
 
   // Create class distribution chart
@@ -911,19 +1163,25 @@
       classCounts[className] = (classCounts[className] || 0) + 1;
     });
 
+    const labels = Object.keys(classCounts);
+    const values = Object.values(classCounts);
+
     const ctx = document.getElementById('classDistributionChart').getContext('2d');
     if (charts.classDistribution) charts.classDistribution.destroy();
+
+    const gradient = createVerticalGradient(ctx, chartPalette.leaf, chartPalette.accentLight);
 
     charts.classDistribution = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: Object.keys(classCounts),
+        labels,
         datasets: [{
-          label: 'Number of Students',
-          data: Object.values(classCounts),
-          backgroundColor: '#4a7c2a',
-          borderColor: '#2d5016',
-          borderWidth: 2
+          label: 'Students',
+          data: values,
+          backgroundColor: gradient,
+          hoverBackgroundColor: chartPalette.accent,
+          borderColor: chartPalette.accentDark,
+          borderWidth: 1.5
         }]
       },
       options: {
@@ -932,18 +1190,49 @@
         plugins: {
           legend: {
             display: false
+          },
+          tooltip: {
+            callbacks: {
+              label(context) {
+                return `${context.parsed.y ?? context.parsed} students`;
+              }
+            }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
             ticks: {
-              stepSize: 1
+              stepSize: 1,
+              color: chartPalette.muted
+            },
+            grid: {
+              color: 'rgba(15, 42, 23, 0.1)'
+            }
+          },
+          x: {
+            ticks: {
+              color: chartPalette.muted
+            },
+            grid: {
+              display: false
             }
           }
         }
       }
     });
+
+    const sorted = Object.entries(classCounts).sort((a, b) => b[1] - a[1]);
+    const topClass = sorted[0] || ['—', 0];
+    const bottomClass = sorted[sorted.length - 1] || topClass;
+    const totalClasses = labels.length || 1;
+    const avgPerClass = totalClasses ? (students.length / totalClasses) : 0;
+
+    renderInsightChips('classDistributionMeta', labels.length ? [
+      { label: 'Largest Class', value: `${topClass[0]} (${topClass[1]})`, variant: 'neutral' },
+      { label: 'Smallest Class', value: `${bottomClass[0]} (${bottomClass[1]})`, variant: 'neutral' },
+      { label: 'Avg / Class', value: `${avgPerClass.toFixed(1)} students`, variant: 'positive' }
+    ] : []);
   }
 
   // Create payment status chart
@@ -952,6 +1241,10 @@
       'Fully Paid': students.filter(s => !s.fee_balance || parseFloat(s.fee_balance) === 0).length,
       'Pending': students.filter(s => parseFloat(s.fee_balance) > 0).length
     };
+
+    const total = statusCounts['Fully Paid'] + statusCounts['Pending'];
+    const paidPercent = calculatePercentage(statusCounts['Fully Paid'], total);
+    const pendingPercent = 100 - paidPercent;
 
     const ctx = document.getElementById('paymentStatusChart').getContext('2d');
     if (charts.paymentStatus) charts.paymentStatus.destroy();
@@ -962,21 +1255,47 @@
         labels: Object.keys(statusCounts),
         datasets: [{
           data: Object.values(statusCounts),
-          backgroundColor: ['#10b981', '#800020'],
+          backgroundColor: [chartPalette.success, chartPalette.warning],
           borderWidth: 2,
-          borderColor: '#fff'
+          borderColor: chartPalette.offWhite || '#fff'
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: '65%',
         plugins: {
           legend: {
             position: 'bottom'
+          },
+          doughnutLabel: {
+            text: `${paidPercent}%`,
+            color: chartPalette.forestDark,
+            fontSize: 20
           }
         }
       }
     });
+
+    renderInsightChips('paymentStatusMeta', total ? [
+      {
+        label: 'Fully Paid',
+        value: `${statusCounts['Fully Paid']} students`,
+        trend: paidPercent,
+        variant: 'positive'
+      },
+      {
+        label: 'Pending',
+        value: `${statusCounts['Pending']} students`,
+        trend: -pendingPercent,
+        variant: 'warning'
+      },
+      {
+        label: 'Collection Rate',
+        value: `${paidPercent}%`,
+        variant: paidPercent >= 80 ? 'positive' : 'warning'
+      }
+    ] : []);
   }
 
   // Create fee balance trend chart
@@ -1009,8 +1328,10 @@
         datasets: [{
           label: 'Average Fee Balance',
           data: averages,
-          borderColor: '#800020',
-          backgroundColor: 'rgba(128, 0, 32, 0.1)',
+          borderColor: chartPalette.accentDark,
+          backgroundColor: hexToRgba(chartPalette.accent, 0.18),
+          pointBackgroundColor: chartPalette.accentDark,
+          pointBorderColor: '#fff',
           borderWidth: 3,
           fill: true,
           tension: 0.4
@@ -1023,6 +1344,13 @@
           legend: {
             display: true,
             position: 'top'
+          },
+          tooltip: {
+            callbacks: {
+              label(context) {
+                return formatCurrency(context.parsed.y ?? context.parsed);
+              }
+            }
           }
         },
         scales: {
@@ -1030,13 +1358,63 @@
             beginAtZero: true,
             ticks: {
               callback: function(value) {
-                return 'KSh ' + value.toLocaleString();
-              }
+                return formatCurrency(value);
+              },
+              color: chartPalette.muted
+            },
+            grid: {
+              color: 'rgba(15, 42, 23, 0.12)'
+            }
+          },
+          x: {
+            ticks: {
+              color: chartPalette.muted
+            },
+            grid: {
+              display: false
             }
           }
         }
       }
     });
+
+    const highest = labels.reduce((acc, label, idx) => {
+      const value = averages[idx];
+      if (!acc || value > acc.value) {
+        return { label, value };
+      }
+      return acc;
+    }, null);
+
+    const lowest = labels.reduce((acc, label, idx) => {
+      const value = averages[idx];
+      if (!acc || value < acc.value) {
+        return { label, value };
+      }
+      return acc;
+    }, null);
+
+    const overallAvg = averages.length
+      ? averages.reduce((sum, val) => sum + val, 0) / averages.length
+      : 0;
+
+    renderInsightChips('feeBalanceMeta', labels.length ? [
+      {
+        label: 'Highest Avg',
+        value: `${highest?.label || '—'} (${formatCurrency(highest?.value || 0)})`,
+        variant: 'warning'
+      },
+      {
+        label: 'Lowest Avg',
+        value: `${lowest?.label || '—'} (${formatCurrency(lowest?.value || 0)})`,
+        variant: 'positive'
+      },
+      {
+        label: 'Campus Avg',
+        value: formatCurrency(overallAvg),
+        variant: 'neutral'
+      }
+    ] : []);
   }
 
   // Create staff department chart
@@ -1050,21 +1428,27 @@
     const ctx = document.getElementById('staffDepartmentChart').getContext('2d');
     if (charts.staffDepartment) charts.staffDepartment.destroy();
 
+    const deptLabels = Object.keys(deptCounts);
+    const deptValues = Object.values(deptCounts);
+    const colorPool = [
+      chartPalette.leaf,
+      chartPalette.accent,
+      chartPalette.accentLight,
+      chartPalette.forest,
+      chartPalette.sky,
+      chartPalette.warning,
+      chartPalette.sageDark
+    ];
+
     charts.staffDepartment = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels: Object.keys(deptCounts),
+        labels: deptLabels,
         datasets: [{
-          data: Object.values(deptCounts),
-          backgroundColor: [
-            '#4a7c2a',
-            '#6b9f47',
-            '#a8d08a',
-            '#800020',
-            '#2d5016'
-          ],
+          data: deptValues,
+          backgroundColor: deptLabels.map((_, idx) => colorPool[idx % colorPool.length]),
           borderWidth: 2,
-          borderColor: '#fff'
+          borderColor: 'rgba(255,255,255,0.9)'
         }]
       },
       options: {
@@ -1072,11 +1456,22 @@
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: 'bottom'
+            position: 'right'
           }
         }
       }
     });
+
+    const sortedDepartments = Object.entries(deptCounts).sort((a, b) => b[1] - a[1]);
+    const topDept = sortedDepartments[0] || ['—', 0];
+    const totalDepartments = deptLabels.length || 0;
+    const avgPerDept = totalDepartments ? (staff.length / totalDepartments).toFixed(1) : 0;
+
+    renderInsightChips('staffDepartmentMeta', deptLabels.length ? [
+      { label: 'Departments', value: totalDepartments, variant: 'neutral' },
+      { label: 'Largest Team', value: `${topDept[0]} (${topDept[1]})`, variant: 'positive' },
+      { label: 'Avg / Dept', value: `${avgPerDept} staff`, variant: 'neutral' }
+    ] : []);
   }
 </script>
 </body>
