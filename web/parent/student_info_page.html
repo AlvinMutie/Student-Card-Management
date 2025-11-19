@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Dashboard | Student Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-dark: #4a3510;
+      --primary-medium: #7a5e2a;
+      --primary-light: #b46a27;
+      --background: #f9f3ea;
+      --surface: #fffdf8;
+      --border: #e3d3bb;
+      --text-dark: #3b2a00;
+      --text-medium: #6e5631;
+      --shadow: rgba(59, 42, 0, 0.15);
+      --sidebar-width: 250px;
+      --success-light: #e8f5e8;
+      --success-dark: #2d8c2d;
+      --warning-light: #fff8e1;
+      --warning-dark: #ff9800;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--background);
+      color: var(--text-dark);
+      display: flex;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--primary-dark);
+      color: white;
+      padding: 2rem 1.5rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .brand-icon {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      filter: brightness(0) invert(1); /* Makes logo white for dark sidebar */
+    }
+
+    .brand-text {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .menu-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .menu-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.8rem 1rem;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .menu-link:hover, .menu-link.active {
+      background-color: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .menu-link i {
+      width: 20px;
+      text-align: center;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: 2rem;
+    }
+
+    /* HEADER */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding: 1.5rem 0;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: var(--primary-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    /* DASHBOARD LAYOUT */
+    .dashboard-container {
+      background: var(--surface);
+      border-radius: 16px;
+      box-shadow: 0 6px 20px var(--shadow);
+      padding: 2.5rem;
+      border: 2px solid #f3e6d0;
+    }
+
+    /* STUDENT PROFILE HEADER */
+    .profile-header {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+      align-items: start;
+    }
+
+    .student-photo {
+      width: 140px;
+      height: 160px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--primary-medium), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2.5rem;
+    }
+
+    .profile-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .profile-info h1 {
+      color: var(--primary-dark);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-info .subtitle {
+      color: var(--text-medium);
+      font-weight: 500;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .basic-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .info-label {
+      font-weight: 500;
+      color: var(--text-medium);
+      font-size: 0.85rem;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: var(--primary-dark);
+      font-size: 1rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .status-active {
+      background: var(--success-light);
+      color: var(--success-dark);
+    }
+
+    .fee-paid {
+      background: var(--success-light);
+      color: var(--success-dark);
+    }
+
+    .fee-pending {
+      background: var(--warning-light);
+      color: var(--warning-dark);
+    }
+
+    /* MAIN CONTENT SECTIONS */
+    .content-sections {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .section {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 0;
+    }
+
+    .section-header {
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--primary-dark);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title i {
+      color: var(--primary-light);
+    }
+
+    /* INFO CARDS GRID */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .info-card {
+      background: var(--background);
+      padding: 1.5rem;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary-light);
+      transition: all 0.2s ease;
+    }
+
+    .info-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    /* FEE BREAKDOWN STYLES */
+    .fee-breakdown {
+      margin-top: 1.5rem;
+    }
+
+    .fee-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .fee-table th,
+    .fee-table td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .fee-table th {
+      background-color: var(--background);
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
+    .fee-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .fee-table .total-row {
+      background-color: var(--background);
+      font-weight: 700;
+    }
+
+    .fee-table .amount {
+      text-align: right;
+      font-weight: 600;
+    }
+
+    .fee-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .fee-status-icon {
+      font-size: 0.8rem;
+    }
+
+    /* QUICK ACTIONS */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .action-btn {
+      background-color: var(--primary-dark);
+      color: #fff;
+      padding: 1rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.2);
+    }
+
+    .action-btn:hover {
+      background-color: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(74, 53, 16, 0.3);
+    }
+
+    .action-btn.secondary {
+      background-color: transparent;
+      color: var(--primary-dark);
+      border: 2px solid var(--primary-dark);
+    }
+
+    .action-btn.secondary:hover {
+      background-color: var(--primary-dark);
+      color: white;
+    }
+
+    .action-btn.logout {
+      background-color: transparent;
+      color: var(--primary-dark);
+      border: 2px solid var(--primary-medium);
+    }
+
+    .action-btn.logout:hover {
+      background-color: var(--primary-medium);
+      color: white;
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 70px;
+        padding: 1rem 0.5rem;
+      }
+      
+      .brand-text, .menu-text {
+        display: none;
+      }
+      
+      .main-content {
+        margin-left: 70px;
+      }
+      
+      .menu-link {
+        justify-content: center;
+        padding: 0.8rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 1.5rem;
+      }
+      
+      .student-photo {
+        margin: 0 auto;
+        width: 120px;
+        height: 140px;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .dashboard-container {
+        padding: 1.5rem;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .basic-info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .fee-table {
+        font-size: 0.85rem;
+      }
+      
+      .fee-table th,
+      .fee-table td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sidebar {
+        width: 60px;
+      }
+      
+      .main-content {
+        margin-left: 60px;
+        padding: 0.5rem;
+      }
+      
+      .student-photo {
+        width: 100px;
+        height: 120px;
+      }
+      
+      .profile-info h1 {
+        font-size: 1.5rem;
+      }
+      
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+      
+      .fee-table {
+        font-size: 0.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
+      <div class="brand-text">Hechlink Ventures</div>
+    </div>
+
+    <ul class="sidebar-menu">
+      <li class="menu-item">
+        <a href="student_info_page.html" class="menu-link active">
+          <i class="fas fa-home"></i>
+          <span class="menu-text">Dashboard</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="student_info_page.html" class="menu-link" data-section="students">
+          <i class="fas fa-users"></i>
+          <span class="menu-text">View Students</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="student_info_page.html" class="menu-link" data-section="settings">
+          <i class="fas fa-cog"></i>
+          <span class="menu-text">Settings</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="student_info_page.html" class="menu-link" data-section="fees">
+          <i class="fas fa-file-invoice-dollar"></i>
+          <span class="menu-text">Fee Management</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+    <div class="page-header">
+      <div class="user-info">
+        <div class="user-avatar">EO</div>
+        <div>
+          <h3>Parent Dashboard</h3>
+          <p>Welcome back!</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="action-btn secondary">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+        <button class="action-btn logout" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+
+    <div class="dashboard-container">
+      <!-- Student Profile Header -->
+      <div class="profile-header">
+        <div class="student-photo">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <div class="profile-info">
+          <h1>Emma Onyango</h1>
+          <p class="subtitle">Grade 7 Student | Registration: ST3507</p>
+          
+          <div class="basic-info-grid">
+            <div class="info-item">
+              <span class="info-label">Admission Number</span>
+              <span class="info-value">ST3507</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">NEMIS Number</span>
+              <span class="info-value">NEMIS-7894561230</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Class</span>
+              <span class="info-value">Grade 7 - Blue Section</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Date Admitted</span>
+              <span class="info-value">January 15, 2023</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Gender</span>
+              <span class="info-value">Female</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Status</span>
+              <span class="status-badge status-active">In Session</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Sections -->
+      <div class="content-sections">
+        <!-- School Information Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fas fa-school"></i>
+              School Information
+            </h2>
+          </div>
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="info-label">School Name</div>
+              <div class="info-value">Green Valley Academy</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Academic Year</div>
+              <div class="info-value">2023-2024</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Current Term</div>
+              <div class="info-value">Term 3</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Guardian Information Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fas fa-user-shield"></i>
+              Guardian Information
+            </h2>
+          </div>
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="info-label">Guardian Name</div>
+              <div class="info-value">Sarah Onyango</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Phone Number</div>
+              <div class="info-value">+254 712 345 678</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Relationship</div>
+              <div class="info-value">Mother</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Academic Information Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fas fa-graduation-cap"></i>
+              Academic Information
+            </h2>
+          </div>
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="info-label">Year Completed</div>
+              <div class="info-value">Grade 6 (2022)</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Current Grade</div>
+              <div class="info-value">Grade 7</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Class Teacher</div>
+              <div class="info-value">Mr. Johnson Mwangi</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fee Information Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fas fa-file-invoice-dollar"></i>
+              Fee Information
+            </h2>
+          </div>
+          
+          <div class="info-grid">
+            <div class="info-card">
+              <div class="info-label">Total Fee Balance</div>
+              <div class="info-value">0/=</div>
+              <span class="status-badge fee-paid">Fully Paid</span>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Last Payment Date</div>
+              <div class="info-value">October 20, 2023</div>
+            </div>
+            <div class="info-card">
+              <div class="info-label">Payment Status</div>
+              <div class="info-value">Cleared</div>
+            </div>
+          </div>
+          
+          <!-- Fee Breakdown Section -->
+          <div class="fee-breakdown">
+            <h3 style="margin-bottom: 1rem; color: var(--primary-dark);">Term 3 Fee Breakdown</h3>
+            <table class="fee-table">
+              <thead>
+                <tr>
+                  <th>Fee Category</th>
+                  <th>Description</th>
+                  <th class="amount">Amount (KES)</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tuition</td>
+                  <td>Academic instruction and materials</td>
+                  <td class="amount">45,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lunch Program</td>
+                  <td>Daily meals and nutrition</td>
+                  <td class="amount">12,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Transport</td>
+                  <td>School bus service</td>
+                  <td class="amount">8,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Examination Fees</td>
+                  <td>Term exams and assessments</td>
+                  <td class="amount">3,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Library</td>
+                  <td>Library access and resources</td>
+                  <td class="amount">2,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Sports & Activities</td>
+                  <td>Swimming, athletics, clubs</td>
+                  <td class="amount">5,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Educational Trips</td>
+                  <td>Field trips and excursions</td>
+                  <td class="amount">4,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Caution Fee</td>
+                  <td>Damage deposit (refundable)</td>
+                  <td class="amount">5,000</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Medical</td>
+                  <td>Health services and first aid</td>
+                  <td class="amount">2,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Technology</td>
+                  <td>Computer lab and digital resources</td>
+                  <td class="amount">3,500</td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      Paid
+                    </span>
+                  </td>
+                </tr>
+                <tr class="total-row">
+                  <td colspan="2"><strong>Total Term Fees</strong></td>
+                  <td class="amount"><strong>91,000</strong></td>
+                  <td>
+                    <span class="fee-status">
+                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
+                      <strong>Fully Paid</strong>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="section">
+          <div class="section-header">
+            <h2 class="section-title">
+              <i class="fas fa-bolt"></i>
+              Quick Actions
+            </h2>
+          </div>
+          <div class="quick-actions">
+            <a href="#" class="action-btn">
+              <i class="fas fa-print"></i> Print Report
+            </a>
+            <a href="#" class="action-btn">
+              <i class="fas fa-download"></i> Download Records
+            </a>
+            <a href="#" class="action-btn secondary">
+              <i class="fas fa-envelope"></i> Contact Teacher
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../runtime-config.js"></script>
+  <script src="../shared/api-client.js"></script>
+  <script>
+    // Check authentication on page load
+    window.addEventListener('DOMContentLoaded', async function() {
+      // Check if parent is logged in
+      const parentToken = localStorage.getItem('sv_parent_token');
+      const authToken = localStorage.getItem('sv_auth_token');
+      
+      if (!parentToken && !authToken) {
+        // Redirect to login if not authenticated
+        alert('Please login to access this page');
+        window.location.href = 'parent_login_page.html';
+        return;
+      }
+
+      // Load student data
+      try {
+        await loadStudentData();
+      } catch (error) {
+        console.error('Error loading student data:', error);
+        alert('Failed to load student data. Please try again later.');
+      }
+    });
+
+    // Load student data from API
+    async function loadStudentData() {
+      try {
+        // Get parent's students
+        const students = await studentsAPI.getMyStudents();
+        
+        if (!students || students.length === 0) {
+          // No students found - show message
+          document.querySelector('.dashboard-container').innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+              <i class="fas fa-user-graduate" style="font-size: 4rem; color: #7a5e2a; margin-bottom: 1rem;"></i>
+              <h2>No Students Found</h2>
+              <p>You don't have any students registered yet.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Display first student (or you can modify to show list/selector)
+        const student = students[0];
+        displayStudentData(student);
+      } catch (error) {
+        console.error('Error fetching students:', error);
+        throw error;
+      }
+    }
+
+    // Display student data in the page
+    function displayStudentData(student) {
+      // Update student name
+      const nameElement = document.querySelector('.profile-info h1');
+      if (nameElement) nameElement.textContent = student.name || 'Student Name';
+
+      // Update subtitle
+      const subtitleElement = document.querySelector('.profile-info .subtitle');
+      if (subtitleElement) {
+        subtitleElement.textContent = `${student.class || 'N/A'} | Registration: ${student.adm || 'N/A'}`;
+      }
+
+      // Update basic info
+      const updateInfoValue = (label, value) => {
+        const items = document.querySelectorAll('.info-item');
+        items.forEach(item => {
+          const labelSpan = item.querySelector('.info-label');
+          if (labelSpan && labelSpan.textContent.trim() === label) {
+            const valueSpan = item.querySelector('.info-value');
+            if (valueSpan) {
+              if (label === 'Status') {
+                valueSpan.innerHTML = `<span class="status-badge status-active">In Session</span>`;
+              } else {
+                valueSpan.textContent = value || 'N/A';
+              }
+            }
+          }
+        });
+      };
+
+      updateInfoValue('Admission Number', student.adm);
+      updateInfoValue('NEMIS Number', student.nemis);
+      updateInfoValue('Class', student.class);
+      
+      // Format date
+      if (student.created_at) {
+        const date = new Date(student.created_at);
+        const formattedDate = date.toLocaleDateString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+        updateInfoValue('Date Admitted', formattedDate);
+      }
+
+      // Update guardian information
+      if (student.parent_name) {
+        const updateGuardianInfo = (label, value) => {
+          const cards = document.querySelectorAll('.info-card');
+          cards.forEach(card => {
+            const labelDiv = card.querySelector('.info-label');
+            if (labelDiv && labelDiv.textContent.trim() === label) {
+              const valueDiv = card.querySelector('.info-value');
+              if (valueDiv) valueDiv.textContent = value || 'N/A';
+            }
+          });
+        };
+
+        updateGuardianInfo('Guardian Name', student.parent_name);
+        updateGuardianInfo('Phone Number', student.parent_phone);
+        updateGuardianInfo('Relationship', 'Parent');
+      }
+
+      // Update fee balance if available
+      if (student.fee_balance !== undefined) {
+        const feeCards = document.querySelectorAll('.info-card');
+        feeCards.forEach(card => {
+          const labelDiv = card.querySelector('.info-label');
+          if (labelDiv && labelDiv.textContent.toLowerCase().includes('fee')) {
+            const valueDiv = card.querySelector('.info-value');
+            if (valueDiv) {
+              const balance = parseFloat(student.fee_balance) || 0;
+              valueDiv.textContent = `KES ${balance.toLocaleString()}`;
+              valueDiv.style.color = balance > 0 ? '#d32f2f' : '#2d8c2d';
+            }
+          }
+        });
+      }
+
+      // Update user avatar with parent initials
+      const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+      if (userData.name) {
+        const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
+        const avatarElement = document.querySelector('.user-avatar');
+        if (avatarElement) avatarElement.textContent = initials;
+      }
+    }
+
+    // Menu link active state
+    document.querySelectorAll('.menu-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const section = this.getAttribute('data-section');
+        if (!section) {
+          e.preventDefault();
+          document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+        }
+      });
+    });
+
+    // Refresh button functionality
+    document.querySelector('.action-btn.secondary').addEventListener('click', async function(e) {
+      e.preventDefault();
+      this.disabled = true;
+      this.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';
+      
+      try {
+        await loadStudentData();
+        alert('Data refreshed!');
+      } catch (error) {
+        alert('Failed to refresh data');
+      } finally {
+        this.disabled = false;
+        this.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+      }
+    });
+
+    // Logout button functionality
+    document.getElementById('logout-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (confirm('Are you sure you want to log out?')) {
+        // Clear authentication data
+        localStorage.removeItem('sv_parent_token');
+        localStorage.removeItem('sv_parent_user');
+        localStorage.removeItem('sv_auth_token');
+        localStorage.removeItem('sv_user_data');
+        
+        // Redirect to parent login page
+        window.location.href = 'parent_login_page.html';
+      }
+    });
+
+    // Current active section
+    let currentSection = 'dashboard';
+
+    // Show section function
+    function showSection(section) {
+      currentSection = section;
+      const container = document.querySelector('.dashboard-container');
+      
+      if (section === 'dashboard') {
+        location.reload(); // Reload to show dashboard
+      } else if (section === 'settings') {
+        showSettingsSection(container);
+      } else if (section === 'fees') {
+        showFeesSection(container);
+      } else if (section === 'students') {
+        loadStudentData().catch(console.error);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // Settings Section
+    async function showSettingsSection(container) {
+      try {
+        const profile = await parentsAPI.getMyProfile();
+        
+        container.innerHTML = `
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-cog"></i>
+                Settings
+              </h2>
+            </div>
+
+            <!-- Profile Settings -->
+            <div style="margin-bottom: 2rem;">
+              <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.2rem;">
+                <i class="fas fa-user"></i> Profile Information
+              </h3>
+              <form id="profileForm" style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
+                <div class="input-group" style="margin-bottom: 1rem;">
+                  <label for="profileName" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Full Name</label>
+                  <input type="text" id="profileName" value="${profile.name || ''}" required
+                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
+                </div>
+                <div class="input-group" style="margin-bottom: 1rem;">
+                  <label for="profileEmail" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Email</label>
+                  <input type="email" id="profileEmail" value="${profile.email || ''}" disabled
+                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; background: #f5f5f5; color: #666;">
+                  <small style="color: var(--text-medium); font-size: 0.85rem;">Email cannot be changed</small>
+                </div>
+                <div class="input-group" style="margin-bottom: 1rem;">
+                  <label for="profilePhone" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Phone Number</label>
+                  <input type="tel" id="profilePhone" value="${profile.phone || ''}"
+                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
+                </div>
+                <button type="submit" class="action-btn" style="margin-top: 1rem;">
+                  <i class="fas fa-save"></i> Save Changes
+                </button>
+              </form>
+            </div>
+
+            <!-- Change Password -->
+            <div>
+              <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.2rem;">
+                <i class="fas fa-lock"></i> Change Password
+              </h3>
+              <form id="passwordForm" style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
+                <div class="input-group" style="margin-bottom: 1rem;">
+                  <label for="currentPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Current Password</label>
+                  <input type="password" id="currentPassword" required
+                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
+                </div>
+                <div class="input-group" style="margin-bottom: 1rem;">
+                  <label for="newPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">New Password</label>
+                  <input type="password" id="newPassword" required minlength="6"
+                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
+                  <small style="color: var(--text-medium); font-size: 0.85rem;">Must be at least 6 characters</small>
+                </div>
+                <div class="input-group" style="margin-bottom: 1rem;">
+                  <label for="confirmPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Confirm New Password</label>
+                  <input type="password" id="confirmPassword" required minlength="6"
+                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
+                </div>
+                <button type="submit" class="action-btn">
+                  <i class="fas fa-key"></i> Change Password
+                </button>
+              </form>
+            </div>
+
+            <div style="margin-top: 2rem; text-align: center;">
+              <button class="action-btn secondary" onclick="showSection('dashboard')">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+              </button>
+            </div>
+          </div>
+        `;
+
+        // Handle profile form submission
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const submitBtn = this.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+          try {
+            const updated = await parentsAPI.updateMyProfile({
+              name: document.getElementById('profileName').value,
+              phone: document.getElementById('profilePhone').value
+            });
+            alert('Profile updated successfully!');
+            // Update localStorage
+            const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+            userData.name = updated.name;
+            userData.phone = updated.phone;
+            localStorage.setItem('sv_parent_user', JSON.stringify(userData));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+          } catch (error) {
+            alert('Failed to update profile: ' + (error.message || 'Unknown error'));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+          }
+        });
+
+        // Handle password form submission
+        document.getElementById('passwordForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const newPassword = document.getElementById('newPassword').value;
+          const confirmPassword = document.getElementById('confirmPassword').value;
+
+          if (newPassword !== confirmPassword) {
+            alert('New passwords do not match!');
+            return;
+          }
+
+          const submitBtn = this.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Changing...';
+
+          try {
+            await parentsAPI.changePassword(
+              document.getElementById('currentPassword').value,
+              newPassword
+            );
+            alert('Password changed successfully!');
+            this.reset();
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-key"></i> Change Password';
+          } catch (error) {
+            alert('Failed to change password: ' + (error.message || 'Unknown error'));
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-key"></i> Change Password';
+          }
+        });
+      } catch (error) {
+        console.error('Error loading settings:', error);
+        container.innerHTML = `
+          <div style="text-align: center; padding: 3rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ff9800; margin-bottom: 1rem;"></i>
+            <h2>Error Loading Settings</h2>
+            <p>${error.message || 'Unknown error'}</p>
+            <button class="action-btn" onclick="showSection('dashboard')" style="margin-top: 1rem;">
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Fees Section
+    async function showFeesSection(container) {
+      try {
+        const students = await studentsAPI.getMyStudents();
+        
+        if (!students || students.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+              <i class="fas fa-user-graduate" style="font-size: 4rem; color: #7a5e2a; margin-bottom: 1rem;"></i>
+              <h2>No Students Found</h2>
+              <p>You don't have any students registered yet.</p>
+              <button class="action-btn" onclick="showSection('dashboard')" style="margin-top: 1rem;">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        // Show fees for all students
+        let feesHTML = '';
+        students.forEach(student => {
+          const balance = parseFloat(student.fee_balance) || 0;
+          const isPaid = balance <= 0;
+          
+          feesHTML += `
+            <div class="section" style="margin-bottom: 2rem;">
+              <div class="section-header">
+                <h2 class="section-title">
+                  <i class="fas fa-file-invoice-dollar"></i>
+                  Fee Information - ${student.name}
+                </h2>
+              </div>
+              
+              <div class="info-grid">
+                <div class="info-card">
+                  <div class="info-label">Student Name</div>
+                  <div class="info-value">${student.name}</div>
+                </div>
+                <div class="info-card">
+                  <div class="info-label">Admission Number</div>
+                  <div class="info-value">${student.adm || 'N/A'}</div>
+                </div>
+                <div class="info-card">
+                  <div class="info-label">Class</div>
+                  <div class="info-value">${student.class || 'N/A'}</div>
+                </div>
+                <div class="info-card">
+                  <div class="info-label">Total Fee Balance</div>
+                  <div class="info-value" style="color: ${isPaid ? 'var(--success-dark)' : 'var(--warning-dark)'};">
+                    KES ${Math.abs(balance).toLocaleString()}
+                  </div>
+                  <span class="status-badge ${isPaid ? 'fee-paid' : 'fee-pending'}">
+                    ${isPaid ? 'Fully Paid' : 'Pending Payment'}
+                  </span>
+                </div>
+              </div>
+
+              ${balance > 0 ? `
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--warning-light); border-radius: 8px; border-left: 4px solid var(--warning-dark);">
+                  <p style="color: var(--warning-dark); font-weight: 600; margin-bottom: 0.5rem;">
+                    <i class="fas fa-exclamation-circle"></i> Payment Required
+                  </p>
+                  <p style="color: var(--text-dark);">
+                    Outstanding balance of <strong>KES ${balance.toLocaleString()}</strong> needs to be paid.
+                  </p>
+                  <button class="action-btn" style="margin-top: 1rem;" onclick="alert('Payment integration coming soon!')">
+                    <i class="fas fa-credit-card"></i> Make Payment
+                  </button>
+                </div>
+              ` : `
+                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--success-light); border-radius: 8px; border-left: 4px solid var(--success-dark);">
+                  <p style="color: var(--success-dark); font-weight: 600;">
+                    <i class="fas fa-check-circle"></i> All fees are paid up to date.
+                  </p>
+                </div>
+              `}
+            </div>
+          `;
+        });
+
+        container.innerHTML = `
+          <div>
+            ${feesHTML}
+            <div style="text-align: center; margin-top: 2rem;">
+              <button class="action-btn secondary" onclick="showSection('dashboard')">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+              </button>
+            </div>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error loading fees:', error);
+        container.innerHTML = `
+          <div style="text-align: center; padding: 3rem;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #ff9800; margin-bottom: 1rem;"></i>
+            <h2>Error Loading Fee Information</h2>
+            <p>${error.message || 'Unknown error'}</p>
+            <button class="action-btn" onclick="showSection('dashboard')" style="margin-top: 1rem;">
+              <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    // Make showSection available globally
+    window.showSection = showSection;
+
+    // Handle navigation menu clicks
+    document.querySelectorAll('.sidebar-menu .menu-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        const section = this.getAttribute('data-section');
+        if (section) {
+          e.preventDefault();
+          // Update active state
+          document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Show the selected section
+          showSection(section);
+        } else {
+          // Dashboard link
+          e.preventDefault();
+          document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          showSection('dashboard');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
