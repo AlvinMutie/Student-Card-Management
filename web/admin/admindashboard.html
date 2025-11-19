@@ -7,19 +7,30 @@
   <link rel="stylesheet" href="shared-admin-styles.css">
   <style>
     :root {
-      /* New Color Scheme: Light/Dark Green + White + Maroon */
-      --primary-green: #2d5016;        /* Dark green */
-      --secondary-green: #4a7c2a;      /* Medium green */
-      --light-green: #6b9f47;          /* Light green */
-      --lighter-green: #a8d08a;        /* Very light green */
-      --pale-green: #e8f5e1;           /* Pale green background */
-      --maroon: #800020;               /* Maroon accent */
-      --maroon-light: #a0334d;         /* Lighter maroon */
-      --maroon-dark: #5c0018;          /* Darker maroon */
-      --white: #ffffff;                /* White accent */
-      --off-white: #fafafa;            /* Off-white background */
+      /* Garden-inspired palette */
+      --forest-900: #0f2a17;
+      --forest-800: #1e3e24;
+      --forest-700: #2d5633;
+      --forest-500: #3d7442;
+      --leaf-400: #4c8a4f;
+      --accent-emerald: #2ec870;
+      --accent-emerald-dark: #1f9c55;
+      --accent-emerald-light: #63dea0;
+      --sage-50: #f5f4ef;
+      --sage-100: #eef5ec;
+      --sage-200: #dfe9dd;
+      --white: #ffffff;
       
       /* Legacy variables for compatibility */
+      --primary-green: var(--forest-900);
+      --secondary-green: var(--forest-700);
+      --light-green: var(--forest-500);
+      --lighter-green: var(--leaf-400);
+      --pale-green: var(--sage-100);
+      --maroon: var(--accent-emerald);
+      --maroon-light: var(--accent-emerald-light);
+      --maroon-dark: var(--accent-emerald-dark);
+      --off-white: var(--sage-50);
       --primary-color: var(--primary-green);
       --secondary-color: var(--secondary-green);
       --accent-color: var(--maroon);
@@ -27,10 +38,10 @@
       --beige-bg: var(--off-white);
       
       --border-radius: 12px;
-      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+      --box-shadow: 0 4px 12px rgba(15, 42, 23, 0.12);
+      --box-shadow-lg: 0 8px 24px rgba(15, 42, 23, 0.15);
       --transition: all 0.3s ease;
-      --success-color: #10b981;
+      --success-color: #16a34a;
       --warning-color: #f59e0b;
       --info-color: #3b82f6;
       --danger-color: #ef4444;
@@ -45,7 +56,7 @@
     
     body {
       background-color: var(--off-white);
-      color: #333;
+      color: #1f2a1f;
       line-height: 1.6;
       display: flex;
       min-height: 100vh;
@@ -207,7 +218,7 @@
       align-items: center;
       margin-bottom: 35px;
       padding-bottom: 20px;
-      border-bottom: 2px solid rgba(45, 80, 22, 0.1);
+      border-bottom: 2px solid rgba(15, 42, 23, 0.12);
     }
     
     .top-row h2 {
@@ -231,7 +242,7 @@
       font-size: 0.95rem;
       color: var(--primary-green);
       font-weight: 500;
-      border: 1px solid rgba(45, 80, 22, 0.1);
+      border: 1px solid rgba(15, 42, 23, 0.12);
     }
     
     .logout-btn-top {
@@ -247,7 +258,7 @@
       font-weight: 500;
       cursor: pointer;
       transition: var(--transition);
-      box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
+      box-shadow: 0 2px 8px rgba(15, 42, 23, 0.18);
     }
     
     .logout-btn-top:hover {
@@ -334,7 +345,7 @@
       background: linear-gradient(135deg, var(--secondary-green), var(--maroon));
       padding: 12px;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(45, 80, 22, 0.15);
+      box-shadow: 0 4px 8px rgba(15, 42, 23, 0.2);
     }
     
     .stat-card:nth-child(1) .stat-icon {
@@ -383,7 +394,7 @@
       color: var(--primary-green);
       margin-bottom: 25px;
       padding-bottom: 15px;
-      border-bottom: 2px solid rgba(45, 80, 22, 0.1);
+      border-bottom: 2px solid rgba(15, 42, 23, 0.12);
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -443,7 +454,7 @@
       border-radius: var(--border-radius);
       padding: 30px;
       box-shadow: var(--box-shadow);
-      border: 1px solid rgba(45, 80, 22, 0.08);
+      border: 1px solid rgba(15, 42, 23, 0.1);
     }
     
     .chart-card h3 {
@@ -451,7 +462,7 @@
       color: var(--primary-green);
       margin-bottom: 20px;
       padding-bottom: 15px;
-      border-bottom: 2px solid rgba(45, 80, 22, 0.1);
+      border-bottom: 2px solid rgba(15, 42, 23, 0.12);
       font-weight: 600;
     }
     
@@ -467,7 +478,7 @@
       padding: 30px;
       box-shadow: var(--box-shadow);
       margin-bottom: 30px;
-      border: 1px solid rgba(45, 80, 22, 0.08);
+      border: 1px solid rgba(15, 42, 23, 0.1);
       border-left: 4px solid var(--maroon);
     }
     
@@ -811,7 +822,7 @@
 
   <!-- Chart.js Library -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  
+
   <script src="../runtime-config.js"></script>
   <script src="../shared/api-client.js"></script>
 <script src="app-api.js"></script>

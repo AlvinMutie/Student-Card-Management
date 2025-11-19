@@ -1,19 +1,30 @@
 /* Shared Admin Styles - Apply to all admin pages */
 
 :root {
-  /* New Color Scheme: Light/Dark Green + White + Maroon */
-  --primary-green: #2d5016;        /* Dark green */
-  --secondary-green: #4a7c2a;      /* Medium green */
-  --light-green: #6b9f47;          /* Light green */
-  --lighter-green: #a8d08a;        /* Very light green */
-  --pale-green: #e8f5e1;           /* Pale green background */
-  --maroon: #800020;               /* Maroon accent */
-  --maroon-light: #a0334d;         /* Lighter maroon */
-  --maroon-dark: #5c0018;          /* Darker maroon */
-  --white: #ffffff;                /* White accent */
-  --off-white: #fafafa;            /* Off-white background */
+  /* Garden-inspired palette */
+  --forest-900: #0f2a17;
+  --forest-800: #1e3e24;
+  --forest-700: #2d5633;
+  --forest-500: #3d7442;
+  --leaf-400: #4c8a4f;
+  --accent-emerald: #2ec870;
+  --accent-emerald-dark: #1f9c55;
+  --accent-emerald-light: #63dea0;
+  --sage-50: #f5f4ef;
+  --sage-100: #eef5ec;
+  --sage-200: #dfe9dd;
+  --white: #ffffff;
   
   /* Legacy variables for compatibility */
+  --primary-green: var(--forest-900);
+  --secondary-green: var(--forest-700);
+  --light-green: var(--forest-500);
+  --lighter-green: var(--leaf-400);
+  --pale-green: var(--sage-100);
+  --maroon: var(--accent-emerald);          /* repurposed as accent green */
+  --maroon-light: var(--accent-emerald-light);
+  --maroon-dark: var(--accent-emerald-dark);
+  --off-white: var(--sage-50);
   --primary-color: var(--primary-green);
   --secondary-color: var(--secondary-green);
   --accent-color: var(--maroon);
@@ -21,10 +32,10 @@
   --beige-bg: var(--off-white);
   
   --border-radius: 12px;
-  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --box-shadow: 0 4px 12px rgba(15, 42, 23, 0.12);
+  --box-shadow-lg: 0 8px 24px rgba(15, 42, 23, 0.15);
   --transition: all 0.3s ease;
-  --success-color: #10b981;
+  --success-color: #16a34a;
   --warning-color: #f59e0b;
   --info-color: #3b82f6;
   --danger-color: #ef4444;
@@ -39,7 +50,7 @@
 
 body {
   background-color: var(--off-white);
-  color: #333;
+  color: #1f2a1f;
   line-height: 1.6;
   display: flex;
   min-height: 100vh;
@@ -203,7 +214,7 @@ body {
   align-items: center;
   margin-bottom: 35px;
   padding-bottom: 20px;
-  border-bottom: 2px solid rgba(74, 53, 16, 0.1);
+  border-bottom: 2px solid rgba(15, 42, 23, 0.12);
 }
 
 .top-row h1,
@@ -228,7 +239,7 @@ body {
   font-size: 0.95rem;
   color: var(--primary-color);
   font-weight: 500;
-  border: 1px solid rgba(74, 53, 16, 0.1);
+  border: 1px solid rgba(15, 42, 23, 0.12);
 }
 
 .logout-btn-top {
@@ -236,7 +247,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-dark) 100%);
   color: white;
   border: none;
   border-radius: 25px;
@@ -244,12 +255,12 @@ body {
   font-weight: 500;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 2px 8px rgba(74, 53, 16, 0.2);
+  box-shadow: 0 2px 8px rgba(15, 42, 23, 0.18);
 }
 
 .logout-btn-top:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 53, 16, 0.3);
+  box-shadow: 0 4px 12px rgba(15, 42, 23, 0.25);
 }
 
 .logout-icon-top {
@@ -273,14 +284,14 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  background: linear-gradient(135deg, var(--maroon) 0%, var(--maroon-light) 100%);
   color: white;
-  box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
+  box-shadow: 0 4px 12px rgba(46, 200, 112, 0.35);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(74, 53, 16, 0.3);
+  box-shadow: 0 6px 18px rgba(46, 200, 112, 0.45);
 }
 
 .btn-success {
@@ -296,12 +307,12 @@ body {
 .btn-secondary {
   background: white;
   color: var(--primary-green);
-  border: 2px solid var(--primary-green);
+  border: 2px solid rgba(15, 42, 23, 0.3);
 }
 
 .btn-secondary:hover {
-  background: var(--primary-green);
-  color: white;
+  background: rgba(15, 42, 23, 0.08);
+  color: var(--primary-green);
 }
 
 /* Cards */
@@ -311,7 +322,7 @@ body {
   padding: 30px;
   box-shadow: var(--box-shadow);
   margin-bottom: 30px;
-  border: 1px solid rgba(74, 53, 16, 0.08);
+  border: 1px solid rgba(15, 42, 23, 0.08);
 }
 
 .card h3 {
@@ -319,7 +330,7 @@ body {
   color: var(--primary-green);
   margin-bottom: 25px;
   padding-bottom: 15px;
-  border-bottom: 2px solid rgba(45, 80, 22, 0.1);
+  border-bottom: 2px solid rgba(15, 42, 23, 0.12);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -351,7 +362,7 @@ th, td {
 }
 
 th {
-  background: linear-gradient(135deg, var(--pale-green) 0%, #d4e9c8 100%);
+  background: linear-gradient(135deg, var(--pale-green) 0%, var(--sage-200) 100%);
   color: var(--primary-green);
   font-weight: 600;
   font-size: 0.9rem;
@@ -360,7 +371,7 @@ th {
 }
 
 tr:hover td {
-  background: var(--light-color);
+  background: var(--sage-100);
 }
 
 tr:last-child td {
@@ -388,8 +399,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--secondary-green);
-  box-shadow: 0 0 0 3px rgba(74, 124, 42, 0.1);
+  border-color: var(--maroon);
+  box-shadow: 0 0 0 3px rgba(46, 200, 112, 0.25);
 }
 
 label {
@@ -505,7 +516,7 @@ label {
 }
 
 .muted {
-  color: #666;
+  color: #5a665c;
   font-size: 0.95rem;
 }
 
