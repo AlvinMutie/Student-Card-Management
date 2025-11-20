@@ -7,15 +7,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-dark: #4a3510;
-      --primary-medium: #7a5e2a;
-      --primary-light: #b46a27;
-      --background: #f9f3ea;
-      --surface: #fffdf8;
-      --border: #e3d3bb;
-      --text-dark: #3b2a00;
-      --text-medium: #6e5631;
-      --shadow: rgba(59, 42, 0, 0.15);
+      --primary-dark: #1a472a;
+      --primary-medium: #2e7d32;
+      --primary-light: #4caf50;
+      --background: #f1f8e9;
+      --surface: #ffffff;
+      --border: #c8e6c9;
+      --text-dark: #1b5e20;
+      --text-medium: #388e3c;
+      --shadow: rgba(27, 94, 32, 0.15);
     }
     
     * {
@@ -41,15 +41,9 @@
       padding: 1.5rem 2rem;
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: center;
       background-color: var(--surface);
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .brand-icon {
-      width: 40px;
-      height: 40px;
-      fill: var(--primary-medium);
     }
 
     .brand-text {
@@ -76,13 +70,13 @@
       width: 90%;
       max-width: 700px;
       padding: 2.5rem 3rem;
-      border: 2px solid #f3e6d0;
+      border: 2px solid var(--border);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .form-container:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(59, 42, 0, 0.2);
+      box-shadow: 0 8px 25px rgba(27, 94, 32, 0.2);
     }
 
     h1 {
@@ -133,7 +127,7 @@
       padding: 0.9rem 1rem;
       border: 1.5px solid var(--border);
       border-radius: 8px;
-      background-color: #fffaf3;
+      background-color: #f9fdf7;
       color: var(--text-dark);
       font-size: 1rem;
       transition: all 0.2s ease;
@@ -142,11 +136,11 @@
     .input-group input:focus {
       border-color: var(--primary-light);
       outline: none;
-      box-shadow: 0 0 0 3px rgba(180, 106, 39, 0.1);
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
     }
 
     .verification-note {
-      background-color: #f7f5f0;
+      background-color: #e8f5e8;
       border-left: 4px solid var(--primary-medium);
       padding: 0.8rem 1rem;
       margin: 1.5rem 0;
@@ -163,7 +157,7 @@
       margin: 2rem 0;
       border: none;
       height: 1px;
-      background: linear-gradient(to right, transparent, #d7c9b8, transparent);
+      background: linear-gradient(to right, transparent, #a5d6a7, transparent);
     }
 
     .submit-btn {
@@ -182,7 +176,7 @@
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.2);
+      box-shadow: 0 4px 12px rgba(26, 71, 42, 0.2);
       width: 100%;
       max-width: 300px;
     }
@@ -190,7 +184,7 @@
     .submit-btn button:hover {
       background-color: var(--primary-light);
       transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(74, 53, 16, 0.3);
+      box-shadow: 0 6px 15px rgba(26, 71, 42, 0.3);
     }
 
     .submit-btn button:active {
@@ -252,11 +246,9 @@
   </style>
 </head>
 <body>
- <header>
-  <img src="Hechlink_ventures_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
-  <div class="brand-text">Hechlink Ventures</div>
-</header>
-
+  <header>
+    <div class="brand-text">Hechlink Ventures</div>
+  </header>
 
   <main>
     <div class="form-container">
@@ -319,7 +311,18 @@
     // Form will not submit data to any backend
     document.getElementById('staffAccountForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      // No backend processing - just prevent default form submission
+      
+      // Basic form validation
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (password !== confirmPassword) {
+        alert('Passwords do not match. Please try again.');
+        return;
+      }
+      
+      // If validation passes, show success message
+      alert('Account registration submitted successfully! Your staff number will be verified.');
     });
   </script>
 </body>
