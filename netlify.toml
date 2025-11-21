@@ -1,6 +1,8 @@
 [build]
+ [build]
   publish = "web"
-  command = "node scripts/generate-runtime-config.js && npm run build"
+  command = "node scripts/generate-runtime-config.js && cd web && npm install && npm run build"
+
 
 
 [build.environment]
