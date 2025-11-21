@@ -48,7 +48,8 @@
       localStorage.removeItem('sv_auth_token');
       localStorage.removeItem('sv_admin_email');
       localStorage.removeItem('sv_user_data');
-      location.href = '../public/index.html';
+      // Redirect to the new admin login page
+      location.href = 'login.html';
     } catch (e) {
       console.error('Error during logout:', e);
       alert('Error during logout. Please clear your browser cache.');
