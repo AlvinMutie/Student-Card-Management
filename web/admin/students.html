@@ -13,6 +13,94 @@
       padding-left: 42px;
     }
 
+    /* Action Buttons Visibility Enhancement */
+    .action-buttons-cell {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      color: var(--text-muted);
+    }
+
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .action-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    /* Specific Button Colors */
+    .action-btn.edit-btn {
+      color: var(--info);
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .action-btn.edit-btn:hover {
+      background: var(--info);
+      color: white;
+    }
+
+    .action-btn.delete-btn {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .action-btn.delete-btn:hover {
+      background: var(--danger);
+      color: white;
+    }
+
+    .action-btn.view-btn {
+      color: var(--primary);
+      background: rgba(20, 83, 45, 0.1);
+      border-color: rgba(20, 83, 45, 0.2);
+    }
+
+    .action-btn.view-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .action-btn.upload-btn {
+      color: var(--accent);
+      background: rgba(217, 119, 6, 0.1);
+      border-color: rgba(217, 119, 6, 0.2);
+    }
+
+    .action-btn.upload-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .action-btn.qr-btn {
+      color: var(--text-main);
+      background: var(--bg-body);
+    }
+
+    .action-btn.qr-btn:hover {
+      background: var(--text-main);
+      color: white;
+    }
+
     .action-buttons {
       display: flex;
       gap: 12px;
