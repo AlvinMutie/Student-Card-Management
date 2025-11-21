@@ -5,7 +5,4 @@
 [build.environment]
   NODE_VERSION = "18"
 
-[[redirects]]
-  from = "/*"
-  to = "/landingpage.html"
-  status = 200
+
