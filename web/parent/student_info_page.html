@@ -130,6 +130,23 @@
       gap: 1rem;
     }
 
+    .student-selector {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-right: auto;
+      margin-left: 2rem;
+    }
+
+    .student-selector select {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+
     /* DASHBOARD LAYOUT */
     .dashboard-container {
       background: var(--surface);
@@ -137,6 +154,24 @@
       box-shadow: 0 25px 60px rgba(15, 42, 23, 0.12);
       padding: 2.5rem;
       border: 1px solid rgba(15, 42, 23, 0.08);
+    }
+
+    .state-banner {
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      background: rgba(15, 42, 23, 0.06);
+      color: var(--primary-dark);
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .state-banner.error {
+      background: rgba(239, 68, 68, 0.1);
+      color: #b91c1c;
+    }
+
+    .hidden {
+      display: none;
     }
 
     /* STUDENT PROFILE HEADER */
@@ -241,6 +276,38 @@
       padding: 0;
     }
 
+    .link-section {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      background: rgba(15, 42, 23, 0.03);
+    }
+
+    .link-form-row {
+      display: flex;
+      gap: 0.75rem;
+      margin: 0.75rem 0 0.5rem;
+    }
+
+    .link-form-row input {
+      flex: 1;
+    }
+
+    .link-status {
+      margin-top: 0.5rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .link-status.success {
+      color: var(--success-dark);
+    }
+
+    .link-status.error {
+      color: var(--rose-500);
+    }
+
     .section-header {
       padding-bottom: 1rem;
       margin-bottom: 1.5rem;
@@ -263,21 +330,16 @@
     /* INFO CARDS GRID */
     .info-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.25rem;
     }
 
     .info-card {
       background: var(--background);
-      padding: 1.5rem;
-      border-radius: 10px;
-      border-left: 4px solid var(--primary-light);
-      transition: all 0.2s ease;
-    }
-
-    .info-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px var(--shadow);
+      padding: 1.25rem;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 42, 23, 0.05);
+      box-shadow: 0 10px 25px rgba(15, 42, 23, 0.08);
     }
 
     /* FEE BREAKDOWN STYLES */
@@ -329,11 +391,57 @@
     }
 
     /* QUICK ACTIONS */
-    .quick-actions {
+    .students-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 1rem;
-      margin-top: 1rem;
+    }
+
+    .student-chip {
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(15, 42, 23, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      background: #fdfdfc;
+      box-shadow: 0 6px 20px rgba(15, 42, 23, 0.08);
+    }
+
+    .student-chip.active {
+      border-color: var(--primary-dark);
+      box-shadow: 0 12px 24px rgba(15, 42, 23, 0.18);
+    }
+
+    .student-chip button {
+      align-self: flex-start;
+      margin-top: 0.35rem;
+    }
+
+    .link-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .link-form input {
+      border: 1.5px dashed rgba(15, 42, 23, 0.2);
+      background: rgba(15, 42, 23, 0.02);
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+    }
+
+    .link-status {
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
+
+    .link-status.error {
+      color: #b91c1c;
+    }
+
+    .link-status.success {
+      color: #166534;
     }
 
     .action-btn {
@@ -523,8 +631,12 @@
           <p>Welcome back!</p>
         </div>
       </div>
+      <div class="student-selector" id="studentSelectorWrapper" style="display:none;">
+        <label for="studentSelector" class="helper-text" style="margin:0;">Viewing</label>
+        <select id="studentSelector" aria-label="Select student"></select>
+      </div>
       <div class="header-actions">
-        <button class="action-btn secondary">
+        <button class="action-btn secondary" id="refreshDataBtn">
           <i class="fas fa-sync-alt"></i> Refresh
         </button>
         <button class="action-btn logout" id="logout-btn">
@@ -534,788 +646,397 @@
     </div>
 
     <div class="dashboard-container">
-      <!-- Student Profile Header -->
-      <div class="profile-header">
-        <div class="student-photo">
-          <i class="fas fa-user-graduate"></i>
+      <div id="dashboardState" class="state-banner">Loading your students…</div>
+
+      <div id="studentContent" class="hidden">
+        <div class="profile-header">
+          <div class="student-photo" id="studentPhoto">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <div class="profile-info">
+            <h1 id="studentNameDisplay">Student Name</h1>
+            <p class="subtitle" id="studentSubtitle">Class | Admission</p>
+            
+            <div class="basic-info-grid">
+              <div class="info-item">
+                <span class="info-label">Admission Number</span>
+                <span class="info-value" id="infoAdmission">—</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">NEMIS Number</span>
+                <span class="info-value" id="infoNemis">—</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Class</span>
+                <span class="info-value" id="infoClass">—</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Date Admitted</span>
+                <span class="info-value" id="infoAdmitted">—</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Status</span>
+                <span class="status-badge status-active" id="infoStatus">—</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="profile-info">
-          <h1>Emma Onyango</h1>
-          <p class="subtitle">Grade 7 Student | Registration: ST3507</p>
-          
-          <div class="basic-info-grid">
-            <div class="info-item">
-              <span class="info-label">Admission Number</span>
-              <span class="info-value">ST3507</span>
+        
+        <div class="content-sections">
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-school"></i>
+                School Snapshot
+              </h2>
             </div>
-            <div class="info-item">
-              <span class="info-label">NEMIS Number</span>
-              <span class="info-value">NEMIS-7894561230</span>
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-label">School</div>
+                <div class="info-value" id="schoolNameValue">—</div>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Academic Year</div>
+                <div class="info-value" id="academicYearValue">—</div>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Current Term</div>
+                <div class="info-value" id="currentTermValue">—</div>
+              </div>
             </div>
-            <div class="info-item">
-              <span class="info-label">Class</span>
-              <span class="info-value">Grade 7 - Blue Section</span>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-user-shield"></i>
+                Guardian Information
+              </h2>
             </div>
-            <div class="info-item">
-              <span class="info-label">Date Admitted</span>
-              <span class="info-value">January 15, 2023</span>
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-label">Guardian Name</div>
+                <div class="info-value" id="guardianNameValue">—</div>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Phone Number</div>
+                <div class="info-value" id="guardianPhoneValue">—</div>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Relationship</div>
+                <div class="info-value" id="guardianRelationshipValue">—</div>
+              </div>
             </div>
-            <div class="info-item">
-              <span class="info-label">Gender</span>
-              <span class="info-value">Female</span>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-file-invoice-dollar"></i>
+                Fee Information
+              </h2>
             </div>
-            <div class="info-item">
-              <span class="info-label">Status</span>
-              <span class="status-badge status-active">In Session</span>
+            
+            <div class="info-grid">
+              <div class="info-card">
+                <div class="info-label">Fee Balance</div>
+                <div class="info-value" id="feeBalanceValue">—</div>
+                <span class="status-badge" id="feeStatusBadge">Pending</span>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Next Review</div>
+                <div class="info-value" id="nextReviewValue">—</div>
+              </div>
+              <div class="info-card">
+                <div class="info-label">Meal Card Validity</div>
+                <div class="info-value" id="mealCardValue">—</div>
+              </div>
             </div>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-user-plus"></i>
+                Link another student
+              </h2>
+            </div>
+            <form id="linkStudentsForm" class="link-form">
+              <input type="text" id="linkAdmissionsInput" placeholder="Enter admission numbers separated by commas e.g. ST001, ST002">
+              <button class="action-btn secondary" type="submit">
+                <i class="fas fa-link"></i> Link Students
+              </button>
+              <div id="linkStatus" class="link-status"></div>
+            </form>
+          </div>
+
+          <div class="section">
+            <div class="section-header">
+              <h2 class="section-title">
+                <i class="fas fa-layer-group"></i>
+                All Linked Students
+              </h2>
+            </div>
+            <div id="studentsList" class="students-list"></div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Content Sections -->
-      <div class="content-sections">
-        <!-- School Information Section -->
-        <div class="section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <i class="fas fa-school"></i>
-              School Information
-            </h2>
-          </div>
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="info-label">School Name</div>
-              <div class="info-value">Green Valley Academy</div>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Academic Year</div>
-              <div class="info-value">2023-2024</div>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Current Term</div>
-              <div class="info-value">Term 3</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Guardian Information Section -->
-        <div class="section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <i class="fas fa-user-shield"></i>
-              Guardian Information
-            </h2>
-          </div>
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="info-label">Guardian Name</div>
-              <div class="info-value">Sarah Onyango</div>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Phone Number</div>
-              <div class="info-value">+254 712 345 678</div>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Relationship</div>
-              <div class="info-value">Mother</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Academic Information Section -->
-        <div class="section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <i class="fas fa-graduation-cap"></i>
-              Academic Information
-            </h2>
-          </div>
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="info-label">Year Completed</div>
-              <div class="info-value">Grade 6 (2022)</div>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Current Grade</div>
-              <div class="info-value">Grade 7</div>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Class Teacher</div>
-              <div class="info-value">Mr. Johnson Mwangi</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Fee Information Section -->
-        <div class="section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <i class="fas fa-file-invoice-dollar"></i>
-              Fee Information
-            </h2>
-          </div>
-          
-          <div class="info-grid">
-            <div class="info-card">
-              <div class="info-label">Total Fee Balance</div>
-              <div class="info-value">0/=</div>
-              <span class="status-badge fee-paid">Fully Paid</span>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Last Payment Date</div>
-              <div class="info-value">October 20, 2023</div>
-            </div>
-            <div class="info-card">
-              <div class="info-label">Payment Status</div>
-              <div class="info-value">Cleared</div>
-            </div>
-          </div>
-          
-          <!-- Fee Breakdown Section -->
-          <div class="fee-breakdown">
-            <h3 style="margin-bottom: 1rem; color: var(--primary-dark);">Term 3 Fee Breakdown</h3>
-            <table class="fee-table">
-              <thead>
-                <tr>
-                  <th>Fee Category</th>
-                  <th>Description</th>
-                  <th class="amount">Amount (KES)</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Tuition</td>
-                  <td>Academic instruction and materials</td>
-                  <td class="amount">45,000</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Lunch Program</td>
-                  <td>Daily meals and nutrition</td>
-                  <td class="amount">12,000</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Transport</td>
-                  <td>School bus service</td>
-                  <td class="amount">8,000</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Examination Fees</td>
-                  <td>Term exams and assessments</td>
-                  <td class="amount">3,500</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Library</td>
-                  <td>Library access and resources</td>
-                  <td class="amount">2,000</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Sports & Activities</td>
-                  <td>Swimming, athletics, clubs</td>
-                  <td class="amount">5,000</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Educational Trips</td>
-                  <td>Field trips and excursions</td>
-                  <td class="amount">4,500</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Caution Fee</td>
-                  <td>Damage deposit (refundable)</td>
-                  <td class="amount">5,000</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Medical</td>
-                  <td>Health services and first aid</td>
-                  <td class="amount">2,500</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Technology</td>
-                  <td>Computer lab and digital resources</td>
-                  <td class="amount">3,500</td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      Paid
-                    </span>
-                  </td>
-                </tr>
-                <tr class="total-row">
-                  <td colspan="2"><strong>Total Term Fees</strong></td>
-                  <td class="amount"><strong>91,000</strong></td>
-                  <td>
-                    <span class="fee-status">
-                      <i class="fas fa-check-circle fee-status-icon" style="color: var(--success-dark);"></i>
-                      <strong>Fully Paid</strong>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Quick Actions Section -->
-        <div class="section">
-          <div class="section-header">
-            <h2 class="section-title">
-              <i class="fas fa-bolt"></i>
-              Quick Actions
-            </h2>
-          </div>
-          <div class="quick-actions">
-            <a href="#" class="action-btn">
-              <i class="fas fa-print"></i> Print Report
-            </a>
-            <a href="#" class="action-btn">
-              <i class="fas fa-download"></i> Download Records
-            </a>
-            <a href="#" class="action-btn secondary">
-              <i class="fas fa-envelope"></i> Contact Teacher
-            </a>
-          </div>
-        </div>
+    <div class="link-section">
+      <div class="section-header" style="margin-bottom: 0.5rem;">
+        <h2 class="section-title">
+          <i class="fas fa-link"></i>
+          Link Another Child
+        </h2>
       </div>
+      <form id="linkChildForm">
+        <label for="linkAdmission" class="helper-text" style="text-align:left;margin-bottom:0;">Enter the admission number provided by the school</label>
+        <div class="link-form-row">
+          <input type="text" id="linkAdmission" class="theme-input" placeholder="e.g. ST1234" required>
+          <button type="submit" class="theme-btn primary" style="min-width:180px;">
+            <i class="fas fa-paperclip"></i> Link Child
+          </button>
+        </div>
+        <p class="helper-text">We will attach any matching student record to your account immediately.</p>
+        <div id="linkStatus" class="link-status" aria-live="polite"></div>
+      </form>
     </div>
   </main>
 
   <script src="../runtime-config.js"></script>
   <script src="../shared/api-client.js"></script>
   <script>
-    // Check authentication on page load
-    window.addEventListener('DOMContentLoaded', async function() {
-      // Check if parent is logged in
-      const parentToken = localStorage.getItem('sv_parent_token');
-      const authToken = localStorage.getItem('sv_auth_token');
-      
-      if (!parentToken && !authToken) {
-        // Redirect to login if not authenticated
-        alert('Please login to access this page');
-        window.location.href = 'parent_login_page.html';
+    const dashboardState = document.getElementById('dashboardState');
+    const studentContent = document.getElementById('studentContent');
+    const studentsListEl = document.getElementById('studentsList');
+    const linkForm = document.getElementById('linkStudentsForm');
+    const linkInput = document.getElementById('linkAdmissionsInput');
+    const linkStatus = document.getElementById('linkStatus');
+    const refreshBtn = document.getElementById('refreshDataBtn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const sidebarLogout = document.getElementById('sidebarLogout');
+    let studentsCache = [];
+    let activeAdmission = null;
+
+    function setState(message, variant = 'info') {
+      if (!dashboardState) return;
+      if (!message) {
+        dashboardState.classList.add('hidden');
+        dashboardState.textContent = '';
+        return;
+      }
+      dashboardState.textContent = message;
+      dashboardState.classList.remove('hidden');
+      dashboardState.className = `state-banner ${variant === 'error' ? 'error' : ''}`;
+    }
+
+    function formatDate(value) {
+      if (!value) return '—';
+      try {
+        return new Date(value).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+      } catch (error) {
+        return value;
+      }
+    }
+
+    function formatCurrency(value) {
+      const num = Number(value || 0);
+      return 'KES ' + num.toLocaleString();
+    }
+
+    function renderStudent(student) {
+      if (!student) return;
+      activeAdmission = (student.adm || student.admission || student.id || '').toUpperCase();
+      const admission = activeAdmission;
+      const className = student.class || student.cls || '—';
+      const nemis = student.nemis || '—';
+      const feeBalance = student.fee_balance ?? student.feeBalance ?? 0;
+      const parentData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+      const guardianName = student.parent_name || parentData.name || '—';
+      const guardianPhone = student.parent_phone || parentData.phone || '—';
+
+      document.getElementById('studentNameDisplay').textContent = student.name || 'Student Name';
+      document.getElementById('studentSubtitle').textContent = `${className} | Admission: ${admission || '—'}`;
+      document.getElementById('infoAdmission').textContent = admission || '—';
+      document.getElementById('infoNemis').textContent = nemis;
+      document.getElementById('infoClass').textContent = className;
+      document.getElementById('infoAdmitted').textContent = formatDate(student.date_of_admission || student.created_at);
+      document.getElementById('infoStatus').textContent = feeBalance > 0 ? 'Balance due' : 'In session';
+      document.getElementById('schoolNameValue').textContent = student.school_name || '—';
+      document.getElementById('academicYearValue').textContent = student.academic_year || `${formatDate(student.academic_year_from)} - ${formatDate(student.academic_year_to)}`;
+      document.getElementById('currentTermValue').textContent = student.current_term || '—';
+      document.getElementById('guardianNameValue').textContent = guardianName;
+      document.getElementById('guardianPhoneValue').textContent = guardianPhone;
+      document.getElementById('guardianRelationshipValue').textContent = student.relationship || 'Parent';
+      document.getElementById('feeBalanceValue').textContent = formatCurrency(feeBalance);
+      const badge = document.getElementById('feeStatusBadge');
+      if (badge) {
+        badge.textContent = feeBalance > 0 ? 'Pending' : 'Cleared';
+        badge.className = `status-badge ${feeBalance > 0 ? 'fee-pending' : 'fee-paid'}`;
+      }
+      document.getElementById('nextReviewValue').textContent = formatDate(student.date_of_completion) || '—';
+      document.getElementById('mealCardValue').textContent = student.meal_card_validity ? formatDate(student.meal_card_validity) : 'Not set';
+
+      document.querySelectorAll('.student-chip').forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.adm === admission);
+      });
+
+      studentContent.classList.remove('hidden');
+    }
+
+    function renderStudentsList(students) {
+      if (!studentsListEl) return;
+      if (!students.length) {
+        studentsListEl.innerHTML = '<p class="muted">No students linked yet.</p>';
         return;
       }
 
-      // Load student data
-      try {
-        await loadStudentData();
-      } catch (error) {
-        console.error('Error loading student data:', error);
-        alert('Failed to load student data. Please try again later.');
-      }
-    });
+      studentsListEl.innerHTML = students.map(student => {
+        const adm = (student.adm || student.admission || '').toUpperCase();
+        return `
+          <div class="student-chip ${adm === activeAdmission ? 'active' : ''}" data-adm="${adm}">
+            <strong>${student.name || 'Unnamed student'}</strong>
+            <span class="muted">${student.class || 'Class —'}</span>
+            <span class="muted">Adm: ${adm || '—'}</span>
+            <span class="muted">Balance: ${formatCurrency(student.fee_balance ?? 0)}</span>
+            <button class="action-btn secondary" type="button" data-adm="${adm}">
+              View
+            </button>
+          </div>
+        `;
+      }).join('');
 
-    // Load student data from API
-    async function loadStudentData() {
+      studentsListEl.querySelectorAll('button[data-adm]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const student = studentsCache.find(s => (s.adm || s.admission || '').toUpperCase() === btn.dataset.adm);
+          if (student) renderStudent(student);
+        });
+      });
+    }
+
+    async function loadStudentData(showToast = false) {
       try {
-        // Get parent's students
+        setState('Loading your students…');
         const students = await studentsAPI.getMyStudents();
-        
-        if (!students || students.length === 0) {
-          // No students found - show message
-          document.querySelector('.dashboard-container').innerHTML = `
-            <div style="text-align: center; padding: 3rem;">
-              <i class="fas fa-user-graduate" style="font-size: 4rem; color: var(--primary-medium); margin-bottom: 1rem;"></i>
-              <h2>No Students Found</h2>
-              <p>You don't have any students registered yet.</p>
-            </div>
-          `;
+        studentsCache = students || [];
+
+        if (!studentsCache.length) {
+          setState('No students linked to this parent account yet. Use “Link another student” to add them.');
+          studentContent.classList.add('hidden');
+          renderStudentsList([]);
           return;
         }
 
-        // Display first student (or you can modify to show list/selector)
-        const student = students[0];
-        displayStudentData(student);
+        setState('');
+        renderStudentsList(studentsCache);
+        const defaultStudent = studentsCache.find(s => (s.adm || '').toUpperCase() === activeAdmission) || studentsCache[0];
+        renderStudent(defaultStudent);
+        if (showToast) {
+          linkStatus.textContent = 'Data refreshed successfully.';
+          linkStatus.className = 'link-status success';
+          setTimeout(() => { linkStatus.textContent = ''; }, 2000);
+        }
       } catch (error) {
-        console.error('Error fetching students:', error);
-        throw error;
+        console.error('Error loading students:', error);
+        setState(error.message || 'Unable to load students right now.', 'error');
+        studentContent.classList.add('hidden');
       }
     }
 
-    // Display student data in the page
-    function displayStudentData(student) {
-      // Update student name
-      const nameElement = document.querySelector('.profile-info h1');
-      if (nameElement) nameElement.textContent = student.name || 'Student Name';
-
-      // Update subtitle
-      const subtitleElement = document.querySelector('.profile-info .subtitle');
-      if (subtitleElement) {
-        subtitleElement.textContent = `${student.class || 'N/A'} | Registration: ${student.adm || 'N/A'}`;
+    async function handleLinkSubmit(event) {
+      event.preventDefault();
+      if (!linkInput) return;
+      const admissions = linkInput.value.split(',').map(item => item.trim().toUpperCase()).filter(Boolean);
+      if (!admissions.length) {
+        linkStatus.textContent = 'Please provide at least one admission number.';
+        linkStatus.className = 'link-status error';
+        return;
       }
 
-      // Update basic info
-      const updateInfoValue = (label, value) => {
-        const items = document.querySelectorAll('.info-item');
-        items.forEach(item => {
-          const labelSpan = item.querySelector('.info-label');
-          if (labelSpan && labelSpan.textContent.trim() === label) {
-            const valueSpan = item.querySelector('.info-value');
-            if (valueSpan) {
-              if (label === 'Status') {
-                valueSpan.innerHTML = `<span class="status-badge status-active">In Session</span>`;
-              } else {
-                valueSpan.textContent = value || 'N/A';
-              }
-            }
-          }
-        });
-      };
+      const btn = linkForm.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Linking…';
+      linkStatus.textContent = '';
 
-      updateInfoValue('Admission Number', student.adm);
-      updateInfoValue('NEMIS Number', student.nemis);
-      updateInfoValue('Class', student.class);
-      
-      // Format date
-      if (student.created_at) {
-        const date = new Date(student.created_at);
-        const formattedDate = date.toLocaleDateString('en-US', { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-        });
-        updateInfoValue('Date Admitted', formattedDate);
+      try {
+        const summary = await parentsAPI.linkStudents(admissions);
+        const linked = summary?.summary?.filter(item => item.status === 'linked') || [];
+        const pending = summary?.summary?.filter(item => item.status !== 'linked') || [];
+        if (linked.length) {
+          linkStatus.textContent = `${linked.length} student${linked.length > 1 ? 's' : ''} linked successfully.`;
+          linkStatus.className = 'link-status success';
+        }
+        if (pending.length) {
+          const issues = pending.map(item => `${item.admission} (${item.status.replaceAll('_', ' ')})`).join(', ');
+          linkStatus.textContent += ` Pending: ${issues}`;
+          linkStatus.className = 'link-status error';
+        }
+        linkInput.value = '';
+        await loadStudentData();
+      } catch (error) {
+        console.error('Error linking students:', error);
+        linkStatus.textContent = error.message || 'Failed to link students.';
+        linkStatus.className = 'link-status error';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-link"></i> Link Students';
       }
+    }
 
-      // Update guardian information
-      if (student.parent_name) {
-        const updateGuardianInfo = (label, value) => {
-          const cards = document.querySelectorAll('.info-card');
-          cards.forEach(card => {
-            const labelDiv = card.querySelector('.info-label');
-            if (labelDiv && labelDiv.textContent.trim() === label) {
-              const valueDiv = card.querySelector('.info-value');
-              if (valueDiv) valueDiv.textContent = value || 'N/A';
-            }
-          });
-        };
-
-        updateGuardianInfo('Guardian Name', student.parent_name);
-        updateGuardianInfo('Phone Number', student.parent_phone);
-        updateGuardianInfo('Relationship', 'Parent');
-      }
-
-      // Update fee balance if available
-      if (student.fee_balance !== undefined) {
-        const feeCards = document.querySelectorAll('.info-card');
-        feeCards.forEach(card => {
-          const labelDiv = card.querySelector('.info-label');
-          if (labelDiv && labelDiv.textContent.toLowerCase().includes('fee')) {
-            const valueDiv = card.querySelector('.info-value');
-            if (valueDiv) {
-              const balance = parseFloat(student.fee_balance) || 0;
-              valueDiv.textContent = `KES ${balance.toLocaleString()}`;
-              valueDiv.style.color = balance > 0 ? '#ef4444' : '#1f9c55';
-            }
-          }
-        });
-      }
-
-      // Update user avatar with parent initials
+    function hydrateAvatar() {
       const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
       if (userData.name) {
-        const initials = userData.name.split(' ').map(n => n[0]).join('').toUpperCase();
-        const avatarElement = document.querySelector('.user-avatar');
-        if (avatarElement) avatarElement.textContent = initials;
+        const initials = userData.name.split(' ').map(part => part[0]).join('').toUpperCase();
+        const avatar = document.querySelector('.user-avatar');
+        if (avatar) avatar.textContent = initials;
+      }
+      const welcome = document.querySelector('.user-info p');
+      if (welcome && userData.name) {
+        welcome.textContent = `Welcome back, ${userData.name.split(' ')[0]}!`;
       }
     }
 
-    // Menu link active state
-    document.querySelectorAll('.menu-link').forEach(link => {
-      link.addEventListener('click', function(e) {
-        const section = this.getAttribute('data-section');
-        if (!section) {
-          e.preventDefault();
-          document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
+    function wireLogout(button) {
+      if (!button) return;
+      button.addEventListener('click', e => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to log out?')) {
+          localStorage.removeItem('sv_parent_token');
+          localStorage.removeItem('sv_parent_user');
+          localStorage.removeItem('sv_auth_token');
+          localStorage.removeItem('sv_user_data');
+          window.location.href = 'parent_login_page.html';
         }
       });
-    });
-
-    // Refresh button functionality
-    document.querySelector('.action-btn.secondary').addEventListener('click', async function(e) {
-      e.preventDefault();
-      this.disabled = true;
-      this.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';
-      
-      try {
-        await loadStudentData();
-        alert('Data refreshed!');
-      } catch (error) {
-        alert('Failed to refresh data');
-      } finally {
-        this.disabled = false;
-        this.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
-      }
-    });
-
-    // Logout button functionality
-    document.getElementById('logout-btn').addEventListener('click', function(e) {
-      e.preventDefault();
-      if (confirm('Are you sure you want to log out?')) {
-        // Clear authentication data
-        localStorage.removeItem('sv_parent_token');
-        localStorage.removeItem('sv_parent_user');
-        localStorage.removeItem('sv_auth_token');
-        localStorage.removeItem('sv_user_data');
-        
-        // Redirect to parent login page
-        window.location.href = 'parent_login_page.html';
-      }
-    });
-
-    // Current active section
-    let currentSection = 'dashboard';
-
-    // Show section function
-    function showSection(section) {
-      currentSection = section;
-      const container = document.querySelector('.dashboard-container');
-      
-      if (section === 'dashboard') {
-        location.reload(); // Reload to show dashboard
-      } else if (section === 'settings') {
-        showSettingsSection(container);
-      } else if (section === 'fees') {
-        showFeesSection(container);
-      } else if (section === 'students') {
-        loadStudentData().catch(console.error);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
     }
 
-    // Settings Section
-    async function showSettingsSection(container) {
-      try {
-        const profile = await parentsAPI.getMyProfile();
-        
-        container.innerHTML = `
-          <div class="section">
-            <div class="section-header">
-              <h2 class="section-title">
-                <i class="fas fa-cog"></i>
-                Settings
-              </h2>
-            </div>
+    document.addEventListener('DOMContentLoaded', async () => {
+      ensureAuthRedirect();
+      hydrateAvatar();
+      await loadStudentData();
 
-            <!-- Profile Settings -->
-            <div style="margin-bottom: 2rem;">
-              <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.2rem;">
-                <i class="fas fa-user"></i> Profile Information
-              </h3>
-              <form id="profileForm" style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
-                <div class="input-group" style="margin-bottom: 1rem;">
-                  <label for="profileName" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Full Name</label>
-                  <input type="text" id="profileName" value="${profile.name || ''}" required
-                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
-                </div>
-                <div class="input-group" style="margin-bottom: 1rem;">
-                  <label for="profileEmail" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Email</label>
-                  <input type="email" id="profileEmail" value="${profile.email || ''}" disabled
-                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem; background: var(--sage-100); color: var(--text-medium);">
-                  <small style="color: var(--text-medium); font-size: 0.85rem;">Email cannot be changed</small>
-                </div>
-                <div class="input-group" style="margin-bottom: 1rem;">
-                  <label for="profilePhone" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Phone Number</label>
-                  <input type="tel" id="profilePhone" value="${profile.phone || ''}"
-                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
-                </div>
-                <button type="submit" class="action-btn" style="margin-top: 1rem;">
-                  <i class="fas fa-save"></i> Save Changes
-                </button>
-              </form>
-            </div>
+      wireLogout(logoutBtn);
+      wireLogout(sidebarLogout);
 
-            <!-- Change Password -->
-            <div>
-              <h3 style="color: var(--primary-dark); margin-bottom: 1rem; font-size: 1.2rem;">
-                <i class="fas fa-lock"></i> Change Password
-              </h3>
-              <form id="passwordForm" style="background: var(--background); padding: 1.5rem; border-radius: 10px;">
-                <div class="input-group" style="margin-bottom: 1rem;">
-                  <label for="currentPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Current Password</label>
-                  <input type="password" id="currentPassword" required
-                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
-                </div>
-                <div class="input-group" style="margin-bottom: 1rem;">
-                  <label for="newPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">New Password</label>
-                  <input type="password" id="newPassword" required minlength="6"
-                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
-                  <small style="color: var(--text-medium); font-size: 0.85rem;">Must be at least 6 characters</small>
-                </div>
-                <div class="input-group" style="margin-bottom: 1rem;">
-                  <label for="confirmPassword" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-dark);">Confirm New Password</label>
-                  <input type="password" id="confirmPassword" required minlength="6"
-                    style="width: 100%; padding: 0.75rem; border: 1.5px solid var(--border); border-radius: 8px; font-size: 1rem;">
-                </div>
-                <button type="submit" class="action-btn">
-                  <i class="fas fa-key"></i> Change Password
-                </button>
-              </form>
-            </div>
-
-            <div style="margin-top: 2rem; text-align: center;">
-              <button class="action-btn secondary" onclick="showSection('dashboard')">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-              </button>
-            </div>
-          </div>
-        `;
-
-        // Handle profile form submission
-        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+      if (refreshBtn) {
+        refreshBtn.addEventListener('click', async (e) => {
           e.preventDefault();
-          const submitBtn = this.querySelector('button[type="submit"]');
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-
-          try {
-            const updated = await parentsAPI.updateMyProfile({
-              name: document.getElementById('profileName').value,
-              phone: document.getElementById('profilePhone').value
-            });
-            alert('Profile updated successfully!');
-            // Update localStorage
-            const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
-            userData.name = updated.name;
-            userData.phone = updated.phone;
-            localStorage.setItem('sv_parent_user', JSON.stringify(userData));
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
-          } catch (error) {
-            alert('Failed to update profile: ' + (error.message || 'Unknown error'));
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
-          }
+          refreshBtn.disabled = true;
+          refreshBtn.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing';
+          await loadStudentData(true);
+          refreshBtn.disabled = false;
+          refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
         });
-
-        // Handle password form submission
-        document.getElementById('passwordForm').addEventListener('submit', async function(e) {
-          e.preventDefault();
-          const newPassword = document.getElementById('newPassword').value;
-          const confirmPassword = document.getElementById('confirmPassword').value;
-
-          if (newPassword !== confirmPassword) {
-            alert('New passwords do not match!');
-            return;
-          }
-
-          const submitBtn = this.querySelector('button[type="submit"]');
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Changing...';
-
-          try {
-            await parentsAPI.changePassword(
-              document.getElementById('currentPassword').value,
-              newPassword
-            );
-            alert('Password changed successfully!');
-            this.reset();
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-key"></i> Change Password';
-          } catch (error) {
-            alert('Failed to change password: ' + (error.message || 'Unknown error'));
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-key"></i> Change Password';
-          }
-        });
-      } catch (error) {
-        console.error('Error loading settings:', error);
-        container.innerHTML = `
-          <div style="text-align: center; padding: 3rem;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: var(--warning-dark); margin-bottom: 1rem;"></i>
-            <h2>Error Loading Settings</h2>
-            <p>${error.message || 'Unknown error'}</p>
-            <button class="action-btn" onclick="showSection('dashboard')" style="margin-top: 1rem;">
-              <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
-          </div>
-        `;
       }
-    }
 
-    // Fees Section
-    async function showFeesSection(container) {
-      try {
-        const students = await studentsAPI.getMyStudents();
-        
-        if (!students || students.length === 0) {
-          container.innerHTML = `
-            <div style="text-align: center; padding: 3rem;">
-              <i class="fas fa-user-graduate" style="font-size: 4rem; color: var(--primary-medium); margin-bottom: 1rem;"></i>
-              <h2>No Students Found</h2>
-              <p>You don't have any students registered yet.</p>
-              <button class="action-btn" onclick="showSection('dashboard')" style="margin-top: 1rem;">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-              </button>
-            </div>
-          `;
-          return;
-        }
-
-        // Show fees for all students
-        let feesHTML = '';
-        students.forEach(student => {
-          const balance = parseFloat(student.fee_balance) || 0;
-          const isPaid = balance <= 0;
-          
-          feesHTML += `
-            <div class="section" style="margin-bottom: 2rem;">
-              <div class="section-header">
-                <h2 class="section-title">
-                  <i class="fas fa-file-invoice-dollar"></i>
-                  Fee Information - ${student.name}
-                </h2>
-              </div>
-              
-              <div class="info-grid">
-                <div class="info-card">
-                  <div class="info-label">Student Name</div>
-                  <div class="info-value">${student.name}</div>
-                </div>
-                <div class="info-card">
-                  <div class="info-label">Admission Number</div>
-                  <div class="info-value">${student.adm || 'N/A'}</div>
-                </div>
-                <div class="info-card">
-                  <div class="info-label">Class</div>
-                  <div class="info-value">${student.class || 'N/A'}</div>
-                </div>
-                <div class="info-card">
-                  <div class="info-label">Total Fee Balance</div>
-                  <div class="info-value" style="color: ${isPaid ? 'var(--success-dark)' : 'var(--warning-dark)'};">
-                    KES ${Math.abs(balance).toLocaleString()}
-                  </div>
-                  <span class="status-badge ${isPaid ? 'fee-paid' : 'fee-pending'}">
-                    ${isPaid ? 'Fully Paid' : 'Pending Payment'}
-                  </span>
-                </div>
-              </div>
-
-              ${balance > 0 ? `
-                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--warning-light); border-radius: 8px; border-left: 4px solid var(--warning-dark);">
-                  <p style="color: var(--warning-dark); font-weight: 600; margin-bottom: 0.5rem;">
-                    <i class="fas fa-exclamation-circle"></i> Payment Required
-                  </p>
-                  <p style="color: var(--text-dark);">
-                    Outstanding balance of <strong>KES ${balance.toLocaleString()}</strong> needs to be paid.
-                  </p>
-                  <button class="action-btn" style="margin-top: 1rem;" onclick="alert('Payment integration coming soon!')">
-                    <i class="fas fa-credit-card"></i> Make Payment
-                  </button>
-                </div>
-              ` : `
-                <div style="margin-top: 1.5rem; padding: 1rem; background: var(--success-light); border-radius: 8px; border-left: 4px solid var(--success-dark);">
-                  <p style="color: var(--success-dark); font-weight: 600;">
-                    <i class="fas fa-check-circle"></i> All fees are paid up to date.
-                  </p>
-                </div>
-              `}
-            </div>
-          `;
-        });
-
-        container.innerHTML = `
-          <div>
-            ${feesHTML}
-            <div style="text-align: center; margin-top: 2rem;">
-              <button class="action-btn secondary" onclick="showSection('dashboard')">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-              </button>
-            </div>
-          </div>
-        `;
-      } catch (error) {
-        console.error('Error loading fees:', error);
-        container.innerHTML = `
-          <div style="text-align: center; padding: 3rem;">
-            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: var(--warning-dark); margin-bottom: 1rem;"></i>
-            <h2>Error Loading Fee Information</h2>
-            <p>${error.message || 'Unknown error'}</p>
-            <button class="action-btn" onclick="showSection('dashboard')" style="margin-top: 1rem;">
-              <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </button>
-          </div>
-        `;
+      if (linkForm) {
+        linkForm.addEventListener('submit', handleLinkSubmit);
       }
-    }
-
-    // Make showSection available globally
-    window.showSection = showSection;
-
-    // Handle navigation menu clicks
-    document.querySelectorAll('.sidebar-menu .menu-link').forEach(link => {
-      link.addEventListener('click', function(e) {
-        const section = this.getAttribute('data-section');
-        if (section) {
-          e.preventDefault();
-          // Update active state
-          document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
-          
-          // Show the selected section
-          showSection(section);
-        } else {
-          // Dashboard link
-          e.preventDefault();
-          document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
-          showSection('dashboard');
-        }
-      });
     });
   </script>
 </body>

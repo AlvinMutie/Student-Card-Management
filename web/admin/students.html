@@ -17,6 +17,41 @@
       gap: 12px;
       align-items: center;
     }
+
+    .import-panel {
+      margin-top: 1rem;
+      padding: 1rem 1.25rem;
+      border: 1px dashed rgba(15, 42, 23, 0.2);
+      border-radius: 12px;
+      background: rgba(15, 42, 23, 0.02);
+    }
+
+    .uploaded-files {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .uploaded-file {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 1px solid rgba(15, 42, 23, 0.08);
+      background: #fff;
+    }
+
+    .uploaded-file .muted {
+      display: block;
+      font-size: 0.85rem;
+    }
+
+    .uploaded-file-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
     
     .refresh-btn {
       background: none;
@@ -401,13 +436,21 @@
           </svg>
           Add Student
         </button>
-        <label for="studentCsvInput" class="btn btn-secondary" style="cursor:pointer;">
+        <label for="studentDataInput" class="btn btn-secondary" style="cursor:pointer;">
           <svg class="btn-icon" viewBox="0 0 24 24">
             <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
           </svg>
-          Import CSV
+          Import / Attach File
         </label>
-        <input type="file" id="studentCsvInput" accept=".csv" style="display:none;">
+        <input type="file" id="studentDataInput" accept=".csv,.xlsx,.xls,image/*" style="display:none;">
+      </div>
+    </div>
+
+    <div class="import-panel">
+      <strong>Supporting files & demo data</strong>
+      <p class="muted" style="margin-top:4px;">Drop in CSV/Excel sheets to populate students or attach reference files (images, scans) for your client demo.</p>
+      <div id="dataFilesList" class="uploaded-files">
+        <p class="muted">No supporting files uploaded yet.</p>
       </div>
     </div>
 
@@ -587,6 +630,7 @@
 
   <script src="../runtime-config.js"></script>
   <script src="../shared/api-client.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="app-api.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {

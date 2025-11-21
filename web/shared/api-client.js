@@ -281,6 +281,13 @@ const parentsAPI = {
       method: 'DELETE',
     });
   },
+
+  async linkStudents(admissions = []) {
+    return apiRequest('/parents/me/students/link', {
+      method: 'POST',
+      body: JSON.stringify({ admissions }),
+    });
+  },
 };
 
 // Staff API

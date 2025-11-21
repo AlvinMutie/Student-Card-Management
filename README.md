@@ -94,6 +94,19 @@ See `BACKEND_SETUP_GUIDE.md` for detailed backend setup instructions.
    npm start
    ```
 
+### Demo data import
+
+Need realistic records to showcase the admin dashboards? Import one of the curated seed files after creating the schema:
+
+```bash
+cd backend
+psql -d student_card_management -f migrations/realistic-seed.sql
+# or
+psql -d student_card_management -f migrations/comprehensive-seed.sql
+```
+
+The admin UI (`web/admin/*.html`) reads directly from the API, so once the data is seeded the charts, tables, and search features will light up automatically.
+
 ### Deployment (Render + Netlify)
 
 **📖 Full Deployment Guide**: See **[DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)** for step-by-step instructions.

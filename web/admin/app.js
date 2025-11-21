@@ -574,13 +574,105 @@
       seedIfEmpty();
       const searchInput = document.getElementById('studentSearchInput');
       const addBtn = document.getElementById('addStudentBtn');
-      const csvInput = document.getElementById('studentCsvInput');
+      const dataInput = document.getElementById('studentDataInput');
+      const filesList = document.getElementById('dataFilesList');
       const tbody = document.querySelector('#studentsTable tbody');
       
       if(!addBtn || !tbody) {
         console.error('Required elements not found for students page');
         return;
       }
+
+      function importStudentRows(rows, sourceLabel) {
+        if (!Array.isArray(rows)) return;
+        let added = 0;
+        const data = readData();
+        data.students = data.students || [];
+        rows.forEach((cols, index) => {
+          const arr = Array.isArray(cols) ? cols : String(cols || '').split(',');
+          const admRaw = String(arr[0] ?? '').trim();
+          if (!admRaw) return;
+          if (index === 0 && admRaw.toLowerCase().includes('adm')) return;
+          const name = String(arr[1] ?? '').trim();
+          const cls = String(arr[2] ?? '').trim();
+          const adm = admRaw.toUpperCase();
+          if (adm && name && !data.students.find(s => s.adm === adm)) {
+            data.students.push({ adm, name, cls, qr: adm });
+            added++;
+          }
+        });
+        data.recent = (data.recent || []).concat([`Imported ${added} students via ${sourceLabel}`]);
+        saveData(data);
+        render(searchInput ? searchInput.value.trim() : '');
+        initDashboard();
+        alert(`Imported ${added} students from ${sourceLabel}.`);
+      }
+
+      function renderFilesList() {
+        if (!filesList) return;
+        const data = readData();
+        const files = data.uploadedFiles || [];
+        if (!files.length) {
+          filesList.innerHTML = '<p class=\"muted\">No supporting files uploaded yet.</p>';
+          return;
+        }
+        filesList.innerHTML = files.map(file => `
+          <div class=\"uploaded-file\" data-id=\"${escapeHtml(file.id)}\">
+            <div>
+              <strong>${escapeHtml(file.name)}</strong>
+              <span class=\"muted\">${escapeHtml(file.type || 'Attachment')} • ${(file.size ? (file.size / 1024).toFixed(1) : '0')} KB</span>
+            </div>
+            <div class=\"uploaded-file-buttons\">
+              <button class=\"btn ghost\" data-download=\"${escapeHtml(file.id)}\">Download</button>
+              <button class=\"btn ghost\" data-remove=\"${escapeHtml(file.id)}\">Remove</button>
+            </div>
+          </div>
+        `).join('');
+
+        filesList.querySelectorAll('button[data-download]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.download;
+            const current = (readData().uploadedFiles || []).find(f => f.id === id);
+            if (!current) return alert('File not found.');
+            const a = document.createElement('a');
+            a.href = current.dataUrl;
+            a.download = current.name || 'attachment';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          });
+        });
+
+        filesList.querySelectorAll('button[data-remove]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.remove;
+            const data = readData();
+            data.uploadedFiles = (data.uploadedFiles || []).filter(f => f.id !== id);
+            data.recent = (data.recent || []).concat([`Removed attachment ${id}`]);
+            saveData(data);
+            renderFilesList();
+          });
+        });
+      }
+
+      function storeUploadedFile(file, dataUrl) {
+        const data = readData();
+        data.uploadedFiles = data.uploadedFiles || [];
+        data.uploadedFiles.push({
+          id: 'file_' + Date.now(),
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          dataUrl,
+          uploadedAt: new Date().toISOString()
+        });
+        data.recent = (data.recent || []).concat([`Attached ${file.name}`]);
+        saveData(data);
+        renderFilesList();
+        alert(`${file.name} stored locally for your demo.`);
+      }
+
+      renderFilesList();
 
     function render(q=''){
       const d = readData();
@@ -818,50 +910,63 @@
       document.getElementById('m_close').onclick = closeModal;
     }
 
-      // CSV import handler - expects adm,name,class (we can extend later)
-      if(csvInput) {
-        csvInput.onchange = (evt) => {
+      if (dataInput) {
+        dataInput.addEventListener('change', (evt) => {
+          const file = evt.target.files[0];
+          if (!file) return;
+          const name = file.name.toLowerCase();
+          const resetInput = () => { dataInput.value = ''; };
+
           try {
-            const f = evt.target.files[0]; 
-            if(!f) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-              try {
-                const rows = e.target.result.split(/\r?\n/).map(r=>r.trim()).filter(Boolean);
-                let added = 0; 
-                const data = readData(); 
-                data.students = data.students || [];
-                rows.forEach((r,i) => {
-                  if(i===0 && r.toLowerCase().includes('adm')) return;
-                  const cols = r.split(','); 
-                  if(cols.length >= 3){
-                    const adm = cols[0].trim(), name = cols[1].trim(), cls = cols[2].trim();
-                    if(adm && name && !data.students.find(s=>s.adm===adm)){ 
-                      data.students.push({adm,name,cls,qr:adm}); 
-                      added++; 
-                    }
+            if (name.endsWith('.csv')) {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                try {
+                  const lines = e.target.result.split(/\\r?\\n/).map(line => line.trim()).filter(Boolean);
+                  const rows = lines.map(line => line.split(','));
+                  importStudentRows(rows, 'CSV');
+                  const encoded = btoa(unescape(encodeURIComponent(e.target.result)));
+                  storeUploadedFile(file, `data:text/csv;base64,${encoded}`);
+                } catch (error) {
+                  alert('Error processing CSV file. Please confirm the format.');
+                }
+              };
+              reader.readAsText(file);
+            } else if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+              if (typeof XLSX === 'undefined') {
+                alert('Excel import requires an internet connection to load the XLSX library.');
+              } else {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  try {
+                    const workbook = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                    importStudentRows(rows, 'Excel');
+                    const binary = Array.from(new Uint8Array(e.target.result)).map(b => String.fromCharCode(b)).join('');
+                    const base64 = btoa(binary);
+                    storeUploadedFile(file, `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,${base64}`);
+                  } catch (error) {
+                    console.error('Excel import error:', error);
+                    alert('Unable to process that Excel file.');
                   }
-                });
-                data.recent = (data.recent||[]).concat([`Imported ${added} students via CSV`]); 
-                saveData(data); 
-                render(); 
-                initDashboard();
-                alert(`Imported ${added} students (client-side).`);
-              } catch(e) {
-                console.error('Error processing CSV:', e);
-                alert('Error processing CSV file. Please check the format and try again.');
+                };
+                reader.readAsArrayBuffer(file);
               }
-            };
-            reader.onerror = () => {
-              alert('Error reading CSV file. Please try again.');
-            };
-            reader.readAsText(f); 
-            csvInput.value = '';
-          } catch(e) {
-            console.error('Error handling CSV import:', e);
-            alert('Error importing CSV. Please try again.');
+            } else if (file.type.startsWith('image/')) {
+              const reader = new FileReader();
+              reader.onload = (e) => storeUploadedFile(file, e.target.result);
+              reader.readAsDataURL(file);
+            } else {
+              alert('Unsupported file type. Please upload CSV, Excel, or image files.');
+            }
+          } catch (error) {
+            console.error('Import error:', error);
+            alert('Failed to process the selected file.');
+          } finally {
+            resetInput();
           }
-        };
+        });
       }
 
       addBtn.onclick = addStudent;

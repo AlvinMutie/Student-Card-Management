@@ -186,6 +186,90 @@ router.put('/me/password', authenticateToken, authorizeRole('parent'), async (re
   }
 });
 
+// Link one or more students to the current parent account
+router.post('/me/students/link', authenticateToken, authorizeRole('parent'), async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { admissions } = req.body;
+
+    if (!Array.isArray(admissions) || admissions.length === 0) {
+      return res.status(400).json({ error: 'Please provide an array of admission numbers.' });
+    }
+
+    const sanitizedAdmissions = admissions
+      .map(adm => (typeof adm === 'string' || typeof adm === 'number') ? String(adm).trim().toUpperCase() : '')
+      .filter(Boolean);
+
+    if (sanitizedAdmissions.length === 0) {
+      return res.status(400).json({ error: 'No valid admission numbers supplied.' });
+    }
+
+    const parentResult = await pool.query(
+      'SELECT id FROM parents WHERE user_id = $1',
+      [userId]
+    );
+
+    if (parentResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Parent profile not found' });
+    }
+
+    const parentId = parentResult.rows[0].id;
+    const summary = [];
+
+    for (const admission of sanitizedAdmissions) {
+      const studentResult = await pool.query(
+        'SELECT id, name, parent_id FROM students WHERE UPPER(adm) = $1',
+        [admission]
+      );
+
+      if (studentResult.rows.length === 0) {
+        summary.push({ admission, status: 'not_found' });
+        continue;
+      }
+
+      const student = studentResult.rows[0];
+
+      if (student.parent_id && student.parent_id !== parentId) {
+        summary.push({
+          admission,
+          studentName: student.name,
+          status: 'linked_to_other_parent'
+        });
+        continue;
+      }
+
+      if (student.parent_id === parentId) {
+        summary.push({
+          admission,
+          studentName: student.name,
+          status: 'already_linked'
+        });
+        continue;
+      }
+
+      await pool.query(
+        'UPDATE students SET parent_id = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+        [parentId, student.id]
+      );
+
+      summary.push({
+        admission,
+        studentName: student.name,
+        status: 'linked'
+      });
+    }
+
+    res.json({
+      parentId,
+      summary,
+      linkedCount: summary.filter(item => item.status === 'linked').length
+    });
+  } catch (error) {
+    console.error('Link students error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Update parent (admin only)
 router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
