@@ -9,14 +9,226 @@
   <style>
     /* Page-specific styles only - base styles are in shared-admin-styles.css */
 
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 25px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      margin-bottom: 10px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .brand-icon {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      transition: var(--transition);
+    }
+
+    .brand:hover .brand-icon {
+      transform: scale(1.05);
+    }
+
+    .brand h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      list-style: none;
+      flex: 1;
+      padding: 10px 0;
+    }
+
+    .nav-links li {
+      margin-bottom: 4px;
+      padding: 0 12px;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      color: rgba(255, 255, 255, 0.85);
+      text-decoration: none;
+      transition: var(--transition);
+      border-radius: 10px;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .nav-links a::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 0;
+      background: var(--accent-color);
+      border-radius: 0 3px 3px 0;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      font-weight: 600;
+    }
+
+    .nav-links a.active::before {
+      height: 60%;
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    .logout-section {
+      padding: 20px 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      margin-top: auto;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(239, 68, 68, 0.2);
+      color: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.3);
+      color: white;
+      border-color: rgba(239, 68, 68, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
+    .logout-icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      padding: 35px 40px;
+      overflow-y: auto;
+      margin-left: 260px;
+      background: var(--beige-bg);
+      min-height: 100vh;
+    }
+
+    .top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 35px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(74, 53, 16, 0.1);
+    }
+
+    .top-row h1,
+    .top-row h2 {
+      font-size: 2rem;
+      color: var(--primary-color);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .admin-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    #adminInfo {
+      background: linear-gradient(135deg, white 0%, #fefefe 100%);
+      padding: 10px 20px;
+      border-radius: 25px;
+      box-shadow: var(--box-shadow);
+      font-size: 0.95rem;
+      color: var(--primary-color);
+      font-weight: 500;
+      border: 1px solid rgba(74, 53, 16, 0.1);
+    }
+
+    .logout-btn-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 2px 8px rgba(74, 53, 16, 0.2);
+    }
+
+    .logout-btn-top:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.3);
+    }
+
+    .logout-icon-top {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    .page-header {
+      margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .page-header p {
+      color: #666;
+    }
+
     /* Controls */
     .controls {
-      background: white;
+      background: linear-gradient(135deg, white 0%, #fefefe 100%);
       padding: 25px;
       border-radius: var(--border-radius);
       box-shadow: var(--box-shadow);
       margin-bottom: 30px;
-      border: 1px solid rgba(45, 80, 22, 0.08);
+      border: 1px solid rgba(74, 53, 16, 0.08);
     }
 
     .form-group {
@@ -27,9 +239,10 @@
       display: block;
       margin-bottom: 5px;
       font-weight: 500;
-      color: var(--primary-green);
+      color: var(--primary-color);
     }
 
+    .form-group input,
     .form-group select {
       width: 100%;
       padding: 10px;
@@ -46,34 +259,31 @@
       font-size: 1rem;
       transition: var(--transition);
       margin-right: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
       color: white;
-      box-shadow: 0 2px 8px rgba(45, 80, 22, 0.2);
+      box-shadow: 0 2px 8px rgba(74, 53, 16, 0.2);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(45, 80, 22, 0.3);
+      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.3);
     }
 
     .btn-secondary {
       background: white;
-      color: var(--primary-green);
-      border: 2px solid var(--primary-green);
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color);
     }
 
     .btn-secondary:hover {
-      background: var(--primary-green);
+      background: var(--primary-color);
       color: white;
     }
 
-    /* ID Card Container - 8.5cm x 5.5cm landscape (321 x 208 pixels at 96 DPI) */
+    /* ID Card Styles */
     .id-card-container {
       display: flex;
       justify-content: center;
@@ -82,9 +292,7 @@
 
     .id-card {
       width: 321px;
-      /* 8.5cm at 96 DPI */
       height: 208px;
-      /* 5.5cm at 96 DPI */
       background: white;
       border: 2px solid #ddd;
       border-radius: 8px;
@@ -131,7 +339,7 @@
 
     .id-card-school {
       font-size: 10px;
-      color: var(--primary-green);
+      color: var(--primary-color);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -150,10 +358,91 @@
       font-weight: 500;
     }
 
-    .id-card-number {
-      font-size: 10px;
-      color: #999;
-      margin-top: 4px;
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 70px;
+      }
+
+      .brand h1,
+      .nav-links a span:not(.nav-icon),
+      .logout-btn span:not(.logout-icon) {
+        display: none;
+      }
+
+      .brand {
+        justify-content: center;
+        padding: 20px 10px;
+      }
+
+      .main-content {
+        margin-left: 70px;
+      }
+
+      .nav-links a {
+        justify-content: center;
+        padding: 14px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        padding: 15px;
+      }
+
+      .brand {
+        padding: 0 15px;
+        margin-bottom: 0;
+        border-bottom: none;
+        border-right: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .nav-links {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 0 10px;
+      }
+
+      .nav-links li {
+        margin-bottom: 0;
+        margin-right: 5px;
+      }
+
+      .logout-section {
+        margin-top: 0;
+        padding: 0 10px;
+        border-top: none;
+        border-left: 1px solid rgba(255, 255, 255, 0.15);
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 25px 20px;
+      }
+
+      .top-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .admin-section {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .id-card {
+        width: 280px;
+        height: 181px;
+      }
     }
 
     /* Print Styles */
@@ -161,27 +450,23 @@
 
       .sidebar,
       .controls,
-      .top-row,
       .btn,
-      .admin-section {
+      .top-row {
         display: none !important;
       }
 
       .main-content {
-        margin-left: 0;
         padding: 0;
+        margin-left: 0;
       }
 
-      /* Hide single card container if batch is visible */
       body.batch-mode .id-card-container {
         display: none !important;
       }
 
-      /* Show batch container */
       #batchIDCards {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr);
-        /* 2 columns for print usually fits better */
         gap: 20px;
         margin: 0;
       }
@@ -190,52 +475,289 @@
         margin: 0 auto;
         page-break-inside: avoid;
         border: 1px solid #ddd;
-        /* Ensure border prints */
       }
     }
-
-    /* ... (rest of CSS) ... */
   </style>
 </head>
 
 <body>
-  <!-- ... (HTML structure) ... -->
-
-  <!-- Controls -->
-  <div class="controls">
-    <div class="form-group">
-      <label for="studentSelect">Select Student</label>
-      <select id="studentSelect">
-        <option value="">-- Select a student --</option>
-      </select>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="brand">
+      <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
+      <h1>Hechlink Ventures</h1>
     </div>
-    <button class="btn btn-primary" onclick="generateIDCard()">Generate ID Card</button>
-    <button class="btn btn-secondary" onclick="printIDCard()">Print ID Card</button>
-    <button class="btn btn-secondary" onclick="downloadIDCard()">Download ID Card</button>
-    <button class="btn btn-secondary" onclick="generateBatchIDCards()">Generate Batch ID Cards</button>
+
+    <ul class="nav-links">
+      <li><a href="admindashboard.html">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+          </svg>
+          <span>Dashboard</span>
+        </a></li>
+      <li><a href="students.html">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+          </svg>
+          <span>Students</span>
+        </a></li>
+      <li><a href="parents.html">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" />
+          </svg>
+          <span>Parents</span>
+        </a></li>
+      <li><a href="staff.html">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M21.1,12.5L22.5,13.91L15.97,20.5L12.5,17L13.9,15.59L15.97,17.67L21.1,12.5M10,17L13,20H3V18C3,15.79 6.58,14 11,14L12.89,14.11L10,17M11,4A4,4 0 0,1 15,8A4,4 0 0,1 11,12A4,4 0 0,1 7,8A4,4 0 0,1 11,4Z" />
+          </svg>
+          <span>Staff</span>
+        </a></li>
+      <li><a href="student-id-generator.html" class="active">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
+          </svg>
+          <span>ID Generator</span>
+        </a></li>
+      <li><a href="qr-generator.html">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M3,11H5V13H3V11M11,5H13V9H11V5M9,11H13V15H11V13H9V11M15,11H17V13H19V11H21V13H19V15H21V19H19V21H17V19H13V21H11V17H15V15H17V13H15V11M19,19V15H17V19H19M15,13H13V15H15V13M17,9H15V11H17V9M9,4A5,5 0 0,0 4,9H6A3,3 0 0,1 9,6A3,3 0 0,1 12,9A3,3 0 0,1 9,12H4A5,5 0 0,0 9,17A5,5 0 0,0 14,12A5,5 0 0,0 9,4Z" />
+          </svg>
+          <span>QR Generator</span>
+        </a></li>
+      <li><a href="adminsettings.html">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+          </svg>
+          <span>Settings</span>
+        </a></li>
+    </ul>
+
+    <div class="logout-section">
+      <button class="logout-btn" id="sidebarLogout">
+        <svg class="logout-icon" viewBox="0 0 24 24">
+          <path
+            d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+        </svg>
+        <span>Log Out</span>
+      </button>
+    </div>
   </div>
 
-  <!-- ... -->
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="top-row">
+      <h1>Student ID Card Generator</h1>
+      <div class="admin-section">
+        <div id="adminInfo" class="muted">Welcome back, Admin</div>
+        <button class="logout-btn-top" id="topLogout">
+          <svg class="logout-icon-top" viewBox="0 0 24 24">
+            <path
+              d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+          </svg>
+          Log Out
+        </button>
+      </div>
+    </div>
 
+    <div class="page-header">
+      <p>Generate and print student ID cards</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="form-group">
+        <label for="studentSelect">Select Student</label>
+        <select id="studentSelect">
+          <option value="">-- Select a student --</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="generateIDCard()">Generate ID Card</button>
+      <button class="btn btn-secondary" onclick="printIDCard()">Print ID Card</button>
+      <button class="btn btn-secondary" onclick="downloadIDCard()">Download ID Card</button>
+      <button class="btn btn-secondary" onclick="generateBatchIDCards()">Generate Batch ID Cards</button>
+    </div>
+
+    <!-- ID Card Display -->
+    <div class="id-card-container" id="idCardContainer" style="display: none;">
+      <div class="id-card" id="idCard">
+        <img src="../shared/Hechlink_logo.png" alt="School Logo" class="id-card-logo">
+        <div class="id-card-qr" id="idCardQR">
+          <!-- QR code will be inserted here -->
+        </div>
+        <div class="id-card-info">
+          <div class="id-card-school">Hechlink Ventures School</div>
+          <div class="id-card-name" id="idCardName">Student Name</div>
+          <div class="id-card-adm" id="idCardAdm">Admission: ADM001</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Batch ID Cards Container -->
+    <div id="batchIDCards"
+      style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; margin-top: 30px;">
+    </div>
+  </main>
+
+  <script src="../runtime-config.js"></script>
+  <script src="../shared/api-client.js"></script>
+  <script src="app-api.js"></script>
   <script>
-    // ... (Variables) ...
+    let allStudents = [];
+    let currentStudent = null;
+    let currentQRCodeDataUrl = null;
     let isBatchMode = false;
+    let qrCodeLibraryLoaded = false;
 
-    // ... (Load students) ...
+    // Load QR Code library with multiple CDN fallbacks
+    function loadQRCodeLibrary() {
+      return new Promise((resolve, reject) => {
+        if (typeof QRCode !== 'undefined') {
+          qrCodeLibraryLoaded = true;
+          resolve();
+          return;
+        }
+
+        const cdnSources = [
+          'https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@gh-pages/qrcode.min.js',
+          'https://unpkg.com/qrcodejs@1.0.0/qrcode.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'
+        ];
+
+        let currentIndex = 0;
+
+        function tryLoadCDN(index) {
+          if (index >= cdnSources.length) {
+            reject(new Error('All CDN sources failed.'));
+            return;
+          }
+
+          const script = document.createElement('script');
+          script.src = cdnSources[index];
+          script.async = true;
+
+          script.onload = () => {
+            let attempts = 0;
+            const checkQRCode = setInterval(() => {
+              attempts++;
+              if (typeof QRCode !== 'undefined') {
+                clearInterval(checkQRCode);
+                qrCodeLibraryLoaded = true;
+                resolve();
+              } else if (attempts >= 10) {
+                clearInterval(checkQRCode);
+                tryLoadCDN(index + 1);
+              }
+            }, 100);
+          };
+
+          script.onerror = () => tryLoadCDN(index + 1);
+          document.head.appendChild(script);
+        }
+
+        tryLoadCDN(0);
+      });
+    }
+
+    // Load students on page load
+    window.addEventListener('DOMContentLoaded', async function () {
+      ensureAuthRedirect();
+
+      try {
+        await loadQRCodeLibrary();
+      } catch (error) {
+        console.error('Error loading QR Code library:', error);
+      }
+
+      try {
+        allStudents = await studentsAPI.getAll();
+        populateStudentSelect();
+      } catch (error) {
+        console.error('Error loading students:', error);
+        alert('Failed to load students.');
+      }
+    });
+
+    function populateStudentSelect() {
+      const select = document.getElementById('studentSelect');
+      select.innerHTML = '<option value="">-- Select a student --</option>';
+
+      allStudents.forEach(student => {
+        const option = document.createElement('option');
+        option.value = student.id;
+        option.textContent = `${student.adm} - ${student.name} (${student.class || 'N/A'})`;
+        option.dataset.student = JSON.stringify(student);
+        select.appendChild(option);
+      });
+    }
 
     // Generate ID Card
     async function generateIDCard() {
+      const select = document.getElementById('studentSelect');
+      const selectedOption = select.options[select.selectedIndex];
+
+      if (!selectedOption.value) {
+        alert('Please select a student');
+        return;
+      }
+
+      currentStudent = JSON.parse(selectedOption.dataset.student);
       isBatchMode = false;
       document.body.classList.remove('batch-mode');
       document.getElementById('batchIDCards').style.display = 'none';
 
-      // ... (Existing logic) ...
+      // Generate QR code
+      const qrData = {
+        id: currentStudent.id,
+        adm: currentStudent.adm,
+        name: currentStudent.name,
+        school: 'Hechlink Ventures School'
+      };
 
-      // Update ID card display
-      document.getElementById('idCardName').textContent = currentStudent.name;
-      document.getElementById('idCardAdm').textContent = `Admission: ${currentStudent.adm}`;
-      document.getElementById('idCardQR').innerHTML = `<img src="${currentQRCodeDataUrl}" alt="QR Code">`;
-      document.getElementById('idCardContainer').style.display = 'flex';
+      const qrDataString = JSON.stringify(qrData);
+
+      try {
+        const tempDiv = document.createElement('div');
+        tempDiv.style.cssText = 'position: absolute; left: -9999px; width: 100px; height: 100px;';
+        document.body.appendChild(tempDiv);
+
+        const qr = new QRCode(tempDiv, {
+          text: qrDataString,
+          width: 100,
+          height: 100,
+          colorDark: '#000000',
+          colorLight: '#FFFFFF',
+          correctLevel: QRCode.CorrectLevel.H
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const qrImg = tempDiv.querySelector('img') || tempDiv.querySelector('canvas');
+        if (qrImg) {
+          if (qrImg.tagName === 'CANVAS') {
+            currentQRCodeDataUrl = qrImg.toDataURL('image/png');
+          } else {
+            currentQRCodeDataUrl = qrImg.src;
+          }
+        }
+
+        document.body.removeChild(tempDiv);
+
+        document.getElementById('idCardName').textContent = currentStudent.name;
+        document.getElementById('idCardAdm').textContent = `Admission: ${currentStudent.adm}`;
+        document.getElementById('idCardQR').innerHTML = `<img src="${currentQRCodeDataUrl}" alt="QR Code">`;
+        document.getElementById('idCardContainer').style.display = 'flex';
+
+      } catch (error) {
+        console.error('Error generating ID card:', error);
+        alert('Error generating ID card. Please try again.');
+      }
     }
 
     // Print ID Card
@@ -258,7 +780,53 @@
         return;
       }
 
-      // ... (Existing download logic) ...
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 321;
+        canvas.height = 208;
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = '#DDD';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
+
+        const qrImg = new Image();
+        qrImg.src = currentQRCodeDataUrl;
+        await new Promise(resolve => {
+          qrImg.onload = () => {
+            ctx.drawImage(qrImg, 15, 54, 100, 100);
+            resolve();
+          };
+        });
+
+        ctx.fillStyle = '#2d5016';
+        ctx.font = '600 10px Arial';
+        ctx.fillText('HECHLINK VENTURES SCHOOL', 130, 25);
+
+        ctx.fillStyle = '#333';
+        ctx.font = 'bold 18px Arial';
+        ctx.fillText(currentStudent.name, 130, 85);
+
+        ctx.fillStyle = '#666';
+        ctx.font = '500 14px Arial';
+        ctx.fillText(`Admission: ${currentStudent.adm}`, 130, 110);
+
+        canvas.toBlob(blob => {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `${currentStudent.adm}-id-card.png`;
+          link.click();
+          URL.revokeObjectURL(url);
+        });
+
+      } catch (error) {
+        console.error('Error downloading ID card:', error);
+        alert('Error downloading ID card. Please try again.');
+      }
     }
 
     // Generate Batch ID Cards
@@ -280,38 +848,17 @@
       container.style.display = 'grid';
       document.getElementById('idCardContainer').style.display = 'none';
 
-      // Disable buttons during generation
       const buttons = document.querySelectorAll('.controls button');
       buttons.forEach(b => b.disabled = true);
 
       for (let i = 0; i < allStudents.length; i++) {
-        // ... (Loop logic) ...
-        // (I will keep the existing loop logic but ensure it appends correctly)
         const student = allStudents[i];
 
         try {
-          // ... (Fetch data) ...
-          let studentData = student;
-          try {
-            studentData = await studentsAPI.getById(student.id);
-          } catch (error) {
-            console.warn(`Could not fetch detailed data for ${student.name}:`, error);
-          }
-
-          // ... (QR Generation) ...
           const qrData = {
-            id: studentData.id,
-            adm: studentData.adm,
-            name: studentData.name,
-            picture: studentData.photo_url || '',
-            class: studentData.class || 'N/A',
-            stream: studentData.stream || 'N/A',
-            house: studentData.house || 'N/A',
-            date_of_admission: studentData.date_of_admission || studentData.created_at || 'N/A',
-            date_of_completion: studentData.date_of_completion || 'N/A',
-            meal_card_validity: studentData.meal_card_validity || 'N/A',
-            nemis: studentData.nemis || 'N/A',
-            parent: studentData.parent_name || 'N/A',
+            id: student.id,
+            adm: student.adm,
+            name: student.name,
             school: 'Hechlink Ventures School'
           };
 
@@ -344,7 +891,6 @@
 
           document.body.removeChild(tempDiv);
 
-          // Create ID card HTML
           const cardDiv = document.createElement('div');
           cardDiv.className = 'id-card';
           cardDiv.innerHTML = `
@@ -357,7 +903,6 @@
               </div>
             `;
 
-          // Clear loading message on first card
           if (i === 0) container.innerHTML = '';
           container.appendChild(cardDiv);
 
@@ -366,15 +911,13 @@
         }
       }
 
-      // Re-enable buttons
       buttons.forEach(b => b.disabled = false);
 
-      // Add a summary message at the top of batch container (hidden in print)
       const summary = document.createElement('div');
       summary.style.gridColumn = '1/-1';
       summary.style.textAlign = 'center';
       summary.style.padding = '20px';
-      summary.className = 'no-print'; // Add a class to hide in print if needed, or just rely on CSS
+      summary.className = 'no-print';
       summary.innerHTML = `<strong>Generated ${allStudents.length} ID cards.</strong><br>Click 'Print ID Card' to print all cards.`;
       container.insertBefore(summary, container.firstChild);
     }
@@ -382,19 +925,15 @@
     // Logout
     function doLogout() {
       if (confirm('Are you sure you want to log out?')) {
-        if (typeof doLogout === 'function') {
-          doLogout();
-        } else {
-          localStorage.removeItem('sv_admin_token');
-          localStorage.removeItem('sv_admin_email');
-          window.location.href = '../public/index.html';
-        }
+        localStorage.removeItem('sv_admin_token');
+        localStorage.removeItem('sv_admin_email');
+        window.location.href = 'login.html';
       }
     }
 
     document.getElementById('sidebarLogout').addEventListener('click', doLogout);
+    document.getElementById('topLogout').addEventListener('click', doLogout);
 
-    // Set admin info
     const adminEmail = localStorage.getItem('sv_admin_email') || 'admin';
     const adminInfoEl = document.getElementById('adminInfo');
     if (adminInfoEl) {
