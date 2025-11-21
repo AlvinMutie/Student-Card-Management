@@ -14,8 +14,8 @@ function normalizeBaseUrl(value) {
   if (/^\/\//.test(sanitized)) {
     const protocol =
       typeof window !== 'undefined' &&
-      window.location &&
-      window.location.protocol
+        window.location &&
+        window.location.protocol
         ? window.location.protocol
         : 'https:';
     sanitized = `${protocol}${sanitized}`;
@@ -75,6 +75,8 @@ function resolveApiBaseUrl() {
 
 const API_BASE_URL = resolveApiBaseUrl();
 
+
+
 if (typeof window !== 'undefined') {
   window.StudentCardConfig = window.StudentCardConfig || {};
   window.StudentCardConfig.apiBaseUrl = API_BASE_URL;
@@ -93,9 +95,9 @@ if (typeof window !== 'undefined') {
 
 // Get auth token from localStorage (check multiple possible keys)
 function getAuthToken() {
-  return localStorage.getItem('sv_auth_token') || 
-         localStorage.getItem('sv_parent_token') || 
-         localStorage.getItem('sv_admin_token');
+  return localStorage.getItem('sv_auth_token') ||
+    localStorage.getItem('sv_parent_token') ||
+    localStorage.getItem('sv_admin_token');
 }
 
 // Set auth token in localStorage
@@ -125,7 +127,7 @@ async function apiRequest(endpoint, options = {}) {
 
   try {
     const response = await fetch(url, config);
-    
+
     // Check if response is JSON
     let data;
     const contentType = response.headers.get('content-type');
