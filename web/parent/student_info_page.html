@@ -609,33 +609,39 @@
     async function loadStudentData(showToast = false) {
       try {
         setState('Loading your students…');
+        // Ensure studentsAPI is available
+        if (typeof studentsAPI === 'undefined') {
+          throw new Error('API Client not loaded properly');
+        }
+
         const students = await studentsAPI.getMyStudents();
         studentsCache = students || [];
 
         if (!studentsCache.length) {
           setState('No students linked yet. Please link a student below.');
-          studentContent.style.display = 'none';
-          // Show link section even if no students
-          document.querySelector('.link-section').style.display = 'block';
-          // But we need to make sure the parent container is visible? 
-          // Actually studentContent wraps everything including link section in my new HTML.
-          // So I should probably separate them or just show studentContent but hide profile parts.
-          // For now, let's just show studentContent but maybe with empty placeholders if needed.
-          // Better: Show the link section separately if no students.
-          // Re-structuring slightly in code:
-          studentContent.style.display = 'block';
+          // Hide profile and grid, show link section
           document.querySelector('.student-profile').style.display = 'none';
           document.querySelector('.student-card-grid').style.display = 'none';
+          document.querySelector('.link-section').style.display = 'block';
           return;
         }
 
+        // Show content
         document.querySelector('.student-profile').style.display = 'flex';
         document.querySelector('.student-card-grid').style.display = 'grid';
+        document.querySelector('.link-section').style.display = 'block'; // Keep link section visible
 
         setState('');
         renderStudentsList(studentsCache);
-        const defaultStudent = studentsCache.find(s => (s.adm || '').toUpperCase() === activeAdmission) || studentsCache[0];
-        renderStudent(defaultStudent);
+
+        // Select student: either active one or first one
+        let targetStudent = studentsCache[0];
+        if (activeAdmission) {
+          const found = studentsCache.find(s => (s.adm || s.admission || s.id || '').toUpperCase() === activeAdmission);
+          if (found) targetStudent = found;
+        }
+
+        renderStudent(targetStudent);
 
         if (showToast && linkStatus) {
           linkStatus.textContent = 'Data refreshed.';
@@ -644,7 +650,9 @@
         }
       } catch (error) {
         console.error('Error:', error);
-        setState('Unable to load students.', 'error');
+        setState('Unable to load students. Please try refreshing.', 'error');
+        // Still show link section in case they need to link
+        document.querySelector('.link-section').style.display = 'block';
       }
     }
 

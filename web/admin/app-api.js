@@ -34,11 +34,11 @@
       const adminToken = localStorage.getItem('sv_admin_token');
       const authToken = localStorage.getItem('sv_auth_token');
       if (!adminToken && !authToken) {
-        location.href = '../public/index.html';
+        location.href = 'login.html';
       }
     } catch (e) {
       console.error('Error checking authentication:', e);
-      location.href = '../public/index.html';
+      location.href = 'login.html';
     }
   };
 

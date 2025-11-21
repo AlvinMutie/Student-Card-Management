@@ -195,15 +195,19 @@
       background: var(--bg-card);
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-md);
-      overflow: hidden;
+      overflow-x: auto;
+      /* Ensure horizontal scroll on small screens */
       border: 1px solid var(--border-light);
       margin-top: 20px;
+      width: 100%;
     }
 
     table {
       width: 100%;
       border-collapse: separate;
       border-spacing: 0;
+      min-width: 800px;
+      /* Prevent squishing on small screens */
     }
 
     th {
@@ -216,6 +220,7 @@
       padding: 16px 24px;
       border-bottom: 1px solid var(--border-light);
       text-align: left;
+      white-space: nowrap;
     }
 
     td {
@@ -256,6 +261,19 @@
       max-height: 90vh;
       overflow-y: auto;
       position: relative;
+      animation: modalSlideUp 0.3s ease-out;
+    }
+
+    @keyframes modalSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .modal-header {

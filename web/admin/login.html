@@ -183,30 +183,57 @@
         </a>
     </div>
 
+    <script src="../runtime-config.js"></script>
+    <script src="../shared/api-client.js"></script>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function (e) {
+        document.getElementById('loginForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('errorMessage');
+            const btn = this.querySelector('button');
+            const originalText = btn.innerHTML;
 
-            // Simple client-side validation for demonstration
-            // In a real app, this would call the backend API
-            if (email && password) {
-                // Simulate login delay
-                const btn = this.querySelector('button');
-                const originalText = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-
-                setTimeout(() => {
-                    // For demo purposes, accept any non-empty credentials or specific ones
-                    // Redirect to dashboard
-                    window.location.href = 'admindashboard.html';
-                }, 800);
-            } else {
+            if (!email || !password) {
                 errorMsg.style.display = 'block';
                 errorMsg.textContent = 'Please enter both email and password';
+                return;
+            }
+
+            // Reset UI
+            errorMsg.style.display = 'none';
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+
+            try {
+                // Use the shared authAPI
+                if (typeof authAPI === 'undefined') {
+                    throw new Error('API Client not loaded properly');
+                }
+
+                const response = await authAPI.login(email, password, 'admin');
+
+                if (response.token) {
+                    // Store tokens
+                    localStorage.setItem('sv_admin_token', response.token);
+                    // Also store as generic auth token for shared API usage
+                    localStorage.setItem('sv_auth_token', response.token);
+                    if (response.user) {
+                        localStorage.setItem('sv_user_data', JSON.stringify(response.user));
+                        localStorage.setItem('sv_admin_email', response.user.email);
+                    }
+
+                    // Redirect to dashboard
+                    window.location.href = 'admindashboard.html';
+                } else {
+                    throw new Error('Login failed: No token received');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorMsg.style.display = 'block';
+                errorMsg.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message || 'Invalid credentials'}`;
+                btn.disabled = false;
+                btn.innerHTML = originalText;
             }
         });
     </script>
