@@ -12,45 +12,22 @@ const PORT = process.env.PORT || 3000;
 const path = require('path');
 
 // Middleware
-// CORS configuration - allow all origins in development for easier testing
-const isProduction = process.env.NODE_ENV === 'production';
 
-const parseOrigins = (value) =>
-  (value || '')
-    .split(',')
-    .map((item) => item.trim())
-    .filter(Boolean);
-
-const allowedOrigins = parseOrigins(
-  process.env.CORS_ORIGIN || process.env.CORS_ORIGINS || process.env.ALLOWED_ORIGINS
-);
-
-const wildcardMatch = (origin, pattern) => {
-  if (!pattern.includes('*')) {
-    return origin === pattern;
-  }
-  const regex = new RegExp(`^${pattern.replace(/\./g, '\\.').replace(/\*/g, '.*')}$`);
-  return regex.test(origin);
-};
-
+// Simplified CORS configuration
 const corsOptions = {
-  origin(origin, callback) {
-    if (!isProduction || !origin) {
+  origin: function(origin, callback) {
+    // Allow localhost for development and Netlify frontend
+    const allowedOrigins = [
+      'http://localhost:5500',            // optional for local testing
+      process.env.CORS_ORIGIN             // Netlify frontend URL
+    ];
+
+    if (!origin || allowedOrigins.includes(origin)) {
       return callback(null, true);
+    } else {
+      console.warn(`CORS blocked request from origin: ${origin}`);
+      return callback(new Error(`Origin ${origin} not allowed by CORS policy`));
     }
-
-    if (allowedOrigins.length === 0) {
-      return callback(null, true);
-    }
-
-    const isAllowed = allowedOrigins.some((allowed) => wildcardMatch(origin, allowed));
-
-    if (isAllowed) {
-      return callback(null, true);
-    }
-
-    console.warn(`CORS blocked request from origin: ${origin}`);
-    return callback(new Error(`Origin ${origin} not allowed by CORS policy`));
   },
   credentials: true,
 };
@@ -62,14 +39,12 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Root route - Serve HTML page or JSON based on Accept header
+// Root route - serve HTML page or JSON
 app.get('/', (req, res) => {
-  // If browser requests HTML, serve the welcome page
   if (req.accepts('html')) {
     return res.sendFile(path.join(__dirname, 'public', 'index.html'));
   }
   
-  // Otherwise return JSON
   res.json({
     message: 'Student Card Management API',
     status: 'running',
@@ -108,42 +83,12 @@ app.get('/', (req, res) => {
   });
 });
 
-// API info endpoint (JSON format)
+// API info endpoint
 app.get('/api', (req, res) => {
   res.json({
     message: 'Student Card Management API',
     status: 'running',
     version: '1.0.0',
-    endpoints: {
-      health: '/api/health',
-      auth: {
-        login: 'POST /api/auth/login',
-        me: 'GET /api/auth/me'
-      },
-      students: {
-        getAll: 'GET /api/students',
-        getById: 'GET /api/students/:id',
-        getMyStudents: 'GET /api/students/parent/my-students',
-        create: 'POST /api/students',
-        update: 'PUT /api/students/:id',
-        delete: 'DELETE /api/students/:id'
-      },
-      parents: {
-        getAll: 'GET /api/parents',
-        getById: 'GET /api/parents/:id',
-        create: 'POST /api/parents',
-        update: 'PUT /api/parents/:id',
-        delete: 'DELETE /api/parents/:id'
-      },
-      staff: {
-        getAll: 'GET /api/staff',
-        getById: 'GET /api/staff/:id',
-        create: 'POST /api/staff',
-        update: 'PUT /api/staff/:id',
-        delete: 'DELETE /api/staff/:id'
-      }
-    },
-    documentation: 'See README.md for full API documentation',
     testHealth: 'Visit /api/health to check server status'
   });
 });
@@ -205,4 +150,3 @@ app.listen(PORT, async () => {
 });
 
 module.exports = app;
-

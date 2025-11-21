@@ -29,7 +29,7 @@ Before starting, ensure you have:
 2. **Create a PostgreSQL Database**
    - Click **"New +"** → **"PostgreSQL"**
    - Configure:
-     - **Name**: `student-card-db` (or your preferred name)
+     - sudo delete web service Student-Card-Management  **Name**: `student-card-db` (or your preferred name)
      - **Database**: `student_card_management`
      - **User**: Auto-generated (save this)
      - **Region**: Choose closest to you
