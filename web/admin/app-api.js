@@ -3,7 +3,7 @@
    - All data fetched from and saved to backend
 */
 
-(function(){
+(function () {
   // Ensure API client is loaded
   if (typeof studentsAPI === 'undefined' || typeof parentsAPI === 'undefined' || typeof staffAPI === 'undefined') {
     console.error('API client not loaded. Make sure shared/api-client.js is included before app-api.js');
@@ -29,34 +29,34 @@
   }
 
   /* ------------------ Auth helpers ------------------ */
-  window.ensureAuthRedirect = function(){
+  window.ensureAuthRedirect = function () {
     try {
       const adminToken = localStorage.getItem('sv_admin_token');
       const authToken = localStorage.getItem('sv_auth_token');
-      if(!adminToken && !authToken){
+      if (!adminToken && !authToken) {
         location.href = '../public/index.html';
       }
-    } catch(e) {
+    } catch (e) {
       console.error('Error checking authentication:', e);
       location.href = '../public/index.html';
     }
   };
 
-  window.doLogout = function(){
+  window.doLogout = function () {
     try {
       localStorage.removeItem('sv_admin_token');
       localStorage.removeItem('sv_auth_token');
       localStorage.removeItem('sv_admin_email');
       localStorage.removeItem('sv_user_data');
       location.href = '../public/index.html';
-    } catch(e) {
+    } catch (e) {
       console.error('Error during logout:', e);
       alert('Error during logout. Please clear your browser cache.');
     }
   };
 
   /* ------------------ Page: Dashboard ------------------ */
-  window.initDashboard = async function(){
+  window.initDashboard = async function () {
     try {
       // Fetch counts from API
       const [students, parents, staff] = await Promise.all([
@@ -71,19 +71,19 @@
       const pendingApprovals = staff.filter(s => !s.approved).length || 0;
 
       const elParents = document.getElementById('statParents');
-      if(elParents) elParents.textContent = parentsCount;
-      
+      if (elParents) elParents.textContent = parentsCount;
+
       const elStaff = document.getElementById('statStaff');
-      if(elStaff) elStaff.textContent = staffCount;
-      
+      if (elStaff) elStaff.textContent = staffCount;
+
       const elStudents = document.getElementById('statStudents');
-      if(elStudents) elStudents.textContent = studentsCount;
-      
+      if (elStudents) elStudents.textContent = studentsCount;
+
       const elPending = document.getElementById('statPending');
-      if(elPending) elPending.textContent = pendingApprovals;
+      if (elPending) elPending.textContent = pendingApprovals;
 
       const recentList = document.getElementById('recentList');
-      if(recentList){
+      if (recentList) {
         recentList.innerHTML = '';
         const recent = [
           `Total ${studentsCount} students enrolled`,
@@ -98,27 +98,34 @@
       }
 
       const adminInfo = document.getElementById('adminInfo');
-      if(adminInfo) {
+      if (adminInfo) {
         try {
           adminInfo.textContent = `Signed in as ${localStorage.getItem('sv_admin_email') || 'admin'}`;
-        } catch(e) {
+        } catch (e) {
           adminInfo.textContent = 'Signed in as admin';
         }
       }
-    } catch(e) {
+    } catch (e) {
       console.error('Error initializing dashboard:', e);
     }
   };
 
   /* ------------------ Page: Students ------------------ */
-  window.initStudentsPage = async function(){
+  window.initStudentsPage = async function () {
     try {
       const searchInput = document.getElementById('studentSearchInput');
       const addBtn = document.getElementById('addStudentBtn');
       const refreshBtn = document.getElementById('refreshBtn');
       const tbody = document.querySelector('#studentsTable tbody');
-      
-      if(!tbody) {
+
+      // Modal elements
+      const studentModal = document.getElementById('studentModal');
+      const studentForm = document.getElementById('studentForm');
+      const closeStudentModalBtn = document.getElementById('closeStudentModal');
+      const cancelStudentModalBtn = document.getElementById('cancelStudentModal');
+      const studentModalTitle = document.getElementById('studentModalTitle');
+
+      if (!tbody) {
         console.error('Students table body not found');
         return;
       }
@@ -130,25 +137,25 @@
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;">Loading students...</td></tr>';
           allStudents = await studentsAPI.getAll();
           render(searchInput ? searchInput.value.trim() : '');
-        } catch(error) {
+        } catch (error) {
           console.error('Error loading students:', error);
           tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:red;">Error loading students: ${error.message}</td></tr>`;
         }
       }
 
-      function render(searchQuery = ''){
+      function render(searchQuery = '') {
         tbody.innerHTML = '';
-        
+
         const filtered = allStudents.filter(s => {
-          if(!searchQuery) return true;
+          if (!searchQuery) return true;
           const q = searchQuery.toLowerCase();
-          return (s.name||'').toLowerCase().includes(q) ||
-                 (s.adm||'').toLowerCase().includes(q) ||
-                 (s.class||'').toLowerCase().includes(q) ||
-                 (s.parent_name||'').toLowerCase().includes(q);
+          return (s.name || '').toLowerCase().includes(q) ||
+            (s.adm || '').toLowerCase().includes(q) ||
+            (s.class || '').toLowerCase().includes(q) ||
+            (s.parent_name || '').toLowerCase().includes(q);
         });
 
-        if(filtered.length === 0) {
+        if (filtered.length === 0) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;">No students found</td></tr>';
           return;
         }
@@ -157,7 +164,7 @@
           const tr = document.createElement('tr');
           const paymentStatus = getPaymentStatus(s.fee_balance);
           const photoUrl = s.photo_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyLDEyQTUuNSw1LjUgMCwwLDAgMTcuNSw2LjVBNS41LDUuNSAwLDAsMCAxMiwxQTUuNSw1LjUgMCwwLDAgNi41LDYuNUE1LjUsNS41IDAsMCwwIDEyLDEyTTEyLDE0QzcuNTgsMTQgNCwxNS43OSA0LDE4VjIwSDIwVjE4QzIwLDE1Ljc5IDE2LjQyLDE0IDEyLDE0WiIvPjwvc3ZnPg==';
-          
+
           tr.innerHTML = `
             <td>
               <img src="${escapeHtml(photoUrl)}" alt="Student" class="student-photo" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyLDEyQTUuNSw1LjUgMCwwLDAgMTcuNSw2LjVBNS41LDUuNSAwLDAsMCAxMiwxQTUuNSw1LjUgMCwwLDAgNi41LDYuNUE1LjUsNS41IDAsMCwwIDEyLDEyTTEyLDE0QzcuNTgsMTQgNCwxNS43OSA0LDE4VjIwSDIwVjE4QzIwLDE1Ljc5IDE2LjQyLDE0IDEyLDE0WiIvPjwvc3ZnPg=='">
@@ -194,11 +201,6 @@
                     <path d="M3,11H5V13H3V11M11,5H13V9H11V5M9,11H13V15H11V13H9V11M15,11H17V13H19V11H21V13H19V15H21V19H19V21H17V19H13V21H11V17H15V15H17V13H15V11M19,19V15H17V19H19M15,3H21V9H15V3M17,5V7H19V5H17M3,3H9V9H3V3M5,5V7H7V5H5M3,15H9V21H3V15M5,17V19H7V17H5Z" />
                   </svg>
                 </button>
-                <button class="action-btn id-btn" data-student-id="${s.id}" title="Generate ID Card" onclick="window.location.href='student-id-generator.html?student=${s.id}'">
-                  <svg class="action-icon" viewBox="0 0 24 24">
-                    <path d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
-                  </svg>
-                </button>
                 <button class="action-btn edit-btn" data-student-id="${s.id}" title="Edit">
                   <svg class="action-icon" viewBox="0 0 24 24">
                     <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z" />
@@ -217,30 +219,33 @@
 
         // Add event listeners
         tbody.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.addEventListener('click', async function() {
+          btn.addEventListener('click', async function () {
             const studentId = this.getAttribute('data-student-id');
             const student = allStudents.find(s => s.id == studentId);
-            if(!confirm(`Delete student ${student ? student.name : studentId}?`)) return;
-            
+            if (!confirm(`Delete student ${student ? student.name : studentId}?`)) return;
+
             try {
               await studentsAPI.delete(studentId);
               await loadStudents();
-              if(typeof initDashboard === 'function') initDashboard();
-            } catch(error) {
+              if (typeof initDashboard === 'function') initDashboard();
+            } catch (error) {
               alert('Error deleting student: ' + error.message);
             }
           });
         });
 
         tbody.querySelectorAll('.edit-btn').forEach(btn => {
-          btn.addEventListener('click', function() {
+          btn.addEventListener('click', function () {
             const studentId = this.getAttribute('data-student-id');
-            alert('Edit functionality coming soon. Student ID: ' + studentId);
+            const student = allStudents.find(s => s.id == studentId);
+            if (student) {
+              openStudentModal(student);
+            }
           });
         });
 
         tbody.querySelectorAll('.view-btn').forEach(btn => {
-          btn.addEventListener('click', async function() {
+          btn.addEventListener('click', async function () {
             const studentId = this.getAttribute('data-student-id');
             const student = allStudents.find(s => s.id == studentId);
             if (student) {
@@ -250,32 +255,107 @@
         });
       }
 
+      // Modal Functions
+      function openStudentModal(student = null) {
+        if (student) {
+          studentModalTitle.textContent = 'Edit Student';
+          document.getElementById('studentId').value = student.id;
+          document.getElementById('studentName').value = student.name || '';
+          document.getElementById('studentAdm').value = student.adm || '';
+          document.getElementById('studentNemis').value = student.nemis || '';
+          document.getElementById('studentClass').value = student.class || '';
+          document.getElementById('studentStream').value = student.stream || '';
+          document.getElementById('studentHouse').value = student.house || '';
+          document.getElementById('studentFee').value = student.fee_balance || 0;
+          document.getElementById('studentParent').value = student.parent_id || '';
+
+          // Format dates for input type="date"
+          if (student.date_of_admission) {
+            document.getElementById('admissionDate').value = new Date(student.date_of_admission).toISOString().split('T')[0];
+          } else {
+            document.getElementById('admissionDate').value = '';
+          }
+
+          if (student.date_of_completion) {
+            document.getElementById('completionDate').value = new Date(student.date_of_completion).toISOString().split('T')[0];
+          } else {
+            document.getElementById('completionDate').value = '';
+          }
+        } else {
+          studentModalTitle.textContent = 'Add New Student';
+          studentForm.reset();
+          document.getElementById('studentId').value = '';
+        }
+        studentModal.style.display = 'flex';
+      }
+
+      function closeStudentModal() {
+        studentModal.style.display = 'none';
+      }
+
       // Wire up events
-      if(refreshBtn) refreshBtn.addEventListener('click', loadStudents);
-      if(searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
-      if(addBtn) {
-        addBtn.addEventListener('click', function() {
-          alert('Add student functionality coming soon. Please use the backend API directly for now.');
+      if (refreshBtn) refreshBtn.addEventListener('click', loadStudents);
+      if (searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
+
+      if (addBtn) {
+        addBtn.addEventListener('click', function () {
+          openStudentModal();
+        });
+      }
+
+      if (closeStudentModalBtn) closeStudentModalBtn.addEventListener('click', closeStudentModal);
+      if (cancelStudentModalBtn) cancelStudentModalBtn.addEventListener('click', closeStudentModal);
+
+      if (studentForm) {
+        studentForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const studentId = document.getElementById('studentId').value;
+          const studentData = {
+            name: document.getElementById('studentName').value,
+            adm: document.getElementById('studentAdm').value,
+            nemis: document.getElementById('studentNemis').value,
+            class: document.getElementById('studentClass').value,
+            stream: document.getElementById('studentStream').value,
+            house: document.getElementById('studentHouse').value,
+            fee_balance: document.getElementById('studentFee').value,
+            parent_id: document.getElementById('studentParent').value || null,
+            date_of_admission: document.getElementById('admissionDate').value || null,
+            date_of_completion: document.getElementById('completionDate').value || null
+          };
+
+          try {
+            if (studentId) {
+              await studentsAPI.update(studentId, studentData);
+            } else {
+              await studentsAPI.create(studentData);
+            }
+            closeStudentModal();
+            await loadStudents();
+            if (typeof initDashboard === 'function') initDashboard();
+          } catch (error) {
+            alert('Error saving student: ' + error.message);
+          }
         });
       }
 
       // Initial load
       await loadStudents();
-    } catch(e) {
+    } catch (e) {
       console.error('Error initializing students page:', e);
       alert('Error loading students page. Please refresh.');
     }
   };
 
   /* ------------------ Page: Parents ------------------ */
-  window.initParentsPage = async function(){
+  window.initParentsPage = async function () {
     try {
       const searchInput = document.getElementById('parentSearchInput');
       const addBtn = document.getElementById('addParentBtn');
       const refreshBtn = document.getElementById('refreshBtn');
       const tbody = document.querySelector('#parentsTable tbody');
-      
-      if(!tbody) {
+
+      if (!tbody) {
         console.error('Parents table body not found');
         return;
       }
@@ -291,24 +371,24 @@
             studentsAPI.getAll()
           ]);
           render(searchInput ? searchInput.value.trim() : '');
-        } catch(error) {
+        } catch (error) {
           console.error('Error loading parents:', error);
           tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:red;">Error loading parents: ${error.message}</td></tr>`;
         }
       }
 
-      function render(searchQuery = ''){
+      function render(searchQuery = '') {
         tbody.innerHTML = '';
-        
+
         const filtered = allParents.filter(p => {
-          if(!searchQuery) return true;
+          if (!searchQuery) return true;
           const q = searchQuery.toLowerCase();
-          return (p.name||'').toLowerCase().includes(q) ||
-                 (p.email||'').toLowerCase().includes(q) ||
-                 (p.phone||'').toLowerCase().includes(q);
+          return (p.name || '').toLowerCase().includes(q) ||
+            (p.email || '').toLowerCase().includes(q) ||
+            (p.phone || '').toLowerCase().includes(q);
         });
 
-        if(filtered.length === 0) {
+        if (filtered.length === 0) {
           tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;">No parents found</td></tr>';
           return;
         }
@@ -333,29 +413,29 @@
 
         // Add event listeners
         tbody.querySelectorAll('.btn-del').forEach(btn => {
-          btn.addEventListener('click', async function() {
+          btn.addEventListener('click', async function () {
             const parentId = this.getAttribute('data-id');
             const parent = allParents.find(p => p.id == parentId);
             const linkedStudents = allStudents.filter(s => s.parent_id == parentId);
-            
-            if(linkedStudents.length > 0) {
-              if(!confirm(`This parent is linked to ${linkedStudents.length} student(s). Deleting will remove the link. Continue?`)) return;
+
+            if (linkedStudents.length > 0) {
+              if (!confirm(`This parent is linked to ${linkedStudents.length} student(s). Deleting will remove the link. Continue?`)) return;
             }
-            
-            if(!confirm(`Delete parent ${parent ? parent.name : parentId}?`)) return;
-            
+
+            if (!confirm(`Delete parent ${parent ? parent.name : parentId}?`)) return;
+
             try {
               await parentsAPI.delete(parentId);
               await loadData();
-              if(typeof initDashboard === 'function') initDashboard();
-            } catch(error) {
+              if (typeof initDashboard === 'function') initDashboard();
+            } catch (error) {
               alert('Error deleting parent: ' + error.message);
             }
           });
         });
 
         tbody.querySelectorAll('.btn-edit').forEach(btn => {
-          btn.addEventListener('click', function() {
+          btn.addEventListener('click', function () {
             const parentId = this.getAttribute('data-id');
             alert('Edit functionality coming soon. Parent ID: ' + parentId);
           });
@@ -363,31 +443,31 @@
       }
 
       // Wire up events
-      if(refreshBtn) refreshBtn.addEventListener('click', loadData);
-      if(searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
-      if(addBtn) {
-        addBtn.addEventListener('click', function() {
+      if (refreshBtn) refreshBtn.addEventListener('click', loadData);
+      if (searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
+      if (addBtn) {
+        addBtn.addEventListener('click', function () {
           alert('Add parent functionality coming soon. Please use the backend API directly for now.');
         });
       }
 
       // Initial load
       await loadData();
-    } catch(e) {
+    } catch (e) {
       console.error('Error initializing parents page:', e);
       alert('Error loading parents page. Please refresh.');
     }
   };
 
   /* ------------------ Page: Staff ------------------ */
-  window.initStaffPage = async function(){
+  window.initStaffPage = async function () {
     try {
       const searchInput = document.getElementById('staffSearchInput');
       const addBtn = document.getElementById('addStaffBtn');
       const refreshBtn = document.getElementById('refreshBtn');
       const tbody = document.querySelector('#staffTable tbody');
-      
-      if(!tbody) {
+
+      if (!tbody) {
         console.error('Staff table body not found');
         return;
       }
@@ -403,23 +483,23 @@
             studentsAPI.getAll()
           ]);
           render(searchInput ? searchInput.value.trim() : '');
-        } catch(error) {
+        } catch (error) {
           console.error('Error loading staff:', error);
           tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:red;">Error loading staff: ${error.message}</td></tr>`;
         }
       }
 
-      function render(searchQuery = ''){
+      function render(searchQuery = '') {
         tbody.innerHTML = '';
-        
+
         const filtered = allStaff.filter(s => {
-          if(!searchQuery) return true;
+          if (!searchQuery) return true;
           const q = searchQuery.toLowerCase();
-          return (s.name||'').toLowerCase().includes(q) ||
-                 (s.staff_no||'').toLowerCase().includes(q);
+          return (s.name || '').toLowerCase().includes(q) ||
+            (s.staff_no || '').toLowerCase().includes(q);
         });
 
-        if(filtered.length === 0) {
+        if (filtered.length === 0) {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;">No staff found</td></tr>';
           return;
         }
@@ -446,39 +526,39 @@
 
         // Add event listeners
         tbody.querySelectorAll('.btn-del').forEach(btn => {
-          btn.addEventListener('click', async function() {
+          btn.addEventListener('click', async function () {
             const staffId = this.getAttribute('data-id');
             const staff = allStaff.find(s => s.id == staffId);
-            if(!confirm(`Delete staff ${staff ? staff.name : staffId}?`)) return;
-            
+            if (!confirm(`Delete staff ${staff ? staff.name : staffId}?`)) return;
+
             try {
               await staffAPI.delete(staffId);
               await loadData();
-              if(typeof initDashboard === 'function') initDashboard();
-            } catch(error) {
+              if (typeof initDashboard === 'function') initDashboard();
+            } catch (error) {
               alert('Error deleting staff: ' + error.message);
             }
           });
         });
 
         tbody.querySelectorAll('.btn-edit').forEach(btn => {
-          btn.addEventListener('click', function() {
+          btn.addEventListener('click', function () {
             const staffId = this.getAttribute('data-id');
             alert('Edit functionality coming soon. Staff ID: ' + staffId);
           });
         });
 
         tbody.querySelectorAll('.btn-approve, .btn-revoke').forEach(btn => {
-          btn.addEventListener('click', async function() {
+          btn.addEventListener('click', async function () {
             const staffId = this.getAttribute('data-id');
             const staff = allStaff.find(s => s.id == staffId);
             const newApprovedStatus = !staff.approved;
-            
+
             try {
               await staffAPI.update(staffId, { approved: newApprovedStatus });
               await loadData();
-              if(typeof initDashboard === 'function') initDashboard();
-            } catch(error) {
+              if (typeof initDashboard === 'function') initDashboard();
+            } catch (error) {
               alert('Error updating staff: ' + error.message);
             }
           });
@@ -486,24 +566,24 @@
       }
 
       // Wire up events
-      if(refreshBtn) refreshBtn.addEventListener('click', loadData);
-      if(searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
-      if(addBtn) {
-        addBtn.addEventListener('click', function() {
+      if (refreshBtn) refreshBtn.addEventListener('click', loadData);
+      if (searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
+      if (addBtn) {
+        addBtn.addEventListener('click', function () {
           alert('Add staff functionality coming soon. Please use the backend API directly for now.');
         });
       }
 
       // Initial load
       await loadData();
-    } catch(e) {
+    } catch (e) {
       console.error('Error initializing staff page:', e);
       alert('Error loading staff page. Please refresh.');
     }
   };
 
   /* ------------------ Student Complete Data View ------------------ */
-  window.showStudentCompleteData = async function(student) {
+  window.showStudentCompleteData = async function (student) {
     try {
       // Fetch complete student data from API
       let studentData;
@@ -612,7 +692,7 @@
         const closeModal = () => {
           document.body.removeChild(modalBackdrop);
         };
-        
+
         modalBackdrop.querySelector('#closeCompleteDataModal')?.addEventListener('click', closeModal);
         modalBackdrop.querySelector('#closeModalBtn')?.addEventListener('click', closeModal);
         modalBackdrop.addEventListener('click', (e) => {
@@ -625,11 +705,11 @@
           pdfBtn.addEventListener('click', () => {
             downloadStudentReportPDF(studentData);
           });
-          pdfBtn.addEventListener('mouseenter', function() {
+          pdfBtn.addEventListener('mouseenter', function () {
             this.style.transform = 'translateY(-2px)';
             this.style.boxShadow = '0 4px 12px rgba(128, 0, 32, 0.3)';
           });
-          pdfBtn.addEventListener('mouseleave', function() {
+          pdfBtn.addEventListener('mouseleave', function () {
             this.style.transform = 'translateY(0)';
             this.style.boxShadow = 'none';
           });
@@ -641,11 +721,11 @@
           excelBtn.addEventListener('click', () => {
             downloadStudentReportExcel(studentData);
           });
-          excelBtn.addEventListener('mouseenter', function() {
+          excelBtn.addEventListener('mouseenter', function () {
             this.style.transform = 'translateY(-2px)';
             this.style.boxShadow = '0 4px 12px rgba(45, 80, 22, 0.3)';
           });
-          excelBtn.addEventListener('mouseleave', function() {
+          excelBtn.addEventListener('mouseleave', function () {
             this.style.transform = 'translateY(0)';
             this.style.boxShadow = 'none';
           });
@@ -743,14 +823,14 @@
       const printWindow = window.open('', '_blank');
       printWindow.document.write(printContent);
       printWindow.document.close();
-      
+
       // Wait for images to load, then print
-      printWindow.onload = function() {
+      printWindow.onload = function () {
         setTimeout(() => {
           printWindow.print();
         }, 500);
       };
-      
+
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Error generating PDF report. Please try again.');
@@ -806,7 +886,7 @@
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      
+
     } catch (error) {
       console.error('Error generating Excel:', error);
       alert('Error generating Excel report. Please try again.');
