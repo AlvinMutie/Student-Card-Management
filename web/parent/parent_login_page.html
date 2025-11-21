@@ -1,331 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="stylesheet" href="styles.css">
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Parent Login | Student Viewer</title>
+  <link rel="stylesheet" href="../shared/portal-theme.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary-dark: #4a3510;
-      --primary-medium: #7a5e2a;
-      --primary-light: #b46a27;
-      --background: #f9f3ea;
-      --surface: #fffdf8;
-      --border: #e3d3bb;
-      --text-dark: #3b2a00;
-      --text-medium: #6e5631;
-      --shadow: rgba(59, 42, 0, 0.15);
-    }
-    
     * {
-      margin: 0;
-      padding: 0;
       box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
     }
 
     body {
-      background-color: var(--background);
+      font-family: 'Inter', 'Poppins', sans-serif;
       color: var(--text-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      line-height: 1.6;
     }
 
-    /* HEADER */
-    header {
-      width: 100%;
-      padding: 1.5rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background-color: var(--surface);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    .login-hero {
+      display: grid;
+      gap: 2rem;
     }
 
-    .brand-icon {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-    }
-
-    .brand-text {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-
-    /* MAIN CONTENT */
-    main {
-      flex: 1;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2rem 1rem;
-    }
-    
-    .back-to-home {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 20px;
-      padding: 10px 20px;
-      background-color: rgba(74, 53, 16, 0.08);
-      color: var(--primary-dark);
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: 500;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      width: fit-content;
-    }
-    
-    .back-to-home:hover {
-      background-color: rgba(74, 53, 16, 0.15);
-      transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    
-    .back-icon {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-      transition: all 0.3s ease;
-    }
-    
-    .back-to-home:hover .back-icon {
-      transform: translateX(-3px);
-    }
-
-    /* LOGIN CONTAINER */
     .login-container {
-      background: var(--surface);
-      border-radius: 16px;
-      box-shadow: 0 6px 20px var(--shadow);
-      width: 90%;
-      max-width: 450px;
       padding: 2.5rem 3rem;
-      border: 2px solid #f3e6d0;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--border);
     }
 
-    .login-container:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(59, 42, 0, 0.2);
-    }
-
-    h1 {
+    .login-container h1 {
       text-align: center;
       color: var(--primary-dark);
-      font-size: 1.8rem;
-      margin-bottom: 0.5rem;
-      font-weight: 700;
+      font-size: clamp(1.9rem, 2.5vw, 2.3rem);
+      margin-bottom: 0.35rem;
     }
 
     .welcome-subtitle {
       text-align: center;
       color: var(--text-medium);
       margin-bottom: 2rem;
-      font-weight: 500;
-      font-size: 1.1rem;
     }
 
     .input-group {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.35rem;
     }
 
     .input-group label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
+      margin-bottom: 0.35rem;
+      font-weight: 600;
       color: var(--text-dark);
       font-size: 0.95rem;
     }
 
-    .input-group input {
-      width: 100%;
-      padding: 0.9rem 1rem;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      background-color: #fffaf3;
-      color: var(--text-dark);
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
-
-    .input-group input:focus {
-      border-color: var(--primary-light);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(180, 106, 39, 0.1);
-    }
-
-    hr {
-      margin: 2rem 0;
-      border: none;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #d7c9b8, transparent);
-    }
-
     .forgot-password {
       text-align: center;
-      margin-bottom: 1.5rem;
+      margin: 1.25rem 0;
+      font-weight: 500;
     }
 
     .forgot-password a {
-      color: var(--primary-light);
+      color: var(--primary-medium);
       text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
     }
 
     .forgot-password a:hover {
-      color: var(--primary-medium);
       text-decoration: underline;
     }
 
-    .login-btn {
+    .login-actions {
       display: flex;
-      justify-content: center;
-    }
-
-    .login-btn button {
-      background-color: var(--primary-dark);
-      color: #fff;
-      padding: 1rem 2.5rem;
-      font-size: 1.05rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.2);
-      width: 100%;
-    }
-
-    .login-btn button:hover {
-      background-color: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(74, 53, 16, 0.3);
-    }
-
-    .login-btn button:active {
-      transform: translateY(0);
-    }
-
-    /* FOOTER */
-    footer {
+      flex-direction: column;
+      gap: 0.75rem;
       text-align: center;
-      padding: 1.5rem;
+    }
+
+    .login-actions p {
       color: var(--text-medium);
-      font-size: 0.9rem;
-      width: 100%;
-      background-color: var(--surface);
-      border-top: 1px solid var(--border);
+      font-size: 0.95rem;
     }
 
-    footer a {
-      color: var(--primary-light);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-    footer a:hover {
+    .login-actions a {
       color: var(--primary-medium);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .login-actions a:hover {
       text-decoration: underline;
     }
 
-    /* RESPONSIVE DESIGN */
+    .feature-card {
+      padding: 2rem;
+      border: 1px solid rgba(15, 42, 23, 0.08);
+      background: linear-gradient(135deg, rgba(15, 42, 23, 0.05), rgba(15, 42, 23, 0.12));
+      color: var(--primary-dark);
+      border-radius: 20px;
+      box-shadow: 0 15px 45px rgba(15, 42, 23, 0.15);
+    }
+
+    .feature-card h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .feature-card p {
+      color: rgba(255,255,255,0.85);
+    }
+
     @media (max-width: 768px) {
       .login-container {
         padding: 2rem 1.5rem;
       }
-      
-      header {
-        padding: 1rem 1.5rem;
-      }
-      
-      .brand-text {
-        font-size: 1.4rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .login-container {
-        padding: 1.5rem 1rem;
-        width: 95%;
-      }
-      
-      h1 {
-        font-size: 1.5rem;
-      }
-      
-      .back-to-home {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-      }
     }
   </style>
 </head>
-<body>
-  <header>
-  <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
-  <div class="brand-text">Hechlink Ventures</div>
-</header>
+<body class="garden-body">
+  <header class="garden-header">
+    <div class="brand-pill">
+      <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
+      <span>Hechlink Ventures</span>
+    </div>
+  </header>
 
-
-  <main>
-    <a href="../public/landingpage.html" class="back-to-home">
-      <svg class="back-icon" viewBox="0 0 24 24">
+  <main class="garden-main">
+    <a href="../public/landingpage.html" class="back-link">
+      <svg viewBox="0 0 24 24" class="back-icon" aria-hidden="true">
         <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
       </svg>
-      <span>Back to Home</span>
+      Back to landing
     </a>
-    
-    <div class="login-container">
-      <h1>Welcome, Parent</h1>
-      <p class="welcome-subtitle">Sign in to your account</p>
-      
-      <form id="parentLoginForm">
-        <div class="input-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" required>
-        </div>
-        
-        <div class="input-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter your password" required>
+
+    <div class="login-hero theme-grid-two">
+      <div class="theme-card login-container">
+        <div class="section-lead" style="margin-bottom: 1.5rem;">
+          <h1>Parent Portal Login</h1>
+          <p>Access dashboards, student updates, and financial records straight from the admin-inspired experience.</p>
         </div>
 
-        <hr />
+        <form id="parentLoginForm">
+          <div class="input-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" class="theme-input" placeholder="you@mail.com" required>
+          </div>
 
-        <div class="forgot-password">
-          <a href="#">Forgot Password?</a>
-        </div>
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="theme-input" placeholder="Enter your password" required>
+          </div>
 
-        <div class="login-btn">
-          <button type="submit">Login</button>
-        </div>
-        <div class="no-account">
-          
-  <p>Don’t have an account? <a href="parent_registration_page.html">Register here</a></p>
-</div>
+          <div class="forgot-password">
+            <a href="#">Forgot your password?</a>
+          </div>
 
-      </form>
+          <div class="login-actions">
+            <button type="submit" class="theme-btn primary" id="loginBtn">Sign in</button>
+            <p>New here? <a href="parent_registration_page.html">Create a parent account</a></p>
+          </div>
+        </form>
+      </div>
+
+      <div class="feature-card">
+        <h2>Aligned with Admin</h2>
+        <p>Enjoy the same polished Student Viewer visuals, gradients, and typography the admin suite uses. Parent access now feels right at home with unified colors, rounded cards, and clear actions.</p>
+      </div>
     </div>
-    
   </main>
 
-  <footer>
-    <p>Need help? Contact <a href="#">support@studentviewer.edu</a></p>
+  <footer class="garden-footer">
+    <p>Need help? Email <a href="mailto:support@studentviewer.edu" class="theme-link">support@studentviewer.edu</a></p>
   </footer>
 
   <script src="../runtime-config.js"></script>
@@ -341,7 +182,7 @@
       
       // Show loading state
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Logging in...';
+      submitBtn.textContent = 'Signing in...';
       
       try {
         // Login via API (authAPI.login stores token in sv_auth_token)
@@ -366,7 +207,7 @@
         console.error('Login error:', error);
         alert('Login failed: ' + (error.message || 'Invalid email or password. Make sure the backend server is reachable.'));
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Login';
+        submitBtn.textContent = 'Sign in';
       }
     });
   </script>

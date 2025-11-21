@@ -4,129 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Parent Account | Student Viewer</title>
+  <link rel="stylesheet" href="../shared/portal-theme.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary-dark: #4a3510;
-      --primary-medium: #7a5e2a;
-      --primary-light: #b46a27;
-      --background: #f9f3ea;
-      --surface: #fffdf8;
-      --border: #e3d3bb;
-      --text-dark: #3b2a00;
-      --text-medium: #6e5631;
-      --shadow: rgba(59, 42, 0, 0.15);
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
     body {
-      background-color: var(--background);
+      font-family: 'Inter', 'Poppins', sans-serif;
       color: var(--text-dark);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      line-height: 1.6;
     }
 
-    header {
-      width: 100%;
-      padding: 1.5rem 2rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background-color: var(--surface);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-
-    .brand-icon {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-    }
-
-    .brand-text {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-    }
-
-    main {
-      flex: 1;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 2rem 1rem;
-    }
-
-    .form-container {
-      background: var(--surface);
-      border-radius: 16px;
-      box-shadow: 0 6px 20px var(--shadow);
-      width: 90%;
-      max-width: 900px;
+    .registration-shell {
       padding: 2.5rem 3rem;
-      border: 2px solid #f3e6d0;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border: 1px solid var(--border);
+      margin-top: 1rem;
     }
 
-    .form-container:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(59, 42, 0, 0.2);
-    }
-
-    h1 {
-      text-align: center;
-      color: var(--primary-dark);
-      font-size: 1.8rem;
-      margin-bottom: 2rem;
-      font-weight: 700;
-    }
-
-    .form-description {
-      text-align: center;
-      color: var(--text-medium);
-      margin-bottom: 2rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-
-    form {
+    .registration-grid {
+      margin-top: 2rem;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2.5rem;
-    }
-
-    .form-section {
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.25rem;
     }
 
     .form-section h2 {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 600;
-      margin-bottom: 1.2rem;
       color: var(--primary-dark);
+      margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .form-section h2::before {
-      content: "";
-      display: block;
-      width: 6px;
-      height: 20px;
-      background-color: var(--primary-light);
-      border-radius: 3px;
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary-medium);
+      box-shadow: 0 0 0 6px rgba(15, 42, 23, 0.08);
     }
 
     .input-group {
@@ -135,218 +50,200 @@
 
     .input-group label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--text-dark);
-      font-size: 0.95rem;
-    }
-
-    input {
-      width: 100%;
-      padding: 0.9rem 1rem;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      background-color: #fffaf3;
-      color: var(--text-dark);
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
-
-    input:focus {
-      border-color: var(--primary-light);
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(180, 106, 39, 0.1);
-    }
-
-    .add-child-btn {
-      background-color: var(--primary-dark);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
-      cursor: pointer;
-      transition: all 0.25s ease;
+      margin-bottom: 0.4rem;
       font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: fit-content;
-      margin-top: 0.5rem;
+      color: var(--text-dark);
     }
 
-    .add-child-btn:hover {
-      background-color: var(--primary-medium);
-      transform: translateY(-2px);
+    .helper-text {
+      font-size: 0.9rem;
+      color: var(--text-medium);
+      margin-top: -0.4rem;
+      margin-bottom: 1rem;
     }
 
-    hr {
-      grid-column: span 2;
-      margin: 1.5rem 0;
-      border: none;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #d7c9b8, transparent);
-    }
-
-    .submit-btn {
-      grid-column: span 2;
-      display: flex;
-      justify-content: center;
+    .child-list {
       margin-top: 1rem;
-    }
-
-    .submit-btn button {
-      background-color: var(--primary-dark);
-      color: #fff;
-      padding: 1rem 2.5rem;
-      font-size: 1.05rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.2);
-    }
-
-    .submit-btn button:hover {
-      background-color: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(74, 53, 16, 0.3);
-    }
-
-    footer {
-      text-align: center;
-      padding: 1.5rem;
+      padding: 1rem;
+      background: rgba(15, 42, 23, 0.04);
+      border-radius: 12px;
+      border: 1px dashed rgba(15, 42, 23, 0.2);
       color: var(--text-medium);
       font-size: 0.95rem;
-      width: 100%;
-      background-color: var(--surface);
-      border-top: 1px solid var(--border);
     }
 
-    footer a {
-      color: var(--primary-light);
-      text-decoration: none;
-      font-weight: 500;
+    .cta-row {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
     }
 
-    /* MODAL STYLING */
     .modal {
       position: fixed;
       inset: 0;
-      background-color: rgba(0,0,0,0.4);
+      background: rgba(0,0,0,0.45);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 10;
+      z-index: 100;
+      padding: 1.5rem;
     }
 
     .modal-content {
-      background-color: var(--surface);
+      background: var(--surface);
       padding: 2rem;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(-20px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-
-    .modal-content h3 {
-      margin-bottom: 1rem;
-      color: var(--primary-dark);
-      text-align: center;
+      border-radius: 16px;
+      width: min(420px, 100%);
+      box-shadow: 0 25px 60px rgba(15, 42, 23, 0.25);
+      border: 1px solid var(--border);
     }
 
     .modal-actions {
-      margin-top: 1.5rem;
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
     }
 
-    .modal-actions button {
-      padding: 0.7rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .save-btn {
-      background-color: var(--primary-dark);
-      color: #fff;
-    }
-
-    .cancel-btn {
-      background-color: #ccc;
-      color: #333;
+    @media (max-width: 768px) {
+      .registration-shell {
+        padding: 2rem 1.25rem;
+      }
     }
   </style>
-<header>
+</head>
+<body class="garden-body">
+  <header class="garden-header">
+    <div class="brand-pill">
       <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
-  <div class="brand-text">Hechlink Ventures</div>
-</header>
-
-
-  <main>
-    <div class="form-container">
-      <h1>Create Your Parent Account</h1>
-      <p class="form-description">Connect with your child's educational journey. Fill in your details and link your children to get started.</p>
-      
-      <form id="parentAccountForm">
-        <div class="form-section">
-          <h2>Your Details</h2>
-          <div class="input-group"><label>Full Name</label><input type="text" required></div>
-          <div class="input-group"><label>Phone</label><input type="tel" required></div>
-          <div class="input-group"><label>Email</label><input type="email" required></div>
-          <div class="input-group"><label>Password</label><input type="password" required></div>
-          <div class="input-group"><label>Confirm Password</label><input type="password" required></div>
-        </div>
-
-        <div class="form-section">
-          <h2>Link Children</h2>
-          <div class="input-group"><label>Student Name</label><input type="text" required></div>
-          <div class="input-group"><label>Class</label><input type="text" required></div>
-          <div class="input-group"><label>Registration Number</label><input type="text" required></div>
-          <button type="button" class="add-child-btn">➕ Add Another Child</button>
-        </div>
-
-        <hr>
-        <div class="submit-btn"><button type="submit">Verify & Register Account</button></div>
-      </form>
+      <span>Hechlink Ventures</span>
     </div>
+  </header>
+
+  <main class="garden-main">
+    <a href="../public/landingpage.html" class="back-link">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z" />
+      </svg>
+      Back to landing
+    </a>
+
+    <section class="theme-card registration-shell">
+      <div class="section-lead">
+        <h1>Create Your Parent Account</h1>
+        <p>Bring the admin dashboard polish into the parent experience. Verify your details, connect your children, and gain instant access to live student data.</p>
+      </div>
+
+      <form id="parentAccountForm">
+        <div class="registration-grid">
+          <div class="form-section">
+            <span class="theme-badge">Step 1 · Guardian Details</span>
+            <h2>Your Profile</h2>
+            <div class="input-group">
+              <label for="parentName">Full Name</label>
+              <input type="text" id="parentName" class="theme-input" placeholder="Jane Doe" required>
+            </div>
+            <div class="input-group">
+              <label for="parentPhone">Phone Number</label>
+              <input type="tel" id="parentPhone" class="theme-input" placeholder="+254 700 000 000" required>
+            </div>
+            <div class="input-group">
+              <label for="parentEmail">Email</label>
+              <input type="email" id="parentEmail" class="theme-input" placeholder="parent@email.com" required>
+            </div>
+            <div class="input-group">
+              <label for="parentPassword">Password</label>
+              <input type="password" id="parentPassword" class="theme-input" placeholder="••••••••" required>
+            </div>
+            <div class="input-group">
+              <label for="confirmParentPassword">Confirm Password</label>
+              <input type="password" id="confirmParentPassword" class="theme-input" placeholder="Repeat password" required>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <span class="theme-badge">Step 2 · Link Children</span>
+            <h2>Student Profiles</h2>
+            <p class="helper-text">Use the same registration numbers and classes stored in the admin database to speed up verification.</p>
+            <div class="input-group">
+              <label for="studentName">Student Name</label>
+              <input type="text" id="studentName" class="theme-input" placeholder="Student name" required>
+            </div>
+            <div class="input-group">
+              <label for="studentClass">Class</label>
+              <input type="text" id="studentClass" class="theme-input" placeholder="Grade 8 Blue" required>
+            </div>
+            <div class="input-group">
+              <label for="studentReg">Registration / Admission No.</label>
+              <input type="text" id="studentReg" class="theme-input" placeholder="ST1234" required>
+            </div>
+
+            <button type="button" class="theme-btn outline" id="openChildModal">
+              ➕ Add another child
+            </button>
+
+            <div class="child-list" id="childList">
+              No extra children added yet.
+            </div>
+          </div>
+        </div>
+
+        <hr class="theme-divider" />
+
+        <div class="cta-row">
+          <button type="submit" class="theme-btn primary">Verify & Register Account</button>
+          <a href="parent_login_page.html" class="theme-btn outline" style="text-decoration:none;">Already registered? Sign in</a>
+        </div>
+      </form>
+    </section>
   </main>
 
-  <!-- POPUP MODAL -->
-  <div class="modal" id="childModal">
+  <!-- Modal -->
+  <div class="modal" id="childModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal-content">
-      <h3>Add Another Child</h3>
-      <div class="input-group"><label>Student Name</label><input type="text" id="modalChildName" required></div>
-      <div class="input-group"><label>Class</label><input type="text" id="modalChildClass" required></div>
-      <div class="input-group"><label>Registration Number</label><input type="text" id="modalChildReg" required></div>
+      <h3 id="modalTitle">Add Another Child</h3>
+      <div class="input-group">
+        <label for="modalChildName">Student Name</label>
+        <input type="text" id="modalChildName" class="theme-input" required>
+      </div>
+      <div class="input-group">
+        <label for="modalChildClass">Class</label>
+        <input type="text" id="modalChildClass" class="theme-input" required>
+      </div>
+      <div class="input-group">
+        <label for="modalChildReg">Registration Number</label>
+        <input type="text" id="modalChildReg" class="theme-input" required>
+      </div>
       <div class="modal-actions">
-        <button class="cancel-btn" id="cancelModal">Cancel</button>
-        <button class="save-btn" id="saveChild">Save</button>
+        <button class="theme-btn outline" id="cancelModal" type="button">Cancel</button>
+        <button class="theme-btn primary" id="saveChild" type="button">Save Child</button>
       </div>
     </div>
   </div>
 
-  <footer>
-    <p>By creating an account, you agree to our <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a></p>
+  <footer class="garden-footer">
+    <p>By creating an account, you agree to our <a href="#" class="theme-link">Privacy Policy</a> and <a href="#" class="theme-link">Terms of Service</a>.</p>
   </footer>
 
   <script>
     const modal = document.getElementById("childModal");
-    const addChildBtn = document.querySelector(".add-child-btn");
+    const addChildBtn = document.getElementById("openChildModal");
     const cancelModal = document.getElementById("cancelModal");
     const saveChild = document.getElementById("saveChild");
+    const childList = document.getElementById("childList");
+    const addedChildren = [];
+
+    const closeModal = () => {
+      modal.style.display = "none";
+      document.getElementById("modalChildName").value = "";
+      document.getElementById("modalChildClass").value = "";
+      document.getElementById("modalChildReg").value = "";
+    };
 
     addChildBtn.addEventListener("click", () => modal.style.display = "flex");
-    cancelModal.addEventListener("click", () => modal.style.display = "none");
+    cancelModal.addEventListener("click", closeModal);
 
     saveChild.addEventListener("click", () => {
       const name = document.getElementById("modalChildName").value.trim();
@@ -354,18 +251,20 @@
       const reg = document.getElementById("modalChildReg").value.trim();
 
       if (name && cls && reg) {
-        alert(`Child Added:\nName: ${name}\nClass: ${cls}\nReg: ${reg}`);
-        modal.style.display = "none";
-        document.getElementById("modalChildName").value = "";
-        document.getElementById("modalChildClass").value = "";
-        document.getElementById("modalChildReg").value = "";
+        addedChildren.push({ name, cls, reg });
+        childList.innerHTML = addedChildren.map(child => `
+          <div>
+            <strong>${child.name}</strong> • ${child.cls} • ${child.reg}
+          </div>
+        `).join('');
+        closeModal();
       } else {
         alert("Please fill in all fields.");
       }
     });
 
     window.addEventListener("click", e => {
-      if (e.target === modal) modal.style.display = "none";
+      if (e.target === modal) closeModal();
     });
 
     document.getElementById('parentAccountForm').addEventListener('submit', e => {
