@@ -1,6 +1,7 @@
 [build]
-  command = "node scripts/generate-runtime-config.js"
   publish = "web"
+  command = "node scripts/generate-runtime-config.js && npm run build"
+
 
 [build.environment]
   NODE_VERSION = "18"
