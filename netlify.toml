@@ -1,9 +1,6 @@
 [build]
-  # The folder to publish (your built frontend)
+  command = "node scripts/generate-runtime-config.js"
   publish = "web"
-
-  # Commands to run: generate runtime config, install backend deps, build frontend
-  command = "cd backend && npm install && node ../scripts/generate-runtime-config.js && cd ../web && npm install && npm run build"
 
 [build.environment]
   NODE_VERSION = "18"
