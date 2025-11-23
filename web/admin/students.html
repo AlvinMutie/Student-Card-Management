@@ -550,7 +550,7 @@
           </svg>
           Import CSV/Excel
         </label>
-        <input type="file" id="studentDataInput" accept=".csv,.xlsx,.xls,image/*" style="display:none;">
+        <input type="file" id="studentDataInput" accept=".csv,.xlsx,.xls" style="display:none;">
       </div>
     </div>
 
@@ -849,6 +849,174 @@
       const adminInfoEl = document.getElementById('adminInfo');
       if (adminInfoEl) {
         adminInfoEl.textContent = `Welcome back, ${adminEmail.split('@')[0]}`;
+      }
+
+      // Import CSV/Excel functionality
+      const studentDataInput = document.getElementById('studentDataInput');
+      if (studentDataInput) {
+        studentDataInput.addEventListener('change', async function(e) {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          const fileName = file.name.toLowerCase();
+          const isCSV = fileName.endsWith('.csv');
+          const isExcel = fileName.endsWith('.xlsx') || fileName.endsWith('.xls');
+
+          if (!isCSV && !isExcel) {
+            alert('Please select a CSV or Excel file (.csv, .xlsx, .xls)');
+            e.target.value = '';
+            return;
+          }
+
+          try {
+            // Show loading message
+            const importBtn = document.querySelector('label[for="studentDataInput"]');
+            const originalText = importBtn.innerHTML;
+            importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+            importBtn.style.pointerEvents = 'none';
+
+            let students = [];
+
+            if (isCSV) {
+              // Parse CSV
+              const text = await file.text();
+              const lines = text.split('\n').filter(line => line.trim());
+              
+              // Skip header row if it exists
+              const startIndex = lines[0].toLowerCase().includes('name') || 
+                                lines[0].toLowerCase().includes('adm') ? 1 : 0;
+              
+              for (let i = startIndex; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+                if (values.length >= 2 && values[0] && values[1]) {
+                  students.push({
+                    adm: values[0],
+                    name: values[1],
+                    class: values[2] || '',
+                    stream: values[3] || '',
+                    nemis: values[4] || '',
+                    fee_balance: parseFloat(values[5]) || 0,
+                    parent_id: values[6] || null
+                  });
+                }
+              }
+            } else if (isExcel) {
+              // Parse Excel using XLSX library
+              const arrayBuffer = await file.arrayBuffer();
+              const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+              const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+              const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+              // Skip header row if it exists
+              const startIndex = jsonData[0] && (
+                jsonData[0].some(cell => cell && String(cell).toLowerCase().includes('name')) ||
+                jsonData[0].some(cell => cell && String(cell).toLowerCase().includes('adm'))
+              ) ? 1 : 0;
+
+              for (let i = startIndex; i < jsonData.length; i++) {
+                const row = jsonData[i];
+                if (row && row.length >= 2 && row[0] && row[1]) {
+                  students.push({
+                    adm: String(row[0]).trim(),
+                    name: String(row[1]).trim(),
+                    class: row[2] ? String(row[2]).trim() : '',
+                    stream: row[3] ? String(row[3]).trim() : '',
+                    nemis: row[4] ? String(row[4]).trim() : '',
+                    fee_balance: row[5] ? parseFloat(row[5]) || 0 : 0,
+                    parent_id: row[6] ? String(row[6]).trim() : null
+                  });
+                }
+              }
+            }
+
+            if (students.length === 0) {
+              alert('No valid student data found in the file. Please check the format.');
+              e.target.value = '';
+              importBtn.innerHTML = originalText;
+              importBtn.style.pointerEvents = 'auto';
+              return;
+            }
+
+            // Import students via API
+            let successCount = 0;
+            let errorCount = 0;
+            const errors = [];
+            const total = students.length;
+
+            // Process students in batches to avoid overwhelming the API
+            for (let i = 0; i < students.length; i++) {
+              const student = students[i];
+              
+              // Update progress
+              if (importBtn) {
+                importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Importing ${i + 1}/${total}...`;
+              }
+
+              try {
+                // Check if student already exists by admission number
+                try {
+                  const existing = await studentsAPI.getById(student.adm);
+                  if (existing) {
+                    // Update existing student
+                    await studentsAPI.update(student.adm, student);
+                    successCount++;
+                    continue;
+                  }
+                } catch (e) {
+                  // Student doesn't exist, create new one
+                }
+
+                // Create new student
+                await studentsAPI.create(student);
+                successCount++;
+              } catch (error) {
+                errorCount++;
+                const errorMsg = error.message || 'Unknown error';
+                errors.push(`${student.adm} (${student.name}): ${errorMsg}`);
+                console.error(`Failed to import student ${student.adm}:`, error);
+              }
+            }
+
+            // Reload students list
+            if (typeof initStudentsPage === 'function') {
+              await initStudentsPage();
+            } else if (typeof loadStudents === 'function') {
+              await loadStudents();
+            }
+
+            // Show results
+            let message = `Import completed!\n\n✅ Successfully imported: ${successCount} students`;
+            if (errorCount > 0) {
+              message += `\n❌ Failed: ${errorCount} students`;
+              if (errors.length > 0 && errors.length <= 10) {
+                message += '\n\nErrors:\n' + errors.join('\n');
+              } else if (errors.length > 10) {
+                message += `\n\nFirst 10 errors:\n${errors.slice(0, 10).join('\n')}\n... and ${errors.length - 10} more`;
+              }
+            }
+            
+            if (successCount > 0) {
+              alert(message);
+            } else {
+              alert('Import failed. No students were imported.\n\n' + (errors.length > 0 ? errors.join('\n') : 'Please check your file format.'));
+            }
+
+            // Reset button
+            importBtn.innerHTML = originalText;
+            importBtn.style.pointerEvents = 'auto';
+            e.target.value = '';
+
+          } catch (error) {
+            console.error('Import error:', error);
+            alert('Error importing file: ' + error.message);
+            const importBtn = document.querySelector('label[for="studentDataInput"]');
+            if (importBtn) {
+              importBtn.innerHTML = '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>Import CSV/Excel';
+              importBtn.style.pointerEvents = 'auto';
+            }
+            e.target.value = '';
+          }
+        });
       }
 
       // Photo upload functionality (kept separate as it's not part of app-api.js)
