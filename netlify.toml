@@ -8,10 +8,17 @@
   # Example: https://student-card-management-api.onrender.com/api
   API_BASE_URL = "https://student-card-management-api.onrender.com/api"
 
+# Redirect root to landing page
+[[redirects]]
+  from = "/"
+  to = "/public/landingpage.html"
+  status = 200
+
+# SPA fallback - redirect 404s to landing page
 [[redirects]]
   from = "/*"
-  to = "/index.html"
-  status = 200
+  to = "/public/landingpage.html"
+  status = 404
 
 [[headers]]
   for = "/*"
