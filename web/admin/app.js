@@ -71,7 +71,7 @@
       const adminToken = localStorage.getItem('sv_admin_token');
       const authToken = localStorage.getItem('sv_auth_token');
       if(!adminToken && !authToken){
-        location.href = '../public/index.html';
+        location.href = '../public/landingpage.html';
       }
     } catch(e) {
       console.error('Error checking authentication:', e);

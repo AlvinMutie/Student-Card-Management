@@ -34,11 +34,11 @@
       const adminToken = localStorage.getItem('sv_admin_token');
       const authToken = localStorage.getItem('sv_auth_token');
       if (!adminToken && !authToken) {
-        location.href = 'login.html';
+        location.href = '../public/landingpage.html';
       }
     } catch (e) {
       console.error('Error checking authentication:', e);
-      location.href = 'login.html';
+      location.href = '../public/landingpage.html';
     }
   };
 
@@ -49,7 +49,7 @@
       localStorage.removeItem('sv_admin_email');
       localStorage.removeItem('sv_user_data');
       // Redirect to the new admin login page
-      location.href = 'login.html';
+      location.href = '../public/landingpage.html';
     } catch (e) {
       console.error('Error during logout:', e);
       alert('Error during logout. Please clear your browser cache.');
