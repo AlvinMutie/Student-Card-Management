@@ -22,6 +22,9 @@ router.get('/status', async (req, res) => {
 
     let userCount = 0;
     let adminCount = 0;
+    let parentCount = 0;
+    let staffCount = 0;
+    let studentCount = 0;
     let adminUsers = [];
 
     if (usersTableExists) {
@@ -33,18 +36,46 @@ router.get('/status', async (req, res) => {
       );
       adminCount = adminResult.rows.length;
       adminUsers = adminResult.rows;
+
+      const parentResult = await pool.query("SELECT COUNT(*) as count FROM users WHERE role = 'parent'");
+      parentCount = parseInt(parentResult.rows[0].count);
+
+      const staffResult = await pool.query("SELECT COUNT(*) as count FROM users WHERE role = 'staff'");
+      staffCount = parseInt(staffResult.rows[0].count);
+    }
+
+    // Check students table
+    let studentsTableExists = false;
+    if (usersTableExists) {
+      const studentsTableCheck = await pool.query(`
+        SELECT EXISTS (
+          SELECT FROM information_schema.tables 
+          WHERE table_schema = 'public' 
+          AND table_name = 'students'
+        );
+      `);
+      studentsTableExists = studentsTableCheck.rows[0].exists;
+      
+      if (studentsTableExists) {
+        const studentResult = await pool.query('SELECT COUNT(*) as count FROM students');
+        studentCount = parseInt(studentResult.rows[0].count);
+      }
     }
 
     res.json({
       databaseConnected: true,
       usersTableExists,
+      studentsTableExists,
       userCount,
       adminCount,
+      parentCount,
+      staffCount,
+      studentCount,
       adminUsers,
       message: usersTableExists 
         ? (userCount === 0 
-          ? 'Database tables exist but no users found. Run setup to create admin user.'
-          : `Database is set up. Found ${userCount} user(s), ${adminCount} admin(s).`)
+          ? 'Database tables exist but no users found. Run setup to create admin user or load test data.'
+          : `Database is set up. Found ${userCount} user(s): ${adminCount} admin(s), ${parentCount} parent(s), ${staffCount} staff. ${studentCount} student(s).`)
         : 'Database tables do not exist. Run migrations first.'
     });
   } catch (error) {
@@ -204,6 +235,74 @@ router.post('/seed-admin', async (req, res) => {
     res.status(500).json({
       error: error.message,
       message: 'Failed to seed admin user'
+    });
+  }
+});
+
+// Load comprehensive test data
+router.post('/load-test-data', async (req, res) => {
+  try {
+    // Check if tables exist
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'users'
+      );
+    `);
+
+    if (!tableCheck.rows[0].exists) {
+      return res.status(400).json({
+        error: 'Users table does not exist',
+        message: 'Please run migrations first'
+      });
+    }
+
+    const seedPath = path.join(__dirname, '../migrations/comprehensive-seed.sql');
+    
+    if (!fs.existsSync(seedPath)) {
+      return res.status(404).json({
+        error: 'Seed file not found',
+        message: 'Cannot find migrations/comprehensive-seed.sql'
+      });
+    }
+
+    const seedSQL = fs.readFileSync(seedPath, 'utf8');
+    
+    // Execute seed script
+    await pool.query(seedSQL);
+
+    // Get counts after seeding
+    const counts = await pool.query(`
+      SELECT 
+        (SELECT COUNT(*) FROM users WHERE role = 'admin') as admins,
+        (SELECT COUNT(*) FROM users WHERE role = 'parent') as parents,
+        (SELECT COUNT(*) FROM users WHERE role = 'staff') as staff,
+        (SELECT COUNT(*) FROM students) as students
+    `);
+
+    const countsData = counts.rows[0];
+
+    res.json({
+      success: true,
+      message: 'Test data loaded successfully!',
+      data: {
+        admins: parseInt(countsData.admins),
+        parents: parseInt(countsData.parents),
+        staff: parseInt(countsData.staff),
+        students: parseInt(countsData.students)
+      },
+      credentials: {
+        admin: { email: 'admin@hechlink.edu', password: 'admin123' },
+        parents: { email: 'sarah.onyango@example.com', password: 'parent123' },
+        staff: { email: 'staff1@hechlink.edu', password: 'parent123' }
+      }
+    });
+  } catch (error) {
+    console.error('Load test data error:', error);
+    res.status(500).json({
+      error: error.message,
+      message: 'Failed to load test data. Check server logs for details.'
     });
   }
 });

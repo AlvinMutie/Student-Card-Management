@@ -1,111 +1,258 @@
-# Test Data Guide
+# Test Data Guide - Loading Demo Data Without Shell
 
-This document describes the realistic test data structure used in the Student Card Management System.
+This guide shows you how to load comprehensive test data (parents, staff, students) using web-based tools - **no shell access needed!**
 
-## Overview
+## Quick Start
 
-The test data is designed to be consistent and realistic, with proper parent-student relationships where:
-- Each parent has **1-2 students** (not random)
-- Students share the **same last name** as their parent (realistic family relationships)
-- Data is consistent across admin, parent, and staff views
-- All test accounts use simple passwords for easy testing
+### Option 1: Using Diagnostic Page (Easiest)
 
-## Test Accounts
+1. **Visit**: `https://hechl1nk.netlify.app/public/api-test.html`
+2. **Click**: "Check Database Status" (verify tables exist)
+3. **Click**: "Run Migrations" (if tables don't exist)
+4. **Click**: "Load Test Data" (loads everything)
+5. **Wait**: 30-60 seconds for data to load
+6. **Done!** You now have test data
 
-### Admin Account
-- **Email:** `admin@hechlink.edu`
-- **Password:** `admin123`
-- **Role:** Admin
+### Option 2: Using API Endpoint
 
-### Parent Accounts
-All parent accounts use the password: `parent123`
+```bash
+curl -X POST https://your-backend.onrender.com/api/setup/load-test-data
+```
 
-**Sample Parent Accounts:**
-1. **Sarah Onyango** (`sarah.onyango@example.com`)
-   - Students: Emma Onyango (Grade 5), James Onyango (Grade 3)
-   
-2. **John Mwangi** (`john.mwangi@example.com`)
-   - Student: Sophia Mwangi (Grade 7)
-   
-3. **Mary Kipchoge** (`mary.kipchoge@example.com`)
-   - Students: Michael Kipchoge (Grade 4), Olivia Kipchoge (Grade 2)
+## What Test Data Includes
 
-... and 12 more parents with similar structure.
+After loading, you'll have:
 
-**Total:** 15 parents with 23 students (mix of 1-2 students per parent)
+### Admin Users
+- **1 Admin**: `admin@hechlink.edu` / `admin123`
 
-### Staff Accounts
-All staff accounts use the password: `parent123`
+### Parent Users (with students)
+- **Multiple parents** with password: `parent123`
+- Each parent has **1-2 students** linked to them
+- Students have realistic data (names, classes, fee balances)
 
-1. **John Mwangi** (`staff1@hechlink.edu`) - Teacher
-2. **Mary Wanjiku** (`staff2@hechlink.edu`) - Administrator
-3. **Peter Kamau** (`staff3@hechlink.edu`) - Librarian
-4. **Jane Njeri** (`staff4@hechlink.edu`) - Nurse
-5. **Robert Kariuki** (`staff5@hechlink.edu`) - Security
+**Example Parent Accounts:**
+- `sarah.onyango@example.com` / `parent123` (has 2 students)
+- `john.mwangi@example.com` / `parent123` (has 1 student)
+- `mary.kipchoge@example.com` / `parent123` (has 2 students)
+- And more...
 
-## Data Structure
+### Staff Users
+- **5 Staff members** with password: `parent123` (same as parents for testing)
+- Different departments (Teaching, Administration, Library, Health, Security)
 
-### Parent-Student Relationships
-- **Family Names:** Each family shares the same last name
-- **Student Distribution:** 
-  - 10 parents have 1 student each
-  - 5 parents have 2 students each
-  - Total: 15 parents, 20 students
+**Example Staff Accounts:**
+- `staff1@hechlink.edu` / `parent123` (Teaching - John Mwangi)
+- `staff2@hechlink.edu` / `parent123` (Administration - Mary Wanjiku)
+- `staff3@hechlink.edu` / `parent123` (Library - Peter Kamau)
+- `staff4@hechlink.edu` / `parent123` (Health - Jane Njeri)
+- `staff5@hechlink.edu` / `parent123` (Security - Robert Kariuki)
 
-### Student Data
-- **Admission Numbers:** ST3501 - ST3523 (sequential)
-- **NEMIS Numbers:** NEMIS-7894561001 - NEMIS-7894561023 (sequential)
-- **Classes:** Grades 1-8, with Red and Blue sections
-- **Fee Balances:** Realistic amounts between KES 7,000 - 19,000
+### Students
+- **Multiple students** linked to parent accounts
+- Realistic data: admission numbers, classes, fee balances, NEMIS numbers
+- Proper parent-student relationships
 
-### Staff Data
-- **Staff Numbers:** STF0001 - STF0005
-- **Departments:** Teaching, Administration, Library, Health, Security
-- **Status:** All approved
+## Test Data Files
 
-## Using the Test Data
+The test data comes from:
+- **`backend/migrations/comprehensive-seed.sql`** - Main comprehensive test data
+- **`backend/migrations/clean-seed.sql`** - Clean seed with reset
+- **`backend/migrations/realistic-seed.sql`** - Realistic test scenarios
 
-### To Seed the Database:
+## Step-by-Step: Loading Test Data
 
-1. **Using the comprehensive seed file:**
-   ```bash
-   psql -U your_user -d student_card_db -f backend/migrations/comprehensive-seed.sql
-   ```
+### Step 1: Verify Database is Ready
 
-2. **Or using the realistic seed file:**
-   ```bash
-   psql -U your_user -d student_card_db -f backend/migrations/realistic-seed.sql
-   ```
+Visit diagnostic page and click **"Check Database Status"**
 
-### Testing Scenarios
+You should see:
+- ✅ Database connected
+- ✅ Users table exists
+- ✅ Students table exists (after migrations)
 
-1. **Admin View:**
-   - Login as `admin@hechlink.edu` / `admin123`
-   - View all students, parents, and staff
-   - See consistent family relationships
+### Step 2: Run Migrations (If Needed)
 
-2. **Parent View:**
-   - Login as any parent (e.g., `sarah.onyango@example.com` / `parent123`)
-   - See only their children (1-2 students)
-   - Verify family names match
+If status shows "tables do not exist":
+1. Click **"Run Migrations"**
+2. Wait for success message
+3. Click **"Check Database Status"** again to verify
 
-3. **Staff View:**
-   - Login as any staff member (e.g., `staff1@hechlink.edu` / `parent123`)
-   - View student information relevant to their role
+### Step 3: Load Test Data
 
-## Data Consistency
+1. Click **"Load Test Data"**
+2. Confirm the action
+3. Wait 30-60 seconds (data is being inserted)
+4. You'll see a summary with:
+   - Number of admins, parents, staff, students created
+   - Test credentials for each user type
 
-The test data ensures:
-- ✅ Consistent family relationships (same last names)
-- ✅ Realistic parent-student ratios (1-2 students per parent)
-- ✅ Sequential admission and NEMIS numbers
-- ✅ Proper foreign key relationships
-- ✅ Realistic fee balances
-- ✅ Consistent across all user roles
+### Step 4: Verify Data Loaded
 
-## Notes
+Click **"Check Database Status"** again to see:
+- User counts for each role
+- Student count
+- Confirmation that data is loaded
 
-- All passwords are hashed using bcrypt
-- The seed files use `ON CONFLICT` clauses to prevent duplicate entries
-- Fee balances are stored in the students table
-- All staff members are pre-approved for testing
+## Test Credentials
+
+After loading test data, you can use:
+
+### Admin
+- **Email**: `admin@hechlink.edu`
+- **Password**: `admin123`
+
+### Parents (Example)
+- **Email**: `sarah.onyango@example.com`
+- **Password**: `parent123`
+- **Has Students**: Emma Onyango, James Onyango
+
+### Staff (Example)
+- **Email**: `staff1@hechlink.edu`
+- **Password**: `parent123`
+- **Department**: Teaching
+- **Name**: John Mwangi
+
+## What Gets Created
+
+### Users Table
+- Admin users
+- Parent users
+- Staff users
+
+### Parents Table
+- Parent profiles linked to user accounts
+- Names, emails, phone numbers
+
+### Students Table
+- Student records with:
+  - Admission numbers (ADM)
+  - Names
+  - Classes
+  - Fee balances
+  - NEMIS numbers
+  - Linked to parent accounts
+
+### Staff Table
+- Staff profiles with:
+  - Staff numbers
+  - Departments
+  - Names, emails, phones
+
+## Using Test Data for Demos
+
+### For Admin Dashboard Demo
+1. Login as: `admin@hechlink.edu` / `admin123`
+2. You'll see:
+   - All students in the system
+   - All parents
+   - All staff
+   - Charts populated with data
+   - Fee summaries
+
+### For Parent Portal Demo
+1. Login as: `sarah.onyango@example.com` / `parent123`
+2. You'll see:
+   - Linked students (Emma and James Onyango)
+   - Fee information
+   - Student details
+
+### For Staff Demo
+1. Login as: `staff1@hechlink.edu` / `staff123`
+2. Access staff features
+
+## API Endpoints for Test Data
+
+### Load Test Data
+```bash
+POST /api/setup/load-test-data
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Test data loaded successfully!",
+  "data": {
+    "admins": 1,
+    "parents": 10,
+    "staff": 5,
+    "students": 15
+  },
+  "credentials": {
+    "admin": {
+      "email": "admin@hechlink.edu",
+      "password": "admin123"
+    },
+    "parents": {
+      "email": "sarah.onyango@example.com",
+      "password": "parent123"
+    },
+    "staff": {
+      "email": "staff1@hechlink.edu",
+      "password": "parent123"
+    }
+  }
+}
+```
+
+### Check Status (See What's Loaded)
+```bash
+GET /api/setup/status
+```
+
+**Response includes:**
+- User counts (admin, parent, staff)
+- Student count
+- Table existence status
+
+## Troubleshooting
+
+### Issue: "Seed file not found"
+- **Solution**: Make sure `comprehensive-seed.sql` exists in `backend/migrations/`
+- Check Render logs for file path issues
+
+### Issue: "Foreign key constraint error"
+- **Solution**: Make sure migrations ran first
+- Click "Run Migrations" before loading test data
+
+### Issue: "Data loads but users can't login"
+- **Solution**: 
+  1. Click "Test Login" with the credentials
+  2. If password wrong, click "Create Admin User" to reset
+  3. For parents/staff, the seed uses known password hashes
+
+### Issue: "Takes too long to load"
+- **Normal**: Loading comprehensive data takes 30-60 seconds
+- **Free tier**: Render may be slow on first request
+- **Wait**: Don't refresh, let it complete
+
+## Data Summary
+
+After loading test data, you typically get:
+
+- **1 Admin** user
+- **10-15 Parent** users
+- **5 Staff** members
+- **15-20 Students** (linked to parents)
+- **Realistic relationships** (parents have children with matching last names)
+- **Fee balances** for students
+- **Classes and grades** for students
+
+## Next Steps After Loading
+
+1. ✅ **Test Admin Login**: Use admin credentials
+2. ✅ **Test Parent Login**: Use parent credentials
+3. ✅ **View Dashboard**: See populated charts and data
+4. ✅ **Import More Data**: Use admin panel to import CSV/Excel
+5. ✅ **Create More Users**: Use registration pages
+
+## Files Reference
+
+- **Test Data SQL**: `backend/migrations/comprehensive-seed.sql`
+- **Diagnostic Page**: `web/public/api-test.html`
+- **Setup Routes**: `backend/routes/setup.js`
+
+---
+
+**All test data can be loaded through the web interface - no shell access needed!**
