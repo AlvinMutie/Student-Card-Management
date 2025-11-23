@@ -44,6 +44,17 @@ app.get('/', (req, res) => {
   if (req.accepts('html')) {
     return res.sendFile(path.join(__dirname, 'public', 'index.html'));
   }
+  const migrate = require('./migrations/migrate');
+
+app.get('/run-migrations-secret-123', async (req, res) => {
+  try {
+    await migrate();
+    res.send("Migrations ran successfully");//
+  } catch (err) {
+    res.status(500).send(err.toString());
+  }
+});
+
   
   res.json({
     message: 'Student Card Management API',
