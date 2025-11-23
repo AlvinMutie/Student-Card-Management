@@ -155,13 +155,13 @@
 
   <header class="garden-header">
     <div class="brand-pill">
-      <img src="../admin/shared/Hechlink_logo.png" alt="Logo" class="brand-icon" onerror="this.style.display='none'">
+      <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
       <span>Hechlink Ventures</span>
     </div>
   </header>
 
   <main class="garden-main">
-    <a href="../index.html" class="back-link">
+    <a href="../public/landingpage.html" class="back-link">
       <i class="fas fa-arrow-left"></i>
       Back to Home
     </a>
@@ -268,15 +268,39 @@
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
 
       try {
-        // Simulate API call since we don't have a staff registration endpoint yet
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        const fullName = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const staffNumber = document.getElementById('staffNumber').value.trim();
+        const email = document.getElementById('email').value.trim();
 
-        alert('Account registration submitted successfully! Your staff number will be verified.');
-        // Redirect to login or dashboard
-        // window.location.href = 'staff_login.html';
+        if (password.length < 6) {
+          alert('Password must be at least 6 characters long.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+          return;
+        }
+
+        // Call staff API
+        const response = await staffAPI.create({
+          staff_no: staffNumber,
+          name: fullName,
+          email: email,
+          phone: phone,
+          password: password,
+          department: null // Can be set later by admin
+        });
+
+        if (response && response.id) {
+          alert('Account registration submitted successfully! Your staff number will be verified by an administrator before you can access the system.');
+          // Clear form
+          document.getElementById('staffAccountForm').reset();
+        } else {
+          throw new Error('Invalid response from server');
+        }
       } catch (error) {
         console.error('Registration error:', error);
-        alert('Registration failed. Please try again.');
+        const errorMessage = error.message || 'Registration failed. Please try again.';
+        alert(`Registration failed: ${errorMessage}`);
       } finally {
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;

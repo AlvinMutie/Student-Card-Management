@@ -1012,18 +1012,31 @@
   function configureChartDefaults() {
     Chart.defaults.font.family = "'Inter','Segoe UI',sans-serif";
     Chart.defaults.font.size = 13;
+    Chart.defaults.font.weight = '500';
     Chart.defaults.color = chartPalette.muted;
-    Chart.defaults.layout.padding = { top: 8, right: 12, bottom: 8, left: 12 };
+    Chart.defaults.layout.padding = { top: 12, right: 16, bottom: 12, left: 16 };
     Chart.defaults.plugins.legend.labels.usePointStyle = true;
-    Chart.defaults.plugins.legend.labels.pointStyleWidth = 10;
-    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 42, 23, 0.92)';
+    Chart.defaults.plugins.legend.labels.pointStyleWidth = 12;
+    Chart.defaults.plugins.legend.labels.fontSize = 13;
+    Chart.defaults.plugins.legend.labels.fontWeight = '600';
+    Chart.defaults.plugins.legend.labels.padding = 15;
+    Chart.defaults.plugins.tooltip.backgroundColor = 'rgba(15, 42, 23, 0.95)';
     Chart.defaults.plugins.tooltip.titleColor = '#f8faf7';
+    Chart.defaults.plugins.tooltip.titleFont = { weight: '600', size: 14 };
     Chart.defaults.plugins.tooltip.bodyColor = '#f8faf7';
-    Chart.defaults.plugins.tooltip.borderWidth = 1;
-    Chart.defaults.plugins.tooltip.borderColor = 'rgba(255, 255, 255, 0.08)';
-    Chart.defaults.elements.bar.borderRadius = 10;
-    Chart.defaults.elements.point.radius = 4;
-    Chart.defaults.elements.point.hoverRadius = 6;
+    Chart.defaults.plugins.tooltip.bodyFont = { weight: '500', size: 13 };
+    Chart.defaults.plugins.tooltip.borderWidth = 2;
+    Chart.defaults.plugins.tooltip.borderColor = 'rgba(46, 200, 112, 0.3)';
+    Chart.defaults.plugins.tooltip.padding = 12;
+    Chart.defaults.plugins.tooltip.cornerRadius = 10;
+    Chart.defaults.elements.bar.borderRadius = { topLeft: 8, topRight: 8 };
+    Chart.defaults.elements.bar.borderWidth = 0;
+    Chart.defaults.elements.point.radius = 5;
+    Chart.defaults.elements.point.hoverRadius = 8;
+    Chart.defaults.elements.point.borderWidth = 2;
+    Chart.defaults.elements.point.borderColor = '#fff';
+    Chart.defaults.elements.line.borderWidth = 3;
+    Chart.defaults.elements.line.tension = 0.4;
   }
 
   function createVerticalGradient(ctx, startColor, endColor) {
@@ -1178,10 +1191,21 @@
         datasets: [{
           label: 'Students',
           data: values,
-          backgroundColor: gradient,
+          backgroundColor: labels.map((_, i) => {
+            const colors = [
+              chartPalette.leaf,
+              chartPalette.accent,
+              chartPalette.accentLight,
+              chartPalette.forest,
+              chartPalette.sky,
+              chartPalette.warning
+            ];
+            return colors[i % colors.length];
+          }),
           hoverBackgroundColor: chartPalette.accent,
-          borderColor: chartPalette.accentDark,
-          borderWidth: 1.5
+          borderColor: 'transparent',
+          borderWidth: 0,
+          borderRadius: { topLeft: 8, topRight: 8 }
         }]
       },
       options: {
@@ -1199,26 +1223,37 @@
             }
           }
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              stepSize: 1,
-              color: chartPalette.muted
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1,
+                color: chartPalette.muted,
+                font: { weight: '600' },
+                padding: 8
+              },
+              grid: {
+                color: 'rgba(15, 42, 23, 0.08)',
+                lineWidth: 1.5
+              },
+              border: {
+                display: false
+              }
             },
-            grid: {
-              color: 'rgba(15, 42, 23, 0.1)'
-            }
-          },
-          x: {
-            ticks: {
-              color: chartPalette.muted
-            },
-            grid: {
-              display: false
+            x: {
+              ticks: {
+                color: chartPalette.muted,
+                font: { weight: '600' },
+                padding: 10
+              },
+              grid: {
+                display: false
+              },
+              border: {
+                display: false
+              }
             }
           }
-        }
       }
     });
 
@@ -1255,23 +1290,35 @@
         labels: Object.keys(statusCounts),
         datasets: [{
           data: Object.values(statusCounts),
-          backgroundColor: [chartPalette.success, chartPalette.warning],
-          borderWidth: 2,
-          borderColor: chartPalette.offWhite || '#fff'
+          backgroundColor: [
+            hexToRgba(chartPalette.success, 0.9),
+            hexToRgba(chartPalette.warning, 0.9)
+          ],
+          hoverBackgroundColor: [
+            chartPalette.success,
+            chartPalette.warning
+          ],
+          borderWidth: 3,
+          borderColor: chartPalette.offWhite || '#fff',
+          hoverBorderWidth: 4
         }]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '65%',
+        cutout: '70%',
         plugins: {
           legend: {
-            position: 'bottom'
+            position: 'bottom',
+            labels: {
+              padding: 20,
+              font: { size: 13, weight: '600' }
+            }
           },
           doughnutLabel: {
             text: `${paidPercent}%`,
             color: chartPalette.forestDark,
-            fontSize: 20
+            fontSize: 24
           }
         }
       }
@@ -1329,12 +1376,18 @@
           label: 'Average Fee Balance',
           data: averages,
           borderColor: chartPalette.accentDark,
-          backgroundColor: hexToRgba(chartPalette.accent, 0.18),
+          backgroundColor: hexToRgba(chartPalette.accent, 0.25),
           pointBackgroundColor: chartPalette.accentDark,
           pointBorderColor: '#fff',
-          borderWidth: 3,
+          pointBorderWidth: 3,
+          pointRadius: 6,
+          pointHoverRadius: 9,
+          borderWidth: 3.5,
           fill: true,
-          tension: 0.4
+          tension: 0.5,
+          shadowOffsetY: 4,
+          shadowBlur: 10,
+          shadowColor: hexToRgba(chartPalette.accent, 0.3)
         }]
       },
       options: {
@@ -1343,12 +1396,16 @@
         plugins: {
           legend: {
             display: true,
-            position: 'top'
+            position: 'top',
+            labels: {
+              padding: 15,
+              font: { size: 13, weight: '600' }
+            }
           },
           tooltip: {
             callbacks: {
               label(context) {
-                return formatCurrency(context.parsed.y ?? context.parsed);
+                return `Balance: ${formatCurrency(context.parsed.y ?? context.parsed)}`;
               }
             }
           }
@@ -1360,17 +1417,28 @@
               callback: function(value) {
                 return formatCurrency(value);
               },
-              color: chartPalette.muted
+              color: chartPalette.muted,
+              font: { weight: '600' },
+              padding: 10
             },
             grid: {
-              color: 'rgba(15, 42, 23, 0.12)'
+              color: 'rgba(15, 42, 23, 0.1)',
+              lineWidth: 1.5
+            },
+            border: {
+              display: false
             }
           },
           x: {
             ticks: {
-              color: chartPalette.muted
+              color: chartPalette.muted,
+              font: { weight: '600' },
+              padding: 10
             },
             grid: {
+              display: false
+            },
+            border: {
               display: false
             }
           }
@@ -1446,9 +1514,14 @@
         labels: deptLabels,
         datasets: [{
           data: deptValues,
-          backgroundColor: deptLabels.map((_, idx) => colorPool[idx % colorPool.length]),
-          borderWidth: 2,
-          borderColor: 'rgba(255,255,255,0.9)'
+          backgroundColor: deptLabels.map((_, idx) => {
+            const baseColor = colorPool[idx % colorPool.length];
+            return hexToRgba(baseColor, 0.85);
+          }),
+          hoverBackgroundColor: deptLabels.map((_, idx) => colorPool[idx % colorPool.length]),
+          borderWidth: 3,
+          borderColor: 'rgba(255,255,255,0.95)',
+          hoverBorderWidth: 4
         }]
       },
       options: {
@@ -1456,7 +1529,24 @@
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: 'right'
+            position: 'right',
+            labels: {
+              padding: 15,
+              font: { size: 13, weight: '600' },
+              usePointStyle: true,
+              pointStyleWidth: 14
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label(context) {
+                const label = context.label || '';
+                const value = context.parsed || 0;
+                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                const percentage = ((value / total) * 100).toFixed(1);
+                return `${label}: ${value} (${percentage}%)`;
+              }
+            }
           }
         }
       }
