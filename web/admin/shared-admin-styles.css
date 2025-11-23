@@ -179,21 +179,22 @@ body {
   gap: 10px;
   width: 100%;
   padding: 12px;
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border: none;
   border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.25);
-  color: var(--text-white);
-  border-color: rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+  color: white;
   transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
 }
 
 .logout-icon {
@@ -251,21 +252,21 @@ body {
   align-items: center;
   gap: 8px;
   padding: 8px 20px;
-  background: var(--bg-card);
-  color: var(--danger);
-  border: 1px solid #fee2e2;
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  border: none;
   border-radius: 99px;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
 }
 
 .logout-btn-top:hover {
-  background: #fef2f2;
-  transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
 }
 
 .logout-icon-top {
@@ -291,46 +292,69 @@ body {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: var(--text-white);
-  box-shadow: 0 4px 6px -1px rgba(20, 83, 45, 0.2);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  border: none;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(20, 83, 45, 0.3);
-  filter: brightness(1.1);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
 }
 
 .btn-success {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-  color: var(--text-white);
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+  border: none;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(67, 233, 123, 0.4);
+  background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%);
 }
 
 .btn-danger {
-  background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
-  color: var(--text-white);
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+  border: none;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
+  background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
 }
 
 .btn-secondary {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 1px solid #cbd5e1;
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
 }
 
 .btn-secondary:hover {
-  background: #f1f5f9;
-  border-color: #94a3b8;
+  background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
 }
 
 .btn.ghost {
-  background: transparent;
-  color: var(--primary);
-  border: 1px solid transparent;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  color: #667eea;
+  border: 1px solid rgba(102, 126, 234, 0.3);
 }
 
 .btn.ghost:hover {
-  background: rgba(20, 83, 45, 0.05);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px);
 }
 
 /* Cards */
