@@ -1,7 +1,7 @@
 # Fix for Netlify Password Protection Issue
 
 ## Problem
-Your Netlify site at `https://hechlink.netlify.app/` is showing a password-protected page even though password protection is disabled in Netlify settings.
+Your Netlify site at `https://hechl1nk.netlify.app/` is showing a password-protected page even though password protection is disabled in Netlify settings.
 
 ## Root Cause Analysis
 
@@ -51,7 +51,7 @@ I've updated your `netlify.toml` file to fix the redirect rule:
 ### Step 2: Verify Netlify Settings
 
 1. Go to your Netlify dashboard: https://app.netlify.com
-2. Select your site: `hechlink`
+2. Select your site: `hechl1nk`
 3. Go to **Site settings** → **Access control**
 4. Verify:
    - **Password protection**: Should be **OFF/Disabled**
@@ -75,7 +75,7 @@ I've updated your `netlify.toml` file to fix the redirect rule:
 
 ### Step 5: Test the Site
 
-1. Visit: `https://hechlink.netlify.app/`
+1. Visit: `https://hechl1nk.netlify.app/`
 2. You should see the landing page (not a password prompt)
 3. If you still see a password prompt:
    - Check if it's a browser-saved password prompt (not Netlify)
@@ -114,7 +114,7 @@ If you have Netlify Functions, check:
 
 ## Expected Result
 
-After these steps, visiting `https://hechlink.netlify.app/` should:
+After these steps, visiting `https://hechl1nk.netlify.app/` should:
 - ✅ Show the landing page immediately
 - ✅ No password prompt
 - ✅ No authentication required
@@ -134,7 +134,7 @@ If you still see a password prompt after all steps:
 
 3. **Test with curl**:
    ```bash
-   curl -I https://hechlink.netlify.app/
+   curl -I https://hechl1nk.netlify.app/
    ```
    - Should return `200 OK` (not `401 Unauthorized`)
 

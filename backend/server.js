@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const studentsRoutes = require('./routes/students');
 const parentsRoutes = require('./routes/parents');
 const staffRoutes = require('./routes/staff');
+const setupRoutes = require('./routes/setup');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,17 +45,6 @@ app.get('/', (req, res) => {
   if (req.accepts('html')) {
     return res.sendFile(path.join(__dirname, 'public', 'index.html'));
   }
-  const migrate = require('./migrations/migrate');
-
-app.get('/run-migrations-secret-123', async (req, res) => {
-  try {
-    await migrate();
-    res.send("Migrations ran successfully");//
-  } catch (err) {
-    res.status(500).send(err.toString());
-  }
-});
-
   
   res.json({
     message: 'Student Card Management API',
@@ -109,6 +99,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/students', studentsRoutes);
 app.use('/api/parents', parentsRoutes);
 app.use('/api/staff', staffRoutes);
+app.use('/api/setup', setupRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

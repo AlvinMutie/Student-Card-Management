@@ -2,7 +2,7 @@
 // This file will be overwritten during deployments by scripts/generate-runtime-config.js
 // When running locally without the build script, the API will default to localhost.
 (function (win) {
-  const DEFAULT_LOCAL_API = 'http://localhost:3000/api';
+  const DEFAULT_LOCAL_API = 'http://localhost:10000/api';
   if (!win.StudentCardConfig) {
     win.StudentCardConfig = {};
   }

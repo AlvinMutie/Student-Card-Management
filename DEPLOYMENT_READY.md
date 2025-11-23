@@ -43,7 +43,7 @@ NODE_ENV=production
 PORT=3000
 DATABASE_URL=<your-postgres-internal-url-from-step-1>
 JWT_SECRET=<generate-a-random-secret-string>
-CORS_ORIGIN=https://your-netlify-site.netlify.app
+CORS_ORIGIN=https://hechl1nk.netlify.app
 ```
 
 **To generate JWT_SECRET**, you can use:
@@ -113,7 +113,7 @@ After getting your Netlify URL, update the `CORS_ORIGIN` environment variable in
 
 1. Go to Render dashboard → Your backend service
 2. Environment → Edit `CORS_ORIGIN`
-3. Set to: `https://your-site-name.netlify.app`
+3. Set to: `https://hechl1nk.netlify.app`
 4. Save changes (service will restart)
 
 ## Part 3: Post-Deployment Checklist
@@ -126,7 +126,7 @@ After getting your Netlify URL, update the `CORS_ORIGIN` environment variable in
 
 ### Frontend Verification
 
-1. ✅ Landing page loads: `https://your-site.netlify.app`
+1. ✅ Landing page loads: `https://hechl1nk.netlify.app`
 2. ✅ Admin login works
 3. ✅ Parent registration works
 4. ✅ API calls succeed (check browser console)
@@ -176,9 +176,9 @@ After getting your Netlify URL, update the `CORS_ORIGIN` environment variable in
 - **Health Check**: `https://student-card-management-api.onrender.com/api/health`
 
 ### Frontend URLs
-- **Site**: `https://your-site-name.netlify.app`
-- **Landing**: `https://your-site-name.netlify.app/public/landingpage.html`
-- **Admin Login**: `https://your-site-name.netlify.app/public/index.html`
+- **Site**: `https://hechl1nk.netlify.app`
+- **Landing**: `https://hechl1nk.netlify.app/public/landingpage.html`
+- **Admin Login**: `https://hechl1nk.netlify.app/public/index.html`
 
 ### Default Admin Credentials
 - **Email**: `admin@hechlink.edu`

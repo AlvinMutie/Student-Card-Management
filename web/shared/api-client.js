@@ -147,7 +147,18 @@ async function apiRequest(endpoint, options = {}) {
     console.error('API request error:', error);
     // Provide more helpful error messages
     if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-      throw new Error(`Cannot connect to backend server. Make sure the API is reachable at ${API_BASE_URL}.`);
+      const helpMessage = `
+Cannot connect to backend server at ${API_BASE_URL}
+
+Possible solutions:
+1. Verify backend is deployed: curl ${API_BASE_URL}/health
+2. Check if backend URL is correct in Netlify environment variables
+3. If backend is on free tier, wait 30-60 seconds (it may be sleeping)
+4. Test connection: Visit /public/api-test.html for diagnostics
+
+Current API URL: ${API_BASE_URL}
+      `.trim();
+      throw new Error(helpMessage);
     }
     throw error;
   }

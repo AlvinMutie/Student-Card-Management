@@ -39,7 +39,7 @@ curl https://student-card-management-api.onrender.com/api/health
 ### Step 3: Update Netlify Environment Variable
 
 1. Go to [Netlify Dashboard](https://app.netlify.com)
-2. Select your site: `hechlink`
+2. Select your site: `hechl1nk`
 3. Go to **Site settings** → **Environment variables**
 4. Find or create `API_BASE_URL`
 5. Set it to: `https://YOUR-ACTUAL-RENDER-URL.onrender.com/api`
@@ -57,7 +57,7 @@ curl https://student-card-management-api.onrender.com/api/health
 
 After deployment, check the generated config:
 
-1. Visit: `https://hechlink.netlify.app/runtime-config.js`
+1. Visit: `https://hechl1nk.netlify.app/runtime-config.js`
 2. It should show:
    ```javascript
    win.StudentCardConfig.apiBaseUrl = 'https://YOUR-ACTUAL-RENDER-URL.onrender.com/api';
@@ -107,7 +107,7 @@ After deployment, check the generated config:
 **Solution**:
 1. In Render dashboard, go to your service
 2. Environment → Edit `CORS_ORIGIN`
-3. Set to: `https://hechlink.netlify.app`
+3. Set to: `https://hechl1nk.netlify.app`
 4. Save (service will restart)
 
 ### Issue 5: Environment Variable Not Set
@@ -148,7 +148,7 @@ fetch('https://student-card-management-api.onrender.com/api/health')
 
 ### Test 3: Check Runtime Config
 
-Visit: `https://hechlink.netlify.app/runtime-config.js`
+Visit: `https://hechl1nk.netlify.app/runtime-config.js`
 
 Should show your Render backend URL.
 
