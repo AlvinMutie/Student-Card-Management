@@ -657,15 +657,15 @@
               d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" />
           </svg>
         </button>
-        <button id="addStudentBtn" class="btn btn-primary">
-          <svg class="btn-icon" viewBox="0 0 24 24">
+        <button id="addStudentBtn" class="btn btn-primary" style="padding: 8px 14px; font-size: 0.9rem;">
+          <svg class="btn-icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
             <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
           </svg>
           Add Student
         </button>
         <label for="studentDataInput" class="btn btn-secondary"
-          style="cursor:pointer; display: flex; align-items: center; gap: 8px;">
-          <svg class="btn-icon" viewBox="0 0 24 24">
+          style="cursor:pointer; display: flex; align-items: center; gap: 6px; padding: 8px 14px; font-size: 0.9rem;">
+          <svg class="btn-icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
           </svg>
           Import Excel
@@ -679,14 +679,14 @@
           Upload Photos
         </label>
         <input type="file" id="studentPhotosInput" accept="image/*,.zip" multiple style="display:none;">
-        <button id="deleteAllBtn" class="btn btn-danger">
-          <svg class="btn-icon" viewBox="0 0 24 24">
+        <button id="deleteAllBtn" class="btn btn-danger" style="padding: 8px 14px; font-size: 0.9rem;">
+          <svg class="btn-icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
             <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
           </svg>
           Delete All
         </button>
-        <button id="restoreBtn" class="btn btn-success" style="display:none;">
-          <svg class="btn-icon" viewBox="0 0 24 24">
+        <button id="restoreBtn" class="btn btn-success" style="display:none; padding: 8px 14px; font-size: 0.9rem;">
+          <svg class="btn-icon" viewBox="0 0 24 24" style="width: 16px; height: 16px;">
             <path d="M14,14H16L12,10L8,14H10V18H14V14M6,19H18V17H6V19M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M12,8C16.42,8 20,9.79 20,12V13.08L19,12.08C18.75,10.23 15.78,9 12,9C8.22,9 5.25,10.23 5,12.08L4,13.08V12C4,9.79 7.58,8 12,8M12,14C15.36,14 18,15.12 18,16.5V18H6V16.5C6,15.12 8.64,14 12,14Z" />
           </svg>
           Restore
@@ -1159,25 +1159,63 @@
                 throw new Error('Missing required fields: adm or name');
               }
               
+              // Try to check if student exists, if not create new one
+              let existing = null;
               try {
-                const existing = await studentsAPI.getById(studentData.adm);
-                if (existing && existing.id) {
+                existing = await studentsAPI.getById(studentData.adm);
+              } catch (checkError) {
+                // Check if it's a 404 (student doesn't exist) - that's expected
+                const errorMsg = checkError.message || checkError.toString() || '';
+                const is404 = errorMsg.includes('404') || 
+                             errorMsg.toLowerCase().includes('not found') ||
+                             (checkError.status === 404) ||
+                             (checkError.statusCode === 404);
+                
+                if (!is404) {
+                  // It's a real error, log it but continue to try creating
+                  console.warn(`Error checking existing student ${studentData.adm}:`, errorMsg);
+                }
+                // If 404, student doesn't exist, so we'll create it below
+              }
+              
+              // If student exists, update it
+              if (existing && (existing.id || existing.adm)) {
+                try {
                   await studentsAPI.update(studentData.adm, studentData);
                   return { success: true, adm: studentData.adm };
+                } catch (updateError) {
+                  throw new Error(`Update failed: ${updateError.message || updateError.toString()}`);
                 }
-              } catch (e) {
-                if (e.status !== 404 && e.statusCode !== 404) {
-                  console.warn(`Error checking existing student ${studentData.adm}:`, e);
-                }
+              }
+              
+              // Student doesn't exist, create new one
+              try {
                 const result = await studentsAPI.create(studentData);
                 if (result && (result.id || result.adm)) {
                   return { success: true, adm: studentData.adm };
                 } else {
                   throw new Error('Create succeeded but no ID returned');
                 }
+              } catch (createError) {
+                const errorMsg = createError.message || createError.toString() || 'Unknown error';
+                // Check for common validation errors
+                if (errorMsg.includes('already exists') || errorMsg.includes('duplicate')) {
+                  // Student might have been created by another batch, try updating
+                  try {
+                    await studentsAPI.update(studentData.adm, studentData);
+                    return { success: true, adm: studentData.adm };
+                  } catch (updateError) {
+                    throw new Error(`Create/Update failed: ${errorMsg}`);
+                  }
+                }
+                throw createError;
               }
             } catch (error) {
               const errorMsg = error.message || error.toString() || 'Unknown error';
+              // Log first few errors for debugging
+              if (job.errorCount < 5) {
+                console.error(`Import error for ${student.adm || 'Unknown'}:`, error);
+              }
               return { 
                 success: false, 
                 adm: student.adm || 'Unknown', 
@@ -1197,7 +1235,10 @@
             } else {
               job.errorCount++;
               job.errors.push(`${result.adm} (${result.name}): ${result.error}`);
-              console.error(`Failed to import student ${result.adm}:`, result.error);
+              // Only log first few errors to avoid console spam
+              if (job.errorCount <= 10) {
+                console.error(`Failed to import student ${result.adm}:`, result.error);
+              }
             }
           });
           
@@ -1219,11 +1260,25 @@
         
         // Show notification if page is visible
         if (!document.hidden) {
-          const message = `Import completed!\n\n✅ Successfully imported: ${job.successCount} students`;
+          let message = `Import completed!\n\n✅ Successfully imported: ${job.successCount} students`;
           if (job.errorCount > 0) {
-            alert(message + `\n❌ Failed: ${job.errorCount} students`);
-          } else {
-            alert(message);
+            message += `\n❌ Failed: ${job.errorCount} students`;
+            
+            // Show first few errors for debugging
+            if (job.errors.length > 0) {
+              const sampleErrors = job.errors.slice(0, 5);
+              message += `\n\nSample errors:\n${sampleErrors.join('\n')}`;
+              if (job.errors.length > 5) {
+                message += `\n... and ${job.errors.length - 5} more errors (check console for details)`;
+              }
+            }
+          }
+          
+          alert(message);
+          
+          // Log all errors to console for debugging
+          if (job.errors.length > 0) {
+            console.error('Import errors:', job.errors);
           }
           
           // Reload students
