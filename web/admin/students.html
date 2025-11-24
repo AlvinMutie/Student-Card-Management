@@ -1081,96 +1081,40 @@
               return;
             }
 
-            // Import students via API
-            let successCount = 0;
-            let errorCount = 0;
-            const errors = [];
-            const total = students.length;
-
-            // Process students in batches to avoid overwhelming the API
-            for (let i = 0; i < students.length; i++) {
-              const student = students[i];
-              
-              // Update progress
-              if (importBtn) {
-                importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Importing ${i + 1}/${total}...`;
-              }
-
-              try {
-                // Ensure student data has all required fields
-                const studentData = {
-                  adm: String(student.adm || '').trim(),
-                  name: String(student.name || '').trim(),
-                  class: String(student.class || '').trim(),
-                  stream: String(student.stream || '').trim(),
-                  nemis: String(student.nemis || '').trim(),
-                  fee_balance: parseFloat(student.fee_balance) || 0,
-                  parent_id: student.parent_id || null
-                };
-                
-                if (!studentData.adm || !studentData.name) {
-                  throw new Error('Missing required fields: adm or name');
-                }
-                
-                // Check if student already exists by admission number
-                try {
-                  const existing = await studentsAPI.getById(studentData.adm);
-                  if (existing && existing.id) {
-                    // Update existing student
-                    await studentsAPI.update(studentData.adm, studentData);
-                    successCount++;
-                    continue;
-                  }
-                } catch (e) {
-                  // Student doesn't exist (404 is expected), create new one
-                  if (e.status !== 404 && e.statusCode !== 404) {
-                    console.warn(`Error checking existing student ${studentData.adm}:`, e);
-                  }
-                }
-
-                // Create new student
-                const result = await studentsAPI.create(studentData);
-                if (result && (result.id || result.adm)) {
-                  successCount++;
-                } else {
-                  throw new Error('Create succeeded but no ID returned');
-                }
-              } catch (error) {
-                errorCount++;
-                const errorMsg = error.message || error.toString() || 'Unknown error';
-                errors.push(`${student.adm || 'Unknown'} (${student.name || 'Unknown'}): ${errorMsg}`);
-                console.error(`Failed to import student ${student.adm}:`, error);
-              }
-            }
-
-            // Reload students list
-            if (typeof initStudentsPage === 'function') {
-              await initStudentsPage();
-            } else if (typeof loadStudents === 'function') {
-              await loadStudents();
-            }
-
-            // Show results
-            let message = `Import completed!\n\n✅ Successfully imported: ${successCount} students`;
-            if (errorCount > 0) {
-              message += `\n❌ Failed: ${errorCount} students`;
-              if (errors.length > 0 && errors.length <= 10) {
-                message += '\n\nErrors:\n' + errors.join('\n');
-              } else if (errors.length > 10) {
-                message += `\n\nFirst 10 errors:\n${errors.slice(0, 10).join('\n')}\n... and ${errors.length - 10} more`;
-              }
+            // Store import data for background processing
+            const importJob = {
+              students: students,
+              total: students.length,
+              currentIndex: 0,
+              successCount: 0,
+              errorCount: 0,
+              errors: [],
+              startTime: new Date().toISOString(),
+              status: 'processing'
+            };
+            
+            localStorage.setItem('sv_import_job', JSON.stringify(importJob));
+            
+            // Start background import
+            processImportInBackground(importJob);
+            
+            // Show notification that import has started
+            if (importBtn) {
+              importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Importing in background...`;
+              importBtn.style.pointerEvents = 'none';
             }
             
-            if (successCount > 0) {
-              alert(message);
-            } else {
-              alert('Import failed. No students were imported.\n\n' + (errors.length > 0 ? errors.join('\n') : 'Please check your file format.'));
-            }
-
-            // Reset button
-            importBtn.innerHTML = originalText;
-            importBtn.style.pointerEvents = 'auto';
+            // Show notification
+            alert(`Import started! Processing ${students.length} students in the background. You can navigate to other pages - the import will continue. Check back later to see results.`);
+            
             e.target.value = '';
+            
+            // Reload students list after a delay to show progress
+            setTimeout(async () => {
+              if (typeof initStudentsPage === 'function') {
+                await initStudentsPage();
+              }
+            }, 2000);
 
           } catch (error) {
             console.error('Import error:', error);
@@ -1187,6 +1131,117 @@
         }
       }
       
+      // Background import processor
+      async function processImportInBackground(job) {
+        const { students, total, currentIndex, successCount, errorCount, errors } = job;
+        
+        for (let i = currentIndex; i < students.length; i++) {
+          const student = students[i];
+          
+          // Update job progress
+          job.currentIndex = i + 1;
+          localStorage.setItem('sv_import_job', JSON.stringify(job));
+          
+          try {
+            const studentData = {
+              adm: String(student.adm || '').trim(),
+              name: String(student.name || '').trim(),
+              class: String(student.class || '').trim(),
+              stream: String(student.stream || '').trim(),
+              nemis: String(student.nemis || '').trim(),
+              fee_balance: parseFloat(student.fee_balance) || 0,
+              parent_id: student.parent_id || null
+            };
+            
+            if (!studentData.adm || !studentData.name) {
+              throw new Error('Missing required fields: adm or name');
+            }
+            
+            try {
+              const existing = await studentsAPI.getById(studentData.adm);
+              if (existing && existing.id) {
+                await studentsAPI.update(studentData.adm, studentData);
+                job.successCount++;
+              }
+            } catch (e) {
+              if (e.status !== 404 && e.statusCode !== 404) {
+                console.warn(`Error checking existing student ${studentData.adm}:`, e);
+              }
+              const result = await studentsAPI.create(studentData);
+              if (result && (result.id || result.adm)) {
+                job.successCount++;
+              } else {
+                throw new Error('Create succeeded but no ID returned');
+              }
+            }
+          } catch (error) {
+            job.errorCount++;
+            const errorMsg = error.message || error.toString() || 'Unknown error';
+            job.errors.push(`${student.adm || 'Unknown'} (${student.name || 'Unknown'}): ${errorMsg}`);
+            console.error(`Failed to import student ${student.adm}:`, error);
+          }
+          
+          // Update localStorage periodically
+          if (i % 10 === 0 || i === students.length - 1) {
+            localStorage.setItem('sv_import_job', JSON.stringify(job));
+          }
+          
+          // Small delay to avoid overwhelming the API
+          if (i < students.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+        }
+        
+        // Mark as completed
+        job.status = 'completed';
+        job.completedAt = new Date().toISOString();
+        localStorage.setItem('sv_import_job', JSON.stringify(job));
+        
+        // Show notification if page is visible
+        if (!document.hidden) {
+          const message = `Import completed!\n\n✅ Successfully imported: ${job.successCount} students`;
+          if (job.errorCount > 0) {
+            alert(message + `\n❌ Failed: ${job.errorCount} students`);
+          } else {
+            alert(message);
+          }
+          
+          // Reload students
+          if (typeof initStudentsPage === 'function') {
+            await initStudentsPage();
+          }
+          
+          // Reset button
+          const importBtn = document.querySelector('label[for="studentDataInput"]');
+          if (importBtn) {
+            importBtn.innerHTML = '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>Import Excel';
+            importBtn.style.pointerEvents = 'auto';
+          }
+        }
+      }
+      
+      // Check for existing import job on page load
+      const existingJob = localStorage.getItem('sv_import_job');
+      if (existingJob) {
+        const job = JSON.parse(existingJob);
+        if (job.status === 'processing' && job.currentIndex < job.total) {
+          // Resume import
+          const importBtn = document.querySelector('label[for="studentDataInput"]');
+          if (importBtn) {
+            importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Resuming import (${job.currentIndex}/${job.total})...`;
+            importBtn.style.pointerEvents = 'none';
+          }
+          processImportInBackground(job);
+        } else if (job.status === 'completed') {
+          // Show completion message
+          const message = `Previous import completed!\n\n✅ Successfully imported: ${job.successCount} students`;
+          if (job.errorCount > 0) {
+            alert(message + `\n❌ Failed: ${job.errorCount} students`);
+          }
+          localStorage.removeItem('sv_import_job');
+        }
+      }
+      
       // Call immediately
       attachImportHandler();
       
@@ -1194,6 +1249,18 @@
       document.addEventListener('visibilitychange', function() {
         if (!document.hidden) {
           setTimeout(attachImportHandler, 200);
+          
+          // Check for import progress
+          const job = localStorage.getItem('sv_import_job');
+          if (job) {
+            const jobData = JSON.parse(job);
+            if (jobData.status === 'processing') {
+              const importBtn = document.querySelector('label[for="studentDataInput"]');
+              if (importBtn) {
+                importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Importing (${jobData.currentIndex}/${jobData.total})...`;
+              }
+            }
+          }
         }
       });
       

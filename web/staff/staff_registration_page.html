@@ -82,6 +82,18 @@
       position: relative;
       overflow: hidden;
     }
+    
+    body, html {
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: auto;
+      min-height: 100vh;
+    }
+    
+    .garden-body {
+      overflow-y: auto;
+      min-height: 100vh;
+    }
 
     .feature-card::before {
       content: '';
