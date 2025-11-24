@@ -18,15 +18,23 @@
       font-family: 'Inter', 'Poppins', sans-serif;
       color: var(--text-dark);
       overflow-x: hidden;
+      overflow-y: auto;
+      height: auto;
+    }
+    
+    html {
+      overflow-y: auto;
+      height: auto;
     }
 
     .landing-body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+      background: linear-gradient(135deg, #0f4c3a 0%, #1a5f47 20%, #2d7a5f 40%, #1a5f47 60%, #8b1538 80%, #6b1a2f 100%);
       background-size: 400% 400%;
       animation: gradientShift 20s ease infinite;
       min-height: 100vh;
       position: relative;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
     
     @keyframes gradientShift {
@@ -162,27 +170,27 @@
     }
     
     .portal-card:nth-child(1) {
-      border-top: 5px solid #667eea;
+      border-top: 5px solid #0f4c3a;
     }
     
     .portal-card:nth-child(1)::before {
-      color: #667eea;
+      color: #0f4c3a;
     }
     
     .portal-card:nth-child(2) {
-      border-top: 5px solid #4facfe;
+      border-top: 5px solid #2d7a5f;
     }
     
     .portal-card:nth-child(2)::before {
-      color: #4facfe;
+      color: #2d7a5f;
     }
     
     .portal-card:nth-child(3) {
-      border-top: 5px solid #43e97b;
+      border-top: 5px solid #8b1538;
     }
     
     .portal-card:nth-child(3)::before {
-      color: #43e97b;
+      color: #8b1538;
     }
     
     .portal-card:hover {
@@ -206,17 +214,17 @@
     }
     
     .portal-card:nth-child(1) h3 i {
-      color: #667eea;
+      color: #0f4c3a;
       font-size: 2rem;
     }
     
     .portal-card:nth-child(2) h3 i {
-      color: #4facfe;
+      color: #2d7a5f;
       font-size: 2rem;
     }
     
     .portal-card:nth-child(3) h3 i {
-      color: #43e97b;
+      color: #8b1538;
       font-size: 2rem;
     }
     
@@ -249,7 +257,7 @@
     .form-group input {
       padding: 14px 18px;
       padding-right: 50px;
-      border: 2px solid rgba(102, 126, 234, 0.2);
+      border: 2px solid rgba(15, 76, 58, 0.2);
       border-radius: 12px;
       font-size: 1rem;
       transition: all 0.3s ease;
@@ -259,8 +267,8 @@
     
     .form-group input:focus {
       outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      border-color: #0f4c3a;
+      box-shadow: 0 0 0 4px rgba(15, 76, 58, 0.1);
     }
     
     .password-toggle {
@@ -269,7 +277,7 @@
       top: 42px;
       background: none;
       border: none;
-      color: #667eea;
+      color: #0f4c3a;
       cursor: pointer;
       padding: 8px;
       display: flex;
@@ -280,13 +288,13 @@
     }
     
     .password-toggle:hover {
-      color: #764ba2;
-      background: rgba(102, 126, 234, 0.1);
+      color: #2d7a5f;
+      background: rgba(15, 76, 58, 0.1);
     }
     
     .login-btn {
       padding: 16px 28px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #0f4c3a 0%, #2d7a5f 100%);
       color: white;
       border: none;
       border-radius: 12px;
@@ -295,14 +303,14 @@
       cursor: pointer;
       transition: all 0.3s ease;
       margin-top: 0.5rem;
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 25px rgba(15, 76, 58, 0.4);
       letter-spacing: 0.5px;
     }
     
     .login-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.5);
-      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+      box-shadow: 0 12px 35px rgba(15, 76, 58, 0.5);
+      background: linear-gradient(135deg, #2d7a5f 0%, #0f4c3a 100%);
     }
     
     .login-btn:disabled {
@@ -367,7 +375,7 @@
     
     .features-strip i {
       font-size: 3rem;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      background: linear-gradient(135deg, #0f4c3a, #2d7a5f);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
