@@ -55,8 +55,8 @@
     }
     
     body {
-      background-color: var(--off-white);
-      color: #1f2a1f;
+      background-color: var(--bg-body);
+      color: var(--text-main);
       line-height: 1.6;
       display: flex;
       min-height: 100vh;
@@ -209,7 +209,7 @@
       padding: 2rem;
       overflow-y: auto;
       margin-left: 280px;
-      background: var(--bg-body);
+      background: var(--surface-off-white);
       min-height: 100vh;
     }
     
@@ -318,33 +318,37 @@
       background: white;
       border-radius: 12px;
       padding: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-light);
     }
     
     .stat-card:nth-child(1) {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
+      border: none;
     }
     
     .stat-card:nth-child(2) {
       background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
       color: white;
+      border: none;
     }
     
     .stat-card:nth-child(3) {
       background: white;
       color: var(--text-main);
+      border: 2px solid var(--primary);
     }
     
     .stat-card:nth-child(4) {
       background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       color: white;
+      border: none;
     }
     
     .stat-card:hover {

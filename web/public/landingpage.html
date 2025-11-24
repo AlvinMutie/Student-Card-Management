@@ -228,9 +228,15 @@
     
     .hero-image {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
       display: block;
       border-radius: 24px;
+      min-height: 500px;
+    }
+    
+    .hero-image-container {
+      min-height: 500px;
     }
     
     .hero-bottom-info {
@@ -563,10 +569,9 @@
           <li><a href="#about">About Us</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#portals">Portals</a></li>
-          <li><a href="#contact">Contact</a></li>
-          <li><a href="../parent/parent_login_page.html" class="book-now-btn">
-            Book now <i class="fas fa-arrow-right"></i>
-          </a></li>
+          <li><a href="../admin/admindashboard.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Admin Login</a></li>
+          <li><a href="../parent/parent_login_page.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Parent Login</a></li>
+          <li><a href="../staff/staff_registration_page.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Staff Login</a></li>
         </ul>
       </nav>
     </div>
@@ -584,8 +589,8 @@
             <i class="fas fa-school"></i>
             <span>Unified School Management Platform</span>
           </div>
-          <h1>Unleash Your Inner Champion Today. All In One Place.</h1>
-          <p>Join the ultimate school management experience — where efficiency meets excellence and every feature brings you closer to seamless operations.</p>
+          <h1>Empower Your School's Future. All In One Platform.</h1>
+          <p>Experience comprehensive school management — where academic excellence meets operational efficiency. Manage students, parents, staff, and resources seamlessly from one unified system.</p>
           <div class="hero-cta">
             <a href="../parent/parent_login_page.html" class="cta-primary">
               Start your own journey <i class="fas fa-arrow-right"></i>
@@ -597,24 +602,9 @@
         </div>
         
         <div class="hero-image-container">
-          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80" alt="Students Learning" class="hero-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-          <div style="display:none; width:100%; height:400px; background:linear-gradient(135deg, #0f4c3a, #2d7a5f); border-radius:24px;"></div>
+          <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80" alt="Modern School Campus" class="hero-image" style="object-fit: cover; height: 100%; min-height: 500px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <div style="display:none; width:100%; height:500px; background:linear-gradient(135deg, #0f4c3a, #2d7a5f); border-radius:24px;"></div>
         </div>
-      </div>
-      
-      <div class="hero-bottom-info">
-        <p>Train with real professionals. Get the real results.</p>
-        <div class="coach-profiles">
-          <div class="coach-profile"></div>
-          <div class="coach-profile"></div>
-          <div class="coach-profile"></div>
-        </div>
-      </div>
-      
-      <div class="hero-social">
-        <a href="#"><span>Instagram</span> <i class="fas fa-arrow-right"></i></a>
-        <a href="#"><span>Facebook</span> <i class="fas fa-arrow-right"></i></a>
-        <a href="#"><span>TikTok</span> <i class="fas fa-arrow-right"></i></a>
       </div>
     </section>
 
@@ -626,40 +616,26 @@
       <div class="portal-grid">
         <article class="portal-card">
           <h3><i class="fas fa-user-shield"></i> Admin Console</h3>
-          <p>Manage your school's operations from one central dashboard. Create IDs, import data, and oversee all stakeholders.</p>
-          <form class="login-form" id="adminLoginForm">
-            <div class="form-group">
-              <label for="adminEmail">Email Address</label>
-              <input type="email" id="adminEmail" required>
-            </div>
-            <div class="form-group">
-              <label for="adminPassword">Password</label>
-              <input type="password" id="adminPassword" required>
-              <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
-                <i class="fas fa-eye" id="toggleIcon"></i>
-              </button>
-            </div>
-            <div class="error-message" id="adminError"></div>
-            <button type="submit" class="login-btn" id="adminLoginBtn">
-              <i class="fas fa-sign-in-alt"></i> Sign In as Admin
-            </button>
-          </form>
+          <p>Manage your school's operations from one central dashboard. Create student ID cards, import academic data, track fees, and oversee all stakeholders with comprehensive analytics.</p>
+          <div class="card-actions">
+            <a href="../admin/admindashboard.html" class="theme-btn primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center;">Access Admin Dashboard</a>
+          </div>
         </article>
 
         <article class="portal-card">
           <h3><i class="fas fa-user-friends"></i> Parent Portal</h3>
-          <p>Access your children's records, track fees, download documents, and stay connected with the school.</p>
+          <p>Access your children's academic records, track fee payments, download report cards and documents, and stay connected with teachers and school administration.</p>
           <div class="card-actions">
-            <a href="../parent/parent_login_page.html" class="theme-btn primary">Sign In</a>
-            <a href="../parent/parent_registration_page.html" class="theme-btn outline">Create Account</a>
+            <a href="../parent/parent_login_page.html" class="theme-btn primary" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center; margin-right: 0.5rem;">Sign In</a>
+            <a href="../parent/parent_registration_page.html" class="theme-btn outline" style="border: 2px solid #43e97b; color: #43e97b; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center;">Create Account</a>
           </div>
         </article>
 
         <article class="portal-card">
           <h3><i class="fas fa-chalkboard-teacher"></i> Staff Portal</h3>
-          <p>Complete your onboarding, manage classes, and sync updates with the admin dashboard seamlessly.</p>
+          <p>Complete your staff onboarding, manage class assignments, update student records, and sync academic updates with the admin dashboard seamlessly.</p>
           <div class="card-actions">
-            <a href="../staff/staff_registration_page.html" class="theme-btn primary">Get Started</a>
+            <a href="../staff/staff_registration_page.html" class="theme-btn primary" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center;">Get Started</a>
           </div>
         </article>
       </div>
@@ -716,63 +692,6 @@
       });
     }
     
-    // Login form submission
-    const adminLoginForm = document.getElementById('adminLoginForm');
-    if (adminLoginForm) {
-      adminLoginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        const email = document.getElementById('adminEmail').value.trim();
-        const password = document.getElementById('adminPassword').value;
-        const errorDiv = document.getElementById('adminError');
-        const submitBtn = document.getElementById('adminLoginBtn');
-        const originalText = submitBtn.innerHTML;
-        
-        // Clear previous errors
-        errorDiv.classList.remove('show');
-        errorDiv.textContent = '';
-        
-        if (!email || !password) {
-          errorDiv.textContent = 'Please enter both email and password';
-          errorDiv.classList.add('show');
-          return;
-        }
-        
-        // Disable button and show loading
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-        
-        try {
-          if (typeof authAPI === 'undefined') {
-            throw new Error('API Client not loaded. Please refresh the page.');
-          }
-          
-          const response = await authAPI.login(email, password, 'admin');
-          
-          if (response.token) {
-            // Store tokens
-            localStorage.setItem('sv_admin_token', response.token);
-            localStorage.setItem('sv_auth_token', response.token);
-            
-            if (response.user) {
-              localStorage.setItem('sv_user_data', JSON.stringify(response.user));
-              localStorage.setItem('sv_admin_email', response.user.email);
-            }
-            
-            // Redirect to admin dashboard
-            window.location.href = '../admin/admindashboard.html';
-          } else {
-            throw new Error('Login failed: No token received');
-          }
-        } catch (error) {
-          console.error('Login error:', error);
-          errorDiv.textContent = error.message || 'Invalid email or password. Please try again.';
-          errorDiv.classList.add('show');
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalText;
-        }
-      });
-    }
   </script>
 </body>
 </html>

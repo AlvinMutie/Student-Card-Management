@@ -1092,26 +1092,48 @@
               }
 
               try {
+                // Ensure student data has all required fields
+                const studentData = {
+                  adm: String(student.adm || '').trim(),
+                  name: String(student.name || '').trim(),
+                  class: String(student.class || '').trim(),
+                  stream: String(student.stream || '').trim(),
+                  nemis: String(student.nemis || '').trim(),
+                  fee_balance: parseFloat(student.fee_balance) || 0,
+                  parent_id: student.parent_id || null
+                };
+                
+                if (!studentData.adm || !studentData.name) {
+                  throw new Error('Missing required fields: adm or name');
+                }
+                
                 // Check if student already exists by admission number
                 try {
-                  const existing = await studentsAPI.getById(student.adm);
-                  if (existing) {
+                  const existing = await studentsAPI.getById(studentData.adm);
+                  if (existing && existing.id) {
                     // Update existing student
-                    await studentsAPI.update(student.adm, student);
+                    await studentsAPI.update(studentData.adm, studentData);
                     successCount++;
                     continue;
                   }
                 } catch (e) {
-                  // Student doesn't exist, create new one
+                  // Student doesn't exist (404 is expected), create new one
+                  if (e.status !== 404 && e.statusCode !== 404) {
+                    console.warn(`Error checking existing student ${studentData.adm}:`, e);
+                  }
                 }
 
                 // Create new student
-                await studentsAPI.create(student);
-                successCount++;
+                const result = await studentsAPI.create(studentData);
+                if (result && (result.id || result.adm)) {
+                  successCount++;
+                } else {
+                  throw new Error('Create succeeded but no ID returned');
+                }
               } catch (error) {
                 errorCount++;
-                const errorMsg = error.message || 'Unknown error';
-                errors.push(`${student.adm} (${student.name}): ${errorMsg}`);
+                const errorMsg = error.message || error.toString() || 'Unknown error';
+                errors.push(`${student.adm || 'Unknown'} (${student.name || 'Unknown'}): ${errorMsg}`);
                 console.error(`Failed to import student ${student.adm}:`, error);
               }
             }
@@ -1245,10 +1267,37 @@
             
             for (const student of data.students) {
               try {
-                await studentsAPI.create(student);
-                restored++;
+                // Ensure all required fields are present
+                const studentData = {
+                  adm: student.adm || student.id,
+                  name: student.name || 'Unknown',
+                  class: student.class || '',
+                  stream: student.stream || '',
+                  nemis: student.nemis || '',
+                  fee_balance: student.fee_balance || 0,
+                  parent_id: student.parent_id || null,
+                  photo_url: student.photo_url || null
+                };
+                
+                // Check if student already exists
+                try {
+                  const existing = await studentsAPI.getById(studentData.adm);
+                  if (existing) {
+                    // Update existing
+                    await studentsAPI.update(studentData.adm, studentData);
+                    restored++;
+                  } else {
+                    // Create new
+                    await studentsAPI.create(studentData);
+                    restored++;
+                  }
+                } catch (createError) {
+                  // If getById fails, try to create
+                  await studentsAPI.create(studentData);
+                  restored++;
+                }
               } catch (error) {
-                console.error(`Error restoring student ${student.adm}:`, error);
+                console.error(`Error restoring student ${student.adm || student.id}:`, error);
                 failed++;
               }
             }
