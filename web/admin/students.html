@@ -1132,11 +1132,11 @@
         }
       }
       
-      // Background import processor - optimized for speed
+      // Background import processor - optimized for maximum speed
       async function processImportInBackground(job) {
         const { students, total, currentIndex } = job;
-        const BATCH_SIZE = 10; // Process 10 students in parallel
-        const BATCH_DELAY = 50; // 50ms delay between batches (reduced from 100ms per student)
+        const BATCH_SIZE = 25; // Process 25 students in parallel (increased for speed)
+        const BATCH_DELAY = 10; // Minimal delay (10ms) between batches for speed
         
         // Process students in batches for better performance
         for (let i = currentIndex; i < students.length; i += BATCH_SIZE) {
@@ -1159,36 +1159,8 @@
                 throw new Error('Missing required fields: adm or name');
               }
               
-              // Try to check if student exists, if not create new one
-              let existing = null;
-              try {
-                existing = await studentsAPI.getById(studentData.adm);
-              } catch (checkError) {
-                // Check if it's a 404 (student doesn't exist) - that's expected
-                const errorMsg = checkError.message || checkError.toString() || '';
-                const is404 = errorMsg.includes('404') || 
-                             errorMsg.toLowerCase().includes('not found') ||
-                             (checkError.status === 404) ||
-                             (checkError.statusCode === 404);
-                
-                if (!is404) {
-                  // It's a real error, log it but continue to try creating
-                  console.warn(`Error checking existing student ${studentData.adm}:`, errorMsg);
-                }
-                // If 404, student doesn't exist, so we'll create it below
-              }
-              
-              // If student exists, update it
-              if (existing && (existing.id || existing.adm)) {
-                try {
-                  await studentsAPI.update(studentData.adm, studentData);
-                  return { success: true, adm: studentData.adm };
-                } catch (updateError) {
-                  throw new Error(`Update failed: ${updateError.message || updateError.toString()}`);
-                }
-              }
-              
-              // Student doesn't exist, create new one
+              // Optimized: Try to create directly first (faster than checking existence)
+              // If it fails with "already exists", then update
               try {
                 const result = await studentsAPI.create(studentData);
                 if (result && (result.id || result.adm)) {
@@ -1198,16 +1170,36 @@
                 }
               } catch (createError) {
                 const errorMsg = createError.message || createError.toString() || 'Unknown error';
-                // Check for common validation errors
-                if (errorMsg.includes('already exists') || errorMsg.includes('duplicate')) {
-                  // Student might have been created by another batch, try updating
+                
+                // Check if student already exists (common case - try update)
+                if (errorMsg.includes('404') || 
+                    errorMsg.toLowerCase().includes('not found') ||
+                    errorMsg.includes('already exists') || 
+                    errorMsg.includes('duplicate') ||
+                    errorMsg.includes('unique constraint')) {
+                  
+                  // Student exists or was created by another batch, try updating
                   try {
                     await studentsAPI.update(studentData.adm, studentData);
                     return { success: true, adm: studentData.adm };
                   } catch (updateError) {
-                    throw new Error(`Create/Update failed: ${errorMsg}`);
+                    // If update also fails, check if it's a 404 (student doesn't exist)
+                    const updateErrorMsg = updateError.message || updateError.toString() || '';
+                    if (updateErrorMsg.includes('404') || updateErrorMsg.toLowerCase().includes('not found')) {
+                      // Student doesn't exist, try creating again (race condition)
+                      try {
+                        const retryResult = await studentsAPI.create(studentData);
+                        if (retryResult && (retryResult.id || retryResult.adm)) {
+                          return { success: true, adm: studentData.adm };
+                        }
+                      } catch (retryError) {
+                        throw new Error(`Create/Update failed: ${errorMsg}`);
+                      }
+                    }
+                    throw new Error(`Update failed: ${updateErrorMsg}`);
                   }
                 }
+                // Other error, throw it
                 throw createError;
               }
             } catch (error) {
@@ -1244,10 +1236,12 @@
           
           job.currentIndex = Math.min(i + BATCH_SIZE, students.length);
           
-          // Update localStorage after each batch
-          localStorage.setItem('sv_import_job', JSON.stringify(job));
+          // Update localStorage after each batch (but less frequently for speed)
+          if (i % (BATCH_SIZE * 2) === 0 || i + BATCH_SIZE >= students.length) {
+            localStorage.setItem('sv_import_job', JSON.stringify(job));
+          }
           
-          // Small delay between batches to avoid overwhelming the API
+          // Minimal delay between batches to avoid overwhelming the API
           if (i + BATCH_SIZE < students.length) {
             await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
           }
