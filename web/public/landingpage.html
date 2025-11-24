@@ -17,18 +17,22 @@
     body {
       font-family: 'Inter', 'Poppins', sans-serif;
       color: var(--text-dark);
-      overflow-x: hidden;
-      overflow-y: auto;
+      overflow: hidden;
+      height: 100vh;
     }
     
     html {
-      overflow-y: auto;
+      overflow: hidden;
+      height: 100vh;
     }
 
     .landing-body {
-      min-height: 100vh;
+      height: 100vh;
       position: relative;
       background: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
     }
     
     /* Header */
@@ -36,9 +40,9 @@
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(10px);
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      position: sticky;
-      top: 0;
+      position: relative;
       z-index: 100;
+      flex-shrink: 0;
     }
     
     .brand-pill {
@@ -68,35 +72,14 @@
       color: var(--primary);
     }
     
-    .book-now-btn {
-      background: linear-gradient(135deg, #0f4c3a 0%, #2d7a5f 100%);
-      color: white;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(15, 76, 58, 0.3);
-    }
-    
-    .book-now-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(15, 76, 58, 0.4);
-    }
-    
     /* Hero Section */
     .hero-section {
       position: relative;
       width: 100%;
-      min-height: 90vh;
+      flex: 1;
       display: flex;
       align-items: center;
       overflow: hidden;
-      border-radius: 0 0 40px 40px;
-      margin-bottom: 4rem;
     }
     
     .hero-background {
@@ -132,8 +115,9 @@
       z-index: 3;
       max-width: 1400px;
       margin: 0 auto;
-      padding: 4rem 2rem;
+      padding: 2rem;
       width: 100%;
+      height: 100%;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 4rem;
@@ -201,26 +185,10 @@
       box-shadow: 0 12px 35px rgba(15, 76, 58, 0.5);
     }
     
-    .cta-secondary {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 1.1rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      transition: all 0.3s ease;
-    }
-    
-    .cta-secondary:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: translateY(-3px);
-    }
-    
     .hero-image-container {
       position: relative;
+      width: 100%;
+      height: 100%;
       border-radius: 24px;
       overflow: hidden;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -232,275 +200,15 @@
       object-fit: cover;
       display: block;
       border-radius: 24px;
-      min-height: 500px;
-    }
-    
-    .hero-image-container {
-      min-height: 500px;
-    }
-    
-    .hero-bottom-info {
-      position: absolute;
-      bottom: 2rem;
-      left: 2rem;
-      color: white;
-      z-index: 4;
-    }
-    
-    .hero-bottom-info p {
-      font-size: 0.9rem;
-      margin-bottom: 0.5rem;
-      opacity: 0.9;
-    }
-    
-    .coach-profiles {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-    }
-    
-    .coach-profile {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 2px solid white;
-      background: rgba(255, 255, 255, 0.3);
-    }
-    
-    .hero-social {
-      position: absolute;
-      bottom: 2rem;
-      right: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      z-index: 4;
-    }
-    
-    .hero-social a {
-      color: white;
-      text-decoration: none;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      opacity: 0.9;
-      transition: opacity 0.3s ease;
-    }
-    
-    .hero-social a:hover {
-      opacity: 1;
-    }
-    
-    /* Portal Cards Section */
-    .portals-section {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 4rem 2rem;
-    }
-    
-    .section-title {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-      margin-bottom: 1rem;
-    }
-    
-    .section-subtitle {
-      text-align: center;
-      font-size: 1.1rem;
-      color: var(--text-medium);
-      margin-bottom: 3rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .portal-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 2rem;
-      margin-bottom: 4rem;
-    }
-    
-    .portal-card {
-      background: white;
-      border-radius: 20px;
-      padding: 2.5rem;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      border: 1px solid #e2e8f0;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .portal-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 5px;
-      background: linear-gradient(90deg, #0f4c3a, #2d7a5f);
-    }
-    
-    .portal-card:nth-child(2)::before {
-      background: linear-gradient(90deg, #2d7a5f, #0f4c3a);
-    }
-    
-    .portal-card:nth-child(3)::before {
-      background: linear-gradient(90deg, #8b1538, #6b1a2f);
-    }
-    
-    .portal-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-    }
-    
-    .portal-card h3 {
-      font-size: 1.6rem;
-      color: var(--primary-dark);
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 700;
-    }
-    
-    .portal-card h3 i {
-      font-size: 2rem;
-      color: #0f4c3a;
-    }
-    
-    .portal-card:nth-child(2) h3 i {
-      color: #2d7a5f;
-    }
-    
-    .portal-card:nth-child(3) h3 i {
-      color: #8b1538;
-    }
-    
-    .portal-card p {
-      color: var(--text-medium);
-      margin-bottom: 2rem;
-      line-height: 1.7;
-    }
-    
-    .login-form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-    
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      position: relative;
-    }
-    
-    .form-group label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-    
-    .form-group input {
-      padding: 14px 18px;
-      padding-right: 50px;
-      border: 2px solid rgba(15, 76, 58, 0.2);
-      border-radius: 12px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      background: white;
-      color: var(--text-dark);
-    }
-    
-    .form-group input:focus {
-      outline: none;
-      border-color: #0f4c3a;
-      box-shadow: 0 0 0 4px rgba(15, 76, 58, 0.1);
-    }
-    
-    .password-toggle {
-      position: absolute;
-      right: 14px;
-      top: 42px;
-      background: none;
-      border: none;
-      color: #0f4c3a;
-      cursor: pointer;
-      padding: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: color 0.3s ease;
-      border-radius: 8px;
-    }
-    
-    .password-toggle:hover {
-      color: #2d7a5f;
-      background: rgba(15, 76, 58, 0.1);
-    }
-    
-    .login-btn {
-      padding: 16px 28px;
-      background: linear-gradient(135deg, #0f4c3a 0%, #2d7a5f 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 0.5rem;
-      box-shadow: 0 8px 25px rgba(15, 76, 58, 0.4);
-    }
-    
-    .login-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 35px rgba(15, 76, 58, 0.5);
-      background: linear-gradient(135deg, #2d7a5f 0%, #0f4c3a 100%);
-    }
-    
-    .login-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    .error-message {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(220, 38, 38, 0.15));
-      color: #dc2626;
-      padding: 0.85rem 1.2rem;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      display: none;
-      margin-top: 0.5rem;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    
-    .error-message.show {
-      display: block;
-    }
-    
-    .card-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-    
-    .card-actions a {
-      text-decoration: none;
     }
     
     /* Footer */
     .garden-footer {
       background: var(--primary-dark);
       color: white;
-      padding: 3rem 2rem;
-      margin-top: 4rem;
+      padding: 2rem;
+      flex-shrink: 0;
+      z-index: 10;
     }
     
     .footer-content {
@@ -531,8 +239,8 @@
     
     .footer-bottom {
       text-align: center;
-      padding-top: 2rem;
-      margin-top: 2rem;
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
       border-top: 1px solid rgba(255, 255, 255, 0.2);
       color: rgba(255, 255, 255, 0.8);
     }
@@ -545,14 +253,11 @@
       
       .hero-image-container {
         order: -1;
+        height: 300px;
       }
       
       .nav-menu {
         display: none;
-      }
-      
-      .portal-grid {
-        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -568,8 +273,7 @@
         <ul class="nav-menu">
           <li><a href="#about">About Us</a></li>
           <li><a href="#services">Services</a></li>
-          <li><a href="#portals">Portals</a></li>
-          <li><a href="../admin/admindashboard.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Admin Login</a></li>
+          <li><a href="admin_login.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Admin Login</a></li>
           <li><a href="../parent/parent_login_page.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Parent Login</a></li>
           <li><a href="../staff/staff_registration_page.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Staff Login</a></li>
         </ul>
@@ -577,7 +281,7 @@
     </div>
   </header>
 
-  <main>
+  <main style="flex: 1; overflow: hidden;">
     <!-- Hero Section -->
     <section class="hero-section">
       <div class="hero-background"></div>
@@ -593,51 +297,15 @@
           <p>Experience comprehensive school management — where academic excellence meets operational efficiency. Manage students, parents, staff, and resources seamlessly from one unified system.</p>
           <div class="hero-cta">
             <a href="../parent/parent_login_page.html" class="cta-primary">
-              Start your own journey <i class="fas fa-arrow-right"></i>
-            </a>
-            <a href="#portals" class="cta-secondary">
-              Learn More
+              Start your journey <i class="fas fa-arrow-right"></i>
             </a>
           </div>
         </div>
         
         <div class="hero-image-container">
-          <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80" alt="Modern School Campus" class="hero-image" style="object-fit: cover; height: 100%; min-height: 500px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-          <div style="display:none; width:100%; height:500px; background:linear-gradient(135deg, #0f4c3a, #2d7a5f); border-radius:24px;"></div>
+          <img src="https://images.unsplash.com/photo-1562774053-701939374585?w=1200&q=80" alt="Modern School Campus" class="hero-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <div style="display:none; width:100%; height:100%; background:linear-gradient(135deg, #0f4c3a, #2d7a5f); border-radius:24px;"></div>
         </div>
-      </div>
-    </section>
-
-    <!-- Portals Section -->
-    <section class="portals-section" id="portals">
-      <h2 class="section-title">Access Your Portal</h2>
-      <p class="section-subtitle">Choose your portal to access your personalized dashboard and manage your school activities.</p>
-      
-      <div class="portal-grid">
-        <article class="portal-card">
-          <h3><i class="fas fa-user-shield"></i> Admin Console</h3>
-          <p>Manage your school's operations from one central dashboard. Create student ID cards, import academic data, track fees, and oversee all stakeholders with comprehensive analytics.</p>
-          <div class="card-actions">
-            <a href="../admin/admindashboard.html" class="theme-btn primary" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center;">Access Admin Dashboard</a>
-          </div>
-        </article>
-
-        <article class="portal-card">
-          <h3><i class="fas fa-user-friends"></i> Parent Portal</h3>
-          <p>Access your children's academic records, track fee payments, download report cards and documents, and stay connected with teachers and school administration.</p>
-          <div class="card-actions">
-            <a href="../parent/parent_login_page.html" class="theme-btn primary" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center; margin-right: 0.5rem;">Sign In</a>
-            <a href="../parent/parent_registration_page.html" class="theme-btn outline" style="border: 2px solid #43e97b; color: #43e97b; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center;">Create Account</a>
-          </div>
-        </article>
-
-        <article class="portal-card">
-          <h3><i class="fas fa-chalkboard-teacher"></i> Staff Portal</h3>
-          <p>Complete your staff onboarding, manage class assignments, update student records, and sync academic updates with the admin dashboard seamlessly.</p>
-          <div class="card-actions">
-            <a href="../staff/staff_registration_page.html" class="theme-btn primary" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.85rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-block; text-align: center;">Get Started</a>
-          </div>
-        </article>
       </div>
     </section>
   </main>
@@ -646,6 +314,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <h4>Quick Links</h4>
+        <a href="admin_login.html">Admin Login</a>
         <a href="../parent/parent_login_page.html">Parent Login</a>
         <a href="../parent/parent_registration_page.html">Parent Registration</a>
         <a href="../staff/staff_registration_page.html">Staff Portal</a>
@@ -668,30 +337,5 @@
       <p>© 2025 Hechlink Ventures. All rights reserved.</p>
     </div>
   </footer>
-
-  <script src="../runtime-config.js"></script>
-  <script src="../shared/api-client.js"></script>
-  <script>
-    // Password toggle functionality
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('adminPassword');
-    const toggleIcon = document.getElementById('toggleIcon');
-    
-    if (togglePassword && passwordInput) {
-      togglePassword.addEventListener('click', function() {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
-        
-        if (type === 'text') {
-          toggleIcon.classList.remove('fa-eye');
-          toggleIcon.classList.add('fa-eye-slash');
-        } else {
-          toggleIcon.classList.remove('fa-eye-slash');
-          toggleIcon.classList.add('fa-eye');
-        }
-      });
-    }
-    
-  </script>
 </body>
 </html>
