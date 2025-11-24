@@ -111,19 +111,22 @@
       gap: 10px;
       width: 100%;
       padding: 14px 16px;
-      background: rgba(239, 68, 68, 0.2);
-      color: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: linear-gradient(135deg, #14532d 0%, #052e16 100%);
+      color: white;
+      border: none;
       border-radius: 10px;
       font-size: 0.95rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(5, 46, 22, 0.3);
     }
 
     .logout-btn:hover {
-      background: rgba(239, 68, 68, 0.3);
+      background: linear-gradient(135deg, #052e16 0%, #14532d 100%);
       color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(5, 46, 22, 0.4);
       border-color: rgba(239, 68, 68, 0.5);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
