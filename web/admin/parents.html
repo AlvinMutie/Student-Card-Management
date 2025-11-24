@@ -67,30 +67,44 @@
     }
     
     .action-btn {
-      background: none;
+      width: 32px;
+      height: 32px;
       border: none;
       cursor: pointer;
-      padding: 6px;
-      border-radius: 4px;
-      transition: var(--transition);
+      padding: 0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
-    .action-btn:hover {
-      background: #f0f0f0;
+    .action-btn.edit-btn {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      box-shadow: 0 2px 8px rgba(79, 172, 254, 0.3);
+    }
+    
+    .action-btn.edit-btn:hover {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+    }
+    
+    .action-btn.delete-btn {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      box-shadow: 0 2px 8px rgba(240, 147, 251, 0.3);
+    }
+    
+    .action-btn.delete-btn:hover {
+      background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
     }
     
     .action-icon {
       width: 16px;
       height: 16px;
-      fill: var(--secondary-green);
-    }
-    
-    .edit-btn:hover .action-icon {
-      fill: #3498db;
-    }
-    
-    .delete-btn:hover .action-icon {
-      fill: #e74c3c;
+      fill: white;
     }
     
     .muted {
