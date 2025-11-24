@@ -150,13 +150,14 @@ async function apiRequest(endpoint, options = {}) {
       const helpMessage = `
 Cannot connect to backend server at ${API_BASE_URL}
 
-Possible solutions:
-1. Verify backend is deployed: curl ${API_BASE_URL}/health
-2. Check if backend URL is correct in Netlify environment variables
-3. If backend is on free tier, wait 30-60 seconds (it may be sleeping)
-4. Test connection: Visit /public/api-test.html for diagnostics
+Quick Fix Steps:
+1. Set Netlify environment variable: API_BASE_URL = https://student-card-management-api.onrender.com/api
+2. Redeploy your Netlify site
+3. Wait 30-60 seconds if backend is sleeping (Render free tier)
+4. Test: Visit /public/api-test.html for diagnostics
 
 Current API URL: ${API_BASE_URL}
+Backend Health: ${API_BASE_URL.replace('/api', '/api/health')}
       `.trim();
       throw new Error(helpMessage);
     }

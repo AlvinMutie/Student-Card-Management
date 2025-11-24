@@ -473,12 +473,18 @@
     
     /* Recent Activity */
     .card {
-      background: linear-gradient(135deg, white 0%, #fefefe 100%);
-      border-radius: var(--border-radius);
-      padding: 30px;
-      box-shadow: var(--box-shadow);
-      margin-bottom: 30px;
-      border: 1px solid rgba(15, 42, 23, 0.1);
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-light);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
     }
     
     .card h3 {
@@ -542,20 +548,26 @@
     }
     
     .chart-card {
-      background: linear-gradient(135deg, #ffffff 0%, #f8faf7 100%);
-      border-radius: var(--border-radius);
-      padding: 28px 28px 24px;
-      box-shadow: var(--box-shadow);
-      border: 1px solid rgba(15, 42, 23, 0.08);
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border-light);
       position: relative;
       overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .chart-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-2px);
     }
     
     .chart-card::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at top right, rgba(46, 200, 112, 0.12), transparent 45%);
+      background: radial-gradient(circle at top right, rgba(46, 200, 112, 0.08), transparent 45%);
       pointer-events: none;
     }
     

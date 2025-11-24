@@ -990,10 +990,15 @@
         adminInfoEl.textContent = `Welcome back, ${adminEmail.split('@')[0]}`;
       }
 
-      // Import CSV/Excel functionality
-      const studentDataInput = document.getElementById('studentDataInput');
-      if (studentDataInput) {
-        studentDataInput.addEventListener('change', async function(e) {
+      // Import CSV/Excel functionality - Use event delegation to ensure it always works
+      function attachImportHandler() {
+        const studentDataInput = document.getElementById('studentDataInput');
+        if (studentDataInput) {
+          // Remove any existing listeners by cloning the element
+          const newInput = studentDataInput.cloneNode(true);
+          studentDataInput.parentNode.replaceChild(newInput, studentDataInput);
+          
+          newInput.addEventListener('change', async function(e) {
           const file = e.target.files[0];
           if (!file) return;
 
@@ -1175,10 +1180,34 @@
               importBtn.innerHTML = '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>Import CSV/Excel';
               importBtn.style.pointerEvents = 'auto';
             }
-            e.target.value = '';
+            const input = document.getElementById('studentDataInput');
+            if (input) input.value = '';
           }
-        });
+          });
+        }
       }
+      
+      // Call immediately
+      attachImportHandler();
+      
+      // Reattach import handler when page becomes visible (user returns)
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+          setTimeout(attachImportHandler, 200);
+        }
+      });
+      
+      // Also reattach on window focus
+      window.addEventListener('focus', function() {
+        setTimeout(attachImportHandler, 200);
+      });
+      
+      // Reattach on pageshow (browser back/forward navigation)
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          setTimeout(attachImportHandler, 200);
+        }
+      });
 
       // Delete All Students functionality
       const deleteAllBtn = document.getElementById('deleteAllBtn');

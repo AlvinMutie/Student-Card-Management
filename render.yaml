@@ -24,9 +24,3 @@ databases:
     databaseName: studentcard
     user: studentcard_user
 
-databases:
-  - name: student-card-db
-    plan: free
-    databaseName: studentcard
-    user: studentcard_user
-

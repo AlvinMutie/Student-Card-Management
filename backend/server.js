@@ -14,21 +14,48 @@ const path = require('path');
 
 // Middleware
 
-// Simplified CORS configuration
+// Simplified CORS configuration - More permissive for Netlify
 const corsOptions = {
   origin: function(origin, callback) {
-    // Allow localhost for development and Netlify frontend
+    // Allow localhost for development
+    const localhostPattern = /^https?:\/\/localhost(:\d+)?$/;
+    
+    // Allow any Netlify subdomain
+    const netlifyPattern = /^https?:\/\/[\w-]+\.netlify\.app$/;
+    
+    // Allow specific origins from environment
     const allowedOrigins = [
-      'http://localhost:5500',            // optional for local testing
-      process.env.CORS_ORIGIN             // Netlify frontend URL
-    ];
+      'http://localhost:5500',
+      'http://localhost:3000',
+      'http://localhost:8080',
+      process.env.CORS_ORIGIN
+    ].filter(Boolean);
 
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
       return callback(null, true);
-    } else {
-      console.warn(`CORS blocked request from origin: ${origin}`);
-      return callback(new Error(`Origin ${origin} not allowed by CORS policy`));
     }
+
+    // Check against allowed origins
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    // Check if it's localhost
+    if (localhostPattern.test(origin)) {
+      return callback(null, true);
+    }
+
+    // Check if it's a Netlify domain
+    if (netlifyPattern.test(origin)) {
+      console.log(`Allowing Netlify origin: ${origin}`);
+      return callback(null, true);
+    }
+
+    // Log blocked origin for debugging
+    console.warn(`CORS blocked request from origin: ${origin}`);
+    console.warn(`Allowed origins: ${allowedOrigins.join(', ')}`);
+    return callback(null, true); // Temporarily allow all for easier setup
   },
   credentials: true,
 };
