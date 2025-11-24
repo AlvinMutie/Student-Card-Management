@@ -62,10 +62,10 @@
       min-height: 100vh;
     }
     
-    /* Sidebar Styles */
+    /* Sidebar Styles - NexaVerse inspired */
     .sidebar {
-      width: 260px;
-      background: linear-gradient(180deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+      width: 280px;
+      background: linear-gradient(180deg, var(--bg-sidebar) 0%, #064e3b 100%);
       color: white;
       padding: 0;
       transition: var(--transition);
@@ -75,6 +75,7 @@
       position: fixed;
       height: 100vh;
       overflow-y: auto;
+      z-index: 100;
     }
     
     .brand {
@@ -202,13 +203,13 @@
       fill: currentColor;
     }
     
-    /* Main Content */
+    /* Main Content - NexaVerse inspired */
     .main-content {
       flex: 1;
-      padding: 35px 40px;
+      padding: 2rem;
       overflow-y: auto;
-      margin-left: 260px;
-      background: var(--off-white);
+      margin-left: 280px;
+      background: var(--bg-body);
       min-height: 100vh;
     }
     
@@ -216,54 +217,87 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 35px;
-      padding-bottom: 20px;
-      border-bottom: 2px solid rgba(15, 42, 23, 0.12);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     
     .top-row h2 {
-      font-size: 2rem;
-      color: var(--primary-green);
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      font-size: 1.75rem;
+      color: var(--primary-dark);
+      font-weight: 800;
+      letter-spacing: -0.025em;
+    }
+    
+    .search-bar {
+      flex: 1;
+      max-width: 400px;
+      position: relative;
+    }
+    
+    .search-bar input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: white;
+      color: var(--text-main);
+    }
+    
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(20, 83, 45, 0.1);
+    }
+    
+    .search-icon-top {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      fill: var(--text-muted);
     }
     
     .admin-section {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
     }
     
     #adminInfo {
-      background: linear-gradient(135deg, white 0%, #fefefe 100%);
-      padding: 10px 20px;
-      border-radius: 25px;
-      box-shadow: var(--box-shadow);
-      font-size: 0.95rem;
-      color: var(--primary-green);
+      background: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      font-size: 0.85rem;
+      color: var(--text-muted);
       font-weight: 500;
-      border: 1px solid rgba(15, 42, 23, 0.12);
+      border: 1px solid var(--border);
     }
     
     .logout-btn-top {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 10px 20px;
-      background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+      padding: 8px 16px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       color: white;
       border: none;
-      border-radius: 25px;
-      font-size: 0.9rem;
-      font-weight: 500;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 2px 8px rgba(15, 42, 23, 0.18);
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(240, 147, 251, 0.3);
     }
     
     .logout-btn-top:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(74, 53, 16, 0.3);
+      box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
+      background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
     }
     
     .logout-icon-top {
@@ -272,25 +306,79 @@
       fill: currentColor;
     }
     
-    /* Stats Grid */
+    /* Stats Grid - NexaVerse KPI Cards */
     .grid-two {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
-      margin-bottom: 35px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
     
     .stat-card {
-      background: linear-gradient(135deg, white 0%, #fefefe 100%);
-      border-radius: var(--border-radius);
-      padding: 28px;
-      box-shadow: var(--box-shadow);
-      transition: var(--transition);
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      border: 1px solid rgba(15, 42, 23, 0.08);
+      border: 1px solid var(--border);
+    }
+    
+    .stat-card:nth-child(1) {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .stat-card:nth-child(2) {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      color: white;
+    }
+    
+    .stat-card:nth-child(3) {
+      background: white;
+      color: var(--text-main);
+    }
+    
+    .stat-card:nth-child(4) {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .stat-label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .stat-icon {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+      opacity: 0.8;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      line-height: 1;
     }
     
     .stat-card::before {
@@ -782,56 +870,64 @@
   <main class="main-content">
     <div class="top-row">
       <h2>Dashboard</h2>
-      <div class="admin-section">
-        <div id="adminInfo" class="muted">Welcome back, Admin</div>
-        <button class="logout-btn-top" id="topLogout">
-          <svg class="logout-icon-top" viewBox="0 0 24 24">
-            <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+      <div style="display: flex; align-items: center; gap: 1rem; flex: 1; justify-content: flex-end;">
+        <div class="search-bar">
+          <svg class="search-icon-top" viewBox="0 0 24 24">
+            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
           </svg>
-          Log Out
-        </button>
+          <input type="text" placeholder="Search transactions, students, parents...">
+        </div>
+        <div class="admin-section">
+          <div id="adminInfo">Welcome back, Admin</div>
+          <button class="logout-btn-top" id="topLogout">
+            <svg class="logout-icon-top" viewBox="0 0 24 24">
+              <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+            </svg>
+            Log Out
+          </button>
+        </div>
       </div>
     </div>
 
     <div class="grid-two">
       <div class="stat-card">
         <div class="stat-header">
-          <div class="stat-label">Parents</div>
+          <div class="stat-label">Current MRR</div>
           <svg class="stat-icon" viewBox="0 0 24 24">
-            <path d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" />
+            <path d="M7,15H9C9,16.08 10.37,17 12,17C13.63,17 15,16.08 15,15C15,13.9 13.96,13.5 11.76,12.97C9.64,12.44 7,11.78 7,9C7,7.21 8.47,5.69 10.5,5.18V3H13.5V5.18C15.53,5.69 17,7.21 17,9H15C15,7.92 13.63,7 12,7C10.37,7 9,7.92 9,9C9,10.1 10.04,10.5 12.24,11.03C14.36,11.56 17,12.22 17,15C17,16.79 15.53,18.31 13.5,18.82V21H10.5V18.82C8.47,18.31 7,16.79 7,15Z" />
           </svg>
         </div>
-        <div class="stat-number" id="statParents">142</div>
-        <div class="stat-label">Total Parents Registered</div>
+        <div class="stat-number" id="statParents">$12.4k</div>
+        <div class="stat-label">Total Parents</div>
       </div>
       <div class="stat-card">
         <div class="stat-header">
-          <div class="stat-label">Staff</div>
-          <svg class="stat-icon" viewBox="0 0 24 24">
-            <path d="M21.1,12.5L22.5,13.91L15.97,20.5L12.5,17L13.9,15.59L15.97,17.67L21.1,12.5M10,17L13,20H3V18C3,15.79 6.58,14 11,14L12.89,14.11L10,17M11,4A4,4 0 0,1 15,8A4,4 0 0,1 11,12A4,4 0 0,1 7,8A4,4 0 0,1 11,4Z" />
-          </svg>
-        </div>
-        <div class="stat-number" id="statStaff">24</div>
-        <div class="stat-label">Total Staff Members</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-header">
-          <div class="stat-label">Students</div>
+          <div class="stat-label">Current Customers</div>
           <svg class="stat-icon" viewBox="0 0 24 24">
             <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
           </svg>
         </div>
-        <div class="stat-number" id="statStudents">312</div>
-        <div class="stat-label">Total Students Registered</div>
+        <div class="stat-number" id="statStudents">16,601</div>
+        <div class="stat-label">Total Students</div>
       </div>
       <div class="stat-card">
         <div class="stat-header">
-          <div class="stat-label">Pending</div>
+          <div class="stat-label">Active Customers</div>
+          <svg class="stat-icon" viewBox="0 0 24 24" style="fill: var(--primary);">
+            <path d="M21.1,12.5L22.5,13.91L15.97,20.5L12.5,17L13.9,15.59L15.97,17.67L21.1,12.5M10,17L13,20H3V18C3,15.79 6.58,14 11,14L12.89,14.11L10,17M11,4A4,4 0 0,1 15,8A4,4 0 0,1 11,12A4,4 0 0,1 7,8A4,4 0 0,1 11,4Z" />
+          </svg>
+        </div>
+        <div class="stat-number" id="statStaff" style="color: var(--primary);">33%</div>
+        <div class="stat-label" style="color: var(--text-muted);">Active Staff</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-label">Churn Rate</div>
           <svg class="stat-icon" viewBox="0 0 24 24">
             <path d="M13,9H18.5L13,3.5V9M6,2H14L20,8V20A2,2 0 0,1 18,22H6C4.89,22 4,21.1 4,20V4C4,2.89 4.89,2 6,2M15,18V16H6V18H15M18,14V12H6V14H18Z" />
           </svg>
         </div>
-        <div class="stat-number" id="statPending">8</div>
+        <div class="stat-number" id="statPending">2%</div>
         <div class="stat-label">Pending Approvals</div>
       </div>
     </div>

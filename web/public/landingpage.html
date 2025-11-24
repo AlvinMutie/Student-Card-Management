@@ -19,22 +19,96 @@
       color: var(--text-dark);
       overflow-x: hidden;
       overflow-y: auto;
-      height: auto;
     }
     
     html {
       overflow-y: auto;
-      height: auto;
     }
 
     .landing-body {
-      background: linear-gradient(135deg, #0f4c3a 0%, #1a5f47 20%, #2d7a5f 40%, #1a5f47 60%, #8b1538 80%, #6b1a2f 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 20s ease infinite;
       min-height: 100vh;
       position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
+      background: #f8fafc;
+    }
+    
+    /* Header */
+    .garden-header {
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .brand-pill {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+    
+    .nav-menu a {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .nav-menu a:hover {
+      color: var(--primary);
+    }
+    
+    .book-now-btn {
+      background: linear-gradient(135deg, #0f4c3a 0%, #2d7a5f 100%);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(15, 76, 58, 0.3);
+    }
+    
+    .book-now-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(15, 76, 58, 0.4);
+    }
+    
+    /* Hero Section */
+    .hero-section {
+      position: relative;
+      width: 100%;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      border-radius: 0 0 40px 40px;
+      margin-bottom: 4rem;
+    }
+    
+    .hero-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f4c3a 0%, #1a5f47 25%, #2d7a5f 50%, #8b1538 75%, #6b1a2f 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      z-index: 1;
     }
     
     @keyframes gradientShift {
@@ -43,65 +117,38 @@
       100% { background-position: 0% 50%; }
     }
     
-    .landing-body::before {
-      content: '';
+    .hero-overlay {
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background: 
-        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08), transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05), transparent 60%);
-      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 2;
     }
     
-    .landing-body::after {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: 
-        repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 100px,
-          rgba(255, 255, 255, 0.03) 100px,
-          rgba(255, 255, 255, 0.03) 200px
-        );
-      animation: patternMove 30s linear infinite;
-      pointer-events: none;
-    }
-    
-    @keyframes patternMove {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(100px, 100px); }
-    }
-    
-    .landing-main {
-      width: min(1200px, 95%);
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      max-width: 1400px;
       margin: 0 auto;
-      flex: 1;
-      padding: 3rem 0 4rem;
-      position: relative;
-      z-index: 1;
+      padding: 4rem 2rem;
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
     }
     
-    .hero {
-      text-align: center;
-      margin-bottom: 4rem;
-      padding: 3rem 0;
-      position: relative;
+    .hero-text {
+      color: white;
     }
     
     .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 0.6rem 1.2rem;
+      padding: 0.5rem 1rem;
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.3);
@@ -110,49 +157,174 @@
       font-size: 0.9rem;
       font-weight: 600;
       margin-bottom: 1.5rem;
-      animation: float 3s ease-in-out infinite;
     }
     
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-    
-    .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 4.5rem);
-      color: #ffffff;
-      margin-bottom: 1.5rem;
-      line-height: 1.1;
+    .hero-text h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
       font-weight: 900;
-      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3), 0 2px 15px rgba(0, 0, 0, 0.2);
-      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
     
-    .hero p {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 1.25rem;
-      max-width: 700px;
-      margin: 0 auto 2.5rem;
+    .hero-text p {
+      font-size: 1.2rem;
       line-height: 1.8;
-      text-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
-      font-weight: 400;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .cta-primary {
+      background: linear-gradient(135deg, #0f4c3a 0%, #2d7a5f 100%);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(15, 76, 58, 0.4);
+    }
+    
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(15, 76, 58, 0.5);
+    }
+    
+    .cta-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+    
+    .cta-secondary:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+    }
+    
+    .hero-image-container {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .hero-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 24px;
+    }
+    
+    .hero-bottom-info {
+      position: absolute;
+      bottom: 2rem;
+      left: 2rem;
+      color: white;
+      z-index: 4;
+    }
+    
+    .hero-bottom-info p {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      opacity: 0.9;
+    }
+    
+    .coach-profiles {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .coach-profile {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .hero-social {
+      position: absolute;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 4;
+    }
+    
+    .hero-social a {
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.9;
+      transition: opacity 0.3s ease;
+    }
+    
+    .hero-social a:hover {
+      opacity: 1;
+    }
+    
+    /* Portal Cards Section */
+    .portals-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+    
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 1rem;
+    }
+    
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.1rem;
+      color: var(--text-medium);
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .portal-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
       margin-bottom: 4rem;
     }
     
     .portal-card {
+      background: white;
+      border-radius: 20px;
       padding: 2.5rem;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.5);
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 1px solid #e2e8f0;
       position: relative;
       overflow: hidden;
     }
@@ -164,43 +336,20 @@
       left: 0;
       right: 0;
       height: 5px;
-      background: linear-gradient(90deg, transparent, currentColor, transparent);
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    
-    .portal-card:nth-child(1) {
-      border-top: 5px solid #0f4c3a;
-    }
-    
-    .portal-card:nth-child(1)::before {
-      color: #0f4c3a;
-    }
-    
-    .portal-card:nth-child(2) {
-      border-top: 5px solid #2d7a5f;
+      background: linear-gradient(90deg, #0f4c3a, #2d7a5f);
     }
     
     .portal-card:nth-child(2)::before {
-      color: #2d7a5f;
-    }
-    
-    .portal-card:nth-child(3) {
-      border-top: 5px solid #8b1538;
+      background: linear-gradient(90deg, #2d7a5f, #0f4c3a);
     }
     
     .portal-card:nth-child(3)::before {
-      color: #8b1538;
+      background: linear-gradient(90deg, #8b1538, #6b1a2f);
     }
     
     .portal-card:hover {
-      transform: translateY(-12px) scale(1.02);
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.8);
-      background: rgba(255, 255, 255, 1);
-    }
-    
-    .portal-card:hover::before {
-      opacity: 1;
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     }
     
     .portal-card h3 {
@@ -209,30 +358,27 @@
       margin-bottom: 1rem;
       display: flex;
       align-items: center;
-      gap: 14px;
-      font-weight: 800;
+      gap: 12px;
+      font-weight: 700;
     }
     
-    .portal-card:nth-child(1) h3 i {
-      color: #0f4c3a;
+    .portal-card h3 i {
       font-size: 2rem;
+      color: #0f4c3a;
     }
     
     .portal-card:nth-child(2) h3 i {
       color: #2d7a5f;
-      font-size: 2rem;
     }
     
     .portal-card:nth-child(3) h3 i {
       color: #8b1538;
-      font-size: 2rem;
     }
     
     .portal-card p {
       color: var(--text-medium);
       margin-bottom: 2rem;
-      line-height: 1.8;
-      font-size: 1rem;
+      line-height: 1.7;
     }
     
     .login-form {
@@ -304,7 +450,6 @@
       transition: all 0.3s ease;
       margin-top: 0.5rem;
       box-shadow: 0 8px 25px rgba(15, 76, 58, 0.4);
-      letter-spacing: 0.5px;
     }
     
     .login-btn:hover {
@@ -344,224 +489,207 @@
       text-decoration: none;
     }
     
-    .features-strip {
+    /* Footer */
+    .garden-footer {
+      background: var(--primary-dark);
+      color: white;
+      padding: 3rem 2rem;
       margin-top: 4rem;
-      padding: 3rem 2.5rem;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    }
+    
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 2.5rem;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.5);
     }
     
-    .features-strip div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      padding: 1.5rem;
-      border-radius: 16px;
-      transition: all 0.3s ease;
+    .footer-section h4 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
     }
     
-    .features-strip div:hover {
-      transform: translateY(-6px);
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.08));
-    }
-    
-    .features-strip i {
-      font-size: 3rem;
-      background: linear-gradient(135deg, #0f4c3a, #2d7a5f);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .features-strip span {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--primary-dark);
-    }
-    
-    .features-strip small {
-      color: var(--text-medium);
-      font-size: 1rem;
-    }
-    
-    .garden-footer {
-      background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(15px);
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 3rem 2rem;
-      margin-top: 5rem;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .garden-footer p {
-      color: rgba(255, 255, 255, 0.9);
-      text-align: center;
-      margin: 0.5rem 0;
-    }
-    
-    .garden-footer .theme-link {
-      color: rgba(255, 255, 255, 0.9);
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
-      transition: all 0.3s ease;
-      font-weight: 500;
+      display: block;
+      margin-bottom: 0.75rem;
+      transition: color 0.3s ease;
     }
     
-    .garden-footer .theme-link:hover {
+    .footer-section a:hover {
       color: white;
-      text-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
     }
     
-    @media (max-width: 768px) {
-      .landing-main {
-        width: 95%;
-        padding: 2rem 0 3rem;
-      }
-      
-      .portal-grid {
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    @media (max-width: 968px) {
+      .hero-content {
         grid-template-columns: 1fr;
         gap: 2rem;
       }
       
-      .hero {
-        padding: 2rem 0;
+      .hero-image-container {
+        order: -1;
       }
       
-      .features-strip {
-        padding: 2rem 1.5rem;
-        gap: 2rem;
+      .nav-menu {
+        display: none;
+      }
+      
+      .portal-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body class="garden-body landing-body">
-  <header class="garden-header" style="position: sticky; top: 0; z-index: 10; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+  <header class="garden-header">
     <div class="brand-pill">
-      <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon">
-      <span>Hechlink Ventures</span>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon" style="width: 40px; height: 40px; object-fit: contain;">
+        <span style="font-weight: 700; font-size: 1.25rem; color: var(--primary-dark);">Hechlink Ventures</span>
+      </div>
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#portals">Portals</a></li>
+          <li><a href="#contact">Contact</a></li>
+          <li><a href="../parent/parent_login_page.html" class="book-now-btn">
+            Book now <i class="fas fa-arrow-right"></i>
+          </a></li>
+        </ul>
+      </nav>
     </div>
   </header>
 
-  <main class="landing-main">
-    <section class="hero">
-      <div class="hero-badge">
-        <i class="fas fa-rocket"></i>
-        <span>Unified School Management Platform</span>
+  <main>
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-background"></div>
+      <div class="hero-overlay"></div>
+      
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <i class="fas fa-school"></i>
+            <span>Unified School Management Platform</span>
+          </div>
+          <h1>Unleash Your Inner Champion Today. All In One Place.</h1>
+          <p>Join the ultimate school management experience — where efficiency meets excellence and every feature brings you closer to seamless operations.</p>
+          <div class="hero-cta">
+            <a href="../parent/parent_login_page.html" class="cta-primary">
+              Start your own journey <i class="fas fa-arrow-right"></i>
+            </a>
+            <a href="#portals" class="cta-secondary">
+              Learn More
+            </a>
+          </div>
+        </div>
+        
+        <div class="hero-image-container">
+          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&q=80" alt="Students Learning" class="hero-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <div style="display:none; width:100%; height:400px; background:linear-gradient(135deg, #0f4c3a, #2d7a5f); border-radius:24px;"></div>
+        </div>
       </div>
-      <h1>Student Viewer Portal</h1>
-      <p>Your comprehensive solution for managing students, parents, and staff. Streamline operations with one secure, modern interface.</p>
+      
+      <div class="hero-bottom-info">
+        <p>Train with real professionals. Get the real results.</p>
+        <div class="coach-profiles">
+          <div class="coach-profile"></div>
+          <div class="coach-profile"></div>
+          <div class="coach-profile"></div>
+        </div>
+      </div>
+      
+      <div class="hero-social">
+        <a href="#"><span>Instagram</span> <i class="fas fa-arrow-right"></i></a>
+        <a href="#"><span>Facebook</span> <i class="fas fa-arrow-right"></i></a>
+        <a href="#"><span>TikTok</span> <i class="fas fa-arrow-right"></i></a>
+      </div>
     </section>
 
-    <section class="portal-grid">
-      <article class="portal-card">
-        <h3><i class="fas fa-user-shield"></i> Admin Console</h3>
-        <p>Manage your school's operations from one central dashboard. Create IDs, import data, and oversee all stakeholders.</p>
-        <form class="login-form" id="adminLoginForm">
-          <div class="form-group">
-            <label for="adminEmail">Email Address</label>
-            <input type="email" id="adminEmail" required>
-          </div>
-          <div class="form-group">
-            <label for="adminPassword">Password</label>
-            <input type="password" id="adminPassword" required>
-            <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
-              <i class="fas fa-eye" id="toggleIcon"></i>
+    <!-- Portals Section -->
+    <section class="portals-section" id="portals">
+      <h2 class="section-title">Access Your Portal</h2>
+      <p class="section-subtitle">Choose your portal to access your personalized dashboard and manage your school activities.</p>
+      
+      <div class="portal-grid">
+        <article class="portal-card">
+          <h3><i class="fas fa-user-shield"></i> Admin Console</h3>
+          <p>Manage your school's operations from one central dashboard. Create IDs, import data, and oversee all stakeholders.</p>
+          <form class="login-form" id="adminLoginForm">
+            <div class="form-group">
+              <label for="adminEmail">Email Address</label>
+              <input type="email" id="adminEmail" required>
+            </div>
+            <div class="form-group">
+              <label for="adminPassword">Password</label>
+              <input type="password" id="adminPassword" required>
+              <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                <i class="fas fa-eye" id="toggleIcon"></i>
+              </button>
+            </div>
+            <div class="error-message" id="adminError"></div>
+            <button type="submit" class="login-btn" id="adminLoginBtn">
+              <i class="fas fa-sign-in-alt"></i> Sign In as Admin
             </button>
+          </form>
+        </article>
+
+        <article class="portal-card">
+          <h3><i class="fas fa-user-friends"></i> Parent Portal</h3>
+          <p>Access your children's records, track fees, download documents, and stay connected with the school.</p>
+          <div class="card-actions">
+            <a href="../parent/parent_login_page.html" class="theme-btn primary">Sign In</a>
+            <a href="../parent/parent_registration_page.html" class="theme-btn outline">Create Account</a>
           </div>
-          <div class="error-message" id="adminError"></div>
-          <button type="submit" class="login-btn" id="adminLoginBtn">
-            <i class="fas fa-sign-in-alt"></i> Sign In as Admin
-          </button>
-        </form>
-      </article>
+        </article>
 
-      <article class="portal-card">
-        <h3><i class="fas fa-user-friends"></i> Parent Portal</h3>
-        <p>Access your children's records, track fees, download documents, and stay connected with the school.</p>
-        <div class="card-actions">
-          <a href="../parent/parent_login_page.html" class="theme-btn primary">Sign In</a>
-          <a href="../parent/parent_registration_page.html" class="theme-btn outline">Create Account</a>
-        </div>
-      </article>
-
-      <article class="portal-card">
-        <h3><i class="fas fa-chalkboard-teacher"></i> Staff Portal</h3>
-        <p>Complete your onboarding, manage classes, and sync updates with the admin dashboard seamlessly.</p>
-        <div class="card-actions">
-          <a href="../staff/staff_registration_page.html" class="theme-btn primary">Get Started</a>
-        </div>
-      </article>
-    </section>
-
-    <section class="features-strip">
-      <div>
-        <i class="fas fa-bolt"></i>
-        <span>Fast Setup</span>
-        <small>Get started in minutes</small>
-      </div>
-      <div>
-        <i class="fas fa-shield-alt"></i>
-        <span>Secure</span>
-        <small>Enterprise-grade security</small>
-      </div>
-      <div>
-        <i class="fas fa-clock"></i>
-        <span>24/7 Access</span>
-        <small>Available anytime, anywhere</small>
-      </div>
-      <div>
-        <i class="fas fa-users"></i>
-        <span>3 Portals</span>
-        <small>All in one platform</small>
+        <article class="portal-card">
+          <h3><i class="fas fa-chalkboard-teacher"></i> Staff Portal</h3>
+          <p>Complete your onboarding, manage classes, and sync updates with the admin dashboard seamlessly.</p>
+          <div class="card-actions">
+            <a href="../staff/staff_registration_page.html" class="theme-btn primary">Get Started</a>
+          </div>
+        </article>
       </div>
     </section>
   </main>
 
   <footer class="garden-footer">
-    <div style="max-width: 1200px; margin: 0 auto;">
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2.5rem; margin-bottom: 2.5rem;">
-        <div>
-          <h4 style="color: white; margin-bottom: 1.2rem; font-size: 1.15rem; font-weight: 700;">Quick Links</h4>
-          <p style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <a href="../parent/parent_login_page.html" class="theme-link">Parent Login</a>
-            <a href="../parent/parent_registration_page.html" class="theme-link">Parent Registration</a>
-            <a href="../staff/staff_registration_page.html" class="theme-link">Staff Portal</a>
-          </p>
-        </div>
-        <div>
-          <h4 style="color: white; margin-bottom: 1.2rem; font-size: 1.15rem; font-weight: 700;">Resources</h4>
-          <p style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <a href="#" class="theme-link">Documentation</a>
-            <a href="#" class="theme-link">Support Center</a>
-            <a href="#" class="theme-link">API Reference</a>
-          </p>
-        </div>
-        <div>
-          <h4 style="color: white; margin-bottom: 1.2rem; font-size: 1.15rem; font-weight: 700;">Company</h4>
-          <p style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <a href="#" class="theme-link">About Us</a>
-            <a href="#" class="theme-link">Privacy Policy</a>
-            <a href="#" class="theme-link">Terms of Service</a>
-            <a href="#" class="theme-link">Contact</a>
-          </p>
-        </div>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <a href="../parent/parent_login_page.html">Parent Login</a>
+        <a href="../parent/parent_registration_page.html">Parent Registration</a>
+        <a href="../staff/staff_registration_page.html">Staff Portal</a>
       </div>
-      <div style="border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 2rem; text-align: center;">
-        <p style="margin: 0;">
-          <a href="#" class="theme-link">About</a> ·
-          <a href="#" class="theme-link">Privacy</a> ·
-          <a href="#" class="theme-link">Contact</a>
-        </p>
-        <p style="margin-top: 1rem; opacity: 0.85; font-size: 0.95rem;">© 2025 Hechlink Ventures. All rights reserved.</p>
+      <div class="footer-section">
+        <h4>Resources</h4>
+        <a href="#">Documentation</a>
+        <a href="#">Support Center</a>
+        <a href="#">API Reference</a>
       </div>
+      <div class="footer-section">
+        <h4>Company</h4>
+        <a href="#">About Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 Hechlink Ventures. All rights reserved.</p>
     </div>
   </footer>
 
@@ -573,73 +701,78 @@
     const passwordInput = document.getElementById('adminPassword');
     const toggleIcon = document.getElementById('toggleIcon');
     
-    togglePassword.addEventListener('click', function() {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      
-      if (type === 'text') {
-        toggleIcon.classList.remove('fa-eye');
-        toggleIcon.classList.add('fa-eye-slash');
-      } else {
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye');
-      }
-    });
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener('click', function() {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        
+        if (type === 'text') {
+          toggleIcon.classList.remove('fa-eye');
+          toggleIcon.classList.add('fa-eye-slash');
+        } else {
+          toggleIcon.classList.remove('fa-eye-slash');
+          toggleIcon.classList.add('fa-eye');
+        }
+      });
+    }
     
     // Login form submission
-    document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const email = document.getElementById('adminEmail').value.trim();
-      const password = document.getElementById('adminPassword').value;
-      const errorDiv = document.getElementById('adminError');
-      const submitBtn = document.getElementById('adminLoginBtn');
-      const originalText = submitBtn.innerHTML;
-      
-      // Clear previous errors
-      errorDiv.classList.remove('show');
-      errorDiv.textContent = '';
-      
-      if (!email || !password) {
-        errorDiv.textContent = 'Please enter both email and password';
-        errorDiv.classList.add('show');
-        return;
-      }
-      
-      // Disable button and show loading
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
-      
-      try {
-        if (typeof authAPI === 'undefined') {
-          throw new Error('API Client not loaded. Please refresh the page.');
+    const adminLoginForm = document.getElementById('adminLoginForm');
+    if (adminLoginForm) {
+      adminLoginForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('adminEmail').value.trim();
+        const password = document.getElementById('adminPassword').value;
+        const errorDiv = document.getElementById('adminError');
+        const submitBtn = document.getElementById('adminLoginBtn');
+        const originalText = submitBtn.innerHTML;
+        
+        // Clear previous errors
+        errorDiv.classList.remove('show');
+        errorDiv.textContent = '';
+        
+        if (!email || !password) {
+          errorDiv.textContent = 'Please enter both email and password';
+          errorDiv.classList.add('show');
+          return;
         }
         
-        const response = await authAPI.login(email, password, 'admin');
+        // Disable button and show loading
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
         
-        if (response.token) {
-          // Store tokens
-          localStorage.setItem('sv_admin_token', response.token);
-          localStorage.setItem('sv_auth_token', response.token);
-          
-          if (response.user) {
-            localStorage.setItem('sv_user_data', JSON.stringify(response.user));
-            localStorage.setItem('sv_admin_email', response.user.email);
+        try {
+          if (typeof authAPI === 'undefined') {
+            throw new Error('API Client not loaded. Please refresh the page.');
           }
           
-          // Redirect to admin dashboard
-          window.location.href = '../admin/admindashboard.html';
-        } else {
-          throw new Error('Login failed: No token received');
+          const response = await authAPI.login(email, password, 'admin');
+          
+          if (response.token) {
+            // Store tokens
+            localStorage.setItem('sv_admin_token', response.token);
+            localStorage.setItem('sv_auth_token', response.token);
+            
+            if (response.user) {
+              localStorage.setItem('sv_user_data', JSON.stringify(response.user));
+              localStorage.setItem('sv_admin_email', response.user.email);
+            }
+            
+            // Redirect to admin dashboard
+            window.location.href = '../admin/admindashboard.html';
+          } else {
+            throw new Error('Login failed: No token received');
+          }
+        } catch (error) {
+          console.error('Login error:', error);
+          errorDiv.textContent = error.message || 'Invalid email or password. Please try again.';
+          errorDiv.classList.add('show');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
         }
-      } catch (error) {
-        console.error('Login error:', error);
-        errorDiv.textContent = error.message || 'Invalid email or password. Please try again.';
-        errorDiv.classList.add('show');
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-      }
-    });
+      });
+    }
   </script>
 </body>
 </html>

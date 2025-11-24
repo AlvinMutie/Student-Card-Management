@@ -166,7 +166,11 @@
     .student-name-cell {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 0;
+    }
+    
+    .student-name-cell .student-photo {
+      display: none;
     }
 
     .guardian-tags {
@@ -291,20 +295,27 @@
     
     table th:nth-child(6),
     table td:nth-child(6) {
-      width: 8%;
-      min-width: 75px;
-      max-width: 90px;
+      width: 10%;
+      min-width: 90px;
+      max-width: 110px;
+      padding-right: 8px;
     }
     
     table th:nth-child(7),
     table td:nth-child(7) {
-      width: 36%;
-      min-width: 200px;
+      width: 28%;
+      min-width: 180px;
       white-space: normal;
+      padding-left: 8px;
     }
     
     .action-buttons-cell {
       gap: 4px;
+      justify-content: flex-start;
+    }
+    
+    .payment-status {
+      margin-right: 0;
     }
     
     .action-btn {
@@ -656,9 +667,29 @@
           <svg class="btn-icon" viewBox="0 0 24 24">
             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
           </svg>
-          Import CSV/Excel
+          Import Excel
         </label>
         <input type="file" id="studentDataInput" accept=".csv,.xlsx,.xls" style="display:none;">
+        <label for="studentPhotosInput" class="btn btn-success"
+          style="cursor:pointer; display: flex; align-items: center; gap: 8px;">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M9,2V8H11V11H5C3.89,11 3,11.89 3,13V16H1V22H7V16H5V13H11V16H9V22H15V16H13V13H19V16H17V22H23V16H21V13C21,11.89 20.11,11 19,11H13V8H15V2H9Z" />
+          </svg>
+          Upload Photos
+        </label>
+        <input type="file" id="studentPhotosInput" accept="image/*,.zip" multiple style="display:none;">
+        <button id="deleteAllBtn" class="btn btn-danger">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+          </svg>
+          Delete All
+        </button>
+        <button id="restoreBtn" class="btn btn-success" style="display:none;">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M14,14H16L12,10L8,14H10V18H14V14M6,19H18V17H6V19M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M12,8C16.42,8 20,9.79 20,12V13.08L19,12.08C18.75,10.23 15.78,9 12,9C8.22,9 5.25,10.23 5,12.08L4,13.08V12C4,9.79 7.58,8 12,8M12,14C15.36,14 18,15.12 18,16.5V18H6V16.5C6,15.12 8.64,14 12,14Z" />
+          </svg>
+          Restore
+        </button>
       </div>
     </div>
 
@@ -1122,6 +1153,196 @@
               importBtn.innerHTML = '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>Import CSV/Excel';
               importBtn.style.pointerEvents = 'auto';
             }
+            e.target.value = '';
+          }
+        });
+      }
+
+      // Delete All Students functionality
+      const deleteAllBtn = document.getElementById('deleteAllBtn');
+      if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', async function() {
+          if (!confirm('Are you sure you want to delete ALL students? This action can be restored within 30 days.')) {
+            return;
+          }
+          
+          try {
+            const allStudents = await studentsAPI.getAll();
+            const deletedData = {
+              students: allStudents,
+              deletedAt: new Date().toISOString(),
+              expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            
+            // Store deleted data for restoration
+            localStorage.setItem('sv_deleted_students', JSON.stringify(deletedData));
+            
+            // Delete all students
+            for (const student of allStudents) {
+              try {
+                await studentsAPI.delete(student.id);
+              } catch (error) {
+                console.error(`Error deleting student ${student.id}:`, error);
+              }
+            }
+            
+            // Show restore button
+            document.getElementById('restoreBtn').style.display = 'inline-flex';
+            
+            // Reload students
+            if (typeof initStudentsPage === 'function') {
+              await initStudentsPage();
+            }
+            
+            alert(`All ${allStudents.length} students have been deleted. You can restore them within 30 days.`);
+          } catch (error) {
+            console.error('Error deleting all students:', error);
+            alert('Error deleting students: ' + error.message);
+          }
+        });
+      }
+      
+      // Restore Deleted Students functionality
+      const restoreBtn = document.getElementById('restoreBtn');
+      if (restoreBtn) {
+        // Check if there are deleted students
+        const deletedData = localStorage.getItem('sv_deleted_students');
+        if (deletedData) {
+          const data = JSON.parse(deletedData);
+          const expiresAt = new Date(data.expiresAt);
+          if (expiresAt > new Date()) {
+            restoreBtn.style.display = 'inline-flex';
+          } else {
+            // Expired, remove from storage
+            localStorage.removeItem('sv_deleted_students');
+          }
+        }
+        
+        restoreBtn.addEventListener('click', async function() {
+          const deletedData = localStorage.getItem('sv_deleted_students');
+          if (!deletedData) {
+            alert('No deleted students to restore.');
+            return;
+          }
+          
+          const data = JSON.parse(deletedData);
+          const expiresAt = new Date(data.expiresAt);
+          
+          if (expiresAt <= new Date()) {
+            alert('The restore period has expired (30 days). Deleted data has been permanently removed.');
+            localStorage.removeItem('sv_deleted_students');
+            restoreBtn.style.display = 'none';
+            return;
+          }
+          
+          if (!confirm(`Restore ${data.students.length} deleted students?`)) {
+            return;
+          }
+          
+          try {
+            let restored = 0;
+            let failed = 0;
+            
+            for (const student of data.students) {
+              try {
+                await studentsAPI.create(student);
+                restored++;
+              } catch (error) {
+                console.error(`Error restoring student ${student.adm}:`, error);
+                failed++;
+              }
+            }
+            
+            // Remove from storage after successful restore
+            localStorage.removeItem('sv_deleted_students');
+            restoreBtn.style.display = 'none';
+            
+            // Reload students
+            if (typeof initStudentsPage === 'function') {
+              await initStudentsPage();
+            }
+            
+            alert(`Restored ${restored} students${failed > 0 ? `. ${failed} failed to restore.` : '.'}`);
+          } catch (error) {
+            console.error('Error restoring students:', error);
+            alert('Error restoring students: ' + error.message);
+          }
+        });
+      }
+      
+      // Photo File Upload functionality
+      const studentPhotosInput = document.getElementById('studentPhotosInput');
+      if (studentPhotosInput) {
+        studentPhotosInput.addEventListener('change', async function(e) {
+          const files = Array.from(e.target.files);
+          if (files.length === 0) return;
+          
+          // Get all students to match photos
+          try {
+            const allStudents = await studentsAPI.getAll();
+            const photoMap = new Map();
+            
+            // Try to match photos by filename (assuming filename contains student name or admission)
+            for (const file of files) {
+              const fileName = file.name.toLowerCase();
+              // Try to find matching student
+              const student = allStudents.find(s => 
+                fileName.includes(s.adm.toLowerCase()) || 
+                fileName.includes(s.name.toLowerCase().split(' ')[0]) ||
+                fileName.includes(s.name.toLowerCase().split(' ')[s.name.split(' ').length - 1])
+              );
+              
+              if (student) {
+                if (!photoMap.has(student.id)) {
+                  photoMap.set(student.id, []);
+                }
+                photoMap.get(student.id).push(file);
+              }
+            }
+            
+            if (photoMap.size === 0) {
+              alert('Could not match photos to students. Please ensure filenames contain student names or admission numbers.');
+              e.target.value = '';
+              return;
+            }
+            
+            // Upload photos
+            let uploaded = 0;
+            for (const [studentId, photoFiles] of photoMap.entries()) {
+              for (const photoFile of photoFiles) {
+                try {
+                  // Convert to base64 for storage (in a real app, upload to server)
+                  const reader = new FileReader();
+                  reader.onload = async function(e) {
+                    const base64 = e.target.result;
+                    // Store photo URL (in real app, this would be a server URL)
+                    const student = allStudents.find(s => s.id == studentId);
+                    if (student) {
+                      // Update student with photo
+                      await studentsAPI.update(studentId, {
+                        ...student,
+                        photo_url: base64
+                      });
+                    }
+                  };
+                  reader.readAsDataURL(photoFile);
+                  uploaded++;
+                } catch (error) {
+                  console.error(`Error uploading photo for student ${studentId}:`, error);
+                }
+              }
+            }
+            
+            // Reload students
+            if (typeof initStudentsPage === 'function') {
+              await initStudentsPage();
+            }
+            
+            alert(`Uploaded ${uploaded} photos for ${photoMap.size} students.`);
+            e.target.value = '';
+          } catch (error) {
+            console.error('Error processing photos:', error);
+            alert('Error uploading photos: ' + error.message);
             e.target.value = '';
           }
         });
