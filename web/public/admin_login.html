@@ -16,9 +16,43 @@
       min-height: 100vh;
     }
     
+    body::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    body::-webkit-scrollbar-track {
+      background: var(--bg-body);
+    }
+    
+    body::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    
+    body::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+    
     .garden-body {
       overflow-y: auto;
       min-height: 100vh;
+    }
+    
+    .garden-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .garden-body::-webkit-scrollbar-track {
+      background: var(--bg-body);
+    }
+    
+    .garden-body::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    
+    .garden-body::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
     }
     
     .login-container {

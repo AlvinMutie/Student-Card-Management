@@ -48,10 +48,24 @@
     .brand-pill {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0.75rem 2rem;
+      padding: 0.4rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
+    
+    .brand-pill .brand-icon {
+      width: 28px !important;
+      height: 28px !important;
+    }
+    
+    .brand-pill span {
+      font-size: 1rem !important;
+    }
+    
+    .nav-menu a {
+      padding: 0.35rem 0.8rem !important;
+      font-size: 0.85rem !important;
     }
     
     .nav-menu {
@@ -237,15 +251,15 @@
 <body class="garden-body landing-body">
   <header class="garden-header">
     <div class="brand-pill">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon" style="width: 40px; height: 40px; object-fit: contain;">
-        <span style="font-weight: 700; font-size: 1.25rem; color: var(--primary-dark);">Hechlink Ventures</span>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="../shared/Hechlink_logo.png" alt="Hechlink Ventures Logo" class="brand-icon" style="width: 28px; height: 28px; object-fit: contain;">
+        <span style="font-weight: 700; font-size: 1rem; color: var(--primary-dark);">Hechlink Ventures</span>
       </div>
       <nav>
         <ul class="nav-menu">
-          <li><a href="admin_login.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Admin Login</a></li>
-          <li><a href="../parent/parent_login_page.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Parent Login</a></li>
-          <li><a href="../staff/staff_registration_page.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600;">Staff Login</a></li>
+          <li><a href="admin_login.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600;">Admin Login</a></li>
+          <li><a href="../parent/parent_registration_page.html" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600;">Parent Register/Sign Up</a></li>
+          <li><a href="../staff/staff_registration_page.html" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 0.4rem 0.9rem; border-radius: 8px; font-weight: 600;">Staff Register/Sign Up</a></li>
         </ul>
       </nav>
     </div>
@@ -265,11 +279,6 @@
           </div>
           <h1>Empower Your School's Future. All In One Platform.</h1>
           <p>Experience comprehensive school management — where academic excellence meets operational efficiency. Manage students, parents, staff, and resources seamlessly from one unified system.</p>
-          <div class="hero-cta">
-            <a href="../parent/parent_login_page.html" class="cta-primary">
-              Start your journey <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
         </div>
         
         <div class="hero-image-container">
