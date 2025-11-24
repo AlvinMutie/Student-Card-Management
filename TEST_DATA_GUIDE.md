@@ -164,7 +164,7 @@ After loading test data, you can use:
 ## API Endpoints for Test Data
 
 ### Load Test Data
-```bash
+   ```bash
 POST /api/setup/load-test-data
 ```
 
@@ -197,7 +197,7 @@ POST /api/setup/load-test-data
 ```
 
 ### Check Status (See What's Loaded)
-```bash
+   ```bash
 GET /api/setup/status
 ```
 

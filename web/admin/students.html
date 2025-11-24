@@ -1131,64 +1131,83 @@
         }
       }
       
-      // Background import processor
+      // Background import processor - optimized for speed
       async function processImportInBackground(job) {
-        const { students, total, currentIndex, successCount, errorCount, errors } = job;
+        const { students, total, currentIndex } = job;
+        const BATCH_SIZE = 10; // Process 10 students in parallel
+        const BATCH_DELAY = 50; // 50ms delay between batches (reduced from 100ms per student)
         
-        for (let i = currentIndex; i < students.length; i++) {
-          const student = students[i];
+        // Process students in batches for better performance
+        for (let i = currentIndex; i < students.length; i += BATCH_SIZE) {
+          const batch = students.slice(i, Math.min(i + BATCH_SIZE, students.length));
+          
+          // Process batch in parallel
+          const batchPromises = batch.map(async (student) => {
+            try {
+              const studentData = {
+                adm: String(student.adm || '').trim(),
+                name: String(student.name || '').trim(),
+                class: String(student.class || '').trim(),
+                stream: String(student.stream || '').trim(),
+                nemis: String(student.nemis || '').trim(),
+                fee_balance: parseFloat(student.fee_balance) || 0,
+                parent_id: student.parent_id || null
+              };
+              
+              if (!studentData.adm || !studentData.name) {
+                throw new Error('Missing required fields: adm or name');
+              }
+              
+              try {
+                const existing = await studentsAPI.getById(studentData.adm);
+                if (existing && existing.id) {
+                  await studentsAPI.update(studentData.adm, studentData);
+                  return { success: true, adm: studentData.adm };
+                }
+              } catch (e) {
+                if (e.status !== 404 && e.statusCode !== 404) {
+                  console.warn(`Error checking existing student ${studentData.adm}:`, e);
+                }
+                const result = await studentsAPI.create(studentData);
+                if (result && (result.id || result.adm)) {
+                  return { success: true, adm: studentData.adm };
+                } else {
+                  throw new Error('Create succeeded but no ID returned');
+                }
+              }
+            } catch (error) {
+              const errorMsg = error.message || error.toString() || 'Unknown error';
+              return { 
+                success: false, 
+                adm: student.adm || 'Unknown', 
+                name: student.name || 'Unknown',
+                error: errorMsg 
+              };
+            }
+          });
+          
+          // Wait for batch to complete
+          const batchResults = await Promise.all(batchPromises);
           
           // Update job progress
-          job.currentIndex = i + 1;
+          batchResults.forEach(result => {
+            if (result.success) {
+              job.successCount++;
+            } else {
+              job.errorCount++;
+              job.errors.push(`${result.adm} (${result.name}): ${result.error}`);
+              console.error(`Failed to import student ${result.adm}:`, result.error);
+            }
+          });
+          
+          job.currentIndex = Math.min(i + BATCH_SIZE, students.length);
+          
+          // Update localStorage after each batch
           localStorage.setItem('sv_import_job', JSON.stringify(job));
           
-          try {
-            const studentData = {
-              adm: String(student.adm || '').trim(),
-              name: String(student.name || '').trim(),
-              class: String(student.class || '').trim(),
-              stream: String(student.stream || '').trim(),
-              nemis: String(student.nemis || '').trim(),
-              fee_balance: parseFloat(student.fee_balance) || 0,
-              parent_id: student.parent_id || null
-            };
-            
-            if (!studentData.adm || !studentData.name) {
-              throw new Error('Missing required fields: adm or name');
-            }
-            
-            try {
-              const existing = await studentsAPI.getById(studentData.adm);
-              if (existing && existing.id) {
-                await studentsAPI.update(studentData.adm, studentData);
-                job.successCount++;
-              }
-            } catch (e) {
-              if (e.status !== 404 && e.statusCode !== 404) {
-                console.warn(`Error checking existing student ${studentData.adm}:`, e);
-              }
-              const result = await studentsAPI.create(studentData);
-              if (result && (result.id || result.adm)) {
-                job.successCount++;
-              } else {
-                throw new Error('Create succeeded but no ID returned');
-              }
-            }
-          } catch (error) {
-            job.errorCount++;
-            const errorMsg = error.message || error.toString() || 'Unknown error';
-            job.errors.push(`${student.adm || 'Unknown'} (${student.name || 'Unknown'}): ${errorMsg}`);
-            console.error(`Failed to import student ${student.adm}:`, error);
-          }
-          
-          // Update localStorage periodically
-          if (i % 10 === 0 || i === students.length - 1) {
-            localStorage.setItem('sv_import_job', JSON.stringify(job));
-          }
-          
-          // Small delay to avoid overwhelming the API
-          if (i < students.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 100));
+          // Small delay between batches to avoid overwhelming the API
+          if (i + BATCH_SIZE < students.length) {
+            await new Promise(resolve => setTimeout(resolve, BATCH_DELAY));
           }
         }
         
