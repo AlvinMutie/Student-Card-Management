@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Students Management | Admin Dashboard</title>
+  <link rel="stylesheet" href="../shared/portal-theme.css">
   <link rel="stylesheet" href="shared-admin-styles.css">
   <style>
     /* Page-specific styles only - base styles are in shared-admin-styles.css */
@@ -671,8 +672,8 @@
         </label>
         <input type="file" id="studentDataInput" accept=".csv,.xlsx,.xls" style="display:none;">
         <label for="studentPhotosInput" class="btn btn-success"
-          style="cursor:pointer; display: flex; align-items: center; gap: 8px;">
-          <svg class="btn-icon" viewBox="0 0 24 24">
+          style="cursor:pointer; display: flex; align-items: center; gap: 6px; padding: 6px 10px; font-size: 0.85rem;">
+          <svg class="btn-icon" viewBox="0 0 24 24" style="width: 14px; height: 14px;">
             <path d="M9,2V8H11V11H5C3.89,11 3,11.89 3,13V16H1V22H7V16H5V13H11V16H9V22H15V16H13V13H19V16H17V22H23V16H21V13C21,11.89 20.11,11 19,11H13V8H15V2H9Z" />
           </svg>
           Upload Photos
@@ -1446,28 +1447,54 @@
             const allStudents = await studentsAPI.getAll();
             const photoMap = new Map();
             
-            // Try to match photos by filename (assuming filename contains student name or admission)
+            // Match photos by admission number (ID) - primary method
+            // Photos should be named with admission number (e.g., "ST001.jpg" or "ST001_photo.jpg")
             for (const file of files) {
               const fileName = file.name.toLowerCase();
-              // Try to find matching student
-              const student = allStudents.find(s => 
-                fileName.includes(s.adm.toLowerCase()) || 
-                fileName.includes(s.name.toLowerCase().split(' ')[0]) ||
-                fileName.includes(s.name.toLowerCase().split(' ')[s.name.split(' ').length - 1])
-              );
+              // Remove file extension and common prefixes/suffixes
+              const nameWithoutExt = fileName.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '')
+                .replace(/^photo[_-]?/i, '')
+                .replace(/[_-]?photo$/i, '')
+                .replace(/^img[_-]?/i, '')
+                .replace(/[_-]?img$/i, '')
+                .trim();
+              
+              // First, try exact match with admission number (most reliable)
+              let student = allStudents.find(s => {
+                const admLower = s.adm.toLowerCase().trim();
+                return nameWithoutExt === admLower || 
+                       fileName.includes(admLower) ||
+                       nameWithoutExt.includes(admLower);
+              });
+              
+              // If no exact match, try matching by name (fallback)
+              if (!student) {
+                student = allStudents.find(s => {
+                  const nameParts = s.name.toLowerCase().split(' ').filter(p => p.length > 2);
+                  return nameParts.some(part => nameWithoutExt.includes(part) || fileName.includes(part));
+                });
+              }
               
               if (student) {
                 if (!photoMap.has(student.id)) {
                   photoMap.set(student.id, []);
                 }
                 photoMap.get(student.id).push(file);
+              } else {
+                console.warn(`Could not match photo: ${file.name}`);
               }
             }
             
             if (photoMap.size === 0) {
-              alert('Could not match photos to students. Please ensure filenames contain student names or admission numbers.');
+              alert('Could not match photos to students.\n\nFor best results, name photos with the student admission number:\n- Example: "ST001.jpg" or "ST001_photo.jpg"\n\nAlternatively, include the student name in the filename.');
               e.target.value = '';
               return;
+            }
+            
+            // Show matching summary
+            const unmatchedCount = files.length - Array.from(photoMap.values()).reduce((sum, files) => sum + files.length, 0);
+            if (unmatchedCount > 0) {
+              console.warn(`${unmatchedCount} photo(s) could not be matched to students`);
             }
             
             // Upload photos
