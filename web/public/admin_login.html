@@ -33,27 +33,6 @@
       background: var(--primary-dark);
     }
     
-    .garden-body {
-      overflow-y: auto;
-      min-height: 100vh;
-    }
-    
-    .garden-body::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    .garden-body::-webkit-scrollbar-track {
-      background: var(--bg-body);
-    }
-    
-    .garden-body::-webkit-scrollbar-thumb {
-      background: var(--primary);
-      border-radius: 4px;
-    }
-    
-    .garden-body::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-dark);
-    }
     
     .login-container {
       padding: 3rem;
@@ -191,8 +170,32 @@
     
     .garden-body {
       position: relative;
-      overflow: hidden;
-      height: 100vh;
+      overflow-y: auto;
+      overflow-x: hidden;
+      min-height: 100vh;
+      height: auto;
+    }
+    
+    .garden-body::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .garden-body::-webkit-scrollbar-track {
+      background: var(--bg-body);
+    }
+    
+    .garden-body::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+    
+    .garden-body::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-dark);
+    }
+    
+    html {
+      overflow-y: auto;
+      overflow-x: hidden;
     }
     
     .garden-body::before {
