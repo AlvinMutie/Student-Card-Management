@@ -190,6 +190,25 @@ const resolveParentReference = async ({
   return null;
 };
 
+let studentColumnsEnsured = false;
+const ensureStudentExtendedColumns = async () => {
+  if (studentColumnsEnsured) return;
+  try {
+    await pool.query(`
+      ALTER TABLE students
+      ADD COLUMN IF NOT EXISTS contact VARCHAR(50),
+      ADD COLUMN IF NOT EXISTS parent_name VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS parent_email VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS gender VARCHAR(20),
+      ADD COLUMN IF NOT EXISTS kcpe_score VARCHAR(50)
+    `);
+    studentColumnsEnsured = true;
+  } catch (error) {
+    console.error('Failed to ensure student columns exist:', error);
+    throw error;
+  }
+};
+
 // Get all students (admin only)
 router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
@@ -290,6 +309,7 @@ router.get('/parent/my-students', authenticateToken, authorizeRole('parent'), as
 router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   let normalized = {};
   try {
+    await ensureStudentExtendedColumns();
     normalized = normalizeStudentPayload(req.body);
     const {
       adm,
@@ -330,6 +350,13 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
       return res.status(400).json({ error: parentError.message });
     }
 
+    const sanitizedFeeBalance =
+      typeof fee_balance === 'number' && Number.isFinite(fee_balance)
+        ? fee_balance
+        : Number.isFinite(Number(fee_balance))
+          ? Number(fee_balance)
+          : 0;
+
     const result = await pool.query(
       `INSERT INTO students (adm, name, nemis, class, fee_balance, parent_id, photo_url, 
                              stream, house, date_of_admission, date_of_completion, meal_card_validity,
@@ -341,7 +368,7 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
         name,
         nemis || null,
         className || null,
-        fee_balance,
+        sanitizedFeeBalance,
         resolvedParentId,
         photo_url || null,
         stream || null,
@@ -377,7 +404,10 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
       `Create student error${rowInfo ? ` (row ${rowInfo})` : ''}:`,
       error
     );
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: error.message || 'Unexpected database error',
+    });
   }
 });
 
@@ -385,6 +415,7 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
 router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
   let normalized = {};
   try {
+    await ensureStudentExtendedColumns();
     const { id } = req.params;
     const identifierIsNumeric = /^\d+$/.test(id);
     const identifierColumn = identifierIsNumeric ? 'id' : 'adm';
@@ -481,7 +512,10 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
       `Update student error${rowInfo ? ` (row ${rowInfo})` : ''}:`,
       error
     );
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({
+      error: 'Internal server error',
+      message: error.message || 'Unexpected database error',
+    });
   }
 });
 
