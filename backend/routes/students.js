@@ -65,8 +65,9 @@ const normalizeStudentPayload = (payload = {}) => {
     className: stringOrNull(
       getValue('class', 'classname', 'grade', 'kcpeclass')
     ),
-    fee_balance:
-      numberOrNull(getValue('fee_balance', 'fee balance', 'feebalance')) || 0,
+    fee_balance: numberOrNull(
+      getValue('fee_balance', 'fee balance', 'feebalance')
+    ),
     parent_id: numberOrNull(getValue('parent_id', 'parentid')),
     photo_url: stringOrNull(getValue('photo_url', 'photourl', 'photo')),
     stream: stringOrNull(getValue('stream')),
@@ -104,6 +105,89 @@ const normalizeStudentPayload = (payload = {}) => {
         )
       ) || null,
   };
+};
+
+const ensureParentExistsById = async (parentId) => {
+  const result = await pool.query('SELECT id FROM parents WHERE id = $1', [
+    parentId,
+  ]);
+  if (result.rows.length === 0) {
+    throw new Error(`Parent with ID ${parentId} was not found`);
+  }
+  return parentId;
+};
+
+const findParentByEmail = async (email) => {
+  if (!email) return null;
+  const result = await pool.query(
+    'SELECT id FROM parents WHERE LOWER(email) = LOWER($1) LIMIT 1',
+    [email]
+  );
+  return result.rows.length ? result.rows[0].id : null;
+};
+
+const findParentByName = async (name) => {
+  if (!name) return null;
+  const result = await pool.query(
+    'SELECT id FROM parents WHERE LOWER(name) = LOWER($1) LIMIT 1',
+    [name.toLowerCase()]
+  );
+  return result.rows.length ? result.rows[0].id : null;
+};
+
+const createParentFromImport = async ({ parent_name, parent_email, contact }) => {
+  if (!parent_email) {
+    throw new Error(
+      'Parent email is required to create a new parent profile automatically'
+    );
+  }
+
+  try {
+    const created = await pool.query(
+      `INSERT INTO parents (name, email, phone)
+       VALUES ($1, $2, $3)
+       RETURNING id`,
+      [parent_name || parent_email, parent_email, contact || null]
+    );
+    return created.rows[0].id;
+  } catch (error) {
+    if (error.code === '23505') {
+      // Unique violation - fetch the parent that races us
+      const existing = await findParentByEmail(parent_email);
+      if (existing) {
+        return existing;
+      }
+    }
+    throw error;
+  }
+};
+
+const resolveParentReference = async ({
+  parent_id,
+  parent_name,
+  parent_email,
+  contact,
+}) => {
+  if (parent_id) {
+    return ensureParentExistsById(parent_id);
+  }
+
+  if (parent_email) {
+    const existingByEmail = await findParentByEmail(parent_email);
+    if (existingByEmail) {
+      return existingByEmail;
+    }
+    return createParentFromImport({ parent_name, parent_email, contact });
+  }
+
+  if (parent_name) {
+    const existingByName = await findParentByName(parent_name);
+    if (existingByName) {
+      return existingByName;
+    }
+  }
+
+  return null;
 };
 
 // Get all students (admin only)
@@ -156,7 +240,12 @@ router.get('/:id', authenticateToken, async (req, res) => {
       return res.status(404).json({ error: 'Student not found' });
     }
 
-    res.json(result.rows[0]);
+    const updatedStudent = result.rows[0];
+    res.json({
+      success: true,
+      message: `Student ${updatedStudent.name || updatedStudent.adm} updated successfully`,
+      ...updatedStudent,
+    });
   } catch (error) {
     console.error('Get student error:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -229,6 +318,18 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
         .json({ error: 'Admission number and name are required' });
     }
 
+    let resolvedParentId = null;
+    try {
+      resolvedParentId = await resolveParentReference({
+        parent_id,
+        parent_name,
+        parent_email,
+        contact,
+      });
+    } catch (parentError) {
+      return res.status(400).json({ error: parentError.message });
+    }
+
     const result = await pool.query(
       `INSERT INTO students (adm, name, nemis, class, fee_balance, parent_id, photo_url, 
                              stream, house, date_of_admission, date_of_completion, meal_card_validity,
@@ -240,8 +341,8 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
         name,
         nemis || null,
         className || null,
-        fee_balance || 0,
-        parent_id || null,
+        fee_balance,
+        resolvedParentId,
         photo_url || null,
         stream || null,
         house || null,
@@ -256,7 +357,12 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
       ]
     );
 
-    res.status(201).json(result.rows[0]);
+    const createdStudent = result.rows[0];
+    res.status(201).json({
+      success: true,
+      message: `Student ${createdStudent.name || adm} created successfully`,
+      ...createdStudent,
+    });
   } catch (error) {
     if (error.code === '23505') {
       return res.status(400).json({
@@ -305,6 +411,18 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
       kcpe_score,
     } = normalized;
 
+    let resolvedParentId = null;
+    try {
+      resolvedParentId = await resolveParentReference({
+        parent_id,
+        parent_name,
+        parent_email,
+        contact,
+      });
+    } catch (parentError) {
+      return res.status(400).json({ error: parentError.message });
+    }
+
     const result = await pool.query(
       `UPDATE students
        SET adm = COALESCE($1, adm),
@@ -333,7 +451,7 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
         nemis,
         className,
         fee_balance,
-        parent_id,
+        resolvedParentId,
         photo_url,
         stream,
         house,
