@@ -305,14 +305,16 @@
       color: #2e7d32;
     }
 
-    .status-pending {
-      background: #fff3e0;
-      color: #ef6c00;
+    .status-partial {
+      background: #fff7ed;
+      color: #c2410c;
     }
 
+    .status-unpaid,
+    .status-pending,
     .status-overdue {
       background: #ffebee;
-      color: #c62828;
+      color: #b91c1c;
     }
 
     .action-icon {
@@ -1712,9 +1714,10 @@
             // Show restore button
             document.getElementById('restoreBtn').style.display = 'inline-flex';
             
-            // Reload students
-            if (typeof initStudentsPage === 'function') {
-              await initStudentsPage();
+            // Reload students for the current view
+            await loadStudents();
+            if (typeof initDashboard === 'function') {
+              initDashboard();
             }
             
             alert(`All ${allStudents.length} students have been deleted. You can restore them within 30 days.`);
@@ -1808,8 +1811,9 @@
             restoreBtn.style.display = 'none';
             
             // Reload students
-            if (typeof initStudentsPage === 'function') {
-              await initStudentsPage();
+            await loadStudents();
+            if (typeof initDashboard === 'function') {
+              initDashboard();
             }
             
             alert(`Restored ${restored} students${failed > 0 ? `. ${failed} failed to restore.` : '.'}`);

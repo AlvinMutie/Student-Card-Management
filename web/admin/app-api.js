@@ -23,9 +23,17 @@
   }
 
   function getPaymentStatus(feeBalance) {
-    if (feeBalance === 0 || feeBalance === null) return { text: 'Paid', class: 'status-paid' };
-    if (feeBalance > 0) return { text: 'Pending', class: 'status-pending' };
-    return { text: 'Overdue', class: 'status-overdue' };
+    const amount = Number(feeBalance);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      return { text: 'Paid', class: 'status-paid' };
+    }
+    if (amount > 0 && amount <= 5000) {
+      return { text: 'Partial', class: 'status-partial' };
+    }
+    if (amount > 5000) {
+      return { text: 'Not Paid', class: 'status-unpaid' };
+    }
+    return { text: 'Pending', class: 'status-pending' };
   }
 
   /* ------------------ Auth helpers ------------------ */
@@ -364,6 +372,7 @@
           const parentSelect = document.getElementById('studentParentSelect');
           const selectedParentId = parentSelect ? parentSelect.value.trim() : '';
 
+          const feeValue = document.getElementById('studentFee').value;
           const studentData = {
             name: document.getElementById('studentName').value,
             adm: document.getElementById('studentAdm').value,
@@ -371,7 +380,7 @@
             class: document.getElementById('studentClass').value,
             stream: document.getElementById('studentStream').value,
             house: document.getElementById('studentHouse').value,
-            fee_balance: document.getElementById('studentFee').value,
+            fee_balance: feeValue === '' ? null : Number(feeValue),
             parent_id: selectedParentId ? Number(selectedParentId) : null,
             date_of_admission: document.getElementById('admissionDate').value || null,
             date_of_completion: document.getElementById('completionDate').value || null
