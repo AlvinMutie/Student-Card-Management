@@ -1027,6 +1027,20 @@
       const rowHasValues = (row = []) =>
         Array.isArray(row) && row.some((cell) => String(cell ?? '').trim().length);
 
+      const importButtonSelector = 'label[for="studentDataInput"]';
+      const importButtonDefaultHTML = document.querySelector(importButtonSelector)?.innerHTML ||
+        '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>Import Excel';
+
+      const setImportButtonState = (html, disabled = false) => {
+        const btn = document.querySelector(importButtonSelector);
+        if (!btn) return;
+        btn.innerHTML = html || importButtonDefaultHTML;
+        btn.style.pointerEvents = disabled ? 'none' : 'auto';
+        btn.style.opacity = disabled ? '0.65' : '1';
+      };
+
+      const resetImportButtonState = () => setImportButtonState(importButtonDefaultHTML, false);
+
       const convertRowToStudent = (row, headerMap, rowNumber) => {
         const getValue = (headerName) => {
           const idx = headerMap[normalizeImportHeader(headerName)];
@@ -1106,6 +1120,7 @@
           // Remove any existing listeners by cloning the element
           const newInput = studentDataInput.cloneNode(true);
           studentDataInput.parentNode.replaceChild(newInput, studentDataInput);
+          resetImportButtonState();
           
           newInput.addEventListener('change', async function(e) {
           const file = e.target.files[0];
@@ -1122,12 +1137,7 @@
           }
 
           try {
-            const importBtn = document.querySelector('label[for="studentDataInput"]');
-            const originalText = importBtn ? importBtn.innerHTML : '';
-            if (importBtn) {
-              importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
-              importBtn.style.pointerEvents = 'none';
-            }
+            setImportButtonState('<i class="fas fa-spinner fa-spin"></i> Importing...', true);
 
             let students = [];
             let parseResult = null;
@@ -1160,10 +1170,7 @@
               alert(
                 `Cannot import file:\n${parseResult.error}\n\nExpected columns:\n${expected}\n\nPlease ensure the header names match exactly.`
               );
-              if (importBtn) {
-                importBtn.innerHTML = originalText || 'Import Excel';
-                importBtn.style.pointerEvents = 'auto';
-              }
+              resetImportButtonState();
               e.target.value = '';
               return;
             }
@@ -1173,10 +1180,7 @@
             if (students.length === 0) {
               alert('No valid student data found in the file. Please check the column names and rows.');
               e.target.value = '';
-              if (importBtn) {
-                importBtn.innerHTML = originalText || 'Import Excel';
-                importBtn.style.pointerEvents = 'auto';
-              }
+              resetImportButtonState();
               return;
             }
 
@@ -1198,10 +1202,7 @@
             processImportInBackground(importJob);
             
             // Show notification that import has started
-            if (importBtn) {
-              importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Importing in background...`;
-              importBtn.style.pointerEvents = 'none';
-            }
+            setImportButtonState(`<i class="fas fa-spinner fa-spin"></i> Importing in background...`, true);
             
             // Show notification
             alert(`Import started! Processing ${students.length} students in the background. You can navigate to other pages - the import will continue. Check back later to see results.`);
@@ -1218,11 +1219,7 @@
           } catch (error) {
             console.error('Import error:', error);
             alert('Error importing file: ' + error.message);
-            const importBtn = document.querySelector('label[for="studentDataInput"]');
-            if (importBtn) {
-              importBtn.innerHTML = '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>Import CSV/Excel';
-              importBtn.style.pointerEvents = 'auto';
-            }
+            resetImportButtonState();
             const input = document.getElementById('studentDataInput');
             if (input) input.value = '';
           }
@@ -1393,11 +1390,7 @@
           }
           
           // Reset button
-          const importBtn = document.querySelector('label[for="studentDataInput"]');
-          if (importBtn) {
-            importBtn.innerHTML = '<svg class="btn-icon" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" /></svg>Import Excel';
-            importBtn.style.pointerEvents = 'auto';
-          }
+          resetImportButtonState();
         }
       }
       
@@ -1407,11 +1400,7 @@
         const job = JSON.parse(existingJob);
         if (job.status === 'processing' && job.currentIndex < job.total) {
           // Resume import
-          const importBtn = document.querySelector('label[for="studentDataInput"]');
-          if (importBtn) {
-            importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Resuming import (${job.currentIndex}/${job.total})...`;
-            importBtn.style.pointerEvents = 'none';
-          }
+          setImportButtonState(`<i class="fas fa-spinner fa-spin"></i> Resuming import (${job.currentIndex}/${job.total})...`, true);
           processImportInBackground(job);
         } else if (job.status === 'completed') {
           // Show completion message
@@ -1436,10 +1425,7 @@
           if (job) {
             const jobData = JSON.parse(job);
             if (jobData.status === 'processing') {
-              const importBtn = document.querySelector('label[for="studentDataInput"]');
-              if (importBtn) {
-                importBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Importing (${jobData.currentIndex}/${jobData.total})...`;
-              }
+              setImportButtonState(`<i class="fas fa-spinner fa-spin"></i> Importing (${jobData.currentIndex}/${jobData.total})...`, true);
             }
           }
         }
