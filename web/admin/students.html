@@ -991,6 +991,114 @@
         adminInfoEl.textContent = `Welcome back, ${adminEmail.split('@')[0]}`;
       }
 
+      const IMPORT_EXPECTED_COLUMNS = [
+        'Admission Number',
+        'Name',
+        'Stream',
+        'UPI',
+        'House',
+        'KCPE',
+        'Contacts',
+        'Parent Name',
+        'Parent Email',
+        'Gender'
+      ];
+
+      const normalizeImportHeader = (value) => {
+        if (value === undefined || value === null) return '';
+        return String(value)
+          .trim()
+          .toLowerCase()
+          .replace(/[_-]+/g, ' ')
+          .replace(/\s+/g, ' ');
+      };
+
+      const buildHeaderMap = (headerRow = []) => {
+        const map = {};
+        headerRow.forEach((cell, idx) => {
+          const normalized = normalizeImportHeader(cell);
+          if (normalized && !(normalized in map)) {
+            map[normalized] = idx;
+          }
+        });
+        return map;
+      };
+
+      const rowHasValues = (row = []) =>
+        Array.isArray(row) && row.some((cell) => String(cell ?? '').trim().length);
+
+      const convertRowToStudent = (row, headerMap, rowNumber) => {
+        const getValue = (headerName) => {
+          const idx = headerMap[normalizeImportHeader(headerName)];
+          if (idx === undefined) return '';
+          const raw = row[idx];
+          if (raw === undefined || raw === null) return '';
+          return String(raw).trim();
+        };
+
+        const adm = getValue('Admission Number');
+        const name = getValue('Name');
+        if (!adm || !name) {
+          return null;
+        }
+
+        return {
+          adm,
+          name,
+          stream: getValue('Stream'),
+          nemis: getValue('UPI'),
+          house: getValue('House'),
+          kcpe_score: getValue('KCPE'),
+          contact: getValue('Contacts'),
+          parent_name: getValue('Parent Name'),
+          parent_email: getValue('Parent Email'),
+          gender: getValue('Gender'),
+          importRowNumber: rowNumber
+        };
+      };
+
+      const prepareImportRows = (rows = []) => {
+        const rowsWithIndex = rows
+          .map((row, idx) => ({
+            row: Array.isArray(row) ? row : [row],
+            idx
+          }))
+          .filter(({ row }) => rowHasValues(row));
+
+        if (rowsWithIndex.length === 0) {
+          return {
+            students: [],
+            error: 'The file is empty. Please include the header row and student data.'
+          };
+        }
+
+        const headerRow = rowsWithIndex[0].row;
+        const headerMap = buildHeaderMap(headerRow);
+        const missingColumns = IMPORT_EXPECTED_COLUMNS.filter((column) => {
+          const normalized = normalizeImportHeader(column);
+          return headerMap[normalized] === undefined;
+        });
+
+        if (missingColumns.length > 0) {
+          return {
+            students: [],
+            error: `Missing required column${missingColumns.length > 1 ? 's' : ''}: ${missingColumns.join(', ')}`,
+            missingColumns
+          };
+        }
+
+        const students = [];
+        for (let i = 1; i < rowsWithIndex.length; i++) {
+          const { row, idx } = rowsWithIndex[i];
+          const student = convertRowToStudent(row, headerMap, idx + 1);
+          if (student) {
+            students.push(student);
+          }
+        }
+
+        return { students };
+      };
+
       // Import CSV/Excel functionality - Use event delegation to ensure it always works
       function attachImportHandler() {
         const studentDataInput = document.getElementById('studentDataInput');
@@ -1014,71 +1122,61 @@
           }
 
           try {
-            // Show loading message
             const importBtn = document.querySelector('label[for="studentDataInput"]');
-            const originalText = importBtn.innerHTML;
-            importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
-            importBtn.style.pointerEvents = 'none';
+            const originalText = importBtn ? importBtn.innerHTML : '';
+            if (importBtn) {
+              importBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Importing...';
+              importBtn.style.pointerEvents = 'none';
+            }
 
             let students = [];
+            let parseResult = null;
 
             if (isCSV) {
-              // Parse CSV
               const text = await file.text();
-              const lines = text.split('\n').filter(line => line.trim());
-              
-              // Skip header row if it exists
-              const startIndex = lines[0].toLowerCase().includes('name') || 
-                                lines[0].toLowerCase().includes('adm') ? 1 : 0;
-              
-              for (let i = startIndex; i < lines.length; i++) {
-                const values = lines[i].split(',').map(v => v.trim().replace(/^"|"$/g, ''));
-                if (values.length >= 2 && values[0] && values[1]) {
-                  students.push({
-                    adm: values[0],
-                    name: values[1],
-                    class: values[2] || '',
-                    stream: values[3] || '',
-                    nemis: values[4] || '',
-                    fee_balance: parseFloat(values[5]) || 0,
-                    parent_id: values[6] || null
-                  });
-                }
-              }
+              const lines = text
+                .split(/\r?\n/)
+                .map(line => line.trim())
+                .filter(line => line.length);
+              const parsedRows = lines.map(line =>
+                line
+                  .split(',')
+                  .map(value => value.trim().replace(/^"|"$/g, ''))
+              );
+              parseResult = prepareImportRows(parsedRows);
             } else if (isExcel) {
-              // Parse Excel using XLSX library
               const arrayBuffer = await file.arrayBuffer();
               const workbook = XLSX.read(arrayBuffer, { type: 'array' });
               const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-              const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-
-              // Skip header row if it exists
-              const startIndex = jsonData[0] && (
-                jsonData[0].some(cell => cell && String(cell).toLowerCase().includes('name')) ||
-                jsonData[0].some(cell => cell && String(cell).toLowerCase().includes('adm'))
-              ) ? 1 : 0;
-
-              for (let i = startIndex; i < jsonData.length; i++) {
-                const row = jsonData[i];
-                if (row && row.length >= 2 && row[0] && row[1]) {
-                  students.push({
-                    adm: String(row[0]).trim(),
-                    name: String(row[1]).trim(),
-                    class: row[2] ? String(row[2]).trim() : '',
-                    stream: row[3] ? String(row[3]).trim() : '',
-                    nemis: row[4] ? String(row[4]).trim() : '',
-                    fee_balance: row[5] ? parseFloat(row[5]) || 0 : 0,
-                    parent_id: row[6] ? String(row[6]).trim() : null
-                  });
-                }
-              }
+              const jsonData = XLSX.utils.sheet_to_json(firstSheet, {
+                header: 1,
+                blankrows: false
+              });
+              parseResult = prepareImportRows(jsonData);
             }
 
-            if (students.length === 0) {
-              alert('No valid student data found in the file. Please check the format.');
+            if (parseResult?.error) {
+              const expected = IMPORT_EXPECTED_COLUMNS.join(', ');
+              alert(
+                `Cannot import file:\n${parseResult.error}\n\nExpected columns:\n${expected}\n\nPlease ensure the header names match exactly.`
+              );
+              if (importBtn) {
+                importBtn.innerHTML = originalText || 'Import Excel';
+                importBtn.style.pointerEvents = 'auto';
+              }
               e.target.value = '';
-              importBtn.innerHTML = originalText;
-              importBtn.style.pointerEvents = 'auto';
+              return;
+            }
+
+            students = parseResult?.students || [];
+
+            if (students.length === 0) {
+              alert('No valid student data found in the file. Please check the column names and rows.');
+              e.target.value = '';
+              if (importBtn) {
+                importBtn.innerHTML = originalText || 'Import Excel';
+                importBtn.style.pointerEvents = 'auto';
+              }
               return;
             }
 
@@ -1145,14 +1243,23 @@
           // Process batch in parallel
           const batchPromises = batch.map(async (student) => {
             try {
+              const cleanString = (value) =>
+                value === undefined || value === null ? '' : String(value).trim();
+
               const studentData = {
-                adm: String(student.adm || '').trim(),
-                name: String(student.name || '').trim(),
-                class: String(student.class || '').trim(),
-                stream: String(student.stream || '').trim(),
-                nemis: String(student.nemis || '').trim(),
+                adm: cleanString(student.adm),
+                name: cleanString(student.name),
+                class: cleanString(student.class),
+                stream: cleanString(student.stream),
+                nemis: cleanString(student.nemis),
                 fee_balance: parseFloat(student.fee_balance) || 0,
-                parent_id: student.parent_id || null
+                parent_id: student.parent_id || null,
+                contact: cleanString(student.contact),
+                parent_name: cleanString(student.parent_name),
+                parent_email: cleanString(student.parent_email),
+                gender: cleanString(student.gender),
+                kcpe_score: cleanString(student.kcpe_score),
+                importRowNumber: student.importRowNumber || null
               };
               
               if (!studentData.adm || !studentData.name) {
@@ -1164,7 +1271,7 @@
               try {
                 const result = await studentsAPI.create(studentData);
                 if (result && (result.id || result.adm)) {
-                  return { success: true, adm: studentData.adm };
+                  return { success: true, adm: studentData.adm, rowNumber: studentData.importRowNumber };
                 } else {
                   throw new Error('Create succeeded but no ID returned');
                 }
@@ -1181,7 +1288,7 @@
                   // Student exists or was created by another batch, try updating
                   try {
                     await studentsAPI.update(studentData.adm, studentData);
-                    return { success: true, adm: studentData.adm };
+                    return { success: true, adm: studentData.adm, rowNumber: studentData.importRowNumber };
                   } catch (updateError) {
                     // If update also fails, check if it's a 404 (student doesn't exist)
                     const updateErrorMsg = updateError.message || updateError.toString() || '';
@@ -1190,7 +1297,7 @@
                       try {
                         const retryResult = await studentsAPI.create(studentData);
                         if (retryResult && (retryResult.id || retryResult.adm)) {
-                          return { success: true, adm: studentData.adm };
+                          return { success: true, adm: studentData.adm, rowNumber: studentData.importRowNumber };
                         }
                       } catch (retryError) {
                         throw new Error(`Create/Update failed: ${errorMsg}`);
@@ -1206,12 +1313,16 @@
               const errorMsg = error.message || error.toString() || 'Unknown error';
               // Log first few errors for debugging
               if (job.errorCount < 5) {
-                console.error(`Import error for ${student.adm || 'Unknown'}:`, error);
+                console.error(
+                  `Import error for row ${student.importRowNumber || '?'} (${student.adm || 'Unknown'}):`,
+                  error
+                );
               }
               return { 
                 success: false, 
                 adm: student.adm || 'Unknown', 
                 name: student.name || 'Unknown',
+                rowNumber: student.importRowNumber || null,
                 error: errorMsg 
               };
             }
@@ -1226,10 +1337,11 @@
               job.successCount++;
             } else {
               job.errorCount++;
-              job.errors.push(`${result.adm} (${result.name}): ${result.error}`);
+              const rowLabel = result.rowNumber ? `Row ${result.rowNumber} - ` : '';
+              job.errors.push(`${rowLabel}${result.adm} (${result.name}): ${result.error}`);
               // Only log first few errors to avoid console spam
               if (job.errorCount <= 10) {
-                console.error(`Failed to import student ${result.adm}:`, result.error);
+                console.error(`Failed to import student ${rowLabel}${result.adm}:`, result.error);
               }
             }
           });

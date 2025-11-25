@@ -4,6 +4,108 @@ const { authenticateToken, authorizeRole } = require('../middleware/auth');
 
 const router = express.Router();
 
+const normalizeKey = (key) => {
+  if (!key && key !== 0) return '';
+  return String(key).trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+};
+
+const stringOrNull = (value) => {
+  if (value === undefined || value === null) return null;
+  const str = String(value).trim();
+  return str.length ? str : null;
+};
+
+const numberOrNull = (value) => {
+  if (value === undefined || value === null || value === '') return null;
+  const num = Number(value);
+  return Number.isFinite(num) ? num : null;
+};
+
+const normalizeStudentPayload = (payload = {}) => {
+  const normalized = {};
+
+  Object.entries(payload).forEach(([key, value]) => {
+    const normalizedKey = normalizeKey(key);
+    if (normalizedKey) {
+      normalized[normalizedKey] =
+        typeof value === 'string' ? value.trim() : value;
+    }
+  });
+
+  const getValue = (...aliases) => {
+    for (const alias of aliases) {
+      const normalizedAlias = normalizeKey(alias);
+      if (
+        normalizedAlias &&
+        Object.prototype.hasOwnProperty.call(normalized, normalizedAlias)
+      ) {
+        return normalized[normalizedAlias];
+      }
+    }
+    return undefined;
+  };
+
+  const toDateString = (value) => {
+    const raw = stringOrNull(value);
+    return raw || null;
+  };
+
+  const adm = stringOrNull(
+    getValue('adm', 'admissionnumber', 'admission number', 'admissionno')
+  );
+
+  const name = stringOrNull(
+    getValue('name', 'fullname', 'full name', 'studentname', 'student name')
+  );
+
+  return {
+    adm,
+    name,
+    nemis: stringOrNull(getValue('nemis', 'upi', 'upinumber', 'upi number')),
+    className: stringOrNull(
+      getValue('class', 'classname', 'grade', 'kcpeclass')
+    ),
+    fee_balance:
+      numberOrNull(getValue('fee_balance', 'fee balance', 'feebalance')) || 0,
+    parent_id: numberOrNull(getValue('parent_id', 'parentid')),
+    photo_url: stringOrNull(getValue('photo_url', 'photourl', 'photo')),
+    stream: stringOrNull(getValue('stream')),
+    house: stringOrNull(getValue('house')),
+    date_of_admission: toDateString(
+      getValue('date_of_admission', 'admissiondate', 'dateadmitted')
+    ),
+    date_of_completion: toDateString(
+      getValue('date_of_completion', 'completiondate', 'graduationdate')
+    ),
+    meal_card_validity: toDateString(
+      getValue('meal_card_validity', 'mealcardvalidity', 'mealcardexpiry')
+    ),
+    contact: stringOrNull(
+      getValue('contact', 'contacts', 'phone', 'phonenumber', 'guardiancontact')
+    ),
+    parent_name: stringOrNull(
+      getValue('parent_name', 'parentname', 'guardianname', 'parent fullname')
+    ),
+    parent_email: stringOrNull(
+      getValue('parent_email', 'parentemail', 'guardianemail')
+    ),
+    gender: stringOrNull(getValue('gender', 'sex')),
+    kcpe_score: stringOrNull(
+      getValue('kcpe', 'kcpegrade', 'kcpepoints', 'kcpe score', 'kcpe_score')
+    ),
+    importRowNumber:
+      numberOrNull(
+        getValue(
+          'importrownumber',
+          'rownumber',
+          '__rownumber',
+          'rowindex',
+          'importrow'
+        )
+      ) || null,
+  };
+};
+
 // Get all students (admin only)
 router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
@@ -97,45 +199,111 @@ router.get('/parent/my-students', authenticateToken, authorizeRole('parent'), as
 
 // Create student (admin only)
 router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
+  let normalized = {};
   try {
-    const { 
-      adm, name, nemis, class: className, fee_balance, parent_id, photo_url,
-      stream, house, date_of_admission, date_of_completion, meal_card_validity
-    } = req.body;
+    normalized = normalizeStudentPayload(req.body);
+    const {
+      adm,
+      name,
+      nemis,
+      className,
+      fee_balance,
+      parent_id,
+      photo_url,
+      stream,
+      house,
+      date_of_admission,
+      date_of_completion,
+      meal_card_validity,
+      contact,
+      parent_name,
+      parent_email,
+      gender,
+      kcpe_score,
+      importRowNumber,
+    } = normalized;
 
     if (!adm || !name) {
-      return res.status(400).json({ error: 'Admission number and name are required' });
+      return res
+        .status(400)
+        .json({ error: 'Admission number and name are required' });
     }
 
     const result = await pool.query(
       `INSERT INTO students (adm, name, nemis, class, fee_balance, parent_id, photo_url, 
-                             stream, house, date_of_admission, date_of_completion, meal_card_validity)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+                             stream, house, date_of_admission, date_of_completion, meal_card_validity,
+                             contact, parent_name, parent_email, gender, kcpe_score)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
        RETURNING *`,
       [
-        adm, name, nemis || null, className || null, fee_balance || 0, parent_id || null, photo_url || null,
-        stream || null, house || null, date_of_admission || null, date_of_completion || null, meal_card_validity || null
+        adm,
+        name,
+        nemis || null,
+        className || null,
+        fee_balance || 0,
+        parent_id || null,
+        photo_url || null,
+        stream || null,
+        house || null,
+        date_of_admission || null,
+        date_of_completion || null,
+        meal_card_validity || null,
+        contact || null,
+        parent_name || null,
+        parent_email || null,
+        gender || null,
+        kcpe_score || null,
       ]
     );
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    if (error.code === '23505') { // Unique violation
-      return res.status(400).json({ error: 'Student with this admission number already exists' });
+    if (error.code === '23505') {
+      return res.status(400).json({
+        error: 'Student with this admission number already exists',
+      });
     }
-    console.error('Create student error:', error);
+    const rowInfo =
+      normalized.importRowNumber ||
+      req.body?.importRowNumber ||
+      req.body?.rowNumber;
+    console.error(
+      `Create student error${rowInfo ? ` (row ${rowInfo})` : ''}:`,
+      error
+    );
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
 // Update student (admin only)
 router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
+  let normalized = {};
   try {
     const { id } = req.params;
-    const { 
-      adm, name, nemis, class: className, fee_balance, parent_id, photo_url,
-      stream, house, date_of_admission, date_of_completion, meal_card_validity
-    } = req.body;
+    const identifierIsNumeric = /^\d+$/.test(id);
+    const identifierColumn = identifierIsNumeric ? 'id' : 'adm';
+    const identifierValue = id;
+
+    normalized = normalizeStudentPayload(req.body);
+    const {
+      adm,
+      name,
+      nemis,
+      className,
+      fee_balance,
+      parent_id,
+      photo_url,
+      stream,
+      house,
+      date_of_admission,
+      date_of_completion,
+      meal_card_validity,
+      contact,
+      parent_name,
+      parent_email,
+      gender,
+      kcpe_score,
+    } = normalized;
 
     const result = await pool.query(
       `UPDATE students
@@ -151,11 +319,34 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
            date_of_admission = COALESCE($10, date_of_admission),
            date_of_completion = COALESCE($11, date_of_completion),
            meal_card_validity = COALESCE($12, meal_card_validity),
+           contact = COALESCE($13, contact),
+           parent_name = COALESCE($14, parent_name),
+           parent_email = COALESCE($15, parent_email),
+           gender = COALESCE($16, gender),
+           kcpe_score = COALESCE($17, kcpe_score),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $13
+       WHERE ${identifierColumn} = $18
        RETURNING *`,
-      [adm, name, nemis, className, fee_balance, parent_id, photo_url, 
-       stream, house, date_of_admission, date_of_completion, meal_card_validity, id]
+      [
+        adm,
+        name,
+        nemis,
+        className,
+        fee_balance,
+        parent_id,
+        photo_url,
+        stream,
+        house,
+        date_of_admission,
+        date_of_completion,
+        meal_card_validity,
+        contact,
+        parent_name,
+        parent_email,
+        gender,
+        kcpe_score,
+        identifierValue,
+      ]
     );
 
     if (result.rows.length === 0) {
@@ -164,7 +355,14 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
 
     res.json(result.rows[0]);
   } catch (error) {
-    console.error('Update student error:', error);
+    const rowInfo =
+      normalized.importRowNumber ||
+      req.body?.importRowNumber ||
+      req.body?.rowNumber;
+    console.error(
+      `Update student error${rowInfo ? ` (row ${rowInfo})` : ''}:`,
+      error
+    );
     res.status(500).json({ error: 'Internal server error' });
   }
 });
