@@ -124,6 +124,107 @@
       align-items: center;
     }
 
+    .import-status {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: rgba(20, 83, 45, 0.07);
+      border: 1px solid rgba(15, 118, 110, 0.2);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .import-status.hidden {
+      display: none;
+    }
+
+    .import-status.completed {
+      background: rgba(15, 118, 110, 0.1);
+      border-color: rgba(15, 118, 110, 0.35);
+    }
+
+    .import-status-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .import-status-title {
+      font-weight: 600;
+      color: var(--primary-green);
+      font-size: 0.95rem;
+    }
+
+    .import-status-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+    }
+
+    .import-progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+    }
+
+    .import-progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #34d399, #10b981);
+      transition: width 0.2s ease;
+    }
+
+    .import-status-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .import-status-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .import-status-meta .success-dot,
+    .import-status-meta .error-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .success-dot {
+      background: #22c55e;
+    }
+
+    .error-dot {
+      background: #ef4444;
+    }
+
+    .import-dismiss-btn {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--text-muted);
+      border-radius: 6px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .import-dismiss-btn:hover {
+      color: var(--danger);
+      background: rgba(15, 23, 42, 0.05);
+    }
+
 
 
     .refresh-btn {
@@ -694,6 +795,23 @@
       </div>
     </div>
 
+    <div id="importStatusBanner" class="import-status hidden">
+      <div class="import-status-header">
+        <div>
+          <p id="importStatusTitle" class="import-status-title">Import progress</p>
+          <p id="importStatusText" class="import-status-body">Waiting for import...</p>
+        </div>
+        <button id="dismissImportStatus" class="import-dismiss-btn" title="Hide status">&times;</button>
+      </div>
+      <div class="import-progress-track">
+        <div id="importStatusProgress" class="import-progress-bar"></div>
+      </div>
+      <div class="import-status-meta">
+        <span><span class="success-dot"></span><span id="importStatusSuccess">Success: 0</span></span>
+        <span><span class="error-dot"></span><span id="importStatusErrors">Failed: 0</span></span>
+      </div>
+    </div>
+
 
 
     <div class="table-container">
@@ -1041,6 +1159,100 @@
 
       const resetImportButtonState = () => setImportButtonState(importButtonDefaultHTML, false);
 
+      const importStatusEls = {
+        banner: document.getElementById('importStatusBanner'),
+        title: document.getElementById('importStatusTitle'),
+        text: document.getElementById('importStatusText'),
+        progress: document.getElementById('importStatusProgress'),
+        success: document.getElementById('importStatusSuccess'),
+        errors: document.getElementById('importStatusErrors'),
+        dismiss: document.getElementById('dismissImportStatus')
+      };
+
+      const getStoredImportJob = () => {
+        const raw = localStorage.getItem('sv_import_job');
+        if (!raw) return null;
+        try {
+          return JSON.parse(raw);
+        } catch (error) {
+          console.warn('Unable to parse import job:', error);
+          return null;
+        }
+      };
+
+      let cleanupTimeout = null;
+
+      const updateImportStatusUI = (job) => {
+        if (!importStatusEls.banner) return;
+
+        if (!job) {
+          importStatusEls.banner.classList.add('hidden');
+          importStatusEls.banner.classList.remove('completed');
+          if (importStatusEls.progress) {
+            importStatusEls.progress.style.width = '0%';
+          }
+          return;
+        }
+
+        importStatusEls.banner.classList.remove('hidden');
+
+        if (job.status === 'completed') {
+          importStatusEls.banner.classList.add('completed');
+          if (importStatusEls.title) {
+            importStatusEls.title.textContent = 'Import finished';
+          }
+          if (importStatusEls.text) {
+            const failureText = job.errorCount ? ` • ${job.errorCount} failed` : '';
+            importStatusEls.text.textContent = `Added ${job.successCount} student${job.successCount === 1 ? '' : 's'}${failureText}.`;
+          }
+          if (importStatusEls.progress) {
+            importStatusEls.progress.style.width = '100%';
+          }
+        } else {
+          importStatusEls.banner.classList.remove('completed');
+          if (importStatusEls.title) {
+            importStatusEls.title.textContent = 'Import running...';
+          }
+          if (importStatusEls.text) {
+            const progress = job.total ? Math.min(100, Math.round((job.currentIndex / job.total) * 100)) : 0;
+            importStatusEls.text.textContent = `Processing ${Math.min(job.currentIndex, job.total)}/${job.total} (${progress}%)`;
+            if (importStatusEls.progress) {
+              importStatusEls.progress.style.width = `${progress}%`;
+            }
+          }
+        }
+
+        if (importStatusEls.success) {
+          importStatusEls.success.textContent = `Success: ${job.successCount}`;
+        }
+        if (importStatusEls.errors) {
+          importStatusEls.errors.textContent = `Failed: ${job.errorCount}`;
+        }
+      };
+
+      const scheduleCompletedJobCleanup = () => {
+        if (cleanupTimeout) {
+          clearTimeout(cleanupTimeout);
+        }
+        cleanupTimeout = setTimeout(() => {
+          const currentJob = getStoredImportJob();
+          if (currentJob && currentJob.status === 'completed') {
+            localStorage.removeItem('sv_import_job');
+            updateImportStatusUI(null);
+          }
+        }, 6000);
+      };
+
+      importStatusEls.dismiss?.addEventListener('click', () => {
+        const job = getStoredImportJob();
+        if (job && job.status !== 'completed') {
+          alert('Import is still running. You can hide this message after it finishes.');
+          return;
+        }
+        localStorage.removeItem('sv_import_job');
+        updateImportStatusUI(null);
+      });
+
       const convertRowToStudent = (row, headerMap, rowNumber) => {
         const getValue = (headerName) => {
           const idx = headerMap[normalizeImportHeader(headerName)];
@@ -1197,6 +1409,7 @@
             };
             
             localStorage.setItem('sv_import_job', JSON.stringify(importJob));
+            updateImportStatusUI(importJob);
             
             // Start background import
             processImportInBackground(importJob);
@@ -1348,6 +1561,7 @@
           // Update localStorage after each batch (but less frequently for speed)
           if (i % (BATCH_SIZE * 2) === 0 || i + BATCH_SIZE >= students.length) {
             localStorage.setItem('sv_import_job', JSON.stringify(job));
+            updateImportStatusUI(job);
           }
           
           // Minimal delay between batches to avoid overwhelming the API
@@ -1360,6 +1574,8 @@
         job.status = 'completed';
         job.completedAt = new Date().toISOString();
         localStorage.setItem('sv_import_job', JSON.stringify(job));
+        updateImportStatusUI(job);
+        scheduleCompletedJobCleanup();
         
         // Show notification if page is visible
         if (!document.hidden) {
@@ -1395,21 +1611,21 @@
       }
       
       // Check for existing import job on page load
-      const existingJob = localStorage.getItem('sv_import_job');
+      const existingJob = getStoredImportJob();
       if (existingJob) {
-        const job = JSON.parse(existingJob);
-        if (job.status === 'processing' && job.currentIndex < job.total) {
-          // Resume import
-          setImportButtonState(`<i class="fas fa-spinner fa-spin"></i> Resuming import (${job.currentIndex}/${job.total})...`, true);
-          processImportInBackground(job);
-        } else if (job.status === 'completed') {
-          // Show completion message
-          const message = `Previous import completed!\n\n✅ Successfully imported: ${job.successCount} students`;
-          if (job.errorCount > 0) {
-            alert(message + `\n❌ Failed: ${job.errorCount} students`);
+        updateImportStatusUI(existingJob);
+        if (existingJob.status === 'processing' && existingJob.currentIndex < existingJob.total) {
+          setImportButtonState(`<i class="fas fa-spinner fa-spin"></i> Resuming import (${existingJob.currentIndex}/${existingJob.total})...`, true);
+          processImportInBackground(existingJob);
+        } else if (existingJob.status === 'completed') {
+          const message = `Previous import completed!\n\n✅ Successfully imported: ${existingJob.successCount} students`;
+          if (existingJob.errorCount > 0) {
+            alert(message + `\n❌ Failed: ${existingJob.errorCount} students`);
           }
-          localStorage.removeItem('sv_import_job');
+          scheduleCompletedJobCleanup();
         }
+      } else {
+        updateImportStatusUI(null);
       }
       
       // Call immediately
@@ -1421,12 +1637,15 @@
           setTimeout(attachImportHandler, 200);
           
           // Check for import progress
-          const job = localStorage.getItem('sv_import_job');
-          if (job) {
-            const jobData = JSON.parse(job);
+          const jobData = getStoredImportJob();
+          if (jobData) {
             if (jobData.status === 'processing') {
               setImportButtonState(`<i class="fas fa-spinner fa-spin"></i> Importing (${jobData.currentIndex}/${jobData.total})...`, true);
             }
+            updateImportStatusUI(jobData);
+          } else {
+            resetImportButtonState();
+            updateImportStatusUI(null);
           }
         }
       });
@@ -1434,12 +1653,28 @@
       // Also reattach on window focus
       window.addEventListener('focus', function() {
         setTimeout(attachImportHandler, 200);
+        const jobData = getStoredImportJob();
+        if (jobData) {
+          updateImportStatusUI(jobData);
+        }
       });
       
       // Reattach on pageshow (browser back/forward navigation)
       window.addEventListener('pageshow', function(event) {
         if (event.persisted) {
           setTimeout(attachImportHandler, 200);
+        }
+        const jobData = getStoredImportJob();
+        if (jobData) {
+          updateImportStatusUI(jobData);
+        }
+      });
+
+      // Sync status if localStorage changes from another tab
+      window.addEventListener('storage', function(event) {
+        if (event.key === 'sv_import_job') {
+          const jobData = getStoredImportJob();
+          updateImportStatusUI(jobData);
         }
       });
 
