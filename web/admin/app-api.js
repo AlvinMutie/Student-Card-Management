@@ -132,11 +132,47 @@
       }
 
       let allStudents = [];
+      let allParents = [];
+      let lastSearchTerm = '';
+
+      async function loadParents() {
+        try {
+          allParents = await parentsAPI.getAll();
+        } catch (error) {
+          console.error('Error loading parents:', error);
+          allParents = [];
+        }
+      }
+
+      function populateParentSelect(selectedId = '') {
+        const parentSelect = document.getElementById('studentParentSelect');
+        if (!parentSelect) return;
+        parentSelect.innerHTML = '<option value="">Unassigned</option>';
+        allParents
+          .slice()
+          .sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+          .forEach(parent => {
+            const parts = [
+              parent.name || 'Unnamed parent',
+              parent.email ? `(${parent.email})` : null,
+              parent.phone ? `• ${parent.phone}` : null
+            ].filter(Boolean);
+            const option = document.createElement('option');
+            option.value = parent.id;
+            option.textContent = parts.join(' ');
+            parentSelect.appendChild(option);
+          });
+        parentSelect.value = selectedId ? String(selectedId) : '';
+      }
 
       async function loadStudents() {
         try {
           tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:20px;">Loading students...</td></tr>';
           allStudents = await studentsAPI.getAll();
+          if (!allParents.length) {
+            await loadParents();
+          }
+          populateParentSelect();
           render(searchInput ? searchInput.value.trim() : '');
         } catch (error) {
           console.error('Error loading students:', error);
@@ -145,6 +181,7 @@
       }
 
       function render(searchQuery = '') {
+        lastSearchTerm = searchQuery;
         tbody.innerHTML = '';
 
         const filtered = allStudents.filter(s => {
@@ -179,8 +216,9 @@
             <td>${escapeHtml(s.class || '—')}</td>
             <td>
               <div class="guardian-tags">
-                <span class="guardian-tag">${escapeHtml(s.parent_name || '—')}</span>
+                <span class="guardian-tag">${escapeHtml(s.parent_name || 'Unlinked')}</span>
               </div>
+              ${s.parent_id ? '' : `<button class="btn btn-secondary link-parent-btn" data-student-id="${s.id}" style="margin-top:6px;padding:4px 10px;font-size:0.75rem;">Link Parent</button>`}
             </td>
             <td class="fee-balance">${formatCurrency(s.fee_balance)}</td>
             <td><span class="payment-status ${paymentStatus.class}">${paymentStatus.text}</span></td>
@@ -221,10 +259,22 @@
 
             try {
               await studentsAPI.delete(studentId);
+              allStudents = allStudents.filter(s => String(s.id) !== String(studentId));
+              render(lastSearchTerm);
               await loadStudents();
               if (typeof initDashboard === 'function') initDashboard();
             } catch (error) {
               alert('Error deleting student: ' + error.message);
+            }
+          });
+        });
+
+        tbody.querySelectorAll('.link-parent-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const studentId = this.getAttribute('data-student-id');
+            const student = allStudents.find(s => s.id == studentId);
+            if (student) {
+              openStudentModal({ ...student, focusParent: true });
             }
           });
         });
@@ -262,7 +312,7 @@
           document.getElementById('studentStream').value = student.stream || '';
           document.getElementById('studentHouse').value = student.house || '';
           document.getElementById('studentFee').value = student.fee_balance || 0;
-          document.getElementById('studentParent').value = student.parent_id || '';
+          populateParentSelect(student.parent_id || '');
 
           // Format dates for input type="date"
           if (student.date_of_admission) {
@@ -280,8 +330,13 @@
           studentModalTitle.textContent = 'Add New Student';
           studentForm.reset();
           document.getElementById('studentId').value = '';
+          populateParentSelect();
         }
         studentModal.style.display = 'flex';
+        if (student && student.focusParent) {
+          const parentSelect = document.getElementById('studentParentSelect');
+          if (parentSelect) parentSelect.focus();
+        }
       }
 
       function closeStudentModal() {
@@ -306,6 +361,9 @@
           e.preventDefault();
 
           const studentId = document.getElementById('studentId').value;
+          const parentSelect = document.getElementById('studentParentSelect');
+          const selectedParentId = parentSelect ? parentSelect.value.trim() : '';
+
           const studentData = {
             name: document.getElementById('studentName').value,
             adm: document.getElementById('studentAdm').value,
@@ -314,7 +372,7 @@
             stream: document.getElementById('studentStream').value,
             house: document.getElementById('studentHouse').value,
             fee_balance: document.getElementById('studentFee').value,
-            parent_id: document.getElementById('studentParent').value || null,
+            parent_id: selectedParentId ? Number(selectedParentId) : null,
             date_of_admission: document.getElementById('admissionDate').value || null,
             date_of_completion: document.getElementById('completionDate').value || null
           };
