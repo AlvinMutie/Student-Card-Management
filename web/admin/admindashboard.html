@@ -1145,8 +1145,22 @@
     // Add event listeners to logout buttons
     const sidebarLogout = document.getElementById('sidebarLogout');
     const topLogout = document.getElementById('topLogout');
-    if (sidebarLogout) sidebarLogout.addEventListener('click', logout);
-    if (topLogout) topLogout.addEventListener('click', logout);
+    
+    // Update the sidebar logout button to use the correct function
+    if (sidebarLogout) {
+      sidebarLogout.onclick = function(e) {
+        e.preventDefault();
+        doLogout();
+      };
+    }
+    
+    // Update the top bar logout button if it exists
+    if (topLogout) {
+      topLogout.onclick = function(e) {
+        e.preventDefault();
+        doLogout();
+      };
+    }
   });
 
   // Load and display charts with real data
