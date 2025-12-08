@@ -738,17 +738,15 @@
         }
 
         filtered.forEach(s => {
-          // Note: Students don't have classTeacherId in current schema, so we can't link them yet
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${escapeHtml(s.id || '—')}</td>
             <td>${escapeHtml(s.name || '—')}</td>
             <td>${escapeHtml(s.staff_no || '—')}</td>
-            <td>—</td>
+            <td>${escapeHtml(s.email || '—')}</td>
+            <td>${escapeHtml(s.phone || '—')}</td>
             <td>${escapeHtml(s.department || '—')}</td>
-            <td>${s.approved ? 'Approved' : '<strong class="muted">Pending</strong>'}</td>
-            <td>—</td>
-            <td>
+            <td>${s.approved ? '<span class="status-badge status-approved">Approved</span>' : '<span class="status-badge status-pending">Pending</span>'}</td>
+            <td class="table-actions">
               <button class="btn ghost btn-edit" data-id="${s.id}">Edit</button>
               ${s.approved ? `<button class="btn ghost btn-revoke" data-id="${s.id}">Revoke</button>` : `<button class="btn btn-approve" data-id="${s.id}">Approve</button>`}
               <button class="btn ghost btn-del" data-id="${s.id}">Delete</button>
