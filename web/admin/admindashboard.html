@@ -1110,6 +1110,14 @@
     return Math.round((part / total) * 100);
   }
   
+  function handleLogout() {
+    // Clear any stored authentication data
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole');
+    // Redirect to login page
+    window.location.href = '/public/admin_login.html';
+  }
+
   document.addEventListener('DOMContentLoaded', async function() {
     // Authentication check
     ensureAuthRedirect();
@@ -1137,29 +1145,18 @@
         } else {
           localStorage.removeItem('sv_admin_token');
           localStorage.removeItem('sv_admin_email');
-          window.location.href = '../public/landingpage.html';
-        }
-      }
     }
     
     // Add event listeners to logout buttons
     const sidebarLogout = document.getElementById('sidebarLogout');
     const topLogout = document.getElementById('topLogout');
     
-    // Update the sidebar logout button to use the correct function
     if (sidebarLogout) {
-      sidebarLogout.onclick = function(e) {
-        e.preventDefault();
-        doLogout();
-      };
+      sidebarLogout.onclick = handleLogout;
     }
     
-    // Update the top bar logout button if it exists
     if (topLogout) {
-      topLogout.onclick = function(e) {
-        e.preventDefault();
-        doLogout();
-      };
+      topLogout.onclick = handleLogout;
     }
   });
 
