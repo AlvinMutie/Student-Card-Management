@@ -983,6 +983,48 @@
     </div>
   </main>
 
+  <div id="staffModal" class="admin-modal-backdrop">
+    <div class="admin-modal">
+      <header>
+        <h3 id="staffModalTitle">Staff Details</h3>
+        <button type="button" class="close-modal-btn" id="closeStaffModal">&times;</button>
+      </header>
+      <form id="staffForm">
+        <div class="two-col-grid">
+          <div class="input-group">
+            <label for="staffNameInput">Full Name</label>
+            <input id="staffNameInput" type="text" required placeholder="Jane Doe">
+          </div>
+          <div class="input-group">
+            <label for="staffNumberInput">Staff Number</label>
+            <input id="staffNumberInput" type="text" required placeholder="STF001">
+          </div>
+          <div class="input-group">
+            <label for="staffEmailInput">Email</label>
+            <input id="staffEmailInput" type="email" placeholder="name@school.edu">
+          </div>
+          <div class="input-group">
+            <label for="staffPhoneInput">Phone</label>
+            <input id="staffPhoneInput" type="tel" placeholder="+254700000000">
+          </div>
+          <div class="input-group">
+            <label for="staffDepartmentInput">Department</label>
+            <input id="staffDepartmentInput" type="text" placeholder="Administration">
+          </div>
+          <div class="input-group" style="display:flex;align-items:center;gap:10px;">
+            <input id="staffApprovedInput" type="checkbox">
+            <label for="staffApprovedInput" style="margin:0;">Approved</label>
+          </div>
+        </div>
+        <div id="staffModalStatus" class="muted small"></div>
+        <div class="admin-modal-actions">
+          <button type="button" class="btn ghost" id="cancelStaffModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveStaffBtn">Save Staff</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Photo Upload Modal -->
   <div class="modal" id="photoUploadModal">
     <div class="modal-content">

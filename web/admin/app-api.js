@@ -416,6 +416,13 @@
       const addBtn = document.getElementById('addParentBtn');
       const refreshBtn = document.getElementById('refreshBtn');
       const tbody = document.querySelector('#parentsTable tbody');
+      const parentModal = document.getElementById('parentModal');
+      const parentForm = document.getElementById('parentForm');
+      const parentModalTitle = document.getElementById('parentModalTitle');
+      const parentModalStatus = document.getElementById('parentModalStatus');
+      const saveParentBtn = document.getElementById('saveParentBtn');
+      const cancelParentModal = document.getElementById('cancelParentModal');
+      const closeParentModal = document.getElementById('closeParentModal');
 
       if (!tbody) {
         console.error('Parents table body not found');
@@ -424,6 +431,84 @@
 
       let allParents = [];
       let allStudents = [];
+      let editingParentId = null;
+
+      function hideParentModal() {
+        if (!parentModal) return;
+        parentModal.style.display = 'none';
+        parentForm?.reset();
+        editingParentId = null;
+        if (parentModalStatus) {
+          parentModalStatus.textContent = '';
+          parentModalStatus.style.color = '';
+        }
+      }
+
+      function openParentModal(parent) {
+        if (!parentModal || !parentForm) return;
+        editingParentId = parent?.id || null;
+        parentForm.reset();
+        if (parentModalStatus) {
+          parentModalStatus.textContent = '';
+          parentModalStatus.style.color = '';
+        }
+        if (parentModalTitle) parentModalTitle.textContent = parent ? 'Edit Parent' : 'Add Parent';
+
+        if (parent) {
+          document.getElementById('parentNameInput').value = parent.name || '';
+          document.getElementById('parentEmailInput').value = parent.email || '';
+          document.getElementById('parentPhoneInput').value = parent.phone || '';
+        }
+
+        parentModal.style.display = 'flex';
+      }
+
+      cancelParentModal?.addEventListener('click', hideParentModal);
+      closeParentModal?.addEventListener('click', hideParentModal);
+      parentModal?.addEventListener('click', (e) => {
+        if (e.target === parentModal) hideParentModal();
+      });
+
+      parentForm?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!saveParentBtn) return;
+
+        const payload = {
+          name: document.getElementById('parentNameInput').value.trim(),
+          email: document.getElementById('parentEmailInput').value.trim(),
+          phone: document.getElementById('parentPhoneInput').value.trim()
+        };
+
+        if (!payload.name || !payload.email) {
+          if (parentModalStatus) parentModalStatus.textContent = 'Name and email are required.';
+          return;
+        }
+
+        const originalText = saveParentBtn.textContent;
+        saveParentBtn.disabled = true;
+        saveParentBtn.textContent = 'Saving...';
+        if (parentModalStatus) parentModalStatus.textContent = '';
+
+        try {
+          if (editingParentId) {
+            await parentsAPI.update(editingParentId, payload);
+          } else {
+            await parentsAPI.create(payload);
+          }
+          hideParentModal();
+          await loadData();
+          if (typeof initDashboard === 'function') initDashboard();
+        } catch (error) {
+          console.error('Save parent error:', error);
+          if (parentModalStatus) {
+            parentModalStatus.textContent = error.message || 'Unable to save parent.';
+            parentModalStatus.style.color = 'red';
+          }
+        } finally {
+          saveParentBtn.disabled = false;
+          saveParentBtn.textContent = originalText;
+        }
+      });
 
       async function loadData() {
         try {
@@ -499,7 +584,8 @@
         tbody.querySelectorAll('.btn-edit').forEach(btn => {
           btn.addEventListener('click', function () {
             const parentId = this.getAttribute('data-id');
-            alert('Edit functionality coming soon. Parent ID: ' + parentId);
+            const parent = allParents.find(p => String(p.id) === String(parentId));
+            openParentModal(parent);
           });
         });
       }
@@ -507,11 +593,7 @@
       // Wire up events
       if (refreshBtn) refreshBtn.addEventListener('click', loadData);
       if (searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
-      if (addBtn) {
-        addBtn.addEventListener('click', function () {
-          alert('Add parent functionality coming soon. Please use the backend API directly for now.');
-        });
-      }
+      if (addBtn) addBtn.addEventListener('click', () => openParentModal());
 
       // Initial load
       await loadData();
@@ -528,6 +610,13 @@
       const addBtn = document.getElementById('addStaffBtn');
       const refreshBtn = document.getElementById('refreshBtn');
       const tbody = document.querySelector('#staffTable tbody');
+      const staffModal = document.getElementById('staffModal');
+      const staffForm = document.getElementById('staffForm');
+      const staffModalTitle = document.getElementById('staffModalTitle');
+      const staffModalStatus = document.getElementById('staffModalStatus');
+      const saveStaffBtn = document.getElementById('saveStaffBtn');
+      const cancelStaffModal = document.getElementById('cancelStaffModal');
+      const closeStaffModal = document.getElementById('closeStaffModal');
 
       if (!tbody) {
         console.error('Staff table body not found');
@@ -536,6 +625,88 @@
 
       let allStaff = [];
       let allStudents = [];
+      let editingStaffId = null;
+
+      function hideStaffModal() {
+        if (!staffModal) return;
+        staffModal.style.display = 'none';
+        staffForm?.reset();
+        editingStaffId = null;
+        if (staffModalStatus) {
+          staffModalStatus.textContent = '';
+          staffModalStatus.style.color = '';
+        }
+      }
+
+      function openStaffModal(staff) {
+        if (!staffModal || !staffForm) return;
+        editingStaffId = staff?.id || null;
+        staffForm.reset();
+        if (staffModalStatus) {
+          staffModalStatus.textContent = '';
+          staffModalStatus.style.color = '';
+        }
+        if (staffModalTitle) staffModalTitle.textContent = staff ? 'Edit Staff' : 'Add Staff';
+
+        document.getElementById('staffNameInput').value = staff?.name || '';
+        document.getElementById('staffNumberInput').value = staff?.staff_no || '';
+        document.getElementById('staffEmailInput').value = staff?.email || '';
+        document.getElementById('staffPhoneInput').value = staff?.phone || '';
+        document.getElementById('staffDepartmentInput').value = staff?.department || '';
+        document.getElementById('staffApprovedInput').checked = !!staff?.approved;
+
+        staffModal.style.display = 'flex';
+      }
+
+      cancelStaffModal?.addEventListener('click', hideStaffModal);
+      closeStaffModal?.addEventListener('click', hideStaffModal);
+      staffModal?.addEventListener('click', (e) => {
+        if (e.target === staffModal) hideStaffModal();
+      });
+
+      staffForm?.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (!saveStaffBtn) return;
+
+        const payload = {
+          name: document.getElementById('staffNameInput').value.trim(),
+          staff_no: document.getElementById('staffNumberInput').value.trim(),
+          email: document.getElementById('staffEmailInput').value.trim(),
+          phone: document.getElementById('staffPhoneInput').value.trim(),
+          department: document.getElementById('staffDepartmentInput').value.trim(),
+          approved: document.getElementById('staffApprovedInput').checked
+        };
+
+        if (!payload.name || !payload.staff_no) {
+          if (staffModalStatus) staffModalStatus.textContent = 'Name and staff number are required.';
+          return;
+        }
+
+        const originalText = saveStaffBtn.textContent;
+        saveStaffBtn.disabled = true;
+        saveStaffBtn.textContent = 'Saving...';
+        if (staffModalStatus) staffModalStatus.textContent = '';
+
+        try {
+          if (editingStaffId) {
+            await staffAPI.update(editingStaffId, payload);
+          } else {
+            await staffAPI.create(payload);
+          }
+          hideStaffModal();
+          await loadData();
+          if (typeof initDashboard === 'function') initDashboard();
+        } catch (error) {
+          console.error('Save staff error:', error);
+          if (staffModalStatus) {
+            staffModalStatus.textContent = error.message || 'Unable to save staff.';
+            staffModalStatus.style.color = 'red';
+          }
+        } finally {
+          saveStaffBtn.disabled = false;
+          saveStaffBtn.textContent = originalText;
+        }
+      });
 
       async function loadData() {
         try {
@@ -606,7 +777,8 @@
         tbody.querySelectorAll('.btn-edit').forEach(btn => {
           btn.addEventListener('click', function () {
             const staffId = this.getAttribute('data-id');
-            alert('Edit functionality coming soon. Staff ID: ' + staffId);
+            const staff = allStaff.find(s => String(s.id) === String(staffId));
+            openStaffModal(staff);
           });
         });
 
@@ -630,11 +802,7 @@
       // Wire up events
       if (refreshBtn) refreshBtn.addEventListener('click', loadData);
       if (searchInput) searchInput.addEventListener('input', () => render(searchInput.value.trim()));
-      if (addBtn) {
-        addBtn.addEventListener('click', function () {
-          alert('Add staff functionality coming soon. Please use the backend API directly for now.');
-        });
-      }
+      if (addBtn) addBtn.addEventListener('click', () => openStaffModal());
 
       // Initial load
       await loadData();

@@ -75,7 +75,7 @@
       }
     } catch(e) {
       console.error('Error checking authentication:', e);
-      location.href = '../public/index.html';
+      location.href = '../public/landingpage.html';
     }
   };
   window.doLogout = function(){
@@ -84,7 +84,7 @@
       localStorage.removeItem('sv_auth_token');
       localStorage.removeItem('sv_admin_email');
       localStorage.removeItem('sv_user_data');
-      location.href = '../public/index.html';
+      location.href = '../public/landingpage.html';
     } catch(e) {
       console.error('Error during logout:', e);
       alert('Error during logout. Please clear your browser cache.');

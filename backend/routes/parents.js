@@ -38,6 +38,48 @@ router.get('/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Update parent (admin only)
+router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, email, phone } = req.body;
+
+    const result = await pool.query(
+      `UPDATE parents
+       SET name = COALESCE($1, name),
+           email = COALESCE($2, email),
+           phone = COALESCE($3, phone),
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $4
+       RETURNING id, user_id, name, email, phone, created_at`,
+      [name, email, phone, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Parent not found' });
+    }
+
+    const parent = result.rows[0];
+
+    // Keep user email in sync when a parent account exists
+    if (email && parent.user_id) {
+      await pool.query(
+        'UPDATE users SET email = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+        [email, parent.user_id]
+      );
+    }
+
+    const { user_id, ...responseBody } = parent;
+    res.json(responseBody);
+  } catch (error) {
+    if (error.code === '23505') {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+    console.error('Update parent error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Create parent (admin only or registration)
 router.post('/', async (req, res) => {
   try {

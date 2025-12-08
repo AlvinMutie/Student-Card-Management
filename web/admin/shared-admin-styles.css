@@ -577,6 +577,65 @@ label {
   }
 }
 
+.admin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1200;
+  padding: 20px;
+}
+
+.admin-modal {
+  background: #fff;
+  width: min(540px, 100%);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  padding: 22px 24px;
+  position: relative;
+}
+
+.admin-modal header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.admin-modal h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--primary-dark);
+}
+
+.admin-modal .close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #777;
+}
+
+.admin-modal .input-group {
+  margin-bottom: 12px;
+}
+
+.admin-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.two-col-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
 .muted {
   color: var(--text-muted);
   font-size: 0.9rem;

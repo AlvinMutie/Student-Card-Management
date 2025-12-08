@@ -633,6 +633,36 @@
     </div>
   </main>
 
+  <div id="parentModal" class="admin-modal-backdrop">
+    <div class="admin-modal">
+      <header>
+        <h3 id="parentModalTitle">Parent Details</h3>
+        <button type="button" class="close-modal-btn" id="closeParentModal">&times;</button>
+      </header>
+      <form id="parentForm">
+        <div class="two-col-grid">
+          <div class="input-group">
+            <label for="parentNameInput">Full Name</label>
+            <input id="parentNameInput" type="text" placeholder="Jane Doe" required>
+          </div>
+          <div class="input-group">
+            <label for="parentEmailInput">Email</label>
+            <input id="parentEmailInput" type="email" placeholder="parent@email.com" required>
+          </div>
+          <div class="input-group">
+            <label for="parentPhoneInput">Phone</label>
+            <input id="parentPhoneInput" type="tel" placeholder="+254700000000">
+          </div>
+        </div>
+        <div id="parentModalStatus" class="muted small"></div>
+        <div class="admin-modal-actions">
+          <button type="button" class="btn ghost" id="cancelParentModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveParentBtn">Save Parent</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="../runtime-config.js"></script>
   <script src="../shared/api-client.js"></script>
   <script src="app-api.js"></script>
