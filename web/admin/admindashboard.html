@@ -792,7 +792,12 @@
   <!-- Main Content -->
   <main class="main-content">
     <div class="top-row">
-      <h2>Dashboard</h2>
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button onclick="backToHome()" class="btn btn-outline" style="margin-right: 1rem;">
+          <i class="fas fa-arrow-left"></i> Back to Home
+        </button>
+        <h2>Dashboard</h2>
+      </div>
       <div style="display: flex; align-items: center; gap: 1rem; flex: 1; justify-content: flex-end;">
         <div class="search-bar">
           <svg class="search-icon-top" viewBox="0 0 24 24">
@@ -1111,11 +1116,17 @@
   }
   
   function handleLogout() {
-    // Clear any stored authentication data
+    // Clear all stored authentication data
     localStorage.removeItem('authToken');
     localStorage.removeItem('userRole');
-    // Redirect to login page
-    window.location.href = '/public/admin_login.html';
+    localStorage.removeItem('sv_admin_token');
+    localStorage.removeItem('sv_admin_email');
+    // Redirect to landing page
+    window.location.href = '/public/landingpage.html';
+  }
+  
+  function backToHome() {
+    window.location.href = '/public/landingpage.html';
   }
 
   document.addEventListener('DOMContentLoaded', async function() {
@@ -1130,7 +1141,7 @@
     // Load and display charts
     await loadAndDisplayCharts();
     
-    // Set admin info (app-api.js handles this, but keeping for UI consistency)
+    // Set admin info
     const adminEmail = localStorage.getItem('sv_admin_email') || 'admin';
     const adminInfoEl = document.getElementById('adminInfo');
     if (adminInfoEl) {
