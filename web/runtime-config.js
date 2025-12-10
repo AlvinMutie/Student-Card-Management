@@ -1,10 +1,11 @@
 // Default runtime configuration for the Student Card Management frontend.
 // This file will be overwritten during deployments by scripts/generate-runtime-config.js
 // When running locally without the build script, the API will default to localhost.
-(function (win) {
-  const DEFAULT_LOCAL_API = 'http://localhost:3000/api';
-  const DEFAULT_REMOTE_API = 'https://student-card-management-api.onrender.com/api';
-  
+   (function (win) {
+     const DEFAULT_LOCAL_API = 'http://localhost:3000/api';
+     const DEFAULT_REMOTE_API = 'http://102.212.245.19/api'; // set to your real URL if different
+     
+
   if (!win.StudentCardConfig) {
     win.StudentCardConfig = {};
   }
