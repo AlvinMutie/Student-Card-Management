@@ -409,9 +409,9 @@ function renderStaffTable() {
         <td>${s.department || ''}</td>
         <td>${s.status || 'pending'}</td>
         <td>
-          <button class="btn-small" data-approve-staff="${s.id}">Approve</button>
-          <button class="btn-small" data-edit-staff="${s.id}">Edit</button>
-          <button class="btn-small" data-delete-staff="${s.id}">Delete</button>
+          <button class="btn-small" data-approve-staff="${s.id || s._id}">Approve</button>
+          <button class="btn-small" data-edit-staff="${s.id || s._id}">Edit</button>
+          <button class="btn-small" data-delete-staff="${s.id || s._id}">Delete</button>
         </td>
       </tr>`
     )
@@ -422,7 +422,7 @@ function openStaffModal(staff) {
   const modal = document.querySelector('#staffModal');
   if (!modal) return;
   modal.classList.add('show');
-  modal.dataset.staffId = staff?.id || '';
+  modal.dataset.staffId = staff?.id || staff?._id || '';
   modal.querySelector('#staffName').value = staff?.name || '';
   modal.querySelector('#staffNo').value = staff?.staff_no || '';
   modal.querySelector('#staffEmail').value = staff?.email || '';
@@ -468,7 +468,7 @@ async function deleteStaff(id) {
   if (!confirm('Delete this staff member?')) return;
   try {
     await staffAPI.delete(id);
-    staffCache = staffCache.filter((s) => `${s.id}` !== `${id}`);
+    staffCache = staffCache.filter((s) => `${s.id}` !== `${id}` && `${s._id}` !== `${id}`);
     renderStaffTable();
   } catch (err) {
     alert('Delete failed: ' + err.message);
@@ -507,7 +507,7 @@ function wireStaffEvents() {
         return;
       }
       if (edit) {
-        const staff = staffCache.find((s) => `${s.id}` === edit.dataset.editStaff);
+        const staff = staffCache.find((s) => `${s.id}` === edit.dataset.editStaff || `${s._id}` === edit.dataset.editStaff);
         openStaffModal(staff || null);
       }
     });
@@ -627,16 +627,26 @@ async function restoreDeletedStudents() {
 async function deleteAllStudents() {
   if (!confirm('Delete ALL students? This cannot be undone.')) return;
   try {
-    const all = await studentsAPI.getAll();
-    for (const s of all) {
+    const [allStudents, allParents] = await Promise.all([
+      studentsAPI.getAll(),
+      parentsAPI.getAll().catch(() => []),
+    ]);
+    for (const s of allStudents) {
       try {
         await studentsAPI.delete(s.id ?? s.adm);
       } catch (err) {
         console.error('Delete failed for', s.id || s.adm, err);
       }
     }
+    for (const p of allParents) {
+      try {
+        await parentsAPI.delete(p.id ?? p._id);
+      } catch (err) {
+        console.error('Delete parent failed for', p.id || p._id, err);
+      }
+    }
     await loadStudents();
-    alert('All students deleted.');
+    alert('All students (and related parents) deleted.');
   } catch (err) {
     alert('Delete all failed: ' + err.message);
   }
