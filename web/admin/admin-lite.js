@@ -190,14 +190,27 @@ async function importStudentsFromFile(file) {
     const adm = map('admission number') || map('adm') || map('admission');
     const name = map('name');
     if (!adm || !name) return null;
+    const upi = map('upi') || map('nemis') || map('upi number');
+    const house = map('house');
+    const kcpe = map('kcpe') || map('kcpe score');
+    const contacts = map('contacts') || map('contact') || map('phone');
+    const gender = map('gender') || map('sex');
     return {
       adm,
       name,
       class: map('class'),
       stream: map('stream'),
       fee_balance: parseFloat(map('fee balance')) || 0,
-      parent_name: map('parent name') || null,
-      parent_email: map('parent email') || null,
+      parent_name: map('parent name') || map('guardian name') || null,
+      parent_email: map('parent email') || map('guardian email') || null,
+      parent_phone: map('parent phone') || map('guardian phone') || map('phone') || null,
+      relationship: map('relationship') || map('guardian relationship') || null,
+      address: map('address') || map('residence') || null,
+      upi,
+      house,
+      kcpe,
+      contacts,
+      gender,
     };
   };
 
@@ -205,6 +218,8 @@ async function importStudentsFromFile(file) {
   if (!students.length) throw new Error('No valid student rows found.');
 
   let ok = 0;
+  let processed = 0;
+  setProgressStatus('import', 5, 'Importing students…');
   for (const s of students) {
     try {
       await studentsAPI.create(s);
@@ -218,8 +233,13 @@ async function importStudentsFromFile(file) {
         console.error(`Row failed (${s.adm}):`, err);
       }
     }
+    processed += 1;
+    const percent = Math.min(95, Math.round((processed / students.length) * 90));
+    setProgressStatus('import', percent, `Processing ${processed}/${students.length}…`);
   }
   await loadStudents();
+  setProgressStatus('import', 100, `Imported/updated ${ok} students.`, 'success');
+  setTimeout(() => setProgressStatus('import', 0, ''), 1200);
   alert(`Imported/updated ${ok} students.`);
 }
 
@@ -242,11 +262,18 @@ function initStudentsPage() {
   const tbody = document.querySelector('#studentsBody');
   if (tbody) {
     tbody.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-edit-student]');
-      if (!btn) return;
-      const id = btn.dataset.editStudent;
-      const student = studentsCache.find((s) => `${s.id ?? s.adm}` === id);
-      openStudentModal(student || null);
+      const editBtn = e.target.closest('[data-edit-student]');
+      const delBtn = e.target.closest('[data-delete-student]');
+      if (editBtn) {
+        const id = editBtn.dataset.editStudent;
+        const student = studentsCache.find((s) => `${s.id ?? s.adm}` === id);
+        openStudentModal(student || null);
+        return;
+      }
+      if (delBtn) {
+        const id = delBtn.dataset.deleteStudent;
+        deleteStudent(id);
+      }
     });
   }
 
@@ -631,12 +658,17 @@ async function deleteAllStudents() {
       studentsAPI.getAll(),
       parentsAPI.getAll().catch(() => []),
     ]);
+    let processed = 0;
+    const total = allStudents.length + allParents.length || 1;
+    setProgressStatus('delete', 5, 'Deleting records…');
     for (const s of allStudents) {
       try {
         await studentsAPI.delete(s.id ?? s.adm);
       } catch (err) {
         console.error('Delete failed for', s.id || s.adm, err);
       }
+      processed++;
+      setProgressStatus('delete', Math.min(90, Math.round((processed / total) * 90)), 'Deleting students…');
     }
     for (const p of allParents) {
       try {
@@ -644,12 +676,33 @@ async function deleteAllStudents() {
       } catch (err) {
         console.error('Delete parent failed for', p.id || p._id, err);
       }
+      processed++;
+      setProgressStatus('delete', Math.min(95, Math.round((processed / total) * 95)), 'Deleting parents…');
     }
     await loadStudents();
+    setProgressStatus('delete', 100, 'All students and parents deleted.', 'success');
+    setTimeout(() => setProgressStatus('delete', 0, ''), 1200);
     alert('All students (and related parents) deleted.');
   } catch (err) {
     alert('Delete all failed: ' + err.message);
   }
+}
+
+// ---------- simple progress UI ----------
+function setProgressStatus(kind, percent, text, variant = 'info') {
+  const bar = document.querySelector(`#${kind}ProgressBar`);
+  const label = document.querySelector(`#${kind}ProgressText`);
+  const wrap = document.querySelector(`#${kind}ProgressWrap`);
+  if (!bar || !label || !wrap) return;
+  if (!percent) {
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'flex';
+  bar.style.width = `${percent}%`;
+  bar.setAttribute('aria-valuenow', percent);
+  bar.className = `progress-bar ${variant}`;
+  label.textContent = text || '';
 }
 
 // ---------- delete parent ----------
