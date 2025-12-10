@@ -1150,12 +1150,16 @@
     
     // Logout functionality (using app-api.js function)
     function logout() {
-      if (confirm('Are you sure you want to logout?')) {
-        if (typeof doLogout === 'function') {
-          doLogout();
-        } else {
-          localStorage.removeItem('sv_admin_token');
-          localStorage.removeItem('sv_admin_email');
+      if (!confirm('Are you sure you want to logout?')) return;
+      if (typeof doLogout === 'function') {
+        doLogout();
+      } else {
+        localStorage.removeItem('sv_admin_token');
+        localStorage.removeItem('sv_auth_token');
+        localStorage.removeItem('sv_admin_email');
+        localStorage.removeItem('sv_user_data');
+        window.location.href = '/public/landingpage.html';
+      }
     }
     
     // Add event listeners to logout buttons
@@ -1163,11 +1167,11 @@
     const topLogout = document.getElementById('topLogout');
     
     if (sidebarLogout) {
-      sidebarLogout.onclick = handleLogout;
+      sidebarLogout.onclick = logout;
     }
     
     if (topLogout) {
-      topLogout.onclick = handleLogout;
+      topLogout.onclick = logout;
     }
   });
 
