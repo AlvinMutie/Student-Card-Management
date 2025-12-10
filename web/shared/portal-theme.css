@@ -237,6 +237,42 @@ body.garden-body {
   align-items: start;
 }
 
+@media (max-width: 1024px) {
+  .garden-main {
+    width: 95%;
+    padding: 2.5rem 0;
+  }
+
+  .theme-grid-two {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .brand-pill {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .garden-main {
+    width: 100%;
+    padding: 2rem 1rem;
+  }
+
+  .brand-pill span {
+    font-size: 1.1rem;
+  }
+
+  .back-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .theme-grid-two {
+    gap: 1.5rem;
+  }
+}
+
 .theme-divider {
   border: none;
   height: 1px;

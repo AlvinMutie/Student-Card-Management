@@ -412,6 +412,15 @@ table {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
 }
 
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-responsive table {
+  min-width: 780px;
+}
+
 th,
 td {
   padding: 12px 14px;
@@ -526,6 +535,10 @@ label {
     justify-content: center;
     padding: 16px;
   }
+
+  .table-responsive table {
+    min-width: 720px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -567,6 +580,10 @@ label {
   .main-content {
     margin-left: 0;
     padding: 20px;
+  }
+
+  .table-responsive table {
+    min-width: 640px;
   }
 
   .top-row {

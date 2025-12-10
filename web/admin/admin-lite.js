@@ -86,15 +86,12 @@ function renderStudentsTable(list) {
   const tbody = document.querySelector('#studentsBody');
   if (!tbody) return;
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="11">No students found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="12">No students found.</td></tr>';
     return;
   }
   tbody.innerHTML = list
     .map(
       (s) => `<tr>
-        <td class="photo-col">
-          <img class="student-avatar" src="${s.localPhoto || s.photo_url || STUDENT_PHOTO_PLACEHOLDER}" alt="" onerror="this.src='${STUDENT_PHOTO_PLACEHOLDER}'" />
-        </td>
         <td>${s.adm || ''}</td>
         <td>${s.name || ''}</td>
         <td>${s.upi || s.nemis || s.nemis_number || ''}</td>
@@ -132,7 +129,6 @@ function openStudentModal(student) {
   modal.querySelector('#studentFee').value = student?.fee_balance ?? '';
   modal.querySelector('#studentParentName').value = student?.parent_name || '';
   modal.querySelector('#studentParentEmail').value = student?.parent_email || '';
-  modal.querySelector('#studentPhoto').value = student?.photo_url || '';
 }
 
 function closeStudentModal() {
@@ -157,7 +153,6 @@ async function saveStudent(event) {
     fee_balance: parseFloat(document.querySelector('#studentFee').value || 0) || 0,
     parent_name: document.querySelector('#studentParentName').value.trim() || null,
     parent_email: document.querySelector('#studentParentEmail').value.trim() || null,
-    photo_url: document.querySelector('#studentPhoto').value.trim() || null,
   };
   try {
     if (!payload.adm || !payload.name) throw new Error('Admission and Name are required');
@@ -314,18 +309,6 @@ function initStudentsPage() {
       }
     });
   }
-
-  const restoreBtn = document.querySelector('#restoreStudentsBtn');
-  if (restoreBtn) {
-    restoreBtn.onclick = restoreDeletedStudents;
-  }
-
-  const deleteAllBtn = document.querySelector('#deleteAllStudentsBtn');
-  if (deleteAllBtn) {
-    deleteAllBtn.onclick = deleteAllStudents;
-  }
-
-  initPhotoBatchUpload();
 }
 
 // ---------- parents ----------
