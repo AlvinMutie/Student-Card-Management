@@ -36,11 +36,13 @@ async function loadCounts() {
       parentsAPI.getAll().catch(() => []),
       staffAPI.getAll().catch(() => []),
     ]);
-    const pending = staff.filter((s) => (s.status || '').toLowerCase() !== 'approved').length;
+    const pendingStaff = staff.filter((s) => (s.status || '').toLowerCase() !== 'approved').length;
+    const pendingParents = parents.filter((p) => (p.status || '').toLowerCase() !== 'approved').length;
     setText('#countStudents', students.length);
     setText('#countParents', parents.length);
     setText('#countStaff', staff.length);
-    setText('#countPending', pending);
+    setText('#countPending', pendingStaff);
+    setText('#countPendingParents', pendingParents);
     renderRecent(students, parents, staff);
   } catch (err) {
     console.error('loadCounts error', err);
@@ -68,6 +70,7 @@ async function initDashboardPage() {
 let studentsCache = [];
 let parentsCache = [];
 let staffCache = [];
+const photoBlobMap = {};
 
 function filterStudents(term) {
   const q = term.trim().toLowerCase();
@@ -83,16 +86,28 @@ function renderStudentsTable(list) {
   const tbody = document.querySelector('#studentsBody');
   if (!tbody) return;
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7">No students found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="11">No students found.</td></tr>';
     return;
   }
   tbody.innerHTML = list
     .map(
       (s) => `<tr>
+        <td>
+          ${
+            s.localPhoto || s.photo_url
+              ? `<img class="student-avatar" src="${s.localPhoto || s.photo_url}" alt="${s.name || ''}" />`
+              : `<div class="student-avatar placeholder">${(s.name || s.adm || '?').toString().trim().charAt(0) || '?'}</div>`
+          }
+        </td>
         <td>${s.adm || ''}</td>
         <td>${s.name || ''}</td>
+        <td>${s.upi || ''}</td>
+        <td>${s.house || ''}</td>
         <td>${s.class || ''}</td>
         <td>${s.stream || ''}</td>
+        <td>${s.kcpe || ''}</td>
+        <td>${s.contacts || s.parent_phone || ''}</td>
+        <td>${s.gender || ''}</td>
         <td>${s.parent_name || s.parent_email || ''}</td>
         <td>${s.fee_balance ?? ''}</td>
         <td>
@@ -111,11 +126,17 @@ function openStudentModal(student) {
   modal.dataset.studentId = student?.id ?? student?.adm ?? '';
   modal.querySelector('#studentAdm').value = student?.adm || '';
   modal.querySelector('#studentName').value = student?.name || '';
+  modal.querySelector('#studentUpi').value = student?.upi || '';
   modal.querySelector('#studentClass').value = student?.class || '';
   modal.querySelector('#studentStream').value = student?.stream || '';
+  modal.querySelector('#studentHouse').value = student?.house || '';
+  modal.querySelector('#studentKCPE').value = student?.kcpe || '';
+  modal.querySelector('#studentContacts').value = student?.contacts || student?.parent_phone || '';
+  modal.querySelector('#studentGender').value = student?.gender || '';
   modal.querySelector('#studentFee').value = student?.fee_balance ?? '';
   modal.querySelector('#studentParentName').value = student?.parent_name || '';
   modal.querySelector('#studentParentEmail').value = student?.parent_email || '';
+  modal.querySelector('#studentPhoto').value = student?.photo_url || '';
 }
 
 function closeStudentModal() {
@@ -130,11 +151,17 @@ async function saveStudent(event) {
   const payload = {
     adm: document.querySelector('#studentAdm').value.trim(),
     name: document.querySelector('#studentName').value.trim(),
+    upi: document.querySelector('#studentUpi').value.trim() || null,
     class: document.querySelector('#studentClass').value.trim(),
     stream: document.querySelector('#studentStream').value.trim(),
+    house: document.querySelector('#studentHouse').value.trim() || null,
+    kcpe: document.querySelector('#studentKCPE').value.trim() || null,
+    contacts: document.querySelector('#studentContacts').value.trim() || null,
+    gender: document.querySelector('#studentGender').value.trim() || null,
     fee_balance: parseFloat(document.querySelector('#studentFee').value || 0) || 0,
     parent_name: document.querySelector('#studentParentName').value.trim() || null,
     parent_email: document.querySelector('#studentParentEmail').value.trim() || null,
+    photo_url: document.querySelector('#studentPhoto').value.trim() || null,
   };
   try {
     if (!payload.adm || !payload.name) throw new Error('Admission and Name are required');
@@ -301,6 +328,8 @@ function initStudentsPage() {
   if (deleteAllBtn) {
     deleteAllBtn.onclick = deleteAllStudents;
   }
+
+  initPhotoBatchUpload();
 }
 
 // ---------- parents ----------
@@ -436,7 +465,11 @@ function renderStaffTable() {
         <td>${s.department || ''}</td>
         <td>${s.status || 'pending'}</td>
         <td>
-          <button class="btn-small" data-approve-staff="${s.id || s._id}">Approve</button>
+          ${
+            (s.status || '').toLowerCase() === 'approved'
+              ? '<span class="status-chip approved">Approved</span>'
+              : `<button class="btn-small" data-approve-staff="${s.id || s._id}">Approve</button>`
+          }
           <button class="btn-small" data-edit-staff="${s.id || s._id}">Edit</button>
           <button class="btn-small" data-delete-staff="${s.id || s._id}">Delete</button>
         </td>
@@ -507,6 +540,7 @@ async function approveStaff(id) {
     await staffAPI.update(id, { status: 'approved' });
     staffCache = await staffAPI.getAll();
     renderStaffTable();
+    await loadCounts();
   } catch (err) {
     alert('Approve failed: ' + err.message);
   }
@@ -565,12 +599,15 @@ async function loadCharts() {
   const ctxClass = document.getElementById('chartStudentsClass');
   const ctxFee = document.getElementById('chartFeeStatus');
   const ctxStaff = document.getElementById('chartStaffStatus');
+  const ctxParents = document.getElementById('chartParentStatus');
+  const ctxGender = document.getElementById('chartGenderMix');
   if (!ctxClass || !ctxFee || !ctxStaff || typeof Chart === 'undefined') return;
 
   try {
-    const [students, staff] = await Promise.all([
+    const [students, staff, parents] = await Promise.all([
       studentsAPI.getAll().catch(() => []),
       staffAPI.getAll().catch(() => []),
+      parentsAPI.getAll().catch(() => []),
     ]);
 
     // Students by class
@@ -604,6 +641,27 @@ async function loadCharts() {
       data: { labels: ['Approved', 'Pending'], datasets: [{ data: [approved, awaiting], backgroundColor: ['#2563eb', '#f97316'] }] },
       options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
     });
+
+    if (ctxParents) {
+      const pApproved = parents.filter((p) => (p.status || '').toLowerCase() === 'approved').length;
+      const pPending = parents.length - pApproved;
+      new Chart(ctxParents, {
+        type: 'doughnut',
+        data: { labels: ['Approved', 'Pending'], datasets: [{ data: [pApproved, pPending], backgroundColor: ['#10b981', '#f59e0b'] }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+      });
+    }
+
+    if (ctxGender) {
+      const male = students.filter((s) => (s.gender || '').toLowerCase().startsWith('m')).length;
+      const female = students.filter((s) => (s.gender || '').toLowerCase().startsWith('f')).length;
+      const other = students.length - male - female;
+      new Chart(ctxGender, {
+        type: 'pie',
+        data: { labels: ['Male', 'Female', 'Other/Unspecified'], datasets: [{ data: [male, female, other], backgroundColor: ['#3b82f6', '#ec4899', '#a3a3a3'] }] },
+        options: { responsive: true, plugins: { legend: { position: 'right' } } },
+      });
+    }
   } catch (err) {
     console.error('charts load failed', err);
   }
@@ -703,6 +761,30 @@ function setProgressStatus(kind, percent, text, variant = 'info') {
   bar.setAttribute('aria-valuenow', percent);
   bar.className = `progress-bar ${variant}`;
   label.textContent = text || '';
+}
+
+// ---------- batch photo upload (match by admission number in filename) ----------
+function initPhotoBatchUpload() {
+  const input = document.querySelector('#photoBatchInput');
+  if (!input) return;
+  input.addEventListener('change', async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    let matched = 0;
+    for (const file of files) {
+      const name = file.name.toLowerCase();
+      const admMatch = studentsCache.find((s) => name.includes((s.adm || '').toLowerCase()));
+      if (admMatch) {
+        const url = URL.createObjectURL(file);
+        photoBlobMap[admMatch.adm] = url;
+        admMatch.localPhoto = url;
+        matched++;
+      }
+    }
+    renderStudentsTable(studentsCache);
+    alert(`Matched ${matched} photos by admission number.`);
+    e.target.value = '';
+  });
 }
 
 // ---------- delete parent ----------
