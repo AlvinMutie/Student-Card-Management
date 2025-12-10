@@ -70,7 +70,7 @@ let parentsCache = [];
 let staffCache = [];
 const photoBlobMap = {};
 const STUDENT_PHOTO_PLACEHOLDER =
-  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="16" fill="%23e5e7eb"/><circle cx="32" cy="26" r="12" fill="%23cbd5e1"/><path d="M16 52c0-8.284 7.163-15 16-15s16 6.716 16 15" fill="%23cbd5e1"/></svg>';
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 100" fill="none"><rect width="80" height="100" rx="10" fill="%23e5e7eb"/><circle cx="40" cy="32" r="14" fill="%23cbd5e1"/><path d="M20 86c0-12 9.5-22 20-22s20 10 20 22" fill="%23cbd5e1"/></svg>';
 
 function filterStudents(term) {
   const q = term.trim().toLowerCase();
