@@ -1115,16 +1115,6 @@
     return Math.round((part / total) * 100);
   }
   
-  function handleLogout() {
-    // Clear all stored authentication data
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('sv_admin_token');
-    localStorage.removeItem('sv_admin_email');
-    // Redirect to landing page
-    window.location.href = '/public/landingpage.html';
-  }
-  
   function backToHome() {
     window.location.href = '/public/landingpage.html';
   }
