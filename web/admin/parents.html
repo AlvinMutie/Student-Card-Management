@@ -12,9 +12,17 @@
     .sidebar a { color:#e2e8f0; text-decoration:none; padding:10px 12px; border-radius:8px; display:block; }
     .sidebar a.active { background:#14532d; }
     .main { flex:1; padding:20px; }
+    .topbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
     table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e2e8f0; }
     th, td { padding:10px; border:1px solid #e2e8f0; text-align:left; }
     button { cursor:pointer; }
+    .btn-small { padding:6px 10px; border:1px solid #cbd5e1; background:#f8fafc; border-radius:6px; }
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; }
+    .modal.show { display:flex; }
+    .modal-content { background:#fff; padding:16px; border-radius:8px; width:360px; max-width:90vw; }
+    .modal-content form { display:flex; flex-direction:column; gap:8px; }
+    .modal-content label { font-size:0.9rem; }
+    .modal-actions { display:flex; gap:8px; justify-content:flex-end; }
   </style>
 </head>
 <body data-page="parents">
@@ -31,17 +39,36 @@
       <button data-logout style="padding:10px;border:none;border-radius:8px;background:#fecdd3;color:#b91c1c;">Log Out</button>
     </aside>
     <main class="main">
-      <h2>Parents</h2>
-      <p>Live data from backend</p>
+      <div class="topbar">
+        <h2 style="margin:0;">Parents</h2>
+        <button id="addParentBtn" class="btn-small">Add Parent</button>
+      </div>
       <table>
         <thead>
           <tr>
-            <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Relationship</th>
+            <th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Relationship</th><th>Actions</th>
           </tr>
         </thead>
-        <tbody id="parentsBody"><tr><td colspan="5">Loading...</td></tr></tbody>
+        <tbody id="parentsBody"><tr><td colspan="6">Loading...</td></tr></tbody>
       </table>
     </main>
+  </div>
+
+  <!-- Parent Modal -->
+  <div class="modal" id="parentModal">
+    <div class="modal-content">
+      <h3 style="margin-top:0;">Parent</h3>
+      <form id="parentForm">
+        <label>Name <input id="parentName" required></label>
+        <label>Email <input id="parentEmail" type="email" required></label>
+        <label>Phone <input id="parentPhone"></label>
+        <label>Relationship <input id="parentRelationship"></label>
+        <div class="modal-actions">
+          <button type="button" class="btn-small" id="closeParentModal">Cancel</button>
+          <button type="submit" class="btn-small">Save</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script src="../runtime-config.js"></script>

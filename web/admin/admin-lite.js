@@ -1,6 +1,7 @@
-// Minimal admin dashboard scripts wired to live API data.
-// Uses the shared api-client.js globals: studentsAPI, parentsAPI, staffAPI, authAPI.
+// Admin utilities and page initializers (dashboard, students, parents, staff)
+// Uses shared api-client.js: studentsAPI, parentsAPI, staffAPI, authAPI
 
+// ---------- shared helpers ----------
 function backToHome() {
   window.location.href = '/public/landingpage.html';
 }
@@ -11,6 +12,8 @@ function logout() {
   }
   localStorage.removeItem('sv_auth_token');
   localStorage.removeItem('sv_user_data');
+  localStorage.removeItem('sv_admin_token');
+  localStorage.removeItem('sv_admin_email');
   window.location.href = '/public/landingpage.html';
 }
 
@@ -20,6 +23,12 @@ function setAdminWelcome() {
   if (el) el.textContent = adminEmail.split('@')[0];
 }
 
+function setText(sel, value) {
+  const el = document.querySelector(sel);
+  if (el) el.textContent = value ?? '0';
+}
+
+// ---------- dashboard ----------
 async function loadCounts() {
   try {
     const [students, parents, staff] = await Promise.all([
@@ -38,11 +47,6 @@ async function loadCounts() {
   }
 }
 
-function setText(sel, value) {
-  const el = document.querySelector(sel);
-  if (el) el.textContent = value ?? '0';
-}
-
 function renderRecent(students = [], parents = [], staff = []) {
   const list = document.querySelector('#recentList');
   if (!list) return;
@@ -55,72 +59,333 @@ function renderRecent(students = [], parents = [], staff = []) {
     : '<li>No recent activity yet.</li>';
 }
 
-async function renderTable({ selector, rows }) {
-  const tbody = document.querySelector(selector);
-  if (!tbody) return;
-  tbody.innerHTML = rows.length
-    ? rows
-        .map(
-          (r) => `<tr>${r.map((cell) => `<td>${cell ?? ''}</td>`).join('')}</tr>`
-        )
-        .join('')
-    : '<tr><td colspan="8">No data yet.</td></tr>';
-}
-
 async function initDashboardPage() {
   await loadCounts();
 }
 
-async function initStudentsPage() {
+// ---------- students ----------
+let studentsCache = [];
+
+function filterStudents(term) {
+  const q = term.trim().toLowerCase();
+  if (!q) return studentsCache;
+  return studentsCache.filter((s) =>
+    [s.name, s.adm, s.class, s.stream, s.parent_name, s.parent_email]
+      .filter(Boolean)
+      .some((v) => v.toLowerCase().includes(q))
+  );
+}
+
+function renderStudentsTable(list) {
+  const tbody = document.querySelector('#studentsBody');
+  if (!tbody) return;
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="7">No students found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list
+    .map(
+      (s) => `<tr>
+        <td>${s.adm || ''}</td>
+        <td>${s.name || ''}</td>
+        <td>${s.class || ''}</td>
+        <td>${s.stream || ''}</td>
+        <td>${s.parent_name || s.parent_email || ''}</td>
+        <td>${s.fee_balance ?? ''}</td>
+        <td><button class="btn-small" data-edit-student="${s.id ?? s.adm}">Edit</button></td>
+      </tr>`
+    )
+    .join('');
+}
+
+function openStudentModal(student) {
+  const modal = document.querySelector('#studentModal');
+  if (!modal) return;
+  modal.classList.add('show');
+  modal.dataset.studentId = student?.id ?? student?.adm ?? '';
+  modal.querySelector('#studentAdm').value = student?.adm || '';
+  modal.querySelector('#studentName').value = student?.name || '';
+  modal.querySelector('#studentClass').value = student?.class || '';
+  modal.querySelector('#studentStream').value = student?.stream || '';
+  modal.querySelector('#studentFee').value = student?.fee_balance ?? '';
+  modal.querySelector('#studentParentName').value = student?.parent_name || '';
+  modal.querySelector('#studentParentEmail').value = student?.parent_email || '';
+}
+
+function closeStudentModal() {
+  const modal = document.querySelector('#studentModal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function saveStudent(event) {
+  event.preventDefault();
+  const modal = document.querySelector('#studentModal');
+  const id = modal?.dataset.studentId;
+  const payload = {
+    adm: document.querySelector('#studentAdm').value.trim(),
+    name: document.querySelector('#studentName').value.trim(),
+    class: document.querySelector('#studentClass').value.trim(),
+    stream: document.querySelector('#studentStream').value.trim(),
+    fee_balance: parseFloat(document.querySelector('#studentFee').value || 0) || 0,
+    parent_name: document.querySelector('#studentParentName').value.trim() || null,
+    parent_email: document.querySelector('#studentParentEmail').value.trim() || null,
+  };
   try {
-    const students = await studentsAPI.getAll();
-    const rows = students.map((s) => [
-      s.adm || '',
-      s.name || '',
-      s.class || '',
-      s.stream || '',
-      s.parent_name || s.parent_email || '—',
-      s.fee_balance != null ? s.fee_balance : '0',
-    ]);
-    await renderTable({ selector: '#studentsBody', rows });
+    if (!payload.adm || !payload.name) throw new Error('Admission and Name are required');
+    if (id) {
+      await studentsAPI.update(id, payload);
+    } else {
+      await studentsAPI.create(payload);
+    }
+    await loadStudents();
+    closeStudentModal();
+  } catch (err) {
+    alert(`Save failed: ${err.message}`);
+  }
+}
+
+async function loadStudents() {
+  try {
+    studentsCache = await studentsAPI.getAll();
+    renderStudentsTable(studentsCache);
   } catch (err) {
     console.error('students load failed', err);
+    alert('Failed to load students.');
   }
 }
 
-async function initParentsPage() {
+async function importStudentsFromFile(file) {
+  const isExcel = /\.xlsx?$/i.test(file.name);
+  const isCsv = /\.csv$/i.test(file.name);
+  if (!isExcel && !isCsv) throw new Error('Please select a CSV or Excel file');
+
+  const parseRows = async () => {
+    if (isCsv) {
+      const text = await file.text();
+      return text
+        .split(/\r?\n/)
+        .map((line) => line.split(',').map((c) => c.trim()))
+        .filter((row) => row.some((c) => c.length));
+    }
+    const data = new Uint8Array(await file.arrayBuffer());
+    const workbook = XLSX.read(data, { type: 'array' });
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    return XLSX.utils.sheet_to_json(firstSheet, { header: 1, blankrows: false });
+  };
+
+  const normalize = (val) => (val ?? '').toString().trim();
+  const rows = await parseRows();
+  if (!rows.length) throw new Error('File is empty.');
+
+  const header = rows[0].map((h) => normalize(h).toLowerCase());
+  const idx = (name) => header.indexOf(name);
+  const getRow = (row) => {
+    const map = (name) => (idx(name) >= 0 ? normalize(row[idx(name)]) : '');
+    const adm = map('admission number') || map('adm') || map('admission');
+    const name = map('name');
+    if (!adm || !name) return null;
+    return {
+      adm,
+      name,
+      class: map('class'),
+      stream: map('stream'),
+      fee_balance: parseFloat(map('fee balance')) || 0,
+      parent_name: map('parent name') || null,
+      parent_email: map('parent email') || null,
+    };
+  };
+
+  const students = rows.slice(1).map(getRow).filter(Boolean);
+  if (!students.length) throw new Error('No valid student rows found.');
+
+  let ok = 0;
+  for (const s of students) {
+    try {
+      await studentsAPI.create(s);
+      ok += 1;
+    } catch (e) {
+      // try update if exists
+      try {
+        await studentsAPI.update(s.adm, s);
+        ok += 1;
+      } catch (err) {
+        console.error(`Row failed (${s.adm}):`, err);
+      }
+    }
+  }
+  await loadStudents();
+  alert(`Imported/updated ${ok} students.`);
+}
+
+function initStudentsPage() {
+  loadStudents();
+
+  const search = document.querySelector('#studentSearch');
+  if (search) {
+    search.addEventListener('input', () => renderStudentsTable(filterStudents(search.value)));
+  }
+
+  const addBtn = document.querySelector('#addStudentBtn');
+  if (addBtn) addBtn.onclick = () => openStudentModal(null);
+
+  const modalForm = document.querySelector('#studentForm');
+  if (modalForm) modalForm.addEventListener('submit', saveStudent);
+  const modalClose = document.querySelector('#closeStudentModal');
+  if (modalClose) modalClose.onclick = closeStudentModal;
+
+  const tbody = document.querySelector('#studentsBody');
+  if (tbody) {
+    tbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-edit-student]');
+      if (!btn) return;
+      const id = btn.dataset.editStudent;
+      const student = studentsCache.find((s) => `${s.id ?? s.adm}` === id);
+      openStudentModal(student || null);
+    });
+  }
+
+  const importInput = document.querySelector('#importStudentsInput');
+  if (importInput) {
+    importInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        await importStudentsFromFile(file);
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        e.target.value = '';
+      }
+    });
+  }
+}
+
+// ---------- parents ----------
+let parentsCache = [];
+
+function renderParentsTable(list) {
+  const tbody = document.querySelector('#parentsBody');
+  if (!tbody) return;
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6">No parents found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list
+    .map(
+      (p) => `<tr>
+        <td>${p.id ?? ''}</td>
+        <td>${p.name ?? ''}</td>
+        <td>${p.email ?? ''}</td>
+        <td>${p.phone ?? ''}</td>
+        <td>${p.relationship ?? ''}</td>
+        <td><button class="btn-small" data-edit-parent="${p.id ?? ''}">Edit</button></td>
+      </tr>`
+    )
+    .join('');
+}
+
+function openParentModal(parent) {
+  const modal = document.querySelector('#parentModal');
+  if (!modal) return;
+  modal.classList.add('show');
+  modal.dataset.parentId = parent?.id ?? '';
+  modal.querySelector('#parentName').value = parent?.name || '';
+  modal.querySelector('#parentEmail').value = parent?.email || '';
+  modal.querySelector('#parentPhone').value = parent?.phone || '';
+  modal.querySelector('#parentRelationship').value = parent?.relationship || '';
+}
+
+function closeParentModal() {
+  const modal = document.querySelector('#parentModal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function saveParent(event) {
+  event.preventDefault();
+  const modal = document.querySelector('#parentModal');
+  const id = modal?.dataset.parentId;
+  const payload = {
+    name: document.querySelector('#parentName').value.trim(),
+    email: document.querySelector('#parentEmail').value.trim(),
+    phone: document.querySelector('#parentPhone').value.trim(),
+    relationship: document.querySelector('#parentRelationship').value.trim(),
+  };
   try {
-    const parents = await parentsAPI.getAll();
-    const rows = parents.map((p) => [
-      p.id || '',
-      p.name || '',
-      p.email || '',
-      p.phone || '',
-      p.relationship || '—',
-    ]);
-    await renderTable({ selector: '#parentsBody', rows });
+    if (!payload.name || !payload.email) throw new Error('Name and Email are required');
+    if (id) {
+      await parentsAPI.update(id, payload);
+    } else {
+      await parentsAPI.create(payload);
+    }
+    await loadParents();
+    closeParentModal();
+  } catch (err) {
+    alert(`Save failed: ${err.message}`);
+  }
+}
+
+async function loadParents() {
+  try {
+    parentsCache = await parentsAPI.getAll();
+    renderParentsTable(parentsCache);
   } catch (err) {
     console.error('parents load failed', err);
+    alert('Failed to load parents.');
   }
 }
 
+function initParentsPage() {
+  loadParents();
+
+  const addBtn = document.querySelector('#addParentBtn');
+  if (addBtn) addBtn.onclick = () => openParentModal(null);
+
+  const form = document.querySelector('#parentForm');
+  if (form) form.addEventListener('submit', saveParent);
+
+  const closeBtn = document.querySelector('#closeParentModal');
+  if (closeBtn) closeBtn.onclick = closeParentModal;
+
+  const tbody = document.querySelector('#parentsBody');
+  if (tbody) {
+    tbody.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-edit-parent]');
+      if (!btn) return;
+      const id = btn.dataset.editParent;
+      const parent = parentsCache.find((p) => `${p.id}` === id);
+      openParentModal(parent || null);
+    });
+  }
+}
+
+// ---------- staff (unchanged minimal list) ----------
 async function initStaffPage() {
   try {
     const staff = await staffAPI.getAll();
-    const rows = staff.map((s) => [
-      s.name || '',
-      s.staff_no || '',
-      s.email || '',
-      s.phone || '',
-      s.department || '',
-      s.status || 'pending',
-    ]);
-    await renderTable({ selector: '#staffBody', rows });
+    const tbody = document.querySelector('#staffBody');
+    if (!tbody) return;
+    if (!staff.length) {
+      tbody.innerHTML = '<tr><td colspan="6">No staff found.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = staff
+      .map(
+        (s) => `<tr>
+          <td>${s.name || ''}</td>
+          <td>${s.staff_no || ''}</td>
+          <td>${s.email || ''}</td>
+          <td>${s.phone || ''}</td>
+          <td>${s.department || ''}</td>
+          <td>${s.status || 'pending'}</td>
+        </tr>`
+      )
+      .join('');
   } catch (err) {
     console.error('staff load failed', err);
   }
 }
 
+// ---------- bootstrap ----------
 document.addEventListener('DOMContentLoaded', () => {
   setAdminWelcome();
 
