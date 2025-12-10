@@ -67,6 +67,7 @@ async function initDashboardPage() {
 // ---------- students ----------
 let studentsCache = [];
 let parentsCache = [];
+let staffCache = [];
 
 function filterStudents(term) {
   const q = term.trim().toLowerCase();
@@ -94,7 +95,10 @@ function renderStudentsTable(list) {
         <td>${s.stream || ''}</td>
         <td>${s.parent_name || s.parent_email || ''}</td>
         <td>${s.fee_balance ?? ''}</td>
-        <td><button class="btn-small" data-edit-student="${s.id ?? s.adm}">Edit</button></td>
+        <td>
+          <button class="btn-small" data-edit-student="${s.id ?? s.adm}">Edit</button>
+          <button class="btn-small" data-delete-student="${s.id ?? s.adm}">Delete</button>
+        </td>
       </tr>`
     )
     .join('');
@@ -260,6 +264,16 @@ function initStudentsPage() {
       }
     });
   }
+
+  const restoreBtn = document.querySelector('#restoreStudentsBtn');
+  if (restoreBtn) {
+    restoreBtn.onclick = restoreDeletedStudents;
+  }
+
+  const deleteAllBtn = document.querySelector('#deleteAllStudentsBtn');
+  if (deleteAllBtn) {
+    deleteAllBtn.onclick = deleteAllStudents;
+  }
 }
 
 // ---------- parents ----------
@@ -279,7 +293,10 @@ function renderParentsTable(list) {
         <td>${p.email ?? ''}</td>
         <td>${p.phone ?? ''}</td>
         <td>${p.relationship ?? ''}</td>
-        <td><button class="btn-small" data-edit-parent="${p.id ?? ''}">Edit</button></td>
+        <td>
+          <button class="btn-small" data-edit-parent="${p.id ?? ''}">Edit</button>
+          <button class="btn-small" data-delete-parent="${p.id ?? ''}">Delete</button>
+        </td>
       </tr>`
     )
     .join('');
@@ -351,6 +368,12 @@ function initParentsPage() {
   if (tbody) {
     tbody.addEventListener('click', (e) => {
       const btn = e.target.closest('[data-edit-parent]');
+      const del = e.target.closest('[data-delete-parent]');
+      if (del) {
+        const id = del.dataset.deleteParent;
+        deleteParent(id);
+        return;
+      }
       if (!btn) return;
       const id = btn.dataset.editParent;
       const parent = parentsCache.find((p) => `${p.id}` === id);
@@ -359,30 +382,135 @@ function initParentsPage() {
   }
 }
 
-// ---------- staff (unchanged minimal list) ----------
+// ---------- staff ----------
 async function initStaffPage() {
   try {
-    const staff = await staffAPI.getAll();
-    const tbody = document.querySelector('#staffBody');
-    if (!tbody) return;
-    if (!staff.length) {
-      tbody.innerHTML = '<tr><td colspan="6">No staff found.</td></tr>';
-      return;
-    }
-    tbody.innerHTML = staff
-      .map(
-        (s) => `<tr>
-          <td>${s.name || ''}</td>
-          <td>${s.staff_no || ''}</td>
-          <td>${s.email || ''}</td>
-          <td>${s.phone || ''}</td>
-          <td>${s.department || ''}</td>
-          <td>${s.status || 'pending'}</td>
-        </tr>`
-      )
-      .join('');
+    staffCache = await staffAPI.getAll();
+    renderStaffTable();
   } catch (err) {
     console.error('staff load failed', err);
+  }
+}
+
+function renderStaffTable() {
+  const tbody = document.querySelector('#staffBody');
+  if (!tbody) return;
+  if (!staffCache.length) {
+    tbody.innerHTML = '<tr><td colspan="7">No staff found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = staffCache
+    .map(
+      (s) => `<tr>
+        <td>${s.name || ''}</td>
+        <td>${s.staff_no || ''}</td>
+        <td>${s.email || ''}</td>
+        <td>${s.phone || ''}</td>
+        <td>${s.department || ''}</td>
+        <td>${s.status || 'pending'}</td>
+        <td>
+          <button class="btn-small" data-approve-staff="${s.id}">Approve</button>
+          <button class="btn-small" data-edit-staff="${s.id}">Edit</button>
+          <button class="btn-small" data-delete-staff="${s.id}">Delete</button>
+        </td>
+      </tr>`
+    )
+    .join('');
+}
+
+function openStaffModal(staff) {
+  const modal = document.querySelector('#staffModal');
+  if (!modal) return;
+  modal.classList.add('show');
+  modal.dataset.staffId = staff?.id || '';
+  modal.querySelector('#staffName').value = staff?.name || '';
+  modal.querySelector('#staffNo').value = staff?.staff_no || '';
+  modal.querySelector('#staffEmail').value = staff?.email || '';
+  modal.querySelector('#staffPhone').value = staff?.phone || '';
+  modal.querySelector('#staffDept').value = staff?.department || '';
+  modal.querySelector('#staffStatus').value = staff?.status || 'pending';
+}
+
+function closeStaffModal() {
+  const modal = document.querySelector('#staffModal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function saveStaff(event) {
+  event.preventDefault();
+  const modal = document.querySelector('#staffModal');
+  const id = modal?.dataset.staffId;
+  const payload = {
+    name: document.querySelector('#staffName').value.trim(),
+    staff_no: document.querySelector('#staffNo').value.trim(),
+    email: document.querySelector('#staffEmail').value.trim(),
+    phone: document.querySelector('#staffPhone').value.trim(),
+    department: document.querySelector('#staffDept').value.trim(),
+    status: document.querySelector('#staffStatus').value.trim() || 'pending',
+  };
+  try {
+    if (!payload.name || !payload.staff_no) throw new Error('Name and Staff No are required');
+    if (id) {
+      await staffAPI.update(id, payload);
+    } else {
+      await staffAPI.create(payload);
+    }
+    staffCache = await staffAPI.getAll();
+    renderStaffTable();
+    closeStaffModal();
+  } catch (err) {
+    alert(`Save failed: ${err.message}`);
+  }
+}
+
+async function deleteStaff(id) {
+  if (!id) return;
+  if (!confirm('Delete this staff member?')) return;
+  try {
+    await staffAPI.delete(id);
+    staffCache = staffCache.filter((s) => `${s.id}` !== `${id}`);
+    renderStaffTable();
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
+  }
+}
+
+async function approveStaff(id) {
+  try {
+    await staffAPI.update(id, { status: 'approved' });
+    staffCache = await staffAPI.getAll();
+    renderStaffTable();
+  } catch (err) {
+    alert('Approve failed: ' + err.message);
+  }
+}
+
+function wireStaffEvents() {
+  const addBtn = document.querySelector('#addStaffBtn');
+  if (addBtn) addBtn.onclick = () => openStaffModal(null);
+  const form = document.querySelector('#staffForm');
+  if (form) form.addEventListener('submit', saveStaff);
+  const closeBtn = document.querySelector('#closeStaffModal');
+  if (closeBtn) closeBtn.onclick = closeStaffModal;
+  const tbody = document.querySelector('#staffBody');
+  if (tbody) {
+    tbody.addEventListener('click', (e) => {
+      const approve = e.target.closest('[data-approve-staff]');
+      const edit = e.target.closest('[data-edit-staff]');
+      const del = e.target.closest('[data-delete-staff]');
+      if (approve) {
+        approveStaff(approve.dataset.approveStaff);
+        return;
+      }
+      if (del) {
+        deleteStaff(del.dataset.deleteStaff);
+        return;
+      }
+      if (edit) {
+        const staff = staffCache.find((s) => `${s.id}` === edit.dataset.editStaff);
+        openStaffModal(staff || null);
+      }
+    });
   }
 }
 
@@ -402,6 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'students') initStudentsPage();
   if (page === 'parents') initParentsPage();
   if (page === 'staff') initStaffPage();
+  wireStaffEvents();
 });
 
 // ---------- charts for dashboard ----------
@@ -491,6 +620,38 @@ async function restoreDeletedStudents() {
     alert(`Restored ${ok} students.`);
   } catch (err) {
     alert('Restore failed: ' + err.message);
+  }
+}
+
+// ---------- delete all students ----------
+async function deleteAllStudents() {
+  if (!confirm('Delete ALL students? This cannot be undone.')) return;
+  try {
+    const all = await studentsAPI.getAll();
+    for (const s of all) {
+      try {
+        await studentsAPI.delete(s.id ?? s.adm);
+      } catch (err) {
+        console.error('Delete failed for', s.id || s.adm, err);
+      }
+    }
+    await loadStudents();
+    alert('All students deleted.');
+  } catch (err) {
+    alert('Delete all failed: ' + err.message);
+  }
+}
+
+// ---------- delete parent ----------
+async function deleteParent(id) {
+  if (!id) return;
+  if (!confirm('Delete this parent?')) return;
+  try {
+    await parentsAPI.delete(id);
+    parentsCache = parentsCache.filter((p) => `${p.id}` !== `${id}`);
+    renderParentsTable(parentsCache);
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
   }
 }
 // Minimal admin utilities for live data rendering
