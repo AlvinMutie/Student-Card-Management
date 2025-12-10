@@ -200,7 +200,12 @@ const ensureStudentExtendedColumns = async () => {
       ADD COLUMN IF NOT EXISTS parent_name VARCHAR(255),
       ADD COLUMN IF NOT EXISTS parent_email VARCHAR(255),
       ADD COLUMN IF NOT EXISTS gender VARCHAR(20),
-      ADD COLUMN IF NOT EXISTS kcpe_score VARCHAR(50)
+      ADD COLUMN IF NOT EXISTS kcpe_score VARCHAR(50),
+      ADD COLUMN IF NOT EXISTS stream VARCHAR(100),
+      ADD COLUMN IF NOT EXISTS house VARCHAR(100),
+      ADD COLUMN IF NOT EXISTS date_of_admission DATE,
+      ADD COLUMN IF NOT EXISTS date_of_completion DATE,
+      ADD COLUMN IF NOT EXISTS meal_card_validity DATE
     `);
     studentColumnsEnsured = true;
   } catch (error) {

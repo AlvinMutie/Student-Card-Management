@@ -45,6 +45,16 @@ CREATE TABLE IF NOT EXISTS students (
     fee_balance DECIMAL(10, 2) DEFAULT 0,
     photo_url VARCHAR(500),
     parent_id INTEGER REFERENCES parents(id) ON DELETE SET NULL,
+    stream VARCHAR(100),
+    house VARCHAR(100),
+    date_of_admission DATE,
+    date_of_completion DATE,
+    meal_card_validity DATE,
+    contact VARCHAR(50),
+    parent_name VARCHAR(255),
+    parent_email VARCHAR(255),
+    gender VARCHAR(20),
+    kcpe_score VARCHAR(50),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
