@@ -61,10 +61,12 @@ function renderRecent(students = [], parents = [], staff = []) {
 
 async function initDashboardPage() {
   await loadCounts();
+  await loadCharts();
 }
 
 // ---------- students ----------
 let studentsCache = [];
+let parentsCache = [];
 
 function filterStudents(term) {
   const q = term.trim().toLowerCase();
@@ -261,7 +263,6 @@ function initStudentsPage() {
 }
 
 // ---------- parents ----------
-let parentsCache = [];
 
 function renderParentsTable(list) {
   const tbody = document.querySelector('#parentsBody');
@@ -402,6 +403,96 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'parents') initParentsPage();
   if (page === 'staff') initStaffPage();
 });
+
+// ---------- charts for dashboard ----------
+async function loadCharts() {
+  const ctxClass = document.getElementById('chartStudentsClass');
+  const ctxFee = document.getElementById('chartFeeStatus');
+  const ctxStaff = document.getElementById('chartStaffStatus');
+  if (!ctxClass || !ctxFee || !ctxStaff || typeof Chart === 'undefined') return;
+
+  try {
+    const [students, staff] = await Promise.all([
+      studentsAPI.getAll().catch(() => []),
+      staffAPI.getAll().catch(() => []),
+    ]);
+
+    // Students by class
+    const classCounts = {};
+    students.forEach((s) => {
+      const c = s.class || 'Unassigned';
+      classCounts[c] = (classCounts[c] || 0) + 1;
+    });
+    const labelsClass = Object.keys(classCounts);
+    const dataClass = Object.values(classCounts);
+    new Chart(ctxClass, {
+      type: 'bar',
+      data: { labels: labelsClass, datasets: [{ label: 'Students', data: dataClass, backgroundColor: '#14532d' }] },
+      options: { responsive: true, plugins: { legend: { display: false } } },
+    });
+
+    // Fee status
+    const paid = students.filter((s) => !s.fee_balance || parseFloat(s.fee_balance) === 0).length;
+    const pending = students.length - paid;
+    new Chart(ctxFee, {
+      type: 'doughnut',
+      data: { labels: ['Paid', 'Pending'], datasets: [{ data: [paid, pending], backgroundColor: ['#22c55e', '#f59e0b'] }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+    });
+
+    // Staff status
+    const approved = staff.filter((s) => (s.status || '').toLowerCase() === 'approved').length;
+    const awaiting = staff.length - approved;
+    new Chart(ctxStaff, {
+      type: 'doughnut',
+      data: { labels: ['Approved', 'Pending'], datasets: [{ data: [approved, awaiting], backgroundColor: ['#2563eb', '#f97316'] }] },
+      options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+    });
+  } catch (err) {
+    console.error('charts load failed', err);
+  }
+}
+
+// ---------- restore deleted (local) ----------
+async function restoreDeletedStudents() {
+  const raw = localStorage.getItem('sv_deleted_students');
+  if (!raw) {
+    alert('No deleted students stored locally to restore.');
+    return;
+  }
+  try {
+    const data = JSON.parse(raw);
+    const students = data.students || [];
+    let ok = 0;
+    for (const s of students) {
+      try {
+        const payload = {
+          adm: s.adm || s.id,
+          name: s.name || '',
+          class: s.class || '',
+          stream: s.stream || '',
+          fee_balance: s.fee_balance || 0,
+          parent_id: s.parent_id || null,
+          parent_name: s.parent_name || null,
+          parent_email: s.parent_email || null,
+        };
+        if (!payload.adm || !payload.name) continue;
+        try {
+          await studentsAPI.create(payload);
+        } catch (_) {
+          await studentsAPI.update(payload.adm, payload);
+        }
+        ok += 1;
+      } catch (e) {
+        console.error('restore failed for', s.adm, e);
+      }
+    }
+    await loadStudents();
+    alert(`Restored ${ok} students.`);
+  } catch (err) {
+    alert('Restore failed: ' + err.message);
+  }
+}
 // Minimal admin utilities for live data rendering
 (function () {
   if (typeof window === 'undefined') return;

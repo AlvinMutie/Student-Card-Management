@@ -6,23 +6,25 @@
   <title>Parents | Admin</title>
   <link rel="stylesheet" href="../shared/portal-theme.css">
   <style>
-    body { margin:0; font-family:'Inter','Segoe UI',sans-serif; background:#f6f7fb; color:#0f172a; }
+    body { margin:0; font-family:'Inter','Segoe UI',sans-serif; background:linear-gradient(180deg,#fdfcfb 0%,#f3f4ff 100%); color:#1f2937; }
     .layout { display:flex; min-height:100vh; }
-    .sidebar { width:220px; background:#0f3b2a; color:#fff; padding:16px; display:flex; flex-direction:column; gap:12px; }
-    .sidebar a { color:#e2e8f0; text-decoration:none; padding:10px 12px; border-radius:8px; display:block; }
+    .sidebar { width:220px; background:#0f3b2a; color:#fff; padding:16px; display:flex; flex-direction:column; gap:12px; box-shadow:4px 0 16px rgba(0,0,0,0.08); }
+    .sidebar a { color:#e2e8f0; text-decoration:none; padding:10px 12px; border-radius:8px; display:block; transition:transform .2s, background .2s; }
+    .sidebar a:hover { transform:translateX(2px); background:rgba(255,255,255,0.12); }
     .sidebar a.active { background:#14532d; }
-    .main { flex:1; padding:20px; }
+    .main { flex:1; padding:24px; }
     .topbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
-    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e2e8f0; }
-    th, td { padding:10px; border:1px solid #e2e8f0; text-align:left; }
+    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e2e8f0; box-shadow:0 8px 30px rgba(0,0,0,0.06); border-radius:12px; overflow:hidden; }
+    th, td { padding:12px; border:1px solid #e5e7eb; text-align:left; }
     button { cursor:pointer; }
-    .btn-small { padding:6px 10px; border:1px solid #cbd5e1; background:#f8fafc; border-radius:6px; }
-    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; }
+    .btn-small { padding:8px 12px; border:none; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; border-radius:8px; box-shadow:0 4px 14px rgba(102,126,234,0.35); transition:transform .2s; }
+    .btn-small:hover { transform:translateY(-1px); }
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); align-items:center; justify-content:center; }
     .modal.show { display:flex; }
-    .modal-content { background:#fff; padding:16px; border-radius:8px; width:360px; max-width:90vw; }
-    .modal-content form { display:flex; flex-direction:column; gap:8px; }
-    .modal-content label { font-size:0.9rem; }
-    .modal-actions { display:flex; gap:8px; justify-content:flex-end; }
+    .modal-content { background:#fff; padding:18px; border-radius:12px; width:380px; max-width:90vw; box-shadow:0 12px 40px rgba(0,0,0,0.15); }
+    .modal-content form { display:flex; flex-direction:column; gap:10px; }
+    .modal-content label { font-size:0.95rem; color:#334155; }
+    .modal-actions { display:flex; gap:10px; justify-content:flex-end; }
   </style>
 </head>
 <body data-page="parents">
