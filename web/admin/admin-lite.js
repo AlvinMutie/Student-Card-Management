@@ -37,12 +37,10 @@ async function loadCounts() {
       staffAPI.getAll().catch(() => []),
     ]);
     const pendingStaff = staff.filter((s) => (s.status || '').toLowerCase() !== 'approved').length;
-    const pendingParents = parents.filter((p) => (p.status || '').toLowerCase() !== 'approved').length;
     setText('#countStudents', students.length);
     setText('#countParents', parents.length);
     setText('#countStaff', staff.length);
     setText('#countPending', pendingStaff);
-    setText('#countPendingParents', pendingParents);
     renderRecent(students, parents, staff);
   } catch (err) {
     console.error('loadCounts error', err);
@@ -599,15 +597,13 @@ async function loadCharts() {
   const ctxClass = document.getElementById('chartStudentsClass');
   const ctxFee = document.getElementById('chartFeeStatus');
   const ctxStaff = document.getElementById('chartStaffStatus');
-  const ctxParents = document.getElementById('chartParentStatus');
   const ctxGender = document.getElementById('chartGenderMix');
   if (!ctxClass || !ctxFee || !ctxStaff || typeof Chart === 'undefined') return;
 
   try {
-    const [students, staff, parents] = await Promise.all([
+    const [students, staff] = await Promise.all([
       studentsAPI.getAll().catch(() => []),
       staffAPI.getAll().catch(() => []),
-      parentsAPI.getAll().catch(() => []),
     ]);
 
     // Students by class
@@ -641,16 +637,6 @@ async function loadCharts() {
       data: { labels: ['Approved', 'Pending'], datasets: [{ data: [approved, awaiting], backgroundColor: ['#2563eb', '#f97316'] }] },
       options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
     });
-
-    if (ctxParents) {
-      const pApproved = parents.filter((p) => (p.status || '').toLowerCase() === 'approved').length;
-      const pPending = parents.length - pApproved;
-      new Chart(ctxParents, {
-        type: 'doughnut',
-        data: { labels: ['Approved', 'Pending'], datasets: [{ data: [pApproved, pPending], backgroundColor: ['#10b981', '#f59e0b'] }] },
-        options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
-      });
-    }
 
     if (ctxGender) {
       const male = students.filter((s) => (s.gender || '').toLowerCase().startsWith('m')).length;

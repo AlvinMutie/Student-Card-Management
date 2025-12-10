@@ -23,7 +23,7 @@
 <body data-page="dashboard">
   <div class="sidebar">
     <div class="brand">
-      <img src="../shared/Hechlink_logo.png" alt="Sasa Shuleni Advantage Logo" class="brand-icon">
+      <img src="../shared/Hechlink_logo.png" alt="Sasa Shuleni Advantage Logo" class="brand-icon" style="filter:none;">
       <h1>Sasa Shuleni Advantage</h1>
     </div>
     <ul class="nav-links">
@@ -51,11 +51,10 @@
     </div>
 
     <div class="stat-grid">
-      <div class="card"><div>Students</div><div class="stat" id="countStudents">0</div></div>
+      <div class="card"><div>Total Students</div><div class="stat" id="countStudents">0</div></div>
       <div class="card"><div>Parents</div><div class="stat" id="countParents">0</div></div>
       <div class="card"><div>Staff</div><div class="stat" id="countStaff">0</div></div>
       <div class="card"><div>Pending Staff</div><div class="stat" id="countPending">0</div></div>
-      <div class="card"><div>Pending Parents</div><div class="stat" id="countPendingParents">0</div></div>
     </div>
 
     <div class="charts-grid">
@@ -70,10 +69,6 @@
           <div>
         <h4>Staff Status</h4>
         <canvas id="chartStaffStatus" height="260"></canvas>
-          </div>
-          <div>
-        <h4>Parents Status</h4>
-        <canvas id="chartParentStatus" height="260"></canvas>
           </div>
           <div>
         <h4>Students Gender Mix</h4>
