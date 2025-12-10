@@ -92,8 +92,8 @@ function renderStudentsTable(list) {
   tbody.innerHTML = list
     .map(
       (s) => `<tr>
-        <td>
-          <img class="student-avatar" src="${s.localPhoto || s.photo_url || STUDENT_PHOTO_PLACEHOLDER}" alt="${s.name || ''}" onerror="this.src='${STUDENT_PHOTO_PLACEHOLDER}'" />
+        <td class="photo-col">
+          <img class="student-avatar" src="${s.localPhoto || s.photo_url || STUDENT_PHOTO_PLACEHOLDER}" alt="" onerror="this.src='${STUDENT_PHOTO_PLACEHOLDER}'" />
         </td>
         <td>${s.adm || ''}</td>
         <td>${s.name || ''}</td>
@@ -101,7 +101,7 @@ function renderStudentsTable(list) {
         <td>${s.house || ''}</td>
         <td>${s.class || ''}</td>
         <td>${s.stream || ''}</td>
-        <td>${s.kcpe || ''}</td>
+        <td>${s.kcpe || s.kcpe_marks || s.kcpe_score || ''}</td>
         <td>${s.contacts || s.contact || s.parent_phone || ''}</td>
         <td>${s.gender || ''}</td>
         <td>${s.parent_name || s.parent_email || ''}</td>
