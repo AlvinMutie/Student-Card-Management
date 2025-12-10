@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student ID Card Generator | Admin Dashboard</title>
-  <link rel="icon" href="../shared/Hechlink_logo.png">
+  <link rel="icon" href="../shared/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="shared-admin-styles.css">
   <style>
     /* Page-specific styles only - base styles are in shared-admin-styles.css */
@@ -651,7 +651,7 @@
           <!-- QR code will be inserted here -->
         </div>
         <div class="id-card-info">
-          <div class="id-card-school">Hechlink Ventures School</div>
+          <div class="id-card-school">Sasa Shuleni Advantage School</div>
           <div class="id-card-name" id="idCardName">Student Name</div>
           <div class="id-card-adm" id="idCardAdm">Admission: ADM001</div>
         </div>
@@ -778,7 +778,7 @@
         id: currentStudent.id,
         adm: currentStudent.adm,
         name: currentStudent.name,
-        school: 'Hechlink Ventures School'
+        school: 'Sasa Shuleni Advantage School'
       };
 
       const qrDataString = JSON.stringify(qrData);
@@ -920,7 +920,7 @@
             id: student.id,
             adm: student.adm,
             name: student.name,
-            school: 'Hechlink Ventures School'
+            school: 'Sasa Shuleni Advantage School'
           };
 
           const qrDataString = JSON.stringify(qrData);
@@ -958,7 +958,7 @@
               <img src="../shared/Hechlink_logo.png" alt="School Logo" class="id-card-logo">
               <div class="id-card-qr"><img src="${qrDataUrl}" alt="QR Code"></div>
               <div class="id-card-info">
-                <div class="id-card-school">Hechlink Ventures School</div>
+                <div class="id-card-school">Sasa Shuleni Advantage School</div>
                 <div class="id-card-name">${student.name || 'N/A'}</div>
                 <div class="id-card-adm">Admission: ${student.adm || 'N/A'}</div>
               </div>

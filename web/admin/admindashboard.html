@@ -3,21 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Admin Dashboard</title>
-  <link rel="icon" href="../shared/Hechlink_logo.png">
+  <title>Sasa Shuleni Advantage | Admin Dashboard</title>
+  <link rel="icon" href="../shared/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="../shared/portal-theme.css">
   <link rel="stylesheet" href="shared-admin-styles.css">
   <style>
-    body { margin:0; font-family:'Inter','Segoe UI',sans-serif; background:linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%); color:#0f172a; }
-    .main-content { flex:1; padding:35px 40px; overflow-y:auto; margin-left:260px; background:var(--beige-bg); min-height:100vh; }
+    body { margin:0; font-family:'Inter','Segoe UI',sans-serif; background:#f6f8fb; color:#0f172a; }
+    .main-content { flex:1; padding:32px 36px; overflow-y:auto; margin-left:260px; background:#f6f8fb; min-height:100vh; }
     .top { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
-    .stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin:20px 0; }
-    .card { background:#fff; border:1px solid #e2e8f0; border-radius:14px; padding:16px; box-shadow:0 6px 24px rgba(0,0,0,0.06); animation: fadeUp .4s ease; }
-    .stat { font-size:26px; font-weight:700; }
-    button { cursor:pointer; }
-    .charts-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:16px; margin-top:12px; }
-    canvas { background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:12px; box-shadow:0 6px 24px rgba(0,0,0,0.05); }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(6px);} to {opacity:1; transform:translateY(0);} }
+    .top h2 { margin:0; font-weight:800; letter-spacing:-0.4px; }
+    .metrics-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin:24px 0; }
+    .metric-card { background:#fff; border-radius:18px; padding:18px 16px; border:1px solid #e5e7eb; box-shadow:0 15px 40px rgba(15,23,42,0.08); position:relative; overflow:hidden; }
+    .metric-card::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg, rgba(16,185,129,0.08), rgba(59,130,246,0.05)); opacity:0.7; pointer-events:none; }
+    .metric-card .metric-top { display:flex; align-items:center; justify-content:space-between; }
+    .metric-icon { width:42px; height:42px; border-radius:12px; display:grid; place-items:center; font-size:20px; font-weight:700; color:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.1); }
+    .metric-label { font-weight:700; color:#0f172a; }
+    .metric-value { font-size:34px; font-weight:800; margin:6px 0 2px; color:#0f172a; letter-spacing:-0.5px; }
+    .metric-sub { color:#6b7280; font-size:13px; }
+    .metric-card.students .metric-icon { background:#16a34a; }
+    .metric-card.parents .metric-icon { background:#0ea5e9; }
+    .metric-card.staff .metric-icon { background:#6366f1; }
+    .metric-card.pending .metric-icon { background:#f59e0b; }
+    .panel-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:18px; }
+    .panel { background:#fff; border:1px solid #e5e7eb; border-radius:18px; padding:18px; box-shadow:0 15px 40px rgba(15,23,42,0.08); }
+    .panel h4, .panel h3 { margin:0 0 12px; font-weight:700; }
+    canvas { background:#fff; border-radius:12px; }
+    .recent-list { list-style:disc; padding-left:18px; color:#334155; }
+    .recent-list li { margin:6px 0; }
+    @media (max-width: 900px){
+      .main-content{margin-left:0;padding:22px;}
+      .sidebar{width:100%;position:relative;flex-direction:row;flex-wrap:wrap;}
+      .nav-links{flex-direction:row;flex-wrap:wrap;}
+    }
   </style>
 </head>
 <body data-page="dashboard">
@@ -50,35 +67,63 @@
       <div>Hi, <span data-admin-name>Admin</span></div>
     </div>
 
-    <div class="stat-grid">
-      <div class="card"><div>Total Students</div><div class="stat" id="countStudents">0</div></div>
-      <div class="card"><div>Parents</div><div class="stat" id="countParents">0</div></div>
-      <div class="card"><div>Staff</div><div class="stat" id="countStaff">0</div></div>
-      <div class="card"><div>Pending Staff</div><div class="stat" id="countPending">0</div></div>
+    <div class="metrics-grid">
+      <div class="metric-card students">
+        <div class="metric-top">
+          <div class="metric-label">Total Students</div>
+          <div class="metric-icon">🎓</div>
+        </div>
+        <div class="metric-value" id="countStudents">0</div>
+        <div class="metric-sub">Live total of enrolled students</div>
+      </div>
+      <div class="metric-card parents">
+        <div class="metric-top">
+          <div class="metric-label">Parents</div>
+          <div class="metric-icon">👪</div>
+        </div>
+        <div class="metric-value" id="countParents">0</div>
+        <div class="metric-sub">Registered guardians</div>
+      </div>
+      <div class="metric-card staff">
+        <div class="metric-top">
+          <div class="metric-label">Staff</div>
+          <div class="metric-icon">🧑‍🏫</div>
+        </div>
+        <div class="metric-value" id="countStaff">0</div>
+        <div class="metric-sub">Active school staff</div>
+      </div>
+      <div class="metric-card pending">
+        <div class="metric-top">
+          <div class="metric-label">Pending Staff</div>
+          <div class="metric-icon">⏳</div>
+        </div>
+        <div class="metric-value" id="countPending">0</div>
+        <div class="metric-sub">Awaiting approval</div>
+      </div>
     </div>
 
-    <div class="charts-grid">
-          <div>
+    <div class="panel-grid">
+      <div class="panel">
         <h4>Students by Class</h4>
         <canvas id="chartStudentsClass" height="260"></canvas>
-          </div>
-          <div>
+      </div>
+      <div class="panel">
         <h4>Fee Status</h4>
         <canvas id="chartFeeStatus" height="260"></canvas>
-        </div>
-          <div>
+      </div>
+      <div class="panel">
         <h4>Staff Status</h4>
         <canvas id="chartStaffStatus" height="260"></canvas>
-          </div>
-          <div>
+      </div>
+      <div class="panel">
         <h4>Students Gender Mix</h4>
         <canvas id="chartGenderMix" height="260"></canvas>
       </div>
     </div>
 
-    <div class="card" style="margin-top:16px;">
+    <div class="panel" style="margin-top:16px;">
       <h3>Recent</h3>
-      <ul id="recentList" style="margin:0;padding-left:18px;"></ul>
+      <ul id="recentList" class="recent-list"></ul>
     </div>
   </main>
 
@@ -86,13 +131,6 @@
   <script src="../runtime-config.js"></script>
   <script src="../shared/api-client.js"></script>
   <script src="admin-lite.js"></script>
-  <style>
-    @media (max-width: 900px){
-      .main-content{margin-left:0;padding:22px;}
-      .sidebar{width:100%;position:relative;flex-direction:row;flex-wrap:wrap;}
-      .nav-links{flex-direction:row;flex-wrap:wrap;}
-    }
-  </style>
 </body>
 </html>
 

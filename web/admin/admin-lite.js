@@ -36,7 +36,7 @@ async function loadCounts() {
       parentsAPI.getAll().catch(() => []),
       staffAPI.getAll().catch(() => []),
     ]);
-    const pendingStaff = staff.filter((s) => (s.status || '').toLowerCase() !== 'approved').length;
+    const pendingStaff = staff.filter((s) => (s.status || '').toLowerCase() !== 'approved' && !s.approved).length;
     setText('#countStudents', students.length);
     setText('#countParents', parents.length);
     setText('#countStaff', staff.length);
@@ -69,6 +69,8 @@ let studentsCache = [];
 let parentsCache = [];
 let staffCache = [];
 const photoBlobMap = {};
+const STUDENT_PHOTO_PLACEHOLDER =
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="16" fill="%23e5e7eb"/><circle cx="32" cy="26" r="12" fill="%23cbd5e1"/><path d="M16 52c0-8.284 7.163-15 16-15s16 6.716 16 15" fill="%23cbd5e1"/></svg>';
 
 function filterStudents(term) {
   const q = term.trim().toLowerCase();
@@ -91,20 +93,16 @@ function renderStudentsTable(list) {
     .map(
       (s) => `<tr>
         <td>
-          ${
-            s.localPhoto || s.photo_url
-              ? `<img class="student-avatar" src="${s.localPhoto || s.photo_url}" alt="${s.name || ''}" />`
-              : `<div class="student-avatar placeholder">${(s.name || s.adm || '?').toString().trim().charAt(0) || '?'}</div>`
-          }
+          <img class="student-avatar" src="${s.localPhoto || s.photo_url || STUDENT_PHOTO_PLACEHOLDER}" alt="${s.name || ''}" onerror="this.src='${STUDENT_PHOTO_PLACEHOLDER}'" />
         </td>
         <td>${s.adm || ''}</td>
         <td>${s.name || ''}</td>
-        <td>${s.upi || ''}</td>
+        <td>${s.upi || s.nemis || s.nemis_number || ''}</td>
         <td>${s.house || ''}</td>
         <td>${s.class || ''}</td>
         <td>${s.stream || ''}</td>
         <td>${s.kcpe || ''}</td>
-        <td>${s.contacts || s.parent_phone || ''}</td>
+        <td>${s.contacts || s.contact || s.parent_phone || ''}</td>
         <td>${s.gender || ''}</td>
         <td>${s.parent_name || s.parent_email || ''}</td>
         <td>${s.fee_balance ?? ''}</td>
@@ -455,23 +453,28 @@ function renderStaffTable() {
   }
   tbody.innerHTML = staffCache
     .map(
-      (s) => `<tr>
+      (s) => {
+        const staffId = s.id || s._id || s.staff_no;
+        const isApproved = (s.status || '').toLowerCase() === 'approved' || s.approved === true;
+        const statusLabel = isApproved ? 'Approved' : 'Pending';
+        return `<tr>
         <td>${s.name || ''}</td>
         <td>${s.staff_no || ''}</td>
         <td>${s.email || ''}</td>
         <td>${s.phone || ''}</td>
         <td>${s.department || ''}</td>
-        <td>${s.status || 'pending'}</td>
+        <td>${statusLabel}</td>
         <td>
           ${
-            (s.status || '').toLowerCase() === 'approved'
+            isApproved
               ? '<span class="status-chip approved">Approved</span>'
-              : `<button class="btn-small" data-approve-staff="${s.id || s._id}">Approve</button>`
+              : `<button class="btn-small" data-approve-staff="${staffId}">Approve</button>`
           }
-          <button class="btn-small" data-edit-staff="${s.id || s._id}">Edit</button>
-          <button class="btn-small" data-delete-staff="${s.id || s._id}">Delete</button>
+          <button class="btn-small" data-edit-staff="${staffId}">Edit</button>
+          <button class="btn-small" data-delete-staff="${staffId}">Delete</button>
         </td>
-      </tr>`
+      </tr>`;
+      }
     )
     .join('');
 }
@@ -535,7 +538,7 @@ async function deleteStaff(id) {
 
 async function approveStaff(id) {
   try {
-    await staffAPI.update(id, { status: 'approved' });
+    await staffAPI.update(id, { status: 'approved', approved: true });
     staffCache = await staffAPI.getAll();
     renderStaffTable();
     await loadCounts();
