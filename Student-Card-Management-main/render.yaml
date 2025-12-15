@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: student-card-management-api
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false
+    healthCheckPath: /api/health
+
+databases:
+  - name: student-card-db
+    plan: free
+    databaseName: studentcard
+    user: studentcard_user
+
