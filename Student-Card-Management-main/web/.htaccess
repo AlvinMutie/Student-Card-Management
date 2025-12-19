@@ -1,0 +1,22 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Redirect root to landing page
+RewriteRule ^$ /public/landingpage.html [L]
+
+# Allow access to all files
+<FilesMatch "\.(html|css|js|png|jpg|jpeg|gif|svg|ico|json|mp4|woff|woff2|ttf|eot)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
+
+# Set default index file
+DirectoryIndex public/landingpage.html
+
+# Enable CORS for API requests (if needed)
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+

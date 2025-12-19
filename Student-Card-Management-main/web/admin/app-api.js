@@ -1042,6 +1042,7 @@
           
           <div class="footer">
             <p>This is a system-generated report from Shuleni Advantage Student Management System</p>
+            <p style="margin-top: 10px;">© 2025 Hechlink Ventures. All rights reserved.</p>
           </div>
         </body>
         </html>
