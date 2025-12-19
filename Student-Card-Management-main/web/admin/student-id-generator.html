@@ -262,14 +262,14 @@
       font-weight: 500;
       transition: all 0.3s ease;
     }
-    
+
     .form-group input:focus,
     .form-group select:focus {
       outline: none;
       border-color: #667eea;
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
-    
+
     .form-group select option {
       background-color: white !important;
       color: var(--primary-color) !important;
@@ -325,22 +325,22 @@
       box-shadow: 0 8px 25px rgba(240, 147, 251, 0.4);
       transform: translateY(-2px);
     }
-    
+
     .btn-secondary:nth-of-type(3) {
       background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
       box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
     }
-    
+
     .btn-secondary:nth-of-type(3):hover {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%) !important;
       box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
     }
-    
+
     .btn-secondary:nth-of-type(4) {
       background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
       box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
     }
-    
+
     .btn-secondary:nth-of-type(4):hover {
       background: linear-gradient(135deg, #38f9d7 0%, #43e97b 100%) !important;
       box-shadow: 0 8px 25px rgba(67, 233, 123, 0.4);
@@ -547,8 +547,8 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="brand">
-      <img src="../shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon" style="filter:none;">
-      <h1>Shuleni Advantage</h1>
+      <img src="../shared/Hechlink_logo.png" alt="School Portal Logo" class="brand-icon" style="filter:none;">
+      <h1>School Portal</h1>
     </div>
 
     <ul class="nav-links">
@@ -648,7 +648,7 @@
           <!-- QR code will be inserted here -->
         </div>
         <div class="id-card-info">
-          <div class="id-card-school">Shuleni Advantage School</div>
+          <div class="id-card-school">School Portal</div>
           <div class="id-card-name" id="idCardName">Student Name</div>
           <div class="id-card-adm" id="idCardAdm">Admission: ADM001</div>
         </div>
@@ -775,7 +775,7 @@
         id: currentStudent.id,
         adm: currentStudent.adm,
         name: currentStudent.name,
-        school: 'Shuleni Advantage School'
+        school: 'School Portal'
       };
 
       const qrDataString = JSON.stringify(qrData);
@@ -957,28 +957,28 @@
       summary.style.textAlign = 'center';
       summary.style.padding = '20px';
       summary.className = 'no-print';
-      
+
       const downloadAllBtn = document.createElement('button');
       downloadAllBtn.className = 'btn btn-primary';
       downloadAllBtn.style.marginTop = '10px';
       downloadAllBtn.innerHTML = '<i class="fas fa-download"></i> Download All ID Cards';
       downloadAllBtn.onclick = downloadAllIDCards;
-      
+
       summary.innerHTML = `<strong>Generated ${allStudents.length} ID cards.</strong><br>Click 'Print ID Card' to print all cards or download them below.`;
       summary.appendChild(downloadAllBtn);
       container.insertBefore(summary, container.firstChild);
     }
-    
+
     // Download All ID Cards as ZIP
     async function downloadAllIDCards() {
       const container = document.getElementById('batchIDCards');
       const cards = container.querySelectorAll('.id-card');
-      
+
       if (cards.length === 0) {
         alert('No ID cards generated. Please generate batch ID cards first.');
         return;
       }
-      
+
       try {
         // Use JSZip library if available, otherwise download individually
         if (typeof JSZip === 'undefined') {
@@ -990,7 +990,7 @@
             canvas.width = 321;
             canvas.height = 208;
             const ctx = canvas.getContext('2d');
-            
+
             // Draw card to canvas
             const cardHTML = card.innerHTML;
             const tempDiv = document.createElement('div');
@@ -998,10 +998,10 @@
             tempDiv.style.position = 'absolute';
             tempDiv.style.left = '-9999px';
             document.body.appendChild(tempDiv);
-            
+
             // Convert to image and download
             await new Promise(resolve => setTimeout(resolve, 100));
-            
+
             html2canvas(card).then(canvas => {
               canvas.toBlob(blob => {
                 const url = URL.createObjectURL(blob);
@@ -1013,7 +1013,7 @@
                 URL.revokeObjectURL(url);
               });
             });
-            
+
             await new Promise(resolve => setTimeout(resolve, 200));
           }
           alert('All ID cards downloaded!');
@@ -1021,7 +1021,7 @@
           // Use JSZip for batch download
           const zip = new JSZip();
           let count = 0;
-          
+
           for (const card of cards) {
             try {
               const canvas = await html2canvas(card);
@@ -1029,7 +1029,7 @@
                 const studentName = card.querySelector('.id-card-name')?.textContent || `student-${count + 1}`;
                 zip.file(`${studentName.replace(/\s+/g, '-')}-id-card.png`, blob);
                 count++;
-                
+
                 if (count === cards.length) {
                   zip.generateAsync({ type: 'blob' }).then(content => {
                     const url = URL.createObjectURL(content);

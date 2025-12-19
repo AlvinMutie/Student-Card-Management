@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,7 +9,7 @@
   <link rel="stylesheet" href="shared-admin-styles.css">
   <style>
     /* Page-specific styles only - base styles are in shared-admin-styles.css */
-    
+
     .brand {
       display: flex;
       align-items: center;
@@ -18,7 +19,7 @@
       margin-bottom: 10px;
       background: rgba(255, 255, 255, 0.05);
     }
-    
+
     .brand-icon {
       width: 45px;
       height: 45px;
@@ -26,28 +27,28 @@
       filter: none;
       transition: var(--transition);
     }
-    
+
     .brand:hover .brand-icon {
       transform: scale(1.05);
     }
-    
+
     .brand h1 {
       font-size: 1.3rem;
       font-weight: 600;
       letter-spacing: 0.5px;
     }
-    
+
     .nav-links {
       list-style: none;
       flex: 1;
       padding: 10px 0;
     }
-    
+
     .nav-links li {
       margin-bottom: 4px;
       padding: 0 12px;
     }
-    
+
     .nav-links a {
       display: flex;
       align-items: center;
@@ -60,7 +61,7 @@
       font-weight: 500;
       position: relative;
     }
-    
+
     .nav-links a::before {
       content: '';
       position: absolute;
@@ -73,37 +74,37 @@
       border-radius: 0 3px 3px 0;
       transition: var(--transition);
     }
-    
+
     .nav-links a:hover {
       background: rgba(255, 255, 255, 0.12);
       color: white;
       transform: translateX(4px);
     }
-    
+
     .nav-links a.active {
       background: rgba(255, 255, 255, 0.15);
       color: white;
       font-weight: 600;
     }
-    
+
     .nav-links a.active::before {
       height: 60%;
     }
-    
+
     .nav-icon {
       width: 20px;
       height: 20px;
       fill: currentColor;
       flex-shrink: 0;
     }
-    
+
     .logout-section {
       padding: 20px 12px;
       border-top: 1px solid rgba(255, 255, 255, 0.15);
       margin-top: auto;
       background: rgba(0, 0, 0, 0.1);
     }
-    
+
     .logout-btn {
       display: flex;
       align-items: center;
@@ -121,7 +122,7 @@
       transition: all 0.3s ease;
       box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
-    
+
     .logout-btn:hover {
       background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
       color: white;
@@ -131,13 +132,13 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
     }
-    
+
     .logout-icon {
       width: 20px;
       height: 20px;
       fill: currentColor;
     }
-    
+
     /* Main Content */
     .main-content {
       flex: 1;
@@ -147,7 +148,7 @@
       background: var(--beige-bg);
       min-height: 100vh;
     }
-    
+
     .top-row {
       display: flex;
       justify-content: space-between;
@@ -156,7 +157,7 @@
       padding-bottom: 20px;
       border-bottom: 2px solid rgba(74, 53, 16, 0.1);
     }
-    
+
     .top-row h1,
     .top-row h2 {
       font-size: 2rem;
@@ -164,13 +165,13 @@
       font-weight: 700;
       letter-spacing: -0.5px;
     }
-    
+
     .admin-section {
       display: flex;
       align-items: center;
       gap: 15px;
     }
-    
+
     #adminInfo {
       background: linear-gradient(135deg, white 0%, #fefefe 100%);
       padding: 10px 20px;
@@ -181,7 +182,7 @@
       font-weight: 500;
       border: 1px solid rgba(74, 53, 16, 0.1);
     }
-    
+
     .logout-btn-top {
       display: flex;
       align-items: center;
@@ -197,19 +198,19 @@
       transition: all 0.3s ease;
       box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
-    
+
     .logout-btn-top:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
       background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%) !important;
     }
-    
+
     .logout-icon-top {
       width: 16px;
       height: 16px;
       fill: currentColor;
     }
-    
+
     /* Settings Cards */
     .card {
       background: linear-gradient(135deg, white 0%, #fefefe 100%);
@@ -219,7 +220,7 @@
       margin-bottom: 30px;
       border: 1px solid rgba(74, 53, 16, 0.08);
     }
-    
+
     .card h3 {
       font-size: 1.3rem;
       color: var(--primary-color);
@@ -227,33 +228,34 @@
       padding-bottom: 10px;
       border-bottom: 1px solid #eee;
     }
-    
+
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-bottom: 20px;
     }
-    
+
     .form-row {
       display: flex;
       gap: 15px;
       flex-wrap: wrap;
     }
-    
+
     .form-control {
       flex: 1;
       min-width: 250px;
     }
-    
+
     label {
       font-weight: 500;
       color: var(--primary-color);
       font-size: 0.9rem;
       margin-bottom: 5px;
     }
-    
-    input, select {
+
+    input,
+    select {
       padding: 12px 15px;
       border: 1px solid #ddd;
       border-radius: var(--border-radius);
@@ -261,13 +263,14 @@
       transition: var(--transition);
       width: 100%;
     }
-    
-    input:focus, select:focus {
+
+    input:focus,
+    select:focus {
       outline: none;
       border-color: var(--secondary-color);
       box-shadow: 0 0 0 2px rgba(139, 107, 61, 0.2);
     }
-    
+
     .btn {
       padding: 12px 20px;
       border: none;
@@ -280,63 +283,63 @@
       align-items: center;
       gap: 8px;
     }
-    
+
     .btn-primary {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
       border: none;
     }
-    
+
     .btn-primary:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
       background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
     }
-    
+
     .btn-secondary {
       background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
       color: white;
       border: none;
       box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
     }
-    
+
     .btn-secondary:hover {
       background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
     }
-    
+
     .btn-danger {
       background: linear-gradient(135deg, var(--danger-color) 0%, #dc2626 100%);
       color: white;
       box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
     }
-    
+
     .btn-danger:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
     }
-    
+
     .btn-icon {
       width: 18px;
       height: 18px;
       fill: currentColor;
     }
-    
+
     .toggle-switch {
       position: relative;
       display: inline-block;
       width: 50px;
       height: 24px;
     }
-    
+
     .toggle-switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-    
+
     .toggle-slider {
       position: absolute;
       cursor: pointer;
@@ -348,7 +351,7 @@
       transition: var(--transition);
       border-radius: 34px;
     }
-    
+
     .toggle-slider:before {
       position: absolute;
       content: "";
@@ -360,22 +363,22 @@
       transition: var(--transition);
       border-radius: 50%;
     }
-    
-    input:checked + .toggle-slider {
+
+    input:checked+.toggle-slider {
       background-color: var(--secondary-color);
     }
-    
-    input:checked + .toggle-slider:before {
+
+    input:checked+.toggle-slider:before {
       transform: translateX(26px);
     }
-    
+
     .toggle-label {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 15px;
     }
-    
+
     .message {
       padding: 10px 15px;
       border-radius: var(--border-radius);
@@ -383,36 +386,36 @@
       font-size: 0.9rem;
       display: none;
     }
-    
+
     .message.success {
       background-color: rgba(46, 204, 113, 0.1);
       color: #2ecc71;
       border: 1px solid rgba(46, 204, 113, 0.2);
     }
-    
+
     .message.error {
       background-color: rgba(231, 76, 60, 0.1);
       color: #e74c3c;
       border: 1px solid rgba(231, 76, 60, 0.2);
     }
-    
+
     .message.warning {
       background-color: rgba(243, 156, 18, 0.1);
       color: #f39c12;
       border: 1px solid rgba(243, 156, 18, 0.2);
     }
-    
+
     .muted {
       color: #666;
       font-size: 0.9rem;
     }
-    
+
     /* Search Container */
     .search-container {
       position: relative;
       margin-bottom: 15px;
     }
-    
+
     .search-icon {
       position: absolute;
       left: 12px;
@@ -422,7 +425,7 @@
       height: 18px;
       fill: #999;
     }
-    
+
     .search-input {
       padding: 12px 12px 12px 40px;
       border: 1px solid #ddd;
@@ -431,13 +434,13 @@
       width: 100%;
       transition: var(--transition);
     }
-    
+
     .search-input:focus {
       outline: none;
       border-color: var(--secondary-color);
       box-shadow: 0 0 0 2px rgba(139, 107, 61, 0.2);
     }
-    
+
     .clear-search {
       position: absolute;
       right: 12px;
@@ -449,11 +452,11 @@
       cursor: pointer;
       display: none;
     }
-    
+
     .clear-search:hover {
       color: #666;
     }
-    
+
     .user-list {
       max-height: 200px;
       overflow-y: auto;
@@ -461,42 +464,42 @@
       border-radius: var(--border-radius);
       margin-bottom: 15px;
     }
-    
+
     .user-item {
       padding: 12px 15px;
       border-bottom: 1px solid #f5f5f5;
       cursor: pointer;
       transition: var(--transition);
     }
-    
+
     .user-item:hover {
       background-color: var(--light-color);
     }
-    
+
     .user-item.selected {
       background-color: rgba(139, 107, 61, 0.1);
       border-left: 3px solid var(--secondary-color);
     }
-    
+
     .user-item:last-child {
       border-bottom: none;
     }
-    
+
     .user-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
-    
+
     .user-name {
       font-weight: 500;
     }
-    
+
     .user-email {
       color: #666;
       font-size: 0.85rem;
     }
-    
+
     .user-role {
       background: var(--light-color);
       color: var(--primary-color);
@@ -504,40 +507,40 @@
       border-radius: 4px;
       font-size: 0.8rem;
     }
-    
+
     .no-results {
       padding: 20px;
       text-align: center;
       color: #666;
       font-style: italic;
     }
-    
+
     .search-stats {
       font-size: 0.8rem;
       color: #666;
       margin-bottom: 10px;
     }
-    
+
     .security-info {
       background: #f8f9fa;
       border-radius: var(--border-radius);
       padding: 15px;
       margin-top: 15px;
     }
-    
+
     .security-item {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 8px;
     }
-    
+
     .security-icon {
       width: 16px;
       height: 16px;
       fill: #2ecc71;
     }
-    
+
     /* Modal Styles */
     .modal {
       display: none;
@@ -551,7 +554,7 @@
       align-items: center;
       justify-content: center;
     }
-    
+
     .modal-content {
       background: white;
       border-radius: var(--border-radius);
@@ -560,19 +563,19 @@
       max-width: 500px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     }
-    
+
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-    
+
     .modal-header h3 {
       color: var(--primary-color);
       font-size: 1.3rem;
     }
-    
+
     .close-modal {
       background: none;
       border: none;
@@ -580,50 +583,50 @@
       cursor: pointer;
       color: #666;
     }
-    
+
     .close-modal:hover {
       color: #333;
     }
-    
+
     .modal-actions {
       display: flex;
       gap: 12px;
       justify-content: flex-end;
       margin-top: 25px;
     }
-    
+
     /* Responsive */
     @media (max-width: 1024px) {
       .sidebar {
         width: 70px;
       }
-      
+
       .brand h1,
       .nav-links a span:not(.nav-icon),
       .logout-btn span:not(.logout-icon) {
         display: none;
       }
-      
+
       .brand {
         justify-content: center;
         padding: 20px 10px;
       }
-      
+
       .main-content {
         margin-left: 70px;
       }
-      
+
       .nav-links a {
         justify-content: center;
         padding: 14px;
       }
     }
-    
+
     @media (max-width: 768px) {
       body {
         flex-direction: column;
       }
-      
+
       .sidebar {
         width: 100%;
         height: auto;
@@ -631,109 +634,116 @@
         flex-direction: row;
         padding: 15px;
       }
-      
+
       .brand {
         padding: 0 15px;
         margin-bottom: 0;
         border-bottom: none;
         border-right: 1px solid rgba(255, 255, 255, 0.15);
       }
-      
+
       .nav-links {
         flex-direction: row;
         overflow-x: auto;
         padding: 0 10px;
       }
-      
+
       .nav-links li {
         margin-bottom: 0;
         margin-right: 5px;
       }
-      
+
       .logout-section {
         margin-top: 0;
         padding: 0 10px;
         border-top: none;
         border-left: 1px solid rgba(255, 255, 255, 0.15);
       }
-      
+
       .main-content {
         margin-left: 0;
         padding: 25px 20px;
       }
-      
+
       .top-row {
         flex-direction: column;
         align-items: flex-start;
         gap: 15px;
       }
-      
+
       .admin-section {
         width: 100%;
         justify-content: space-between;
       }
-      
+
       .form-row {
         flex-direction: column;
       }
-      
+
       .form-control {
         min-width: 100%;
       }
     }
   </style>
 </head>
+
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="brand">
-      <img src="../shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon">
-      <h1>Shuleni Advantage</h1>
+      <img src="../shared/Hechlink_logo.png" alt="School Portal Logo" class="brand-icon">
+      <h1>School Portal</h1>
     </div>
-    
+
     <ul class="nav-links">
       <li><a href="admindashboard.html">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
-        </svg>
-        <span>Dashboard</span>
-      </a></li>
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" />
+          </svg>
+          <span>Dashboard</span>
+        </a></li>
       <li><a href="students.html">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
-        </svg>
-        <span>Students</span>
-      </a></li>
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+          </svg>
+          <span>Students</span>
+        </a></li>
       <li><a href="parents.html">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" />
-        </svg>
-        <span>Parents</span>
-      </a></li>
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" />
+          </svg>
+          <span>Parents</span>
+        </a></li>
       <li><a href="staff.html">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M21.1,12.5L22.5,13.91L15.97,20.5L12.5,17L13.9,15.59L15.97,17.67L21.1,12.5M10,17L13,20H3V18C3,15.79 6.58,14 11,14L12.89,14.11L10,17M11,4A4,4 0 0,1 15,8A4,4 0 0,1 11,12A4,4 0 0,1 7,8A4,4 0 0,1 11,4Z" />
-        </svg>
-        <span>Staff</span>
-      </a></li>
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M21.1,12.5L22.5,13.91L15.97,20.5L12.5,17L13.9,15.59L15.97,17.67L21.1,12.5M10,17L13,20H3V18C3,15.79 6.58,14 11,14L12.89,14.11L10,17M11,4A4,4 0 0,1 15,8A4,4 0 0,1 11,12A4,4 0 0,1 7,8A4,4 0 0,1 11,4Z" />
+          </svg>
+          <span>Staff</span>
+        </a></li>
       <li><a href="student-id-generator.html">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
-        </svg>
-        <span>ID Generator</span>
-      </a></li>
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
+          </svg>
+          <span>ID Generator</span>
+        </a></li>
       <li><a href="adminsettings.html" class="active">
-        <svg class="nav-icon" viewBox="0 0 24 24">
-          <path d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
-        </svg>
-        <span>Settings</span>
-      </a></li>
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.22,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.22,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.68 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z" />
+          </svg>
+          <span>Settings</span>
+        </a></li>
     </ul>
-    
+
     <div class="logout-section">
       <button class="logout-btn" id="sidebarLogout">
         <svg class="logout-icon" viewBox="0 0 24 24">
-          <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+          <path
+            d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
         </svg>
         Log Out
       </button>
@@ -748,7 +758,8 @@
         <div id="adminInfo" class="muted">Welcome back, Admin</div>
         <button class="logout-btn-top" id="topLogout">
           <svg class="logout-icon-top" viewBox="0 0 24 24">
-            <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+            <path
+              d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
           </svg>
           Log Out
         </button>
@@ -770,7 +781,8 @@
         </div>
         <button id="saveProfileBtn" class="btn btn-primary">
           <svg class="btn-icon" viewBox="0 0 24 24">
-            <path d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
+            <path
+              d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
           </svg>
           Save Profile
         </button>
@@ -781,21 +793,23 @@
     <div class="card">
       <h3>User Password Recovery</h3>
       <p class="muted" style="margin-bottom: 15px;">Reset passwords for users who have forgotten their credentials.</p>
-      
+
       <div class="form-group">
         <label>Find User</label>
         <div class="search-container">
           <svg class="search-icon" viewBox="0 0 24 24">
-            <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+            <path
+              d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
           </svg>
           <input type="text" id="userSearch" class="search-input" placeholder="Search by name, email, or role...">
           <button class="clear-search" id="clearSearch">✕</button>
         </div>
         <div class="search-stats" id="searchStats">Showing all users</div>
-        
+
         <label>Select User</label>
         <div class="user-list" id="userList">
-          <div class="user-item" data-user="ST001" data-name="Alex Johnson" data-email="alex.johnson@student.edu" data-role="Student">
+          <div class="user-item" data-user="ST001" data-name="Alex Johnson" data-email="alex.johnson@student.edu"
+            data-role="Student">
             <div class="user-info">
               <div>
                 <div class="user-name">Alex Johnson</div>
@@ -804,7 +818,8 @@
               <span class="user-role">Student</span>
             </div>
           </div>
-          <div class="user-item" data-user="ST002" data-name="Sophia Garcia" data-email="sophia.garcia@student.edu" data-role="Student">
+          <div class="user-item" data-user="ST002" data-name="Sophia Garcia" data-email="sophia.garcia@student.edu"
+            data-role="Student">
             <div class="user-info">
               <div>
                 <div class="user-name">Sophia Garcia</div>
@@ -813,7 +828,8 @@
               <span class="user-role">Student</span>
             </div>
           </div>
-          <div class="user-item" data-user="ST003" data-name="Emma Chen" data-email="emma.chen@student.edu" data-role="Student">
+          <div class="user-item" data-user="ST003" data-name="Emma Chen" data-email="emma.chen@student.edu"
+            data-role="Student">
             <div class="user-info">
               <div>
                 <div class="user-name">Emma Chen</div>
@@ -822,7 +838,8 @@
               <span class="user-role">Student</span>
             </div>
           </div>
-          <div class="user-item" data-user="P001" data-name="Maria Garcia" data-email="maria.garcia@email.com" data-role="Parent">
+          <div class="user-item" data-user="P001" data-name="Maria Garcia" data-email="maria.garcia@email.com"
+            data-role="Parent">
             <div class="user-info">
               <div>
                 <div class="user-name">Maria Garcia</div>
@@ -831,7 +848,8 @@
               <span class="user-role">Parent</span>
             </div>
           </div>
-          <div class="user-item" data-user="P002" data-name="Robert Chen" data-email="robert.chen@email.com" data-role="Parent">
+          <div class="user-item" data-user="P002" data-name="Robert Chen" data-email="robert.chen@email.com"
+            data-role="Parent">
             <div class="user-info">
               <div>
                 <div class="user-name">Robert Chen</div>
@@ -840,7 +858,8 @@
               <span class="user-role">Parent</span>
             </div>
           </div>
-          <div class="user-item" data-user="S001" data-name="Sarah Wilson" data-email="sarah.wilson@staff.edu" data-role="Teacher">
+          <div class="user-item" data-user="S001" data-name="Sarah Wilson" data-email="sarah.wilson@staff.edu"
+            data-role="Teacher">
             <div class="user-info">
               <div>
                 <div class="user-name">Sarah Wilson</div>
@@ -849,7 +868,8 @@
               <span class="user-role">Teacher</span>
             </div>
           </div>
-          <div class="user-item" data-user="S002" data-name="James Rodriguez" data-email="james.rodriguez@staff.edu" data-role="Teacher">
+          <div class="user-item" data-user="S002" data-name="James Rodriguez" data-email="james.rodriguez@staff.edu"
+            data-role="Teacher">
             <div class="user-info">
               <div>
                 <div class="user-name">James Rodriguez</div>
@@ -858,7 +878,8 @@
               <span class="user-role">Teacher</span>
             </div>
           </div>
-          <div class="user-item" data-user="S003" data-name="Lisa Thompson" data-email="lisa.thompson@staff.edu" data-role="Administrator">
+          <div class="user-item" data-user="S003" data-name="Lisa Thompson" data-email="lisa.thompson@staff.edu"
+            data-role="Administrator">
             <div class="user-info">
               <div>
                 <div class="user-name">Lisa Thompson</div>
@@ -868,7 +889,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-control">
             <label for="recoveryMethod">Recovery Method</label>
@@ -879,7 +900,7 @@
             </select>
           </div>
         </div>
-        
+
         <div id="manualResetSection" style="display: none;">
           <div class="form-row">
             <div class="form-control">
@@ -892,7 +913,7 @@
             </div>
           </div>
         </div>
-        
+
         <div id="temporaryPasswordSection" style="display: none;">
           <div class="security-info">
             <h4 style="margin-bottom: 10px;">Temporary Password Security</h4>
@@ -916,10 +937,11 @@
             </div>
           </div>
         </div>
-        
+
         <button id="initiateRecoveryBtn" class="btn btn-primary" disabled>
           <svg class="btn-icon" viewBox="0 0 24 24">
-            <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
+            <path
+              d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
           </svg>
           Initiate Password Recovery
         </button>
@@ -953,7 +975,8 @@
         </div>
         <button id="saveSecurityBtn" class="btn btn-primary">
           <svg class="btn-icon" viewBox="0 0 24 24">
-            <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.1 16,12.7V16.5C16,17.1 15.4,17.7 14.8,17.7H9.2C8.6,17.7 8,17.1 8,16.5V12.6C8,12 8.6,11.4 9.2,11.4V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11.5H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z" />
+            <path
+              d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.1 16,12.7V16.5C16,17.1 15.4,17.7 14.8,17.7H9.2C8.6,17.7 8,17.1 8,16.5V12.6C8,12 8.6,11.4 9.2,11.4V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11.5H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z" />
           </svg>
           Save Security Settings
         </button>
@@ -985,7 +1008,8 @@
         </div>
         <button id="savePreferencesBtn" class="btn btn-primary">
           <svg class="btn-icon" viewBox="0 0 24 24">
-            <path d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+            <path
+              d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
           </svg>
           Save Preferences
         </button>
@@ -1002,7 +1026,8 @@
         <button class="close-modal">&times;</button>
       </div>
       <p>Are you sure you want to reset the password for <strong id="confirmUserName">User Name</strong>?</p>
-      <p class="muted" style="margin-top: 10px;">This action cannot be undone. The user will receive instructions to set a new password.</p>
+      <p class="muted" style="margin-top: 10px;">This action cannot be undone. The user will receive instructions to set
+        a new password.</p>
       <div class="modal-actions">
         <button class="btn btn-secondary" id="cancelReset">Cancel</button>
         <button class="btn btn-primary" id="confirmReset">Confirm Reset</button>
@@ -1014,22 +1039,22 @@
   <script src="../shared/api-client.js"></script>
   <script src="app-api.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Authentication check
       ensureAuthRedirect();
-      
+
       // Initialize settings page using app-api.js (for profile settings)
       if (typeof initSettingsPage === 'function') {
         initSettingsPage();
       }
-      
+
       // Set admin info
       const adminEmail = localStorage.getItem('sv_admin_email') || 'admin';
       const adminInfoEl = document.getElementById('adminInfo');
       if (adminInfoEl) {
         adminInfoEl.textContent = `Welcome back, ${adminEmail.split('@')[0]}`;
       }
-      
+
       // Logout functionality (using app-api.js function)
       function logout() {
         if (confirm('Are you sure you want to logout?')) {
@@ -1042,54 +1067,54 @@
           }
         }
       }
-      
+
       // Add event listeners to logout buttons
       const sidebarLogout = document.getElementById('sidebarLogout');
       const topLogout = document.getElementById('topLogout');
       if (sidebarLogout) sidebarLogout.addEventListener('click', logout);
       if (topLogout) topLogout.addEventListener('click', logout);
-      
+
       // Profile save functionality (app-api.js handles this, but keeping for UI consistency)
       const saveProfileBtn = document.getElementById('saveProfileBtn');
       if (saveProfileBtn) {
-        saveProfileBtn.addEventListener('click', function() {
+        saveProfileBtn.addEventListener('click', function () {
           const nameEl = document.getElementById('profileName');
           const emailEl = document.getElementById('profileEmail');
           if (nameEl && emailEl) {
             const name = nameEl.value;
             const email = emailEl.value;
-            
+
             if (!name || !email) {
               showMessage('profileMessage', 'Please fill in all required fields', 'error');
               return;
             }
-            
+
             // app-api.js initSettingsPage already handles saving, but we can show a message
             showMessage('profileMessage', 'Profile updated successfully!', 'success');
           }
         });
       }
-      
+
       // Search functionality
       const userSearch = document.getElementById('userSearch');
       const clearSearch = document.getElementById('clearSearch');
       const userList = document.getElementById('userList');
       const searchStats = document.getElementById('searchStats');
       const userItems = document.querySelectorAll('.user-item');
-      
-      userSearch.addEventListener('input', function() {
+
+      userSearch.addEventListener('input', function () {
         const searchTerm = this.value.toLowerCase().trim();
         let visibleCount = 0;
-        
+
         // Show/hide clear button based on search input
         clearSearch.style.display = searchTerm ? 'block' : 'none';
-        
+
         // Filter users
         userItems.forEach(item => {
           const name = item.getAttribute('data-name').toLowerCase();
           const email = item.getAttribute('data-email').toLowerCase();
           const role = item.getAttribute('data-role').toLowerCase();
-          
+
           if (name.includes(searchTerm) || email.includes(searchTerm) || role.includes(searchTerm)) {
             item.style.display = 'block';
             visibleCount++;
@@ -1097,14 +1122,14 @@
             item.style.display = 'none';
           }
         });
-        
+
         // Update search stats
         if (searchTerm) {
           searchStats.textContent = `Found ${visibleCount} user${visibleCount !== 1 ? 's' : ''} matching "${searchTerm}"`;
         } else {
           searchStats.textContent = `Showing all ${visibleCount} users`;
         }
-        
+
         // Clear selection if selected user is no longer visible
         const selectedItem = document.querySelector('.user-item.selected');
         if (selectedItem && selectedItem.style.display === 'none') {
@@ -1113,97 +1138,97 @@
           document.getElementById('initiateRecoveryBtn').disabled = true;
         }
       });
-      
+
       // Clear search functionality
-      clearSearch.addEventListener('click', function() {
+      clearSearch.addEventListener('click', function () {
         userSearch.value = '';
         userSearch.dispatchEvent(new Event('input'));
         userSearch.focus();
       });
-      
+
       // User selection functionality
       let selectedUser = null;
-      
+
       userItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
           // Remove selected class from all items
           userItems.forEach(i => i.classList.remove('selected'));
           // Add selected class to clicked item
           this.classList.add('selected');
           selectedUser = this.getAttribute('data-user');
-          
+
           // Enable the recovery button
           document.getElementById('initiateRecoveryBtn').disabled = false;
         });
       });
-      
+
       // Recovery method change
-      document.getElementById('recoveryMethod').addEventListener('change', function() {
+      document.getElementById('recoveryMethod').addEventListener('change', function () {
         const method = this.value;
         document.getElementById('manualResetSection').style.display = 'none';
         document.getElementById('temporaryPasswordSection').style.display = 'none';
-        
+
         if (method === 'manual') {
           document.getElementById('manualResetSection').style.display = 'block';
         } else if (method === 'temporary') {
           document.getElementById('temporaryPasswordSection').style.display = 'block';
         }
       });
-      
+
       // Initiate recovery
-      document.getElementById('initiateRecoveryBtn').addEventListener('click', function() {
+      document.getElementById('initiateRecoveryBtn').addEventListener('click', function () {
         if (!selectedUser) {
           showMessage('recoveryMessage', 'Please select a user first', 'error');
           return;
         }
-        
+
         const method = document.getElementById('recoveryMethod').value;
         const selectedUserElement = document.querySelector('.user-item.selected');
         const userName = selectedUserElement.querySelector('.user-name').textContent;
-        
+
         // Show confirmation modal
         document.getElementById('confirmUserName').textContent = userName;
         document.getElementById('confirmationModal').style.display = 'flex';
       });
-      
+
       // Modal functionality
       document.querySelector('.close-modal').addEventListener('click', closeModal);
       document.getElementById('cancelReset').addEventListener('click', closeModal);
-      
+
       function closeModal() {
         document.getElementById('confirmationModal').style.display = 'none';
       }
-      
+
       // Confirm reset
-      document.getElementById('confirmReset').addEventListener('click', function() {
+      document.getElementById('confirmReset').addEventListener('click', function () {
         const method = document.getElementById('recoveryMethod').value;
         const selectedUserElement = document.querySelector('.user-item.selected');
         const userName = selectedUserElement.querySelector('.user-name').textContent;
-        
+
         // Validate manual password reset
         if (method === 'manual') {
           const newPassword = document.getElementById('newPassword').value;
           const confirmPassword = document.getElementById('confirmPassword').value;
-          
+
           if (!newPassword || !confirmPassword) {
             showMessage('recoveryMessage', 'Please enter and confirm the new password', 'error');
             closeModal();
             return;
           }
-          
+
           if (newPassword !== confirmPassword) {
             showMessage('recoveryMessage', 'Passwords do not match', 'error');
             closeModal();
             return;
           }
-          
+
           if (newPassword.length < 8) {
             showMessage('recoveryMessage', 'Password must be at least 8 characters', 'error');
             closeModal();
             return;
           }
         }
-        
+
         // Simulate API call
         setTimeout(() => {
           let message = '';
@@ -1217,40 +1242,40 @@
             document.getElementById('newPassword').value = '';
             document.getElementById('confirmPassword').value = '';
           }
-          
+
           showMessage('recoveryMessage', message, 'success');
           closeModal();
-          
+
           // Reset selection
           userItems.forEach(i => i.classList.remove('selected'));
           selectedUser = null;
           document.getElementById('initiateRecoveryBtn').disabled = true;
         }, 1000);
       });
-      
+
       // Security settings save
-      document.getElementById('saveSecurityBtn').addEventListener('click', function() {
+      document.getElementById('saveSecurityBtn').addEventListener('click', function () {
         // Simulate API call
         setTimeout(() => {
           showMessage('securityMessage', 'Security settings updated successfully!', 'success');
         }, 1000);
       });
-      
+
       // Preferences save
-      document.getElementById('savePreferencesBtn').addEventListener('click', function() {
+      document.getElementById('savePreferencesBtn').addEventListener('click', function () {
         // Simulate API call
         setTimeout(() => {
           showMessage('preferencesMessage', 'Preferences saved successfully!', 'success');
         }, 1000);
       });
-      
+
       // Helper function to show messages
       function showMessage(elementId, text, type) {
         const element = document.getElementById(elementId);
         element.textContent = text;
         element.className = `message ${type}`;
         element.style.display = 'block';
-        
+
         // Hide message after 5 seconds
         setTimeout(() => {
           element.style.display = 'none';
@@ -1259,4 +1284,5 @@
     });
   </script>
 </body>
+
 </html>
