@@ -587,7 +587,6 @@ async function loadCharts() {
   const ctxClass = document.getElementById('chartStudentsClass');
   const ctxFee = document.getElementById('chartFeeStatus');
   const ctxStaff = document.getElementById('chartStaffStatus');
-  const ctxGender = document.getElementById('chartGenderMix');
   if (!ctxClass || !ctxFee || !ctxStaff || typeof Chart === 'undefined') return;
 
   try {
@@ -628,16 +627,6 @@ async function loadCharts() {
       options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
     });
 
-    if (ctxGender) {
-      const male = students.filter((s) => (s.gender || '').toLowerCase().startsWith('m')).length;
-      const female = students.filter((s) => (s.gender || '').toLowerCase().startsWith('f')).length;
-      const other = students.length - male - female;
-      new Chart(ctxGender, {
-        type: 'pie',
-        data: { labels: ['Male', 'Female', 'Other/Unspecified'], datasets: [{ data: [male, female, other], backgroundColor: ['#3b82f6', '#ec4899', '#a3a3a3'] }] },
-        options: { responsive: true, plugins: { legend: { position: 'right' } } },
-      });
-    }
   } catch (err) {
     console.error('charts load failed', err);
   }

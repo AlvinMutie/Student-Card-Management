@@ -179,7 +179,7 @@ body {
   gap: 10px;
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, #14532d 0%, #052e16 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -187,14 +187,14 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(5, 46, 22, 0.3);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
 }
 
 .logout-btn:hover {
-  background: linear-gradient(135deg, #052e16 0%, #14532d 100%);
+  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(5, 46, 22, 0.4);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
 }
 
 .logout-icon {
@@ -252,7 +252,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 8px 20px;
-  background: linear-gradient(135deg, #14532d 0%, #052e16 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   color: white;
   border: none;
   border-radius: 99px;
@@ -260,13 +260,13 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
-  box-shadow: 0 4px 15px rgba(5, 46, 22, 0.3);
+  box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);
 }
 
 .logout-btn-top:hover {
-  background: linear-gradient(135deg, #052e16 0%, #14532d 100%);
+  background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(5, 46, 22, 0.4);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
 }
 
 .logout-icon-top {
@@ -414,11 +414,12 @@ table {
 
 .table-responsive {
   width: 100%;
-  overflow-x: auto;
+  overflow-x: visible;
 }
 
 .table-responsive table {
-  min-width: 780px;
+  width: 100%;
+  table-layout: auto;
 }
 
 th,

@@ -1041,7 +1041,7 @@
           </div>
           
           <div class="footer">
-            <p>This is a system-generated report from Sasa Shuleni Advantage Student Management System</p>
+            <p>This is a system-generated report from Shuleni Advantage Student Management System</p>
           </div>
         </body>
         </html>
@@ -1071,7 +1071,7 @@
       // Create CSV content (Excel can open CSV)
       const csvRows = [
         ['Student Complete Data Report'],
-        ['Sasa Shuleni Advantage School'],
+        ['Shuleni Advantage School'],
         ['Generated on: ' + new Date().toLocaleDateString('en-KE')],
         [],
         ['Field', 'Value'],

@@ -112,7 +112,7 @@
       gap: 10px;
       width: 100%;
       padding: 14px 16px;
-      background: linear-gradient(135deg, #14532d 0%, #052e16 100%);
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
       color: white;
       border: none;
       border-radius: 10px;
@@ -120,17 +120,14 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(5, 46, 22, 0.3);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
 
     .logout-btn:hover {
-      background: linear-gradient(135deg, #052e16 0%, #14532d 100%);
+      background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
       color: white;
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(5, 46, 22, 0.4);
-      border-color: rgba(239, 68, 68, 0.5);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
     }
 
     .logout-icon {
@@ -188,7 +185,7 @@
       align-items: center;
       gap: 8px;
       padding: 10px 20px;
-      background: linear-gradient(135deg, #14532d 0%, #052e16 100%) !important;
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
       color: white !important;
       border: none !important;
       border-radius: 25px;
@@ -196,13 +193,13 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(240, 147, 251, 0.4);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
     }
 
     .logout-btn-top:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(5, 46, 22, 0.4);
-      background: linear-gradient(135deg, #052e16 0%, #14532d 100%) !important;
+      box-shadow: 0 6px 16px rgba(220, 38, 38, 0.4);
+      background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%) !important;
     }
 
     .logout-icon-top {
@@ -551,7 +548,7 @@
   <div class="sidebar">
     <div class="brand">
       <img src="../shared/Hechlink_logo.png" alt="Sasa Shuleni Advantage Logo" class="brand-icon" style="filter:none;">
-      <h1>Sasa Shuleni Advantage</h1>
+      <h1>Shuleni Advantage</h1>
     </div>
 
     <ul class="nav-links">
@@ -651,7 +648,7 @@
           <!-- QR code will be inserted here -->
         </div>
         <div class="id-card-info">
-          <div class="id-card-school">Sasa Shuleni Advantage School</div>
+          <div class="id-card-school">Shuleni Advantage School</div>
           <div class="id-card-name" id="idCardName">Student Name</div>
           <div class="id-card-adm" id="idCardAdm">Admission: ADM001</div>
         </div>
@@ -778,7 +775,7 @@
         id: currentStudent.id,
         adm: currentStudent.adm,
         name: currentStudent.name,
-        school: 'Sasa Shuleni Advantage School'
+        school: 'Shuleni Advantage School'
       };
 
       const qrDataString = JSON.stringify(qrData);
@@ -842,38 +839,19 @@
       }
 
       try {
-        const canvas = document.createElement('canvas');
-        canvas.width = 321;
-        canvas.height = 208;
-        const ctx = canvas.getContext('2d');
+        const idCardElement = document.getElementById('idCard');
+        if (!idCardElement) {
+          alert('ID card element not found');
+          return;
+        }
 
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.strokeStyle = '#DDD';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(1, 1, canvas.width - 2, canvas.height - 2);
-
-        const qrImg = new Image();
-        qrImg.src = currentQRCodeDataUrl;
-        await new Promise(resolve => {
-          qrImg.onload = () => {
-            ctx.drawImage(qrImg, 15, 54, 100, 100);
-            resolve();
-          };
+        // Use html2canvas to capture the actual displayed card
+        const canvas = await html2canvas(idCardElement, {
+          backgroundColor: '#FFFFFF',
+          scale: 2,
+          logging: false,
+          useCORS: true
         });
-
-        ctx.fillStyle = '#2d5016';
-        ctx.font = '600 10px Arial';
-        ctx.fillText('HECHLINK VENTURES SCHOOL', 130, 25);
-
-        ctx.fillStyle = '#333';
-        ctx.font = 'bold 18px Arial';
-        ctx.fillText(currentStudent.name, 130, 85);
-
-        ctx.fillStyle = '#666';
-        ctx.font = '500 14px Arial';
-        ctx.fillText(`Admission: ${currentStudent.adm}`, 130, 110);
 
         canvas.toBlob(blob => {
           const url = URL.createObjectURL(blob);
@@ -920,7 +898,7 @@
             id: student.id,
             adm: student.adm,
             name: student.name,
-            school: 'Sasa Shuleni Advantage School'
+            school: 'Shuleni Advantage School'
           };
 
           const qrDataString = JSON.stringify(qrData);
@@ -958,7 +936,7 @@
               <img src="../shared/Hechlink_logo.png" alt="School Logo" class="id-card-logo">
               <div class="id-card-qr"><img src="${qrDataUrl}" alt="QR Code"></div>
               <div class="id-card-info">
-                <div class="id-card-school">Sasa Shuleni Advantage School</div>
+                <div class="id-card-school">Shuleni Advantage School</div>
                 <div class="id-card-name">${student.name || 'N/A'}</div>
                 <div class="id-card-adm">Admission: ${student.adm || 'N/A'}</div>
               </div>

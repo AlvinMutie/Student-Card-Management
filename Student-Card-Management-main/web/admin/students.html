@@ -11,8 +11,9 @@
     body { margin:0; font-family:'Inter','Segoe UI',sans-serif; background:linear-gradient(180deg,#f8fafc 0%,#eef2ff 100%); color:#0f172a; }
     .main-content { flex:1; padding:35px 40px; overflow-y:auto; margin-left:260px; background:var(--beige-bg); min-height:100vh; }
     .topbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
-    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e2e8f0; box-shadow:0 6px 24px rgba(0,0,0,0.05); border-radius:10px; overflow:hidden; }
-    th, td { padding:10px; border:1px solid #e2e8f0; text-align:left; }
+    table { width:100%; border-collapse:collapse; background:#fff; border:1px solid #e2e8f0; box-shadow:0 6px 24px rgba(0,0,0,0.05); border-radius:10px; overflow:hidden; table-layout:auto; }
+    th, td { padding:8px 6px; border:1px solid #e2e8f0; text-align:left; white-space: nowrap; font-size: 0.85rem; }
+    th:first-child, td:first-child { white-space: normal; }
     button { cursor:pointer; }
     .btn-small { padding:8px 12px; border:none; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; border-radius:8px; box-shadow:0 4px 14px rgba(102,126,234,0.35); transition:transform .2s, box-shadow .2s; }
     .btn-small:hover { transform:translateY(-1px); box-shadow:0 6px 18px rgba(102,126,234,0.4); }
@@ -30,7 +31,7 @@
   <div class="sidebar">
     <div class="brand">
       <img src="../shared/Hechlink_logo.png" alt="Sasa Shuleni Advantage Logo" class="brand-icon" style="filter:none;">
-      <h1>Sasa Shuleni Advantage</h1>
+      <h1>Shuleni Advantage</h1>
     </div>
     <ul class="nav-links">
       <li><a href="admindashboard.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z" /></svg><span>Dashboard</span></a></li>
