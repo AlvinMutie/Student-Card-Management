@@ -16,25 +16,25 @@
       height: auto;
       min-height: 100vh;
     }
-    
+
     body::-webkit-scrollbar {
       width: 8px;
     }
-    
+
     body::-webkit-scrollbar-track {
       background: var(--bg-body);
     }
-    
+
     body::-webkit-scrollbar-thumb {
       background: var(--primary);
       border-radius: 4px;
     }
-    
+
     body::-webkit-scrollbar-thumb:hover {
       background: var(--primary-dark);
     }
-    
-    
+
+
     .login-container {
       padding: 3rem;
     }
@@ -67,7 +67,7 @@
       transition: color 0.3s ease;
       border-radius: 8px;
     }
-    
+
     .password-toggle:hover {
       color: var(--primary-dark);
       background: rgba(20, 83, 45, 0.1);
@@ -125,7 +125,7 @@
       position: relative;
       overflow: hidden;
     }
-    
+
     .feature-card::before {
       content: '';
       position: absolute;
@@ -138,14 +138,22 @@
       animation: gradientShift 20s ease infinite;
       z-index: 0;
     }
-    
+
     @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
     }
-    
-    .feature-card > * {
+
+    .feature-card>* {
       position: relative;
       z-index: 1;
     }
@@ -168,7 +176,7 @@
       font-size: 1.1rem;
       line-height: 1.6;
     }
-    
+
     .garden-body {
       position: relative;
       overflow-y: auto;
@@ -176,29 +184,29 @@
       min-height: 100vh;
       height: auto;
     }
-    
+
     .garden-body::-webkit-scrollbar {
       width: 8px;
     }
-    
+
     .garden-body::-webkit-scrollbar-track {
       background: var(--bg-body);
     }
-    
+
     .garden-body::-webkit-scrollbar-thumb {
       background: var(--primary);
       border-radius: 4px;
     }
-    
+
     .garden-body::-webkit-scrollbar-thumb:hover {
       background: var(--primary-dark);
     }
-    
+
     html {
       overflow-y: auto;
       overflow-x: hidden;
     }
-    
+
     .garden-body::before {
       content: '';
       position: fixed;
@@ -229,7 +237,8 @@
 <body class="garden-body">
   <header class="garden-header">
     <div class="brand-pill">
-      <img src="../shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon" onerror="this.style.display='none'">
+      <img src="../shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon"
+        onerror="this.style.display='none'">
       <span>Shuleni Advantage</span>
     </div>
   </header>
@@ -251,13 +260,14 @@
           <i class="fas fa-shield-alt"></i>
         </div>
         <h2>Secure & Powerful</h2>
-        <p>Manage your entire school ecosystem from one centralized dashboard. Import student data, generate ID cards, track fees, and oversee all stakeholders with comprehensive analytics and reporting.</p>
+        <p>Manage your entire school ecosystem from one centralized dashboard. Import student data, generate ID cards,
+          track fees, and oversee all stakeholders with comprehensive analytics and reporting.</p>
       </div>
       <div class="theme-card login-container">
         <form id="adminLoginForm">
           <div class="input-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" class="theme-input" placeholder="admin@sasashuleni.com" required>
+            <input type="email" id="email" class="theme-input" placeholder="admin@shuleniadvantage.com" required>
           </div>
 
           <div class="input-group">
@@ -287,9 +297,10 @@
   </main>
 
   <footer class="garden-footer">
-    <p>Need help? Email <a href="mailto:support@sasashuleni.com"
-        style="color: var(--primary); text-decoration: none; font-weight: 600;">support@sasashuleni.com</a></p>
-    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights reserved.</p>
+    <p>Need help? Email <a href="mailto:support@shuleniadvantage.com"
+        style="color: var(--primary); text-decoration: none; font-weight: 600;">support@shuleniadvantage.com</a></p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights
+      reserved.</p>
   </footer>
 
   <script src="../runtime-config.js"></script>
@@ -299,12 +310,12 @@
     const togglePassword = document.getElementById('togglePassword');
     const passwordInput = document.getElementById('password');
     const toggleIcon = document.getElementById('toggleIcon');
-    
+
     if (togglePassword && passwordInput) {
-      togglePassword.addEventListener('click', function() {
+      togglePassword.addEventListener('click', function () {
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
-        
+
         if (type === 'text') {
           toggleIcon.classList.remove('fa-eye');
           toggleIcon.classList.add('fa-eye-slash');
@@ -314,7 +325,7 @@
         }
       });
     }
-    
+
     document.getElementById('adminLoginForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -369,4 +380,3 @@
 </body>
 
 </html>
-
