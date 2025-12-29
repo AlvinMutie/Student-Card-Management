@@ -770,11 +770,18 @@
       document.body.classList.remove('batch-mode');
       document.getElementById('batchIDCards').style.display = 'none';
 
-      // Generate QR code
+      // Generate QR code with comprehensive details
       const qrData = {
-        id: currentStudent.id,
         adm: currentStudent.adm,
         name: currentStudent.name,
+        class: currentStudent.class || 'N/A',
+        stream: currentStudent.stream || 'N/A',
+        house: currentStudent.house || 'N/A',
+        upi: currentStudent.upi || currentStudent.nemis || 'N/A',
+        gender: currentStudent.gender || 'N/A',
+        parent_phone: currentStudent.contacts || currentStudent.parent_phone || 'N/A',
+        fee_balance: currentStudent.fee_balance || 0,
+        meal_card_valid: currentStudent.meal_card_validity || 'N/A',
         school: 'Shuleni Advantage School'
       };
 
@@ -895,9 +902,16 @@
 
         try {
           const qrData = {
-            id: student.id,
             adm: student.adm,
             name: student.name,
+            class: student.class || 'N/A',
+            stream: student.stream || 'N/A',
+            house: student.house || 'N/A',
+            upi: student.upi || student.nemis || 'N/A',
+            gender: student.gender || 'N/A',
+            parent_phone: student.contacts || student.parent_phone || 'N/A',
+            fee_balance: student.fee_balance || 0,
+            meal_card_valid: student.meal_card_validity || 'N/A',
             school: 'Shuleni Advantage School'
           };
 

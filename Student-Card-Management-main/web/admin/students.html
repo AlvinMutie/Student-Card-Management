@@ -288,15 +288,20 @@
         <h2 style="margin:0;">Students</h2>
         <input id="studentSearch" placeholder="Search students..."
           style="padding:8px; border:1px solid #cbd5e1; border-radius:6px; flex:1; min-width:220px;">
-        <input type="file" id="importStudentsInput" accept=".csv,.xlsx,.xls" style="display:none;">
-        <button class="btn-small" onclick="document.getElementById('importStudentsInput').click();">Import
-          Excel/CSV</button>
-        <button id="restoreStudentsBtn" class="btn-small">Restore Deleted</button>
-        <button id="deleteAllStudentsBtn" class="btn-small" style="background:#fee2e2;">Delete All</button>
-        <button id="addStudentBtn" class="btn-small">Add Student</button>
-        <input type="file" id="photoBatchInput" accept="image/*" multiple style="display:none;">
-        <button class="btn-small" onclick="document.getElementById('photoBatchInput').click();">Upload Photos
-          (Batch)</button>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <label style="display:flex; align-items:center; gap:5px; font-size:0.9rem; color:#4a3510; cursor:pointer;">
+            <input type="checkbox" id="filterUnpaid"> Unpaid Fees Only
+          </label>
+          <input type="file" id="importStudentsInput" accept=".csv, .xlsx, .xls" style="display:none;">
+          <button class="btn-small" onclick="document.getElementById('importStudentsInput').click();">Import
+            Excel/CSV</button>
+          <button id="restoreStudentsBtn" class="btn-small">Restore Deleted</button>
+          <button id="deleteAllStudentsBtn" class="btn-small" style="background:#fee2e2;">Delete All</button>
+          <button id="addStudentBtn" class="btn-small">Add Student</button>
+          <input type="file" id="photoBatchInput" accept="image/*" multiple style="display:none;">
+          <button class="btn-small" onclick="document.getElementById('photoBatchInput').click();">Upload Photos
+            (Batch)</button>
+        </div>
       </div>
 
       <div class="table-wrapper">
@@ -313,7 +318,8 @@
               <th>KCPE</th>
               <th>Contacts</th>
               <th>Gender</th>
-              <th>Parent</th>
+              <th>Parent/Guardian</th>
+              <th>Meal Card</th>
               <th>Fee Balance</th>
               <th>Actions</th>
             </tr>
@@ -341,7 +347,8 @@
         <label>House <input id="studentHouse"></label>
         <label>KCPE <input id="studentKCPE"></label>
         <label>Contacts <input id="studentContacts" placeholder="Phone"></label>
-        <label>Gender <input id="studentGender" placeholder="Male/Female"></label>
+        <label>Gender <input id="studentGender" placeholder="Boy/Girl"></label>
+        <label>Meal Card Validity <input type="date" id="studentMealValid"></label>
         <label>Fee Balance <input id="studentFee" type="number" step="0.01"></label>
         <label>Parent Name <input id="studentParentName"></label>
         <label>Parent Email <input id="studentParentEmail" type="email"></label>

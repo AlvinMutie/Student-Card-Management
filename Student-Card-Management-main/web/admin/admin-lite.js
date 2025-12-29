@@ -74,8 +74,15 @@ const STUDENT_PHOTO_PLACEHOLDER =
 
 function filterStudents(term) {
   const q = term.trim().toLowerCase();
-  if (!q) return studentsCache;
-  return studentsCache.filter((s) =>
+  const unpaidOnly = document.querySelector('#filterUnpaid')?.checked;
+
+  let filtered = studentsCache;
+  if (unpaidOnly) {
+    filtered = filtered.filter(s => (parseFloat(s.fee_balance) || 0) > 0);
+  }
+
+  if (!q) return filtered;
+  return filtered.filter((s) =>
     [s.name, s.adm, s.class, s.stream, s.parent_name, s.parent_email]
       .filter(Boolean)
       .some((v) => v.toLowerCase().includes(q))
@@ -91,7 +98,21 @@ function renderStudentsTable(list) {
   }
   tbody.innerHTML = list
     .map(
-      (s) => `<tr>
+      (s) => {
+        // Meal Card Reality Check
+        let mealStatus = '<span class="status-chip pending">No Data</span>';
+        if (s.meal_card_validity) {
+          const expiry = new Date(s.meal_card_validity);
+          const now = new Date();
+          now.setHours(0, 0, 0, 0);
+          if (expiry >= now) {
+            mealStatus = `<span class="status-chip approved">Valid (${s.meal_card_validity})</span>`;
+          } else {
+            mealStatus = `<span class="status-chip delete" style="background:#ef4444; color:white;">Expired (${s.meal_card_validity})</span>`;
+          }
+        }
+
+        return `<tr>
         <td><img src="${s.localPhoto || STUDENT_PHOTO_PLACEHOLDER}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0;" alt="Img"></td>
         <td>${s.adm || ''}</td>
         <td>${s.name || ''}</td>
@@ -103,12 +124,14 @@ function renderStudentsTable(list) {
         <td>${s.contacts || s.contact || s.parent_phone || ''}</td>
         <td>${s.gender || ''}</td>
         <td>${s.parent_name || s.parent_email || ''}</td>
-        <td>${s.fee_balance ?? ''}</td>
+        <td>${mealStatus}</td>
+        <td>${s.fee_balance ?? '0.00'}</td>
         <td>
           <button class="btn-small" data-edit-student="${s.id ?? s.adm}">Edit</button>
           <button class="btn-small" data-delete-student="${s.id ?? s.adm}">Delete</button>
         </td>
-      </tr>`
+      </tr>`;
+      }
     )
     .join('');
 }
@@ -128,6 +151,7 @@ function openStudentModal(student) {
   modal.querySelector('#studentContacts').value = student?.contacts || student?.parent_phone || '';
   modal.querySelector('#studentGender').value = student?.gender || '';
   modal.querySelector('#studentFee').value = student?.fee_balance ?? '';
+  modal.querySelector('#studentMealValid').value = student?.meal_card_validity ? student.meal_card_validity.split('T')[0] : '';
   modal.querySelector('#studentParentName').value = student?.parent_name || '';
   modal.querySelector('#studentParentEmail').value = student?.parent_email || '';
 }
@@ -152,6 +176,7 @@ async function saveStudent(event) {
     contacts: document.querySelector('#studentContacts').value.trim() || null,
     gender: document.querySelector('#studentGender').value.trim() || null,
     fee_balance: parseFloat(document.querySelector('#studentFee').value || 0) || 0,
+    meal_card_validity: document.querySelector('#studentMealValid').value || null,
     parent_name: document.querySelector('#studentParentName').value.trim() || null,
     parent_email: document.querySelector('#studentParentEmail').value.trim() || null,
   };
@@ -268,6 +293,14 @@ function initStudentsPage() {
   const search = document.querySelector('#studentSearch');
   if (search) {
     search.addEventListener('input', () => renderStudentsTable(filterStudents(search.value)));
+  }
+
+  const unpaidFilter = document.querySelector('#filterUnpaid');
+  if (unpaidFilter) {
+    unpaidFilter.addEventListener('change', () => {
+      const term = search ? search.value : '';
+      renderStudentsTable(filterStudents(term));
+    });
   }
 
   const addBtn = document.querySelector('#addStudentBtn');
@@ -585,6 +618,7 @@ async function saveStaff(event) {
     phone: document.querySelector('#staffPhone').value.trim(),
     department: document.querySelector('#staffDept').value.trim(),
     status: document.querySelector('#staffStatus').value.trim() || 'pending',
+    approved: document.querySelector('#staffStatus').value === 'approved'
   };
   try {
     if (!payload.name || !payload.staff_no) throw new Error('Name and Staff No are required');
