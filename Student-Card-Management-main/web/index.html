@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shuleni Advantage | Trial Redesign</title>
+    <title>Shuleni Advantage | Smart School Management</title>
     <link rel="stylesheet" href="/style.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
@@ -21,11 +21,14 @@
                 <img src="/assets/logo.png" alt="Logo" class="logo">
                 <span class="brand-name">Shuleni<span>Advantage</span></span>
             </a>
-            <nav class="nav-links">
+            <nav class="nav-links" id="navLinks">
                 <a href="/#features">Features</a>
                 <a href="/about.html">About</a>
                 <a href="/#portals" class="btn btn-maroon">Login</a>
             </nav>
+            <div class="mobile-toggle" id="mobileToggle" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </div>
         </div>
     </header>
 
@@ -169,6 +172,30 @@
         };
 
         window.onload = animateIn;
+
+        // Mobile Menu Toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileToggle && navLinks) {
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = mobileToggle.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.replace('fa-bars', 'fa-times');
+                } else {
+                    icon.classList.replace('fa-times', 'fa-bars');
+                }
+            });
+
+            // Close menu when clicking links
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    mobileToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+                });
+            });
+        }
     </script>
 </body>
 

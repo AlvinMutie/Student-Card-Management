@@ -422,7 +422,8 @@ table {
 
 .table-responsive {
   width: 100%;
-  overflow-x: visible;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table-responsive table {
@@ -588,6 +589,11 @@ label {
   .admin-section {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
   }
 }
 

@@ -344,8 +344,25 @@ h3 {
 .pillar-row {
     display: flex;
     align-items: center;
-    gap: 6rem;
+    gap: 4rem;
     margin-bottom: 8rem;
+}
+
+@media (max-width: 768px) {
+    .pillar-row {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 2rem;
+        margin-bottom: 5rem;
+    }
+
+    .pillar-text {
+        order: 2;
+    }
+
+    .pillar-visual {
+        order: 1;
+    }
 }
 
 .pillar-row.reverse {
@@ -424,13 +441,22 @@ h3 {
 /* Portals Section - Landing Page */
 .portals-section {
     padding: 8rem 0;
-    background: linear-gradient(to bottom, #f8fafc, #ffffff);
+    background: #f8fafc;
 }
 
 .portal-selection-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 2.5rem;
+    margin-top: 4rem;
+}
+
+@media (max-width: 992px) {
+    .portal-selection-grid {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+        margin: 4rem auto 0;
+    }
 }
 
 .portal-card {
@@ -563,10 +589,47 @@ h3 {
     }
 
     .navbar {
-        width: 95%;
+        width: 92%;
+        padding: 0.8rem 1.5rem;
     }
 
     .nav-links {
         display: none;
+        /* Simple Mobile Row for now */
+        position: absolute;
+        top: 110%;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        color: var(--primary-green);
+        padding: 0.8rem 0;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-links a:last-child {
+        border-bottom: none;
+        margin-top: 0.5rem;
+    }
+
+    .mobile-toggle {
+        display: flex !important;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: var(--primary-green);
     }
 }
