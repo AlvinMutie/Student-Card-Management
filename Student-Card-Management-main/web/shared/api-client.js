@@ -7,12 +7,12 @@ function normalizeBaseUrl(value) {
   if (!value || typeof value !== 'string') return null;
   let sanitized = value.trim();
   if (!sanitized) return null;
-  
+
   // If it's a relative path (starts with /), return as-is
   if (sanitized.startsWith('/')) {
     return sanitized.replace(/\/+$/, '');
   }
-  
+
   // Allow values without protocol (e.g., //api.example.com or api.example.com)
   if (!/^https?:\/\//i.test(sanitized) && !/^\/\//.test(sanitized)) {
     sanitized = `https://${sanitized}`;
@@ -202,7 +202,7 @@ const authAPI = {
 
   logout(redirectPath) {
     removeAuthToken();
-    const fallback = '/public/landingpage.html';
+    const fallback = '/index.html';
     try {
       const target =
         redirectPath ||

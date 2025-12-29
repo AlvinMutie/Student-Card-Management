@@ -2,7 +2,7 @@
 RewriteEngine On
 
 # Redirect root to landing page
-RewriteRule ^$ /public/landingpage.html [L]
+RewriteRule ^$ /index.html [L]
 
 # Allow access to all files
 <FilesMatch "\.(html|css|js|png|jpg|jpeg|gif|svg|ico|json|mp4|woff|woff2|ttf|eot)$">
@@ -11,7 +11,7 @@ RewriteRule ^$ /public/landingpage.html [L]
 </FilesMatch>
 
 # Set default index file
-DirectoryIndex public/landingpage.html
+DirectoryIndex index.html
 
 # Enable CORS for API requests (if needed)
 <IfModule mod_headers.c>

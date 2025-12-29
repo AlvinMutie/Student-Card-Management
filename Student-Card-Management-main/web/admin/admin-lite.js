@@ -3,7 +3,7 @@
 
 // ---------- shared helpers ----------
 function backToHome() {
-  window.location.href = '/public/landingpage.html';
+  window.location.href = '/index.html';
 }
 
 function logout() {
@@ -14,7 +14,7 @@ function logout() {
   localStorage.removeItem('sv_user_data');
   localStorage.removeItem('sv_admin_token');
   localStorage.removeItem('sv_admin_email');
-  window.location.href = '/public/landingpage.html';
+  window.location.href = '/index.html';
 }
 
 function setAdminWelcome() {
