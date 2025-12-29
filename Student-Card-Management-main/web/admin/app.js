@@ -105,8 +105,8 @@
     const email = localStorage.getItem('sv_admin_email') || 'admin';
 
     layout.innerHTML = `
-      <aside class="sidebar">
-        <div>
+      <header class="sidebar">
+        <div class="flex">
           <div class="side-brand">
             <div class="logo">SV</div>
             <div style="margin-left:10px">
@@ -114,7 +114,7 @@
               <div class="small muted">Admin</div>
             </div>
           </div>
-          <nav class="nav" style="margin-top:16px">
+          <nav class="nav" style="margin-left:32px">
             <a href="admindashboard.html" class="${activePage === 'dashboard' ? 'active' : ''}">Dashboard</a>
             <a href="parents.html" class="${activePage === 'parents' ? 'active' : ''}">Parents</a>
             <a href="staff.html" class="${activePage === 'staff' ? 'active' : ''}">Staff</a>
@@ -122,11 +122,11 @@
             <a href="adminsettings.html" class="${activePage === 'settings' ? 'active' : ''}">Settings</a>
           </nav>
         </div>
-        <div>
-          <div class="muted small" style="margin-bottom:8px">Signed in as <br><strong>${escapeHtml(email)}</strong></div>
+        <div class="flex" style="gap:20px">
+          <div class="muted small">Signed in as: <strong>${escapeHtml(email)}</strong></div>
           <div class="logout" id="logoutBtn">🔒 Logout</div>
         </div>
-      </aside>
+      </header>
     `;
 
     // Replace or append root with layout and move main into layout
