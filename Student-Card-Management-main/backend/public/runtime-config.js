@@ -18,11 +18,11 @@
       win.location.hostname === ''
     );
 
-    // Priority 1: Use the previous "Working" Render API (The Legacy Way)
-    const RENDER_API = 'https://student-card-management-api.onrender.com/api';
+    // Priority 1: Use the Local VPS API (The Most Reliable Way)
+    const LOCAL_PROD_API = 'https://shuleniadvantage.co.ke/api';
 
-    // Use Render for production (resolves 404s), absolute for localhost
-    win.StudentCardConfig.apiBaseUrl = isLocalhost ? DEFAULT_LOCAL_API : RENDER_API;
+    // Use the VPS Domain for production, absolute for localhost
+    win.StudentCardConfig.apiBaseUrl = isLocalhost ? DEFAULT_LOCAL_API : LOCAL_PROD_API;
   }
 })(window);
 
