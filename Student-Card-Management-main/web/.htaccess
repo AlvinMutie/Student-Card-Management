@@ -5,9 +5,9 @@ RewriteEngine On
 RewriteRule ^$ /index.html [L]
 
 # Allow access to all files
-<FilesMatch "\.(html|css|js|png|jpg|jpeg|gif|svg|ico|json|mp4|woff|woff2|ttf|eot|txt|xml)$">
-    Order allow,deny
-    Allow from all
+# Added |[^.]+$ to allow extensionless files like Certbot challenges
+<FilesMatch "\.(html|css|js|png|jpg|jpeg|gif|svg|ico|json|mp4|woff|woff2|ttf|eot|txt|xml)|[^.]+$">
+    Require all granted
 </FilesMatch>
 
 # Set default index file
