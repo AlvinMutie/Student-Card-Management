@@ -70,7 +70,7 @@ let parentsCache = [];
 let staffCache = [];
 const photoBlobMap = {};
 const STUDENT_PHOTO_PLACEHOLDER =
-  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 100" fill="none"><rect width="80" height="100" rx="10" fill="%23e5e7eb"/><circle cx="40" cy="32" r="14" fill="%23cbd5e1"/><path d="M20 86c0-12 9.5-22 20-22s20 10 20 22" fill="%23cbd5e1"/></svg>';
+  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2394a3b8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>';
 
 function filterStudents(term) {
   const q = term.trim().toLowerCase();
@@ -92,7 +92,7 @@ function renderStudentsTable(list) {
   tbody.innerHTML = list
     .map(
       (s) => `<tr>
-        <td><img src="${s.localPhoto || STUDENT_PHOTO_PLACEHOLDER}" style="width:50px; height:65px; border-radius:4px; object-fit:cover; background:#f3f4f6;"></td>
+        <td><img src="${s.localPhoto || STUDENT_PHOTO_PLACEHOLDER}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0;" alt="Img"></td>
         <td>${s.adm || ''}</td>
         <td>${s.name || ''}</td>
         <td>${s.upi || s.nemis || s.nemis_number || ''}</td>
@@ -677,7 +677,7 @@ async function loadCharts() {
   const ctxClass = document.getElementById('chartStudentsClass');
   const ctxFee = document.getElementById('chartFeeStatus');
   const ctxStaff = document.getElementById('chartStaffStatus');
-  if (!ctxClass || !ctxFee || !ctxStaff || typeof Chart === 'undefined') return;
+  if (typeof Chart === 'undefined') return;
 
   try {
     const [students, staff] = await Promise.all([
@@ -685,37 +685,43 @@ async function loadCharts() {
       staffAPI.getAll().catch(() => []),
     ]);
 
-    // Students by class
-    const classCounts = {};
-    students.forEach((s) => {
-      const c = s.class || 'Unassigned';
-      classCounts[c] = (classCounts[c] || 0) + 1;
-    });
-    const labelsClass = Object.keys(classCounts);
-    const dataClass = Object.values(classCounts);
-    new Chart(ctxClass, {
-      type: 'bar',
-      data: { labels: labelsClass, datasets: [{ label: 'Students', data: dataClass, backgroundColor: '#14532d' }] },
-      options: { responsive: true, plugins: { legend: { display: false } } },
-    });
+    // Student Chart (if exists)
+    if (ctxClass) {
+      const classCounts = {};
+      students.forEach((s) => {
+        const c = s.class || 'Unassigned';
+        classCounts[c] = (classCounts[c] || 0) + 1;
+      });
+      const labelsClass = Object.keys(classCounts);
+      const dataClass = Object.values(classCounts);
+      new Chart(ctxClass, {
+        type: 'bar',
+        data: { labels: labelsClass, datasets: [{ label: 'Students', data: dataClass, backgroundColor: '#14532d' }] },
+        options: { responsive: true, plugins: { legend: { display: false } } },
+      });
+    }
 
     // Fee status
-    const paid = students.filter((s) => !s.fee_balance || parseFloat(s.fee_balance) === 0).length;
-    const pending = students.length - paid;
-    new Chart(ctxFee, {
-      type: 'doughnut',
-      data: { labels: ['Paid', 'Pending'], datasets: [{ data: [paid, pending], backgroundColor: ['#22c55e', '#f59e0b'] }] },
-      options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
-    });
+    if (ctxFee) {
+      const paid = students.filter((s) => !s.fee_balance || parseFloat(s.fee_balance) === 0).length;
+      const pending = students.length - paid;
+      new Chart(ctxFee, {
+        type: 'doughnut',
+        data: { labels: ['Paid', 'Pending'], datasets: [{ data: [paid, pending], backgroundColor: ['#22c55e', '#f59e0b'] }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+      });
+    }
 
     // Staff status
-    const approved = staff.filter((s) => (s.status || '').toLowerCase() === 'approved').length;
-    const awaiting = staff.length - approved;
-    new Chart(ctxStaff, {
-      type: 'doughnut',
-      data: { labels: ['Approved', 'Pending'], datasets: [{ data: [approved, awaiting], backgroundColor: ['#2563eb', '#f97316'] }] },
-      options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
-    });
+    if (ctxStaff) {
+      const approved = staff.filter((s) => (s.status || '').toLowerCase() === 'approved').length;
+      const awaiting = staff.length - approved;
+      new Chart(ctxStaff, {
+        type: 'doughnut',
+        data: { labels: ['Approved', 'Pending'], datasets: [{ data: [approved, awaiting], backgroundColor: ['#2563eb', '#f97316'] }] },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } },
+      });
+    }
 
   } catch (err) {
     console.error('charts load failed', err);
