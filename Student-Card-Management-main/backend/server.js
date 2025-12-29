@@ -7,6 +7,7 @@ const studentsRoutes = require('./routes/students');
 const parentsRoutes = require('./routes/parents');
 const staffRoutes = require('./routes/staff');
 const setupRoutes = require('./routes/setup');
+const paymentsRoutes = require('./routes/payments');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,7 +26,7 @@ const allowedOrigins = [
 
 
 const corsOptions = {
-  origin: function(origin, callback) {
+  origin: function (origin, callback) {
     if (!origin) return callback(null, true); // allow Postman or server-to-server requests
     if (allowedOrigins.includes(origin)) return callback(null, true);
     console.warn(`CORS blocked request from origin: ${origin}`);
@@ -59,6 +60,7 @@ app.use('/api/students', studentsRoutes);
 app.use('/api/parents', parentsRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/setup', setupRoutes);
+app.use('/api/payments', paymentsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
