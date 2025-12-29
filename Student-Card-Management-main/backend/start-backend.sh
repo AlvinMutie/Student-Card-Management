@@ -42,20 +42,43 @@ echo "Checking database connection..."
 node check-setup.js > /tmp/setup-check.log 2>&1
 if [ $? -ne 0 ]; then
     echo "❌ Database connection check failed"
-    echo "Please check:"
-    echo "1. PostgreSQL is running"
-    echo "2. Database exists: student_card_management"
-    echo "3. .env file has correct database credentials"
+    
     echo ""
-    echo "To fix:"
-    echo "  sudo -u postgres createdb student_card_management"
-    echo "  sudo -u postgres psql -d student_card_management -f migrations/schema.sql"
-    echo "  sudo -u postgres psql -d student_card_management -f migrations/clean-seed.sql"
+    echo "Would you like to automatically reset and seed the database? (y/n)"
+    echo "⚠️  WARNING: This will DELETE ALL DATA in 'student_card_management' and load fresh test data."
+    read -p "Choice: " -n 1 -r
     echo ""
-    read -p "Continue anyway? (y/n): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
+    
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        echo "🚀 Starting automatic setup..."
+        chmod +x migrations/reset-and-seed.sh
+        
+        # Run the reset script and pipe "yes" to skip confirmation
+        echo "yes" | ./migrations/reset-and-seed.sh
+        
+        if [ $? -eq 0 ]; then
+            echo "✅ Database setup completed successfully!"
+            sleep 1
+        else
+            echo "❌ Automatic setup failed. Please check the logs above."
+            exit 1
+        fi
+    else
+        echo "Please check:"
+        echo "1. PostgreSQL is running"
+        echo "2. Database exists: student_card_management"
+        echo "3. .env file has correct database credentials"
+        echo ""
+        echo "To fix manually:"
+        echo "  sudo -u postgres createdb student_card_management"
+        echo "  sudo -u postgres psql -d student_card_management -f migrations/schema.sql"
+        echo "  sudo -u postgres psql -d student_card_management -f migrations/clean-seed.sql"
+        echo ""
+        read -p "Continue anyway? (y/n): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            exit 1
+        fi
     fi
 fi
 
