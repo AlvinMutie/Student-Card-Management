@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /about.html
+Disallow: /admin/
+Disallow: /shared/
+Disallow: /api/
+
+Sitemap: https://shuleniadvantage.co.ke/sitemap.xml
