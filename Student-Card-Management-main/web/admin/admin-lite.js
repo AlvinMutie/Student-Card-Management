@@ -113,9 +113,14 @@ function renderStudentsTable(list) {
         }
 
         return `<tr>
-        <td><img src="${s.localPhoto || STUDENT_PHOTO_PLACEHOLDER}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0;" alt="Img"></td>
+        <td><input type="checkbox" style="width:16px; height:16px; cursor:pointer;"></td>
         <td>${s.adm || ''}</td>
-        <td>${s.name || ''}</td>
+        <td>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${s.localPhoto || STUDENT_PHOTO_PLACEHOLDER}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;" alt="Img">
+            <span style="font-weight:600; color:#334155;">${s.name || ''}</span>
+          </div>
+        </td>
         <td>${s.upi || s.nemis || s.nemis_number || ''}</td>
         <td>${s.house || ''}</td>
         <td>${s.class || ''}</td>
