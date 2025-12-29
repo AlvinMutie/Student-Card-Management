@@ -429,6 +429,97 @@ async function initStaffPage() {
   } catch (err) {
     console.error('staff load failed', err);
   }
+
+  const importInput = document.querySelector('#importStaffInput');
+  if (importInput) {
+    importInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        await importStaffFromFile(file);
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        e.target.value = '';
+      }
+    });
+  }
+}
+
+async function importStaffFromFile(file) {
+  const isExcel = /\.xlsx?$/i.test(file.name);
+  const isCsv = /\.csv$/i.test(file.name);
+  if (!isExcel && !isCsv) throw new Error('Please select a CSV or Excel file');
+
+  const parseRows = async () => {
+    if (isCsv) {
+      const text = await file.text();
+      return text
+        .split(/\r?\n/)
+        .map((line) => line.split(',').map((c) => c.trim()))
+        .filter((row) => row.some((c) => c.length));
+    }
+    const data = new Uint8Array(await file.arrayBuffer());
+    const workbook = XLSX.read(data, { type: 'array' });
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    return XLSX.utils.sheet_to_json(firstSheet, { header: 1, blankrows: false });
+  };
+
+  const normalize = (val) => (val ?? '').toString().trim();
+  const rows = await parseRows();
+  if (!rows.length) throw new Error('File is empty.');
+
+  const header = rows[0].map((h) => normalize(h).toLowerCase());
+  const idx = (name) => header.indexOf(name);
+
+  const getRow = (row) => {
+    const map = (name) => (idx(name) >= 0 ? normalize(row[idx(name)]) : '');
+    const name = map('name') || map('full name');
+    const staffNo = map('staff no') || map('staff number') || map('tsc no') || map('id');
+
+    if (!name || !staffNo) return null;
+
+    return {
+      name,
+      staff_no: staffNo,
+      email: map('email'),
+      phone: map('phone') || map('mobile'),
+      department: map('department'),
+      status: 'pending'
+    };
+  };
+
+  const staffList = rows.slice(1).map(getRow).filter(Boolean);
+  if (!staffList.length) throw new Error('No valid staff rows found (requires Name and Staff No cols).');
+
+  let ok = 0;
+  let processed = 0;
+  // reuse setProgressStatus if available or just alert at end
+  // simplified for staff:
+
+  for (const s of staffList) {
+    try {
+      await staffAPI.create(s);
+      ok += 1;
+    } catch (e) {
+      try {
+        // Optionally update if exists, but staff API update needs ID, we only have staff_no here.
+        // We'd need to find ID by staff_no from cache first. 
+        const existing = staffCache.find(ex => ex.staff_no === s.staff_no);
+        if (existing) {
+          await staffAPI.update(existing.id, s);
+          ok += 1;
+        }
+      } catch (err) {
+        console.error(`Row failed (${s.staff_no}):`, err);
+      }
+    }
+    processed++;
+  }
+
+  staffCache = await staffAPI.getAll();
+  renderStaffTable();
+  alert(`Imported/updated ${ok} staff members.`);
 }
 
 function renderStaffTable() {
@@ -452,10 +543,9 @@ function renderStaffTable() {
         <td>${s.department || ''}</td>
         <td>${statusLabel}</td>
         <td>
-          ${
-            isApproved
-              ? '<span class="status-chip approved">Approved</span>'
-              : `<button class="btn-small" data-approve-staff="${staffId}">Approve</button>`
+          ${isApproved
+            ? '<span class="status-chip approved">Approved</span>'
+            : `<button class="btn-small" data-approve-staff="${staffId}">Approve</button>`
           }
           <button class="btn-small" data-edit-staff="${staffId}">Edit</button>
           <button class="btn-small" data-delete-staff="${staffId}">Delete</button>

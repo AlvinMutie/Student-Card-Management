@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-const db = require('../db'); // adjust to your actual DB module
+const pool = require('../config/database');
 
 // Authenticate: check token and attach user info from DB
 const authenticateToken = async (req, res, next) => {
@@ -7,30 +6,48 @@ const authenticateToken = async (req, res, next) => {
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    // TEMPORARY fallback: stub admin user if token missing
-    req.user = { id: 0, role: 'admin' };
-    return next();
+    // If no token provided, we can't authenticate
+    // (Unless you want public access, but usually we return 401)
+    // For now, keeping original fallback behavior but it's risky:
+    // req.user = { id: 0, role: 'admin' };
+    // return next();
+    return res.status(401).json({ error: 'Authentication token required' });
   }
 
   try {
-    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    const payload = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-change-this-in-production');
+
+    // Basic user info from token is often enough, but let's verify existence
+    // Admin users might only exist in 'users' table, not 'staff'
+    if (payload.role === 'admin') {
+      req.user = payload; // or query users table if needed
+      return next();
+    }
 
     // Determine table based on role in token
     let table;
     if (payload.role === 'parent') table = 'parents';
-    else table = 'staff'; // admin and staff are in staff table
-
-    // Fetch user info from the correct table
-    const result = await db.query(`SELECT id, email, role FROM ${table} WHERE id = $1`, [payload.id]);
-    
-    if (!result.rows[0]) {
-      return res.status(401).json({ error: 'User not found' });
+    else if (payload.role === 'staff') table = 'staff';
+    else {
+      // unknown role
+      req.user = payload;
+      return next();
     }
 
-    req.user = result.rows[0];
+    // Fetch user info from the correct table using user_id FK
+    const result = await pool.query(`SELECT id, email, role, user_id FROM ${table} WHERE user_id = $1`, [payload.id]);
+
+    if (result.rows.length === 0) {
+      // User has valid token but no profile record? 
+      // Fallback to token payload
+      req.user = payload;
+    } else {
+      req.user = { ...payload, ...result.rows[0] };
+    }
+
     next();
   } catch (err) {
-    console.error(err);
+    console.error('Auth middleware error:', err);
     return res.status(403).json({ error: 'Invalid or expired token' });
   }
 };

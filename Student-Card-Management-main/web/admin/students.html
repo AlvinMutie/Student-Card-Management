@@ -14,15 +14,33 @@
       font-family: 'Inter', 'Segoe UI', sans-serif;
       background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
       color: #0f172a;
+      height: 100vh;
+      /* Full viewport height */
+      overflow: hidden;
+      /* Prevent body scroll */
+      display: flex;
+      /* Flex layout for sidebar + main */
     }
 
     .main-content {
       flex: 1;
-      padding: 35px 40px;
-      overflow-y: auto;
+      padding: 0;
+      /* Removing padding to handle internally */
       margin-left: 260px;
       background: var(--beige-bg);
-      min-height: 100vh;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      /* No scroll on main container, child will scroll */
+    }
+
+    .content-wrapper {
+      padding: 35px 40px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
     }
 
     .topbar {
@@ -31,32 +49,76 @@
       align-items: center;
       flex-wrap: wrap;
       margin-bottom: 12px;
+      flex-shrink: 0;
+      /* Keep header fixed size */
+    }
+
+    .table-wrapper {
+      flex: 1;
+      /* Turn into a flex item that fills remaining space */
+      overflow-y: auto;
+      /* Vertical scroll only for table area */
+      overflow-x: auto;
+      /* Horizontal scroll if table is too wide */
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+      border-radius: 10px;
+      position: relative;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
-      border-radius: 10px;
-      overflow: hidden;
-      table-layout: auto;
+      /* Remove border/shadow from table itself as wrapper handles it */
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: #f8fafc;
+      z-index: 10;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     th,
     td {
-      padding: 10px 8px;
-      border: 1px solid #e2e8f0;
+      padding: 12px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      /* Use bottom border only for cleaner look */
+      border-left: none;
+      border-right: none;
+      border-top: none;
       text-align: left;
       font-size: 0.85rem;
       vertical-align: middle;
+      white-space: nowrap;
+      /* Prevent wrapping for neatness */
     }
 
+    th {
+      font-weight: 600;
+      color: #475569;
+    }
+
+    /* Column widths optimization */
     th:first-child,
     td:first-child {
-      white-space: normal;
+      width: 60px;
+      text-align: center;
     }
+
+    /* Photo */
+    th:last-child,
+    td:last-child {
+      width: 140px;
+      text-align: center;
+    }
+
+    /* Actions */
 
     button {
       cursor: pointer;
@@ -77,6 +139,7 @@
       box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
     }
 
+    /* ... modal styles ... */
     .modal {
       display: none;
       position: fixed;
@@ -84,6 +147,7 @@
       background: rgba(0, 0, 0, 0.5);
       align-items: center;
       justify-content: center;
+      z-index: 100;
     }
 
     .modal.show {
@@ -114,19 +178,50 @@
       justify-content: flex-end;
     }
 
-    .fade-in {
-      animation: fadeInUp .35s ease;
+    /* Progress bar styles */
+    .progress-wrap {
+      /* ... keep existing ... */
+      gap: 10px;
+      display: flex;
+      flex-direction: column;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
     }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+        /* Stack sidebar on top */
+        overflow: auto;
+        /* Allow scroll on mobile */
       }
 
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      .main-content {
+        margin-left: 0;
+        height: auto;
+        /* Allow growth */
+        overflow: visible;
+      }
+
+      .content-wrapper {
+        padding: 20px;
+        height: auto;
+      }
+
+      .table-wrapper {
+        overflow: visible;
+        /* Let table expand page on mobile */
+      }
+
+      .sidebar {
+        /* inherited from shared-admin-styles but checked here */
+        position: relative;
+        width: 100%;
+        height: auto;
       }
     }
   </style>
@@ -175,58 +270,61 @@
   </div>
 
   <main class="main-content">
-    <div id="importProgressWrap" class="progress-wrap" style="display:none;">
-      <div class="progress-text" id="importProgressText">Importing…</div>
-      <div class="progress-track">
-        <div class="progress-bar" id="importProgressBar" style="width:0%"></div>
+    <div class="content-wrapper">
+      <div id="importProgressWrap" class="progress-wrap" style="display:none;">
+        <div class="progress-text" id="importProgressText">Importing…</div>
+        <div class="progress-track">
+          <div class="progress-bar" id="importProgressBar" style="width:0%"></div>
+        </div>
       </div>
-    </div>
-    <div id="deleteProgressWrap" class="progress-wrap" style="display:none;">
-      <div class="progress-text" id="deleteProgressText">Deleting…</div>
-      <div class="progress-track">
-        <div class="progress-bar danger" id="deleteProgressBar" style="width:0%"></div>
+      <div id="deleteProgressWrap" class="progress-wrap" style="display:none;">
+        <div class="progress-text" id="deleteProgressText">Deleting…</div>
+        <div class="progress-track">
+          <div class="progress-bar danger" id="deleteProgressBar" style="width:0%"></div>
+        </div>
       </div>
-    </div>
 
-    <div class="topbar">
-      <h2 style="margin:0;">Students</h2>
-      <input id="studentSearch" placeholder="Search students..."
-        style="padding:8px; border:1px solid #cbd5e1; border-radius:6px; flex:1; min-width:220px;">
-      <input type="file" id="importStudentsInput" accept=".csv,.xlsx,.xls" style="display:none;">
-      <button class="btn-small" onclick="document.getElementById('importStudentsInput').click();">Import
-        Excel/CSV</button>
-      <button id="restoreStudentsBtn" class="btn-small">Restore Deleted</button>
-      <button id="deleteAllStudentsBtn" class="btn-small" style="background:#fee2e2;">Delete All</button>
-      <button id="addStudentBtn" class="btn-small">Add Student</button>
-      <input type="file" id="photoBatchInput" accept="image/*" multiple style="display:none;">
-      <button class="btn-small" onclick="document.getElementById('photoBatchInput').click();">Upload Photos
-        (Batch)</button>
-    </div>
-    <div class="table-responsive">
-      <table class="fade-in">
-        <thead>
-          <tr>
-            + <th>Photo</th>
-            <th>Adm</th>
-            <th>Name</th>
-            <th>UPI</th>
-            <th>House</th>
-            <th>Class</th>
-            <th>Stream</th>
-            <th>KCPE</th>
-            <th>Contacts</th>
-            <th>Gender</th>
-            <th>Parent</th>
-            <th>Fee Balance</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="studentsBody">
-          <tr>
-            <td colspan="13">Loading...</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="topbar">
+        <h2 style="margin:0;">Students</h2>
+        <input id="studentSearch" placeholder="Search students..."
+          style="padding:8px; border:1px solid #cbd5e1; border-radius:6px; flex:1; min-width:220px;">
+        <input type="file" id="importStudentsInput" accept=".csv,.xlsx,.xls" style="display:none;">
+        <button class="btn-small" onclick="document.getElementById('importStudentsInput').click();">Import
+          Excel/CSV</button>
+        <button id="restoreStudentsBtn" class="btn-small">Restore Deleted</button>
+        <button id="deleteAllStudentsBtn" class="btn-small" style="background:#fee2e2;">Delete All</button>
+        <button id="addStudentBtn" class="btn-small">Add Student</button>
+        <input type="file" id="photoBatchInput" accept="image/*" multiple style="display:none;">
+        <button class="btn-small" onclick="document.getElementById('photoBatchInput').click();">Upload Photos
+          (Batch)</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table class="fade-in">
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Adm</th>
+              <th>Name</th>
+              <th>UPI</th>
+              <th>House</th>
+              <th>Class</th>
+              <th>Stream</th>
+              <th>KCPE</th>
+              <th>Contacts</th>
+              <th>Gender</th>
+              <th>Parent</th>
+              <th>Fee Balance</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentsBody">
+            <tr>
+              <td colspan="13">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </main>
 
