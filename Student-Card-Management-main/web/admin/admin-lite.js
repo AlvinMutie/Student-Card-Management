@@ -468,6 +468,9 @@ async function initStaffPage() {
     console.error('staff load failed', err);
   }
 
+  const addBtn = document.querySelector('#addStaffBtn');
+  if (addBtn) addBtn.onclick = () => openStaffModal(null);
+
   const importInput = document.querySelector('#importStaffInput');
   if (importInput) {
     importInput.addEventListener('change', async (e) => {
@@ -571,7 +574,7 @@ function renderStaffTable() {
     .map(
       (s) => {
         const staffId = s.id || s._id || s.staff_no;
-        const isApproved = (s.status || '').toLowerCase() === 'approved' || s.approved === true;
+        const isApproved = (s.status || '').toLowerCase() === 'approved' || s.approved === true || s.approved === 'true';
         const statusLabel = isApproved ? 'Approved' : 'Pending';
         return `<tr>
         <td>${s.name || ''}</td>
@@ -697,6 +700,7 @@ async function approveStaff(id) {
 function wireStaffEvents() {
   const addBtn = document.querySelector('#addStaffBtn');
   if (addBtn) addBtn.onclick = () => openStaffModal(null);
+
   const form = document.querySelector('#staffForm');
   if (form) form.addEventListener('submit', saveStaff);
   const closeBtn = document.querySelector('#closeStaffModal');
@@ -716,7 +720,8 @@ function wireStaffEvents() {
         return;
       }
       if (edit) {
-        const staff = staffCache.find((s) => `${s.id}` === edit.dataset.editStaff || `${s._id}` === edit.dataset.editStaff);
+        const id = edit.dataset.editStaff;
+        const staff = staffCache.find((s) => `${s.id}` === id || `${s._id}` === id || `${s.staff_no}` === id);
         openStaffModal(staff || null);
       }
     });
@@ -784,7 +789,7 @@ async function loadCharts() {
 
     // Staff status
     if (ctxStaff) {
-      const approved = staff.filter((s) => (s.status || '').toLowerCase() === 'approved').length;
+      const approved = staff.filter((s) => (s.status || '').toLowerCase() === 'approved' || s.approved === true || s.approved === 'true').length;
       const awaiting = staff.length - approved;
       new Chart(ctxStaff, {
         type: 'doughnut',
@@ -1089,13 +1094,14 @@ async function deleteParent(id) {
         return;
       }
       staff.forEach((s) => {
+        const isApproved = (s.status || '').toLowerCase() === 'approved' || s.approved === true || s.approved === 'true';
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${s.name || ''}</td>
           <td>${s.staff_no || ''}</td>
           <td>${s.email || ''}</td>
           <td>${s.department || ''}</td>
-          <td>${s.approved ? 'Approved' : 'Pending'}</td>
+          <td>${isApproved ? 'Approved' : 'Pending'}</td>
           <td>${s.id}</td>
         `;
         tbody.appendChild(tr);
