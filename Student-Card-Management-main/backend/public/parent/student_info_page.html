@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Dashboard | Shuleni Advantage</title>
+  <link rel="icon" href="/shared/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/shared/portal-theme.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Dashboard Specific Styles */
+    .dashboard-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, var(--bg-sidebar) 0%, #064e3b 100%);
+      color: var(--text-white);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 50;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar-header {
+      padding: 2rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar-logo {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .sidebar-brand {
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+      font-weight: 500;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-white);
+      transform: translateX(4px);
+    }
+
+    .nav-item.active {
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar-footer {
+      padding: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    #logout-btn {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+      color: white !important;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+
+    #logout-btn:hover {
+      background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%) !important;
+      box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+    }
+
+    .main-content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 2rem;
+      background: var(--bg-body);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      background: var(--bg-card);
+      padding: 1.5rem 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+
+    .user-welcome h1 {
+      font-size: 1.5rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .user-welcome p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .student-card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .info-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      transition: var(--transition);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .info-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(20, 83, 45, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .data-row:last-child {
+      border-bottom: none;
+    }
+
+    .data-label {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .data-value {
+      color: var(--text-main);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .student-profile {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .student-profile::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1));
+      transform: skewX(-20deg);
+    }
+
+    .profile-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      background: white;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .profile-details h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      font-weight: 800;
+    }
+
+    .profile-badges {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .badge {
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .badge.warning {
+      background: rgba(251, 191, 36, 0.2);
+      color: #fef3c7;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .badge.success {
+      background: rgba(34, 197, 94, 0.2);
+      color: #dcfce7;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .link-section {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      border: 1px dashed var(--primary);
+      background: rgba(20, 83, 45, 0.02);
+    }
+
+    .link-form {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 80px;
+      }
+
+      .sidebar-brand,
+      .nav-item span,
+      .sidebar-footer span {
+        display: none;
+      }
+
+      .main-content {
+        margin-left: 80px;
+      }
+
+      .nav-item {
+        justify-content: center;
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-layout {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        padding: 1rem;
+        justify-content: space-between;
+      }
+
+      .sidebar-nav {
+        display: none;
+        /* Hide nav on mobile for simplicity or use hamburger */
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 1rem;
+      }
+
+      .student-profile {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+      }
+
+      .link-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="/shared/Hechlink_logo.png" alt="School Portal Logo" class="sidebar-logo"
+          onerror="this.style.display='none'">
+        <span class="sidebar-brand">School Portal</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="student_info_page.html" class="nav-item active">
+          <i class="fas fa-home"></i>
+          <span>Dashboard</span>
+        </a>
+        <!-- "My Student" removed as per request -->
+        <a href="payments.html" class="nav-item">
+          <i class="fas fa-wallet"></i>
+          <span>Payments</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="#" class="nav-item" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="top-bar">
+        <div class="user-welcome">
+          <h1>Parent Portal</h1>
+          <p id="welcomeMsg">Welcome back to your dashboard</p>
+        </div>
+        <div class="top-actions">
+          <button class="theme-btn outline" id="refreshDataBtn">
+            <i class="fas fa-sync-alt"></i> Refresh
+          </button>
+          <div class="user-avatar"
+            style="width:40px;height:40px;background:var(--primary);border-radius:50%;color:white;display:flex;align-items:center;justify-content:center;font-weight:bold;">
+            P
+          </div>
+        </div>
+      </div>
+
+      <div id="dashboardState" class="theme-card"
+        style="padding:1rem;margin-bottom:2rem;display:none;text-align:center;"></div>
+
+      <!-- Student Profile Hero -->
+      <div id="studentContent" style="display:none;">
+        <div class="student-profile">
+          <img src="" alt="Student" class="profile-img" id="studentPhoto"
+            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyLDEyQTUuNSw1LjUgMCwwLDAgMTcuNSw2LjVBNS41LDUuNSAwLDAsMCAxMiwxQTUuNSw1LjUgMCwwLDAgNi41LDYuNUE1LjUsNS41IDAsMCwwIDEyLDEyTTEyLDE0QzcuNTgsMTQgNCwxNS43OSA0LDE4VjIwSDIwVjE4QzIwLDE1Ljc5IDE2LjQyLDE0IDEyLDE0WiIvPjwvc3ZnPg=='">
+          <div class="profile-details">
+            <h2 id="studentNameDisplay">Student Name</h2>
+            <p style="opacity:0.9;font-size:1.1rem;" id="studentSubtitle">Class | Admission</p>
+            <div class="profile-badges">
+              <span class="badge success" id="statusBadge">Active Student</span>
+              <span class="badge warning" id="feeBadge">Fee Balance</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="student-card-grid">
+          <!-- Academic Info -->
+          <div class="info-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-school"></i>
+              </div>
+              <span class="card-title">Academic Details</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">School</span>
+              <span class="data-value" id="schoolNameValue">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Class</span>
+              <span class="data-value" id="infoClass">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Admission No</span>
+              <span class="data-value" id="infoAdmission">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">NEMIS</span>
+              <span class="data-value" id="infoNemis">—</span>
+            </div>
+          </div>
+
+          <!-- Fee Info -->
+          <div class="info-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-coins"></i>
+              </div>
+              <span class="card-title">Fee Status</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Balance</span>
+              <span class="data-value" id="feeBalanceValue" style="color:var(--danger);">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Next Review</span>
+              <span class="data-value" id="nextReviewValue">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Meal Card</span>
+              <span class="data-value" id="mealCardValue">—</span>
+            </div>
+          </div>
+
+          <!-- Guardian Info -->
+          <div class="info-card">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="fas fa-user-shield"></i>
+              </div>
+              <span class="card-title">Guardian Info</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Name</span>
+              <span class="data-value" id="guardianNameValue">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Phone</span>
+              <span class="data-value" id="guardianPhoneValue">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Relation</span>
+              <span class="data-value" id="guardianRelationshipValue">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Link Student Section -->
+        <div class="link-section">
+          <h3 style="color:var(--primary-dark);margin-bottom:0.5rem;">Link Another Student</h3>
+          <p class="text-muted">Enter the admission number provided by the school to link another child to your account.
+          </p>
+          <form id="linkStudentsForm" class="link-form">
+            <input type="text" id="linkAdmissionsInput" class="theme-input" placeholder="e.g. ST001, ST002" required>
+            <button type="submit" class="theme-btn primary">
+              <i class="fas fa-link"></i> Link Student
+            </button>
+          </form>
+          <div id="linkStatus" style="margin-top:1rem;font-weight:600;"></div>
+        </div>
+
+        <!-- Student List (Chips) -->
+        <div id="studentsList" style="margin-top:2rem;display:flex;gap:1rem;flex-wrap:wrap;"></div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/runtime-config.js"></script>
+  <script src="/shared/api-client.js"></script>
+  <script>
+    // Re-implementing logic with new UI IDs
+    const dashboardState = document.getElementById('dashboardState');
+    const studentContent = document.getElementById('studentContent');
+    const studentsListEl = document.getElementById('studentsList');
+    const linkForm = document.getElementById('linkStudentsForm');
+    const linkInput = document.getElementById('linkAdmissionsInput');
+    const linkStatus = document.getElementById('linkStatus');
+    const refreshBtn = document.getElementById('refreshDataBtn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    let studentsCache = [];
+    let activeAdmission = null;
+
+    function setState(message, variant = 'info') {
+      if (!dashboardState) return;
+      if (!message) {
+        dashboardState.style.display = 'none';
+        dashboardState.textContent = '';
+        return;
+      }
+      dashboardState.textContent = message;
+      dashboardState.style.display = 'block';
+      dashboardState.style.color = variant === 'error' ? 'var(--danger)' : 'var(--primary)';
+      dashboardState.style.background = variant === 'error' ? '#fee2e2' : '#dcfce7';
+    }
+
+    function formatDate(value) {
+      if (!value) return '—';
+      try {
+        return new Date(value).toLocaleDateString('en-US', {
+          year: 'numeric', month: 'short', day: 'numeric'
+        });
+      } catch (error) { return value; }
+    }
+
+    function formatCurrency(value) {
+      const num = Number(value || 0);
+      return 'KES ' + num.toLocaleString();
+    }
+
+    function renderStudent(student) {
+      if (!student) return;
+      activeAdmission = (student.adm || student.admission || student.id || '').toUpperCase();
+      const admission = activeAdmission;
+      const className = student.class || student.cls || '—';
+      const feeBalance = student.fee_balance ?? student.feeBalance ?? 0;
+      const parentData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+
+      document.getElementById('studentNameDisplay').textContent = student.name || 'Student Name';
+      document.getElementById('studentSubtitle').textContent = `${className} | Admission: ${admission}`;
+
+      // Badges
+      const feeBadge = document.getElementById('feeBadge');
+      if (feeBalance > 0) {
+        feeBadge.className = 'badge warning';
+        feeBadge.textContent = `Balance: ${formatCurrency(feeBalance)}`;
+      } else {
+        feeBadge.className = 'badge success';
+        feeBadge.textContent = 'Fees Cleared';
+      }
+
+      document.getElementById('schoolNameValue').textContent = student.school_name || 'Shuleni Advantage';
+      document.getElementById('infoClass').textContent = className;
+      document.getElementById('infoAdmission').textContent = admission;
+      document.getElementById('infoNemis').textContent = student.nemis || '—';
+
+      document.getElementById('feeBalanceValue').textContent = formatCurrency(feeBalance);
+      document.getElementById('nextReviewValue').textContent = formatDate(student.date_of_completion);
+      document.getElementById('mealCardValue').textContent = student.meal_card_validity ? formatDate(student.meal_card_validity) : 'Not set';
+
+      document.getElementById('guardianNameValue').textContent = student.parent_name || parentData.name || '—';
+      document.getElementById('guardianPhoneValue').textContent = student.parent_phone || parentData.phone || '—';
+      document.getElementById('guardianRelationshipValue').textContent = student.relationship || 'Parent';
+
+      // Update chips
+      document.querySelectorAll('.student-chip').forEach(chip => {
+        chip.style.borderColor = chip.dataset.adm === admission ? 'var(--primary)' : 'var(--border)';
+        chip.style.background = chip.dataset.adm === admission ? 'rgba(20,83,45,0.05)' : 'var(--bg-card)';
+      });
+
+      studentContent.style.display = 'block';
+    }
+
+    function renderStudentsList(students) {
+      if (!studentsListEl) return;
+      if (!students.length) {
+        studentsListEl.innerHTML = '<p class="text-muted">No students linked yet.</p>';
+        return;
+      }
+
+      studentsListEl.innerHTML = students.map(student => {
+        const adm = (student.adm || student.admission || '').toUpperCase();
+        return `
+          <div class="student-chip" data-adm="${adm}" style="padding:1rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);cursor:pointer;min-width:200px;transition:var(--transition);" onclick="selectStudent('${adm}')">
+            <div style="font-weight:700;color:var(--primary-dark);">${student.name || 'Student'}</div>
+            <div style="font-size:0.9rem;color:var(--text-muted);">${student.class || 'Class —'}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.selectStudent = function (adm) {
+      const student = studentsCache.find(s => (s.adm || s.admission || '').toUpperCase() === adm);
+      if (student) renderStudent(student);
+    }
+
+    async function loadStudentData(showToast = false) {
+      try {
+        setState('Loading your students…');
+        // Ensure studentsAPI is available
+        if (typeof studentsAPI === 'undefined') {
+          throw new Error('API Client not loaded properly');
+        }
+
+        const students = await studentsAPI.getMyStudents();
+        studentsCache = students || [];
+
+        if (!studentsCache.length) {
+          setState('No students linked associated with your account. Please link a student using the form below.');
+          // Hide profile and grid, show link section
+          document.querySelector('.student-profile').style.display = 'none';
+          document.querySelector('.student-card-grid').style.display = 'none';
+          document.querySelector('.link-section').style.display = 'block';
+          // Ensure container is visible
+          studentContent.style.display = 'block';
+          return;
+        }
+
+        // Show content
+        document.querySelector('.student-profile').style.display = 'flex';
+        document.querySelector('.student-card-grid').style.display = 'grid';
+        document.querySelector('.link-section').style.display = 'block';
+
+        setState('');
+        renderStudentsList(studentsCache);
+
+        // Ensure container is visible
+        studentContent.style.display = 'block';
+
+        // Select student: either active one or first one
+        let targetStudent = studentsCache[0];
+        if (activeAdmission) {
+          const found = studentsCache.find(s => (s.adm || s.admission || s.id || '').toUpperCase() === activeAdmission);
+          if (found) targetStudent = found;
+        }
+
+        renderStudent(targetStudent);
+
+        if (showToast && linkStatus) {
+          linkStatus.textContent = 'Data refreshed.';
+          linkStatus.style.color = 'var(--success)';
+          setTimeout(() => { linkStatus.textContent = ''; }, 2000);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setState('Unable to load students. Please try refreshing.', 'error');
+        // Still show link section in case they need to link
+        document.querySelector('.link-section').style.display = 'block';
+      }
+    }
+
+    async function handleLinkSubmit(e) {
+      e.preventDefault();
+      const admissions = linkInput.value.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+      if (!admissions.length) return;
+
+      const btn = linkForm.querySelector('button');
+      const originalText = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Linking...';
+
+      try {
+        const summary = await parentsAPI.linkStudents(admissions);
+        // Handle success/partial success
+        linkStatus.textContent = 'Link attempt complete. Refreshing...';
+        linkStatus.style.color = 'var(--success)';
+        linkInput.value = '';
+        await loadStudentData();
+      } catch (err) {
+        linkStatus.textContent = err.message || 'Failed to link.';
+        linkStatus.style.color = 'var(--danger)';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+      }
+    }
+
+    function logout() {
+      if (confirm('Are you sure you want to log out?')) {
+        localStorage.removeItem('sv_parent_token');
+        localStorage.removeItem('sv_parent_user');
+        window.location.href = 'parent_login_page.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check auth
+      const token = localStorage.getItem('sv_parent_token');
+      if (!token) {
+        window.location.href = 'parent_login_page.html';
+        return;
+      }
+
+      const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+      if (userData.name) {
+        document.getElementById('welcomeMsg').textContent = `Welcome back, ${userData.name.split(' ')[0]}`;
+        document.querySelector('.user-avatar').textContent = userData.name.charAt(0).toUpperCase();
+      }
+
+      await loadStudentData();
+
+      if (logoutBtn) logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        logout();
+      });
+
+      if (refreshBtn) refreshBtn.addEventListener('click', () => loadStudentData(true));
+      if (linkForm) linkForm.addEventListener('submit', handleLinkSubmit);
+    });
+  </script>
+</body>
+
+</html>

@@ -240,13 +240,6 @@
   </footer>
 
   <script src="/runtime-config.js"></script>
-  <script src="/admin/app-api.js"></script>
-  <script>
-    // Use the shared API client but we need to make sure it's loaded correctly
-    // Since app-api.js might be designed for admin, we might need to check if authAPI is available
-    // If not, we'll define a minimal one here or ensure the path is correct.
-    // The previous file referenced ../shared/api-client.js, let's check if that exists.
-  </script>
   <script src="/shared/api-client.js"></script>
   <script>
     document.getElementById('parentLoginForm').addEventListener('submit', async function (e) {

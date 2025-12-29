@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Connection Test - Student Card Management</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    .code {
+      background: #f4f4f4;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px 10px 0;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      margin: 10px 0;
+      box-sizing: border-box;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔍 API Connection Diagnostic Tool</h1>
+    <p>Use this page to diagnose backend connection issues.</p>
+  </div>
+
+  <div class="card">
+    <h2>Current Configuration</h2>
+    <div id="configInfo"></div>
+  </div>
+
+  <div class="card">
+    <h2>Test Backend Connection</h2>
+    <label>Backend API URL:</label>
+    <input type="text" id="apiUrl" placeholder="https://your-backend.onrender.com/api">
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="testHealth()">Test Health Endpoint</button>
+    <div id="testResults"></div>
+  </div>
+
+  <div class="card">
+    <h2>Database Setup & Troubleshooting</h2>
+    <p>Use these tools to set up your database and fix login issues:</p>
+    
+    <button onclick="checkDatabaseStatus()">Check Database Status</button>
+    <button onclick="runMigrations()">Run Migrations</button>
+    <button onclick="createAdminUser()">Create Admin User</button>
+    <button onclick="loadTestData()" style="background: #28a745;">Load Test Data</button>
+    <button onclick="testLoginCredentials()">Test Login</button>
+    
+    <div id="setupResults"></div>
+  </div>
+
+  <div class="card">
+    <h2>Update API URL</h2>
+    <p>If you need to change the API URL temporarily, you can set it here:</p>
+    <label>New API Base URL:</label>
+    <input type="text" id="newApiUrl" placeholder="https://your-backend.onrender.com/api">
+    <button onclick="updateApiUrl()">Update API URL</button>
+    <div id="updateResults"></div>
+  </div>
+
+  <script src="../runtime-config.js"></script>
+  <script src="../shared/api-client.js"></script>
+  <script>
+    // Display current configuration
+    function displayConfig() {
+      const configDiv = document.getElementById('configInfo');
+      const apiUrl = window.StudentCardConfig?.apiBaseUrl || 'Not set';
+      const storedUrl = localStorage.getItem('sv_api_base_url');
+      
+      configDiv.innerHTML = `
+        <div class="status info">
+          <strong>Runtime Config API URL:</strong><br>
+          <code>${apiUrl}</code>
+        </div>
+        ${storedUrl ? `
+        <div class="status info">
+          <strong>Stored in LocalStorage:</strong><br>
+          <code>${storedUrl}</code>
+        </div>
+        ` : ''}
+        <div class="code">
+          <strong>Window Location:</strong> ${window.location.href}<br>
+          <strong>Hostname:</strong> ${window.location.hostname}
+        </div>
+      `;
+      
+      // Pre-fill the input with current URL
+      document.getElementById('apiUrl').value = apiUrl;
+    }
+
+    // Test connection
+    async function testConnection() {
+      const url = document.getElementById('apiUrl').value.trim();
+      const resultsDiv = document.getElementById('testResults');
+      
+      if (!url) {
+        resultsDiv.innerHTML = '<div class="status error">Please enter an API URL</div>';
+        return;
+      }
+
+      resultsDiv.innerHTML = '<div class="status info">Testing connection...</div>';
+
+      try {
+        const response = await fetch(`${url}/health`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          resultsDiv.innerHTML = `
+            <div class="status success">
+              <strong>✅ Connection Successful!</strong><br>
+              Response: ${JSON.stringify(data, null, 2)}
+            </div>
+          `;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="status error">
+              <strong>❌ Connection Failed</strong><br>
+              Status: ${response.status} ${response.statusText}
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Connection Error</strong><br>
+            ${error.message}<br><br>
+            <strong>Possible causes:</strong><br>
+            • Backend not deployed<br>
+            • Wrong URL<br>
+            • CORS issue<br>
+            • Backend is sleeping (free tier)
+          </div>
+        `;
+      }
+    }
+
+    // Test health endpoint using api-client
+    async function testHealth() {
+      const resultsDiv = document.getElementById('testResults');
+      resultsDiv.innerHTML = '<div class="status info">Testing health endpoint via API client...</div>';
+
+      try {
+        // Temporarily use the API client
+        const response = await fetch(`${window.StudentCardConfig?.apiBaseUrl || 'http://localhost:3000/api'}/health`);
+        if (response.ok) {
+          const data = await response.json();
+          resultsDiv.innerHTML = `
+            <div class="status success">
+              <strong>✅ Health Check Passed!</strong><br>
+              Using API URL: ${window.StudentCardConfig?.apiBaseUrl || 'http://localhost:3000/api'}<br>
+              Response: ${JSON.stringify(data, null, 2)}
+            </div>
+          `;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="status error">
+              <strong>❌ Health Check Failed</strong><br>
+              Status: ${response.status} ${response.statusText}<br>
+              API URL: ${window.StudentCardConfig?.apiBaseUrl || 'Not set'}
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Health Check Error</strong><br>
+            ${error.message}<br>
+            API URL: ${window.StudentCardConfig?.apiBaseUrl || 'Not set'}
+          </div>
+        `;
+      }
+    }
+
+    // Update API URL
+    function updateApiUrl() {
+      const newUrl = document.getElementById('newApiUrl').value.trim();
+      const resultsDiv = document.getElementById('updateResults');
+      
+      if (!newUrl) {
+        resultsDiv.innerHTML = '<div class="status error">Please enter a URL</div>';
+        return;
+      }
+
+      try {
+        if (window.StudentCardConfig && window.StudentCardConfig.setApiBaseUrl) {
+          window.StudentCardConfig.setApiBaseUrl(newUrl, { persist: true });
+          resultsDiv.innerHTML = `
+            <div class="status success">
+              <strong>✅ API URL Updated!</strong><br>
+              New URL: ${newUrl}<br>
+              This will persist in localStorage. Refresh the page to see the change.
+            </div>
+          `;
+          setTimeout(() => {
+            displayConfig();
+          }, 500);
+        } else {
+          // Fallback: set directly
+          window.StudentCardConfig = window.StudentCardConfig || {};
+          window.StudentCardConfig.apiBaseUrl = newUrl;
+          localStorage.setItem('sv_api_base_url', newUrl);
+          resultsDiv.innerHTML = `
+            <div class="status success">
+              <strong>✅ API URL Updated!</strong><br>
+              New URL: ${newUrl}
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Update Failed</strong><br>
+            ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    // Check database status
+    async function checkDatabaseStatus() {
+      const resultsDiv = document.getElementById('setupResults');
+      resultsDiv.innerHTML = '<div class="status info">Checking database status...</div>';
+
+      try {
+        const response = await fetch(`${window.StudentCardConfig?.apiBaseUrl || 'http://localhost:3000/api'}/setup/status`);
+        const data = await response.json();
+
+        if (data.databaseConnected) {
+          let html = `
+            <div class="status ${data.usersTableExists ? 'success' : 'error'}">
+              <strong>Database Status:</strong><br>
+              ${data.message}<br><br>
+              <strong>Details:</strong><br>
+              • Users table exists: ${data.usersTableExists ? '✅ Yes' : '❌ No'}<br>
+              • Total users: ${data.userCount}<br>
+              • Admin users: ${data.adminCount}<br>
+            `;
+
+          if (data.adminUsers && data.adminUsers.length > 0) {
+            html += `<br><strong>Admin Users:</strong><br>`;
+            data.adminUsers.forEach(admin => {
+              html += `• ${admin.email} (${admin.role})<br>`;
+            });
+          }
+
+          html += `<br><strong>User Breakdown:</strong><br>`;
+          html += `• Parents: ${data.parentCount || 0}<br>`;
+          html += `• Staff: ${data.staffCount || 0}<br>`;
+          html += `• Students: ${data.studentCount || 0}<br>`;
+
+          html += `</div>`;
+
+          if (!data.usersTableExists) {
+            html += `
+              <div class="status info" style="margin-top: 10px;">
+                <strong>Next Step:</strong> Click "Run Migrations" to create database tables.
+              </div>
+            `;
+          } else if (data.adminCount === 0) {
+            html += `
+              <div class="status info" style="margin-top: 10px;">
+                <strong>Next Step:</strong> Click "Create Admin User" to set up your admin account.
+              </div>
+            `;
+          }
+
+          resultsDiv.innerHTML = html;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="status error">
+              <strong>❌ Database Connection Failed</strong><br>
+              ${data.error || data.message}<br><br>
+              <strong>Possible causes:</strong><br>
+              • DATABASE_URL not set in Render<br>
+              • Database not created<br>
+              • Wrong database credentials
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Error Checking Status</strong><br>
+            ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    // Run migrations
+    async function runMigrations() {
+      const resultsDiv = document.getElementById('setupResults');
+      resultsDiv.innerHTML = '<div class="status info">Running migrations... This may take a moment.</div>';
+
+      try {
+        const response = await fetch(`${window.StudentCardConfig?.apiBaseUrl || 'http://localhost:3000/api'}/setup/run-migrations`);
+        const data = await response.json();
+
+        if (data.success) {
+          resultsDiv.innerHTML = `
+            <div class="status success">
+              <strong>✅ Migrations Completed!</strong><br>
+              ${data.message}<br><br>
+              <strong>Next Step:</strong> Click "Create Admin User" to set up your admin account.
+            </div>
+          `;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="status error">
+              <strong>❌ Migration Failed</strong><br>
+              ${data.error || data.message}
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Migration Error</strong><br>
+            ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    // Create admin user
+    async function createAdminUser() {
+      const resultsDiv = document.getElementById('setupResults');
+      const email = prompt('Enter admin email:', 'admin@hechlink.edu');
+      if (!email) return;
+
+      const password = prompt('Enter admin password:', 'admin123');
+      if (!password) return;
+
+      resultsDiv.innerHTML = '<div class="status info">Creating admin user...</div>';
+
+      try {
+        const response = await fetch(`${window.StudentCardConfig?.apiBaseUrl || 'http://localhost:3000/api'}/setup/create-admin`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          resultsDiv.innerHTML = `
+            <div class="status success">
+              <strong>✅ Admin User ${data.action === 'created' ? 'Created' : 'Updated'}!</strong><br>
+              ${data.message}<br><br>
+              <strong>Credentials:</strong><br>
+              • Email: ${data.user.email}<br>
+              • Password: ${data.credentials.password}<br><br>
+              You can now log in with these credentials.
+            </div>
+          `;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="status error">
+              <strong>❌ Failed to Create Admin</strong><br>
+              ${data.error || data.message}
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Error Creating Admin</strong><br>
+            ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    // Load test data
+    async function loadTestData() {
+      const resultsDiv = document.getElementById('setupResults');
+      const confirmLoad = confirm('This will load comprehensive test data including:\n\n• 1 Admin user\n• Multiple Parent users with students\n• Staff members\n• Students linked to parents\n\nContinue?');
+      
+      if (!confirmLoad) return;
+
+      resultsDiv.innerHTML = '<div class="status info">Loading test data... This may take 30-60 seconds. Please wait...</div>';
+
+      try {
+        const response = await fetch(`${window.StudentCardConfig?.apiBaseUrl || 'http://localhost:3000/api'}/setup/load-test-data`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          let html = `
+            <div class="status success">
+              <strong>✅ Test Data Loaded Successfully!</strong><br><br>
+              <strong>Data Summary:</strong><br>
+              • Admin users: ${data.data.admins}<br>
+              • Parent users: ${data.data.parents}<br>
+              • Staff members: ${data.data.staff}<br>
+              • Students: ${data.data.students}<br><br>
+              <strong>Test Credentials:</strong><br>
+              <div class="code" style="margin-top: 10px;">
+                <strong>Admin:</strong><br>
+                Email: ${data.credentials.admin.email}<br>
+                Password: ${data.credentials.admin.password}<br><br>
+                <strong>Parent (Example):</strong><br>
+                Email: ${data.credentials.parents.email}<br>
+                Password: ${data.credentials.parents.password}<br><br>
+                <strong>Staff (Example):</strong><br>
+                Email: ${data.credentials.staff.email}<br>
+                Password: ${data.credentials.staff.password}<br>
+                <small>Note: Staff use same password as parents (parent123) for testing</small>
+              </div>
+            </div>
+          `;
+          resultsDiv.innerHTML = html;
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="status error">
+              <strong>❌ Failed to Load Test Data</strong><br>
+              ${data.error || data.message}
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Error Loading Test Data</strong><br>
+            ${error.message}<br><br>
+            Make sure migrations have been run first.
+          </div>
+        `;
+      }
+    }
+
+    // Test login credentials
+    async function testLoginCredentials() {
+      const resultsDiv = document.getElementById('setupResults');
+      const email = prompt('Enter email to test:', 'admin@hechlink.edu');
+      if (!email) return;
+
+      const password = prompt('Enter password to test:', 'admin123');
+      if (!password) return;
+
+      resultsDiv.innerHTML = '<div class="status info">Testing login credentials...</div>';
+
+      try {
+        const response = await fetch(`${window.StudentCardConfig?.apiBaseUrl || 'http://localhost:3000/api'}/setup/test-login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.exists) {
+          if (data.passwordValid) {
+            resultsDiv.innerHTML = `
+              <div class="status success">
+                <strong>✅ Login Credentials Valid!</strong><br>
+                ${data.message}<br><br>
+                <strong>User Info:</strong><br>
+                • Email: ${data.user.email}<br>
+                • Role: ${data.user.role}<br>
+                • ID: ${data.user.id}<br><br>
+                You can use these credentials to log in.
+              </div>
+            `;
+          } else {
+            resultsDiv.innerHTML = `
+              <div class="status error">
+                <strong>❌ Password Incorrect</strong><br>
+                ${data.message}<br><br>
+                The user exists but the password is wrong.<br>
+                Click "Create Admin User" to reset the password.
+              </div>
+            `;
+          }
+        } else {
+          resultsDiv.innerHTML = `
+            <div class="status error">
+              <strong>❌ User Not Found</strong><br>
+              ${data.message}<br><br>
+              Click "Create Admin User" to create this account.
+            </div>
+          `;
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = `
+          <div class="status error">
+            <strong>❌ Error Testing Login</strong><br>
+            ${error.message}
+          </div>
+        `;
+      }
+    }
+
+    // Initialize
+    displayConfig();
+  </script>
+</body>
+</html>
+

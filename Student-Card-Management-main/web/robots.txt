@@ -3,7 +3,9 @@ Allow: /
 Allow: /index.html
 Allow: /about.html
 Disallow: /admin/
-Disallow: /shared/
+Disallow: /parent/
+Disallow: /staff/
+Disallow: /student/
 Disallow: /api/
 
 Sitemap: https://shuleniadvantage.co.ke/sitemap.xml
