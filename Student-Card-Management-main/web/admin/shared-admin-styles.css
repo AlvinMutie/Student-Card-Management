@@ -214,12 +214,12 @@ body {
 /* Main Content - Full Width Centered Layout */
 .main-content {
   flex: 1;
-  padding: 40px 60px;
+  padding: 40px 40px;
   overflow-y: auto;
   margin-left: 0;
   background: var(--bg-body);
   min-height: calc(100vh - 70px);
-  max-width: 1600px;
+  max-width: 2000px;
   margin: 0 auto;
   width: 100%;
 }

@@ -2,9 +2,9 @@
 
 /* Container for admin content */
 .admin-container {
-    max-width: 1600px;
+    max-width: 2000px;
     margin: 0 auto;
-    padding: 40px 60px;
+    padding: 40px 40px;
     width: 100%;
 }
 
