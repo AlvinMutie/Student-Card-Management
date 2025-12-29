@@ -211,14 +211,17 @@ body {
   fill: currentColor;
 }
 
-/* Main Content */
+/* Main Content - Full Width Centered Layout */
 .main-content {
   flex: 1;
-  padding: 28px;
+  padding: 40px 60px;
   overflow-y: auto;
   margin-left: 0;
   background: var(--bg-body);
-  min-height: auto;
+  min-height: calc(100vh - 70px);
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .top-row {
