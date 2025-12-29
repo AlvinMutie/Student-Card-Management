@@ -601,6 +601,37 @@ async function saveStaff(event) {
   }
 }
 
+// Helper for soft-delete backup
+function addToDeletedStorage(studentArray) {
+  try {
+    const raw = localStorage.getItem('sv_deleted_students');
+    const data = raw ? JSON.parse(raw) : { students: [] };
+    // Add new ones, avoiding duplicates by adm
+    for (const s of studentArray) {
+      if (!data.students.some(ds => ds.adm === s.adm)) {
+        data.students.push(s);
+      }
+    }
+    localStorage.setItem('sv_deleted_students', JSON.stringify(data));
+  } catch (e) {
+    console.error('Backup failed', e);
+  }
+}
+
+async function deleteStudent(id) {
+  if (!id) return;
+  if (!confirm('Delete this student?')) return;
+  const student = studentsCache.find(s => (s.id == id || s.adm == id));
+  if (student) addToDeletedStorage([student]); // Backup first
+
+  try {
+    await studentsAPI.delete(id);
+    await loadStudents();
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
+  }
+}
+
 async function deleteStaff(id) {
   if (!id) return;
   if (!confirm('Delete this staff member?')) return;
@@ -770,6 +801,7 @@ async function restoreDeletedStudents() {
 }
 
 // ---------- delete all students ----------
+// ---------- delete all students ----------
 async function deleteAllStudents() {
   if (!confirm('Delete ALL students? This cannot be undone.')) return;
   try {
@@ -777,6 +809,10 @@ async function deleteAllStudents() {
       studentsAPI.getAll(),
       parentsAPI.getAll().catch(() => []),
     ]);
+
+    // Backup all students before delete
+    addToDeletedStorage(allStudents);
+
     let processed = 0;
     const total = allStudents.length + allParents.length || 1;
     setProgressStatus('delete', 5, 'Deleting records…');
@@ -801,7 +837,7 @@ async function deleteAllStudents() {
     await loadStudents();
     setProgressStatus('delete', 100, 'All students and parents deleted.', 'success');
     setTimeout(() => setProgressStatus('delete', 0, ''), 1200);
-    alert('All students (and related parents) deleted.');
+    alert('All students (and related parents) deleted. (Backup saved to Restore bin)');
   } catch (err) {
     alert('Delete all failed: ' + err.message);
   }
