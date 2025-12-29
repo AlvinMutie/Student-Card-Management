@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <title>Admin Login | Shuleni Advantage</title>
   <link rel="icon" href="/shared/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="../shared/portal-theme.css">
+  <link rel="stylesheet" href="/shared/portal-theme.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -237,7 +237,7 @@
 <body class="garden-body">
   <header class="garden-header">
     <div class="brand-pill">
-      <img src="../shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon"
+      <img src="/shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon"
         onerror="this.style.display='none'">
       <span>Shuleni Advantage</span>
     </div>
@@ -303,8 +303,8 @@
       reserved.</p>
   </footer>
 
-  <script src="../runtime-config.js"></script>
-  <script src="../shared/api-client.js"></script>
+  <script src="/runtime-config.js"></script>
+  <script src="/shared/api-client.js"></script>
   <script>
     // Password toggle functionality
     const togglePassword = document.getElementById('togglePassword');
@@ -361,7 +361,7 @@
 
           // Redirect to admin dashboard
           setTimeout(() => {
-            window.location.href = '../admin/admindashboard.html';
+            window.location.href = '/admin/admindashboard.html';
           }, 800);
         } else {
           throw new Error('Invalid response from server');

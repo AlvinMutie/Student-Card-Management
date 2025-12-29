@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Parent Account | Shuleni Advantage</title>
   <link rel="icon" href="/shared/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="../shared/portal-theme.css">
+  <link rel="stylesheet" href="/shared/portal-theme.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -23,7 +23,7 @@
       color: var(--text-dark);
       font-weight: 700;
     }
-    
+
     .garden-body {
       position: relative;
       overflow-y: auto;
@@ -45,9 +45,17 @@
     }
 
     @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
     }
 
     .registration-shell {
@@ -55,8 +63,8 @@
       border: 1px solid var(--border);
       margin-top: 0.5rem;
       border-radius: 16px;
-      box-shadow: 0 14px 32px rgba(0,0,0,0.08);
-      background: rgba(255,255,255,0.94);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+      background: rgba(255, 255, 255, 0.94);
     }
 
     .registration-grid {
@@ -204,7 +212,7 @@
       display: flex;
       gap: 8px;
     }
-    
+
     .country-code-select {
       flex: 0 0 100px;
       padding: 10px 12px;
@@ -213,12 +221,12 @@
       font-size: 14px;
       background-color: white;
     }
-    
+
     .password-input-container {
       position: relative;
       display: flex;
     }
-    
+
     .toggle-password {
       position: absolute;
       right: 10px;
@@ -229,44 +237,44 @@
       cursor: pointer;
       color: #6b7280;
     }
-    
+
     .password-requirements {
       margin-top: 8px;
       font-size: 13px;
       color: #4b5563;
     }
-    
+
     .password-requirements ul {
       margin: 5px 0 0 0;
       padding-left: 20px;
     }
-    
+
     .password-requirements li {
       position: relative;
       margin-bottom: 4px;
       list-style-type: none;
     }
-    
+
     .password-requirements li:before {
       content: '✗';
       color: #ef4444;
       margin-right: 8px;
     }
-    
+
     .password-requirements li.valid:before {
       content: '✓';
       color: #10b981;
     }
-    
+
     .validation-message {
       font-size: 13px;
       margin-top: 4px;
     }
-    
+
     .validation-message.valid {
       color: #10b981;
     }
-    
+
     .validation-message.error {
       color: #ef4444;
     }
@@ -278,7 +286,7 @@
   <header class="garden-header">
     <div class="brand-pill">
       <a href="/index.html" class="brand-link">
-        <img src="../shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon">
+        <img src="/shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon">
         <span>Shuleni Advantage</span>
       </a>
     </div>
@@ -292,15 +300,15 @@
 
     <section class="theme-card registration-shell">
       <div class="section-lead">
-      <h1>Create Your Parent Account</h1>
+        <h1>Create Your Parent Account</h1>
         <p>Connect directly to live attendance, fee balances, and school announcements. Register once and link every
           child using their admission number.</p>
       </div>
-      
+
       <form id="parentAccountForm" novalidate>
         <div id="formStatus" class="form-status" role="alert" style="display: none;"></div>
         <div class="registration-grid">
-        <div class="form-section">
+          <div class="form-section">
             <span class="theme-badge">Step 1 · Guardian Details</span>
             <h2>Your Profile</h2>
             <div class="input-group">
@@ -316,7 +324,8 @@
                   <option value="+256">UG +256</option>
                   <option value="+250">RW +250</option>
                 </select>
-                <input type="tel" id="parentPhone" class="theme-input" placeholder="700 000 000" pattern="[0-9]{9,15}" required>
+                <input type="tel" id="parentPhone" class="theme-input" placeholder="700 000 000" pattern="[0-9]{9,15}"
+                  required>
               </div>
             </div>
             <div class="input-group">
@@ -326,7 +335,8 @@
             <div class="input-group">
               <label for="parentPassword">Password</label>
               <div class="password-input-container">
-                <input type="password" id="parentPassword" class="theme-input" placeholder="••••••••" minlength="8" required>
+                <input type="password" id="parentPassword" class="theme-input" placeholder="••••••••" minlength="8"
+                  required>
                 <button type="button" class="toggle-password" aria-label="Toggle password visibility">
                   <i class="fas fa-eye"></i>
                 </button>
@@ -344,16 +354,17 @@
             <div class="input-group">
               <label for="confirmParentPassword">Confirm Password</label>
               <div class="password-input-container">
-                <input type="password" id="confirmParentPassword" class="theme-input" placeholder="Repeat password" minlength="8" required>
+                <input type="password" id="confirmParentPassword" class="theme-input" placeholder="Repeat password"
+                  minlength="8" required>
                 <button type="button" class="toggle-password" aria-label="Toggle password visibility">
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
               <div id="passwordMatch" class="validation-message"></div>
             </div>
-        </div>
+          </div>
 
-        <div class="form-section">
+          <div class="form-section">
             <span class="theme-badge">Step 2 · Link Children</span>
             <h2>Student Profiles</h2>
             <p class="helper-text">Use the same admission numbers already stored by the school so we can attach your
@@ -418,11 +429,12 @@
   <footer class="garden-footer">
     <p>By creating an account, you agree to our <a href="#" class="theme-link">Privacy Policy</a> and <a href="#"
         class="theme-link">Terms of Service</a>.</p>
-    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights reserved.</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights
+      reserved.</p>
   </footer>
 
-  <script src="../runtime-config.js"></script>
-  <script src="../shared/api-client.js"></script>
+  <script src="/runtime-config.js"></script>
+  <script src="/shared/api-client.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const modal = document.getElementById('childModal');

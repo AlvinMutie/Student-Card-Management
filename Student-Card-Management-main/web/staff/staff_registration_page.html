@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Create Staff Account | Shuleni Advantage</title>
   <link rel="icon" href="/shared/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="../shared/portal-theme.css">
+  <link rel="stylesheet" href="/shared/portal-theme.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -84,13 +84,14 @@
       overflow: hidden;
     }
 
-    body, html {
+    body,
+    html {
       overflow-y: auto;
       overflow-x: hidden;
       height: auto;
       min-height: 100vh;
     }
-    
+
     .garden-body {
       overflow-y: auto;
       min-height: 100vh;
@@ -109,14 +110,22 @@
       z-index: 0;
       pointer-events: none;
     }
-    
+
     @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
     }
-    
-    .feature-card > * {
+
+    .feature-card>* {
       position: relative;
       z-index: 1;
     }
@@ -182,8 +191,9 @@
 
   <header class="garden-header">
     <div class="brand-pill">
-      <a href="/index.html" class="brand-link" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-weight:700;">
-        <img src="../shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon">
+      <a href="/index.html" class="brand-link"
+        style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-weight:700;">
+        <img src="/shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon">
         <span>Shuleni Advantage</span>
       </a>
     </div>
@@ -274,11 +284,12 @@
   <footer class="garden-footer">
     <p>By creating an account, you agree to our <a href="#" class="theme-link">Privacy Policy</a> and <a href="#"
         class="theme-link">Terms of Service</a></p>
-    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights reserved.</p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights
+      reserved.</p>
   </footer>
 
-  <script src="../runtime-config.js"></script>
-  <script src="../shared/api-client.js"></script>
+  <script src="/runtime-config.js"></script>
+  <script src="/shared/api-client.js"></script>
   <script>
     document.getElementById('staffAccountForm').addEventListener('submit', async function (e) {
       e.preventDefault();
