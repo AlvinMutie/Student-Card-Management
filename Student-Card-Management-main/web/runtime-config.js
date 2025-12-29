@@ -18,11 +18,8 @@
       win.location.hostname === ''
     );
 
-    // Priority 1: Use the Local VPS API (The Most Reliable Way)
-    const LOCAL_PROD_API = 'https://shuleniadvantage.co.ke/api';
-
-    // Use the VPS Domain for production, absolute for localhost
-    win.StudentCardConfig.apiBaseUrl = isLocalhost ? DEFAULT_LOCAL_API : LOCAL_PROD_API;
+    // Use relative path for production (Apache proxy handles /api), localhost for development
+    win.StudentCardConfig.apiBaseUrl = isLocalhost ? DEFAULT_LOCAL_API : '/api';
   }
 })(window);
 
