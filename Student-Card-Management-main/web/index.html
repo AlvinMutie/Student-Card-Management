@@ -1,12 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; URL=/public/landingpage.html">
-  <title>Redirecting...</title>
-</head>
-<body>
-  Redirecting to landing page...
-</body>
-</html>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shuleni Advantage | Trial Redesign</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
+</head>
+
+<body>
+    <!-- Glass Header -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand">
+                <img src="assets/logo.png" alt="Logo" class="logo">
+                <span class="brand-name">Shuleni<span>Advantage</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="about.html">About</a>
+                <a href="#portals" class="btn btn-maroon">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-container">
+            <div class="hero-text">
+                <div class="badge-container">
+                    <div class="badge">Next-Gen Education Logic</div>
+                    <dotlottie-wc src="https://lottie.host/08e85af3-eca8-4600-b3ae-922e84026625/O1NL65Q5w4.lottie"
+                        class="badge-lottie" autoplay loop></dotlottie-wc>
+                </div>
+                <h1>The Intelligent Pulse of Your School.</h1>
+                <p>Manage ID cards, fee allocations, and visitor tracking with surgical precision. Professional, secure,
+                    and ready for growth.</p>
+                <div class="hero-btns">
+                    <a href="#portals" class="btn btn-green">Access Portals</a>
+                </div>
+            </div>
+            <div class="hero-visual" id="demo">
+                <div class="background-pulse">
+                    <dotlottie-wc src="https://lottie.host/8e9904fc-2f7f-448b-bcc0-e1f8ea0497d7/OnNSu8gz9U.lottie"
+                        autoplay loop></dotlottie-wc>
+                </div>
+                <div class="mockup-wrapper">
+                    <img src="assets/mockup.png" alt="Dashboard Mockup" class="dashboard-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Professional Portals Section -->
+    <section id="portals" class="portals-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Access Portals</h2>
+                <p>Select your authorized account type to manage your school ecosystem.</p>
+            </div>
+            <div class="portal-selection-grid">
+                <!-- Admin Card -->
+                <a href="public/admin_login.html" class="portal-card admin">
+                    <div class="card-lottie">
+                        <dotlottie-wc src="https://lottie.host/906a3d28-fda6-44d9-b6aa-8518d539b390/wFTld0b4Se.lottie"
+                            autoplay loop></dotlottie-wc>
+                    </div>
+                    <div class="card-content">
+                        <h3>School Admin</h3>
+                        <p>Complete control over records & analytics.</p>
+                        <span class="portal-link">Enter <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+
+                <!-- Parent Card -->
+                <a href="parent/parent_registration_page.html" class="portal-card parent">
+                    <div class="card-lottie">
+                        <dotlottie-wc src="https://lottie.host/08e85af3-eca8-4600-b3ae-922e84026625/O1NL65Q5w4.lottie"
+                            autoplay loop></dotlottie-wc>
+                    </div>
+                    <div class="card-content">
+                        <h3>Parent Portal</h3>
+                        <p>Track your child's progress & fees.</p>
+                        <span class="portal-link">Enter <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+
+                <!-- Staff Card -->
+                <a href="staff/staff_registration_page.html" class="portal-card staff">
+                    <div class="card-lottie">
+                        <dotlottie-wc src="https://lottie.host/19e48a8b-d3bf-48f1-9dad-472a387101d8/VS3CfW2Fjc.lottie"
+                            autoplay loop></dotlottie-wc>
+                    </div>
+                    <div class="card-content">
+                        <h3>Staff / Guard</h3>
+                        <p>Mobile verification & visitor tracking.</p>
+                        <span class="portal-link">Enter <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Precision Features</h2>
+                <p>Designed for administrative excellence.</p>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon-box green"><i class="fas fa-id-card"></i></div>
+                    <h3>Smart ID Generation</h3>
+                    <p>Instant student ID cards with high-detail QR codes for mobile scanning.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box maroon"><i class="fas fa-money-bill-wave"></i></div>
+                    <h3>Priority Fee Split</h3>
+                    <p>Automatically allocate parent payments to tuition and meals based on your school's priority.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-box green"><i class="fas fa-user-shield"></i></div>
+                    <h3>Guard Verification</h3>
+                    <p>Empower security staff with a dedicated mobile interface for visitor and student checks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>&copy; 2025 Hechlink Ventures. Empowering professional education.</p>
+        </div>
+    </footer>
+    <!-- GSAP for Smooth Scroll Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Global Fade-In Animation for Sections
+        const animateIn = () => {
+            const sections = document.querySelectorAll('section, .portals-section, .feature-card, .portal-card, .pillar-row, .inline-cta');
+
+            sections.forEach(el => {
+                gsap.fromTo(el,
+                    { opacity: 0, y: 30 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 85%",
+                            end: "bottom 15%",
+                            toggleActions: el.classList.contains('inline-cta') ? "play none none none" : "play reverse play reverse",
+                        }
+                    }
+                );
+            });
+        };
+
+        window.onload = animateIn;
+    </script>
+</body>
+
+</html>
