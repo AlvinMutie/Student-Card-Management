@@ -202,7 +202,7 @@ const authAPI = {
 
   logout(redirectPath) {
     removeAuthToken();
-    const fallback = '/index.html';
+    const fallback = '/';
     try {
       const target =
         redirectPath ||
