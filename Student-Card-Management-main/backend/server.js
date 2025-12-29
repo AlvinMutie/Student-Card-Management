@@ -8,6 +8,7 @@ const parentsRoutes = require('./routes/parents');
 const staffRoutes = require('./routes/staff');
 const setupRoutes = require('./routes/setup');
 const paymentsRoutes = require('./routes/payments');
+const visitorRoutes = require('./routes/visitors');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -61,6 +62,7 @@ app.use('/api/parents', parentsRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/setup', setupRoutes);
 app.use('/api/payments', paymentsRoutes);
+app.use('/api/visitors', visitorRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

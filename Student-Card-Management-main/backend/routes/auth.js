@@ -53,6 +53,8 @@ router.post('/login', async (req, res) => {
       }
     } else if (user.role === 'admin') {
       userInfo.name = 'Admin';
+    } else if (user.role === 'guard') {
+      userInfo.name = 'Security Guard';
     }
 
     res.json({
@@ -89,6 +91,8 @@ router.get('/me', authenticateToken, async (req, res) => {
       }
     } else if (role === 'admin') {
       userInfo.name = 'Admin';
+    } else if (role === 'guard') {
+      userInfo.name = 'Security Guard';
     }
 
     res.json({ user: userInfo });
