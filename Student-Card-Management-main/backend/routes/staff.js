@@ -50,7 +50,7 @@ router.post('/', async (req, res) => {
     // Hash password if provided
     let passwordHash = null;
     let userId = null;
-    if (password) {
+    if (password && password.trim().length > 0) {
       passwordHash = await bcrypt.hash(password, 10);
       const userResult = await pool.query(
         'INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3) RETURNING id',
@@ -63,7 +63,7 @@ router.post('/', async (req, res) => {
       `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id, staff_no, name, email, phone, department, approved, created_at`,
-      [userId, staff_no, name, email || null, phone || null, department || null, false]
+      [userId, staff_no, name, (email && email.trim() !== '') ? email : null, phone || null, department || null, false]
     );
 
     res.status(201).json(result.rows[0]);

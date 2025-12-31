@@ -211,7 +211,7 @@ body {
   fill: currentColor;
 }
 
-/* Main Content - Full Width Centered Layout */
+/* Main Content - Full Width Left-Aligned Layout */
 .main-content {
   flex: 1;
   padding: 40px 40px;
@@ -219,8 +219,8 @@ body {
   margin-left: 0;
   background: var(--bg-body);
   min-height: calc(100vh - 70px);
-  max-width: 2000px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: 0;
   width: 100%;
 }
 
@@ -575,7 +575,7 @@ label {
 
   .main-content {
     margin-left: 0;
-    padding: 20px;
+    padding: 24px 16px;
   }
 
   .table-responsive table {

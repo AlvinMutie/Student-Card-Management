@@ -91,7 +91,7 @@ router.post('/', async (req, res) => {
 
     // Hash password if provided
     let passwordHash = null;
-    if (password) {
+    if (password && password.trim().length > 0) {
       passwordHash = await bcrypt.hash(password, 10);
     }
 
