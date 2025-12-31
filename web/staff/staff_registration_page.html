@@ -354,7 +354,7 @@
         const role = document.getElementById('role').value;
 
         // Call staff registration API
-        const response = await apiRequest('/api/staff/register', {
+        const response = await apiRequest('/staff/register', {
           method: 'POST',
           body: JSON.stringify({
             full_name: fullName,

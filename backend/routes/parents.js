@@ -97,7 +97,7 @@ router.post('/', async (req, res) => {
     if (password && password.trim().length > 0) {
       const passwordHash = await bcrypt.hash(password, 10);
       const userResult = await client.query(
-        'INSERT INTO users (email, password_hash, role, name) VALUES ($1, $2, $3, $4) RETURNING id',
+        'INSERT INTO users (email, password, role, full_name) VALUES ($1, $2, $3, $4) RETURNING id',
         [email, passwordHash, 'parent', name]
       );
       userId = userResult.rows[0].id;
@@ -200,7 +200,7 @@ router.put('/me/password', authenticateToken, authorizeRole('parent'), async (re
 
     // Get current password hash
     const userResult = await pool.query(
-      'SELECT password_hash FROM users WHERE id = $1',
+      'SELECT password FROM users WHERE id = $1',
       [userId]
     );
 
@@ -209,7 +209,7 @@ router.put('/me/password', authenticateToken, authorizeRole('parent'), async (re
     }
 
     // Verify current password
-    const validPassword = await bcrypt.compare(currentPassword, userResult.rows[0].password_hash);
+    const validPassword = await bcrypt.compare(currentPassword, userResult.rows[0].password);
     if (!validPassword) {
       return res.status(401).json({ error: 'Current password is incorrect' });
     }
@@ -219,7 +219,7 @@ router.put('/me/password', authenticateToken, authorizeRole('parent'), async (re
 
     // Update password
     await pool.query(
-      'UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      'UPDATE users SET password = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
       [newPasswordHash, userId]
     );
 
