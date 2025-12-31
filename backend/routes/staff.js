@@ -69,13 +69,20 @@ router.post('/', async (req, res) => {
     );
 
     await client.query('COMMIT');
+    console.log('✅ Staff registered successfully:', staff_no);
     res.status(201).json(result.rows[0]);
   } catch (error) {
     await client.query('ROLLBACK');
+    console.error('❌ Create staff error details:', {
+      message: error.message,
+      detail: error.detail,
+      code: error.code,
+      stack: error.stack
+    });
+
     if (error.code === '23505') { // Unique violation
       return res.status(400).json({ error: 'Staff number or email already exists' });
     }
-    console.error('Create staff error:', error);
     res.status(500).json({ error: 'Internal server error' });
   } finally {
     client.release();
