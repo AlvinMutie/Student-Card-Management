@@ -82,6 +82,7 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
 
 // Create parent (admin only or registration)
 router.post('/', async (req, res) => {
+  const client = await pool.connect();
   try {
     const { name, email, phone, password } = req.body;
 
@@ -89,16 +90,13 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Name and email are required' });
     }
 
-    // Hash password if provided
-    let passwordHash = null;
-    if (password && password.trim().length > 0) {
-      passwordHash = await bcrypt.hash(password, 10);
-    }
+    await client.query('BEGIN');
 
-    // Create user account if password provided
+    // Hash password if provided
     let userId = null;
-    if (passwordHash) {
-      const userResult = await pool.query(
+    if (password && password.trim().length > 0) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      const userResult = await client.query(
         'INSERT INTO users (email, password_hash, role, name) VALUES ($1, $2, $3, $4) RETURNING id',
         [email, passwordHash, 'parent', name]
       );
@@ -106,20 +104,24 @@ router.post('/', async (req, res) => {
     }
 
     // Create parent record
-    const result = await pool.query(
+    const result = await client.query(
       `INSERT INTO parents (user_id, name, email, phone)
        VALUES ($1, $2, $3, $4)
        RETURNING id, name, email, phone, created_at`,
       [userId, name, email, phone || null]
     );
 
+    await client.query('COMMIT');
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    await client.query('ROLLBACK');
     if (error.code === '23505') { // Unique violation
       return res.status(400).json({ error: 'Email already exists' });
     }
     console.error('Create parent error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    client.release();
   }
 });
 

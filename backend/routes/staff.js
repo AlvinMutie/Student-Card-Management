@@ -40,6 +40,7 @@ router.get('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
 
 // Create staff (admin only or registration)
 router.post('/', async (req, res) => {
+  const client = await pool.connect();
   try {
     const { staff_no, name, email, phone, department, password } = req.body;
 
@@ -47,32 +48,37 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ error: 'Staff number and name are required' });
     }
 
+    await client.query('BEGIN');
+
     // Hash password if provided
-    let passwordHash = null;
     let userId = null;
     if (password && password.trim().length > 0) {
-      passwordHash = await bcrypt.hash(password, 10);
-      const userResult = await pool.query(
+      const passwordHash = await bcrypt.hash(password, 10);
+      const userResult = await client.query(
         'INSERT INTO users (email, password_hash, role, name) VALUES ($1, $2, $3, $4) RETURNING id',
         [email || `${staff_no}@school.edu`, passwordHash, 'staff', name]
       );
       userId = userResult.rows[0].id;
     }
 
-    const result = await pool.query(
+    const result = await client.query(
       `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id, staff_no, name, email, phone, department, approved, created_at`,
       [userId, staff_no, name, (email && email.trim() !== '') ? email : null, phone || null, department || null, false]
     );
 
+    await client.query('COMMIT');
     res.status(201).json(result.rows[0]);
   } catch (error) {
+    await client.query('ROLLBACK');
     if (error.code === '23505') { // Unique violation
       return res.status(400).json({ error: 'Staff number or email already exists' });
     }
     console.error('Create staff error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  } finally {
+    client.release();
   }
 });
 
