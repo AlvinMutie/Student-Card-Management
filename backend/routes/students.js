@@ -230,28 +230,71 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   }
 });
 
-// Get student by Admission Number (Mobile App / QR Scan)
-router.get('/lookup/:adm', authenticateToken, authorizeRole(['admin', 'staff', 'guard']), async (req, res) => {
+// QR Code Scan endpoint (Mobile App)
+router.post('/scan-qr', authenticateToken, authorizeRole(['admin', 'staff', 'guard']), async (req, res) => {
   try {
-    const { adm } = req.params;
+    const { qrData, scannedBy } = req.body;
+
+    if (!qrData) {
+      return res.status(400).json({ 
+        success: false,
+        message: 'QR data is required' 
+      });
+    }
+
+    // QR code contains the admission number
+    const admissionNumber = qrData.trim();
+
+    // Fetch student details from database
     const result = await pool.query(
-      `SELECT s.*, p.name as parent_name, p.phone as parent_phone
+      `SELECT s.*, p.name as parent_name, p.phone as parent_phone, p.email as parent_email
        FROM students s
        LEFT JOIN parents p ON s.parent_id = p.id
        WHERE s.adm = $1`,
-      [adm]
+      [admissionNumber]
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Student not found' });
+      return res.status(404).json({ 
+        success: false,
+        message: 'Student not found. Invalid QR code.' 
+      });
     }
 
-    res.json(result.rows[0]);
+    const student = result.rows[0];
+
+    // Log the scan event (optional - you can add a scans table later if needed)
+    console.log(`QR Scan: Student ${student.name} (${student.adm}) scanned by user ${scannedBy}`);
+
+    // Return student data in the format expected by mobile app
+    res.json({
+      success: true,
+      message: 'Student verified successfully',
+      student: {
+        id: student.id,
+        studentId: student.adm,
+        name: student.name,
+        grade: student.class,
+        nemis: student.nemis,
+        photoUrl: student.photo_url,
+        parentName: student.parent_name,
+        parentPhone: student.parent_phone,
+        parentEmail: student.parent_email,
+        feeBalance: student.fee_balance,
+        stream: student.stream,
+        house: student.house,
+        contact: student.contact
+      }
+    });
   } catch (error) {
-    console.error('Lookup student error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('QR scan error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Internal server error during QR scan' 
+    });
   }
 });
+
 
 // Get student by ID
 router.get('/:id', authenticateToken, async (req, res) => {
