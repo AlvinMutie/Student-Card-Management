@@ -60,8 +60,15 @@ router.post('/login', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'An unexpected error occurred during login' });
+    console.error('❌ Login Error Details:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
+    res.status(500).json({
+      error: 'An unexpected error occurred during login',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
