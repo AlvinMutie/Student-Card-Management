@@ -214,12 +214,20 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
 // Delete staff (admin only)
 router.delete('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // receiving user_id from frontend
 
-    const result = await pool.query('DELETE FROM staff WHERE id = $1 RETURNING *', [id]);
+    // We delete from USERS, which will cascade delete the STAFF record
+    const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING id', [id]);
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Staff not found' });
+      // Fallback: try deleting from staff just in case ID was actually a staff_id (backward compatibility)
+      const staffRes = await pool.query('DELETE FROM staff WHERE id = $1 RETURNING user_id', [id]);
+      if (staffRes.rows.length > 0) {
+        // If we deleted a staff record, we should try to cleanup the user too
+        await pool.query('DELETE FROM users WHERE id = $1', [staffRes.rows[0].user_id]);
+        return res.json({ message: 'Staff deleted successfully' });
+      }
+      return res.status(404).json({ error: 'Staff/User not found' });
     }
 
     res.json({ message: 'Staff deleted successfully' });
