@@ -230,6 +230,29 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   }
 });
 
+// Get student by Admission Number (Mobile App / QR Scan)
+router.get('/lookup/:adm', authenticateToken, authorizeRole(['admin', 'staff', 'guard']), async (req, res) => {
+  try {
+    const { adm } = req.params;
+    const result = await pool.query(
+      `SELECT s.*, p.name as parent_name, p.phone as parent_phone
+       FROM students s
+       LEFT JOIN parents p ON s.parent_id = p.id
+       WHERE s.adm = $1`,
+      [adm]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error('Lookup student error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Get student by ID
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
