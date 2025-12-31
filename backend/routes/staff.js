@@ -29,7 +29,7 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
     res.json(result.rows);
   } catch (error) {
     console.error('Get staff error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: `server error: ${error.message}` });
   }
 });
 
