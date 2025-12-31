@@ -81,7 +81,7 @@ router.post('/register', async (req, res) => {
     await client.query(
       `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
        VALUES ($1, $2, $3, $4, $5, $6, false)`,
-      [userId, staff_no || staffNumber || `WEB-${Date.now()}`, full_name, email, phone || null, department || null]
+      [userId, staff_no || `WEB-${Date.now()}`, full_name, email, phone || null, department || null]
     );
 
     await client.query('COMMIT');
@@ -144,7 +144,10 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Create staff error:', error);
-    res.status(500).json({ error: error.code === '23505' ? 'Staff number or email already exists' : 'Internal server error' });
+    const isConflict = error.code === '23505';
+    res.status(isConflict ? 400 : 500).json({
+      error: isConflict ? 'Email or Staff Number already exists' : 'Internal server error'
+    });
   } finally {
     client.release();
   }
@@ -177,7 +180,10 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
     res.json(result.rows[0]);
   } catch (error) {
     console.error('Update staff error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    const isConflict = error.code === '23505';
+    res.status(isConflict ? 400 : 500).json({
+      error: isConflict ? 'Email or Staff Number already exists' : 'Internal server error'
+    });
   }
 });
 
