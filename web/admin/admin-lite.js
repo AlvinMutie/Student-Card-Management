@@ -466,6 +466,12 @@ async function initStaffPage() {
     renderStaffTable();
   } catch (err) {
     console.error('staff load failed', err);
+    const tbody = document.querySelector('#staffBody');
+    if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="color:red; padding:20px; text-align:center;">
+        <strong>Error loading data</strong><br>
+        ${err.message}<br>
+        <button onclick="location.reload()" class="btn-small" style="margin-top:10px;">Retry</button>
+    </td></tr>`;
   }
 
   const addBtn = document.querySelector('#addStaffBtn');
@@ -704,7 +710,11 @@ async function approveStaff(id) {
 
 function wireStaffEvents() {
   const addBtn = document.querySelector('#addStaffBtn');
-  if (addBtn) addBtn.onclick = () => openStaffModal(null);
+  if (addBtn) addBtn.onclick = () => {
+    const modal = document.querySelector('#staffModal');
+    if (modal) modal.dataset.staffId = '';
+    openStaffModal(null);
+  };
 
   const form = document.querySelector('#staffForm');
   if (form) form.addEventListener('submit', saveStaff);
