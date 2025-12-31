@@ -247,6 +247,18 @@
             </div>
 
             <div class="input-group">
+              <label for="role">Role / Position</label>
+              <select id="role" class="theme-input" required>
+                <option value="" disabled selected>Select your role</option>
+                <option value="teacher">Teacher</option>
+                <option value="kitchen">Kitchen Staff</option>
+                <option value="accountant">Accountant</option>
+                <option value="guard">Security Guard</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="input-group">
               <label for="department">Department</label>
               <select id="department" class="theme-input" required>
                 <option value="" disabled selected>Select your department</option>
@@ -339,23 +351,29 @@
         }
 
         const department = document.getElementById('department').value;
+        const role = document.getElementById('role').value;
 
-        // Call staff API
-        const response = await staffAPI.create({
-          staff_no: staffNumber,
-          name: fullName,
-          email: email,
-          phone: phone,
-          password: password,
-          department: department
+        // Call staff registration API
+        const response = await apiRequest('/api/staff/register', {
+          method: 'POST',
+          body: JSON.stringify({
+            full_name: fullName,
+            email: email,
+            phone: phone,
+            password: password,
+            role: role,
+            department: department
+          })
         });
 
-        if (response && response.id) {
-          alert('Account registration submitted successfully! Your staff number will be verified by an administrator before you can access the system.');
+        if (response && response.user) {
+          alert('Account registration successful! Your account is currently PENDING. An administrator must approve your account before you can log in to the website or mobile app.');
           // Clear form
           document.getElementById('staffAccountForm').reset();
+          // Optional: redirect to home
+          setTimeout(() => { window.location.href = '/index.html'; }, 3000);
         } else {
-          throw new Error('Invalid response from server');
+          throw new Error(response.error || 'Invalid response from server');
         }
       } catch (error) {
         console.error('Registration error:', error);

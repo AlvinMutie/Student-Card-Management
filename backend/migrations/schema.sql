@@ -1,11 +1,14 @@
 -- Create database schema for Student Card Management System
 
--- Users table (for authentication)
+-- Users table (for authentication and profile)
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
+    full_name VARCHAR(255),
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    role VARCHAR(50) NOT NULL CHECK (role IN ('admin', 'parent', 'staff')),
+    phone VARCHAR(20),
+    password VARCHAR(255) NOT NULL, -- Hashed password
+    role VARCHAR(50) NOT NULL CHECK (role IN ('admin', 'parent', 'staff', 'teacher', 'kitchen', 'accountant', 'guard', 'other')),
+    status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'disabled')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -38,52 +38,73 @@ router.get('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
   }
 });
 
-// Create staff (admin only or registration)
-router.post('/', async (req, res) => {
+// Public staff registration (Website only)
+router.post('/register', async (req, res) => {
+  try {
+    const { full_name, email, phone, password, role } = req.body;
+
+    if (!full_name || !email || !password || !role) {
+      return res.status(400).json({ error: 'Full name, email, password, and role are required' });
+    }
+
+    // Hash password
+    const passwordHash = await bcrypt.hash(password, 10);
+
+    // Insert into users table
+    const result = await pool.query(
+      `INSERT INTO users (full_name, email, phone, password, role, status)
+       VALUES ($1, $2, $3, $4, $5, 'pending')
+       RETURNING id, full_name, email, role, status, created_at`,
+      [full_name, email, phone || null, passwordHash, role]
+    );
+
+    res.status(201).json({
+      message: 'Registration successful. Waiting for admin approval.',
+      user: result.rows[0]
+    });
+  } catch (error) {
+    if (error.code === '23505') { // Unique violation
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+    console.error('Staff registration error:', error);
+    res.status(500).json({ error: 'Failed to register staff account' });
+  }
+});
+
+// Create staff (Internal/Admin use)
+router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   const client = await pool.connect();
   try {
-    const { staff_no, name, email, phone, department, password } = req.body;
+    const { staff_no, name, email, phone, department, password, role } = req.body;
 
-    if (!staff_no || !name) {
-      return res.status(400).json({ error: 'Staff number and name are required' });
+    if (!name || !email) {
+      return res.status(400).json({ error: 'Name and email are required' });
     }
 
     await client.query('BEGIN');
 
-    // Hash password if provided
-    let userId = null;
-    if (password && password.trim().length > 0) {
-      const passwordHash = await bcrypt.hash(password, 10);
-      const userResult = await client.query(
-        'INSERT INTO users (email, password_hash, role, name) VALUES ($1, $2, $3, $4) RETURNING id',
-        [email || `${staff_no}@school.edu`, passwordHash, 'staff', name]
-      );
-      userId = userResult.rows[0].id;
-    }
+    // Create user record
+    const passwordHash = await bcrypt.hash(password || 'Staff123!', 10);
+    const userResult = await client.query(
+      'INSERT INTO users (full_name, email, phone, password, role, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+      [name, email, phone || null, passwordHash, role || 'staff', 'approved']
+    );
+    const userId = userResult.rows[0].id;
 
+    // Create staff record (Optional: keep if you need staff_no/department)
     const result = await client.query(
       `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
        RETURNING id, staff_no, name, email, phone, department, approved, created_at`,
-      [userId, staff_no, name, (email && email.trim() !== '') ? email : null, phone || null, department || null, false]
+      [userId, staff_no || `STF${Date.now()}`, name, email, phone || null, department || null, true]
     );
 
     await client.query('COMMIT');
-    console.log('✅ Staff registered successfully:', staff_no);
     res.status(201).json(result.rows[0]);
   } catch (error) {
     await client.query('ROLLBACK');
-    console.error('❌ Create staff error details:', {
-      message: error.message,
-      detail: error.detail,
-      code: error.code,
-      stack: error.stack
-    });
-
-    if (error.code === '23505') { // Unique violation
-      return res.status(400).json({ error: 'Staff number or email already exists' });
-    }
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Create staff error:', error);
+    res.status(500).json({ error: error.code === '23505' ? 'Staff number or email already exists' : 'Internal server error' });
   } finally {
     client.release();
   }
