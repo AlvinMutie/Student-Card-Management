@@ -81,7 +81,7 @@ router.post('/register', async (req, res) => {
     await client.query(
       `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
        VALUES ($1, $2, $3, $4, $5, $6, false)`,
-      [userId, staff_no || `WEB-${Date.now()}`, full_name, email, phone || null, department || null]
+      [userId, staff_no || staffNumber || `WEB-${Date.now()}`, full_name, email, phone || null, department || null]
     );
 
     await client.query('COMMIT');
@@ -106,7 +106,7 @@ router.post('/register', async (req, res) => {
 router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   const client = await pool.connect();
   try {
-    const { staff_no, name, email, phone, department, password, role } = req.body;
+    const { staff_no, name, email, phone, department, password, role, status } = req.body;
 
     if (!name || !email) {
       return res.status(400).json({ error: 'Name and email are required' });
@@ -116,22 +116,31 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
 
     // Create user record
     const passwordHash = await bcrypt.hash(password || 'Staff123!', 10);
+    const userRole = role || 'staff';
+    const userStatus = status || 'approved'; // Default to approved if admin adds them
+
     const userResult = await client.query(
       'INSERT INTO users (full_name, email, phone, password, role, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-      [name, email, phone || null, passwordHash, role || 'staff', 'approved']
+      [name, email, phone || null, passwordHash, userRole, userStatus]
     );
     const userId = userResult.rows[0].id;
 
-    // Create staff record (Optional: keep if you need staff_no/department)
+    // Create staff record
+    const isApproved = userStatus === 'approved';
     const result = await client.query(
       `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
        VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id, staff_no, name, email, phone, department, approved, created_at`,
-      [userId, staff_no || `STF${Date.now()}`, name, email, phone || null, department || null, true]
+       RETURNING id as staff_table_id, staff_no, name, email, phone, department, approved, created_at`,
+      [userId, staff_no || `STF${Date.now()}`, name, email, phone || null, department || null, isApproved]
     );
 
     await client.query('COMMIT');
-    res.status(201).json(result.rows[0]);
+
+    // Return record where 'id' is the user ID to maintain UI consistency
+    res.status(201).json({
+      ...result.rows[0],
+      id: userId
+    });
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Create staff error:', error);

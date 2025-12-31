@@ -73,7 +73,7 @@ async function setup() {
             INSERT INTO users (full_name, email, phone, password, role, status)
             VALUES ('Demo Parent', 'demo@example.com', '0700000000', $1, 'parent', 'approved')
             ON CONFLICT (email) DO UPDATE 
-            SET full_name = EXCLUDED.full_name, phone = EXCLUDED.phone, status = EXCLUDED.status
+            SET full_name = EXCLUDED.full_name, phone = EXCLUDED.phone, status = EXCLUDED.status, password = EXCLUDED.password
             RETURNING id
         `, [demoHash]);
 

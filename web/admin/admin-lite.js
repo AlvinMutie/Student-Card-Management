@@ -693,7 +693,7 @@ async function deleteStaff(id) {
 
 async function approveStaff(id) {
   try {
-    await staffAPI.update(id, { status: 'approved', approved: true });
+    await adminAPI.approveStaff(id);
     staffCache = await staffAPI.getAll();
     renderStaffTable();
     await loadCounts();

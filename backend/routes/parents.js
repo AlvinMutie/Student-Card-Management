@@ -80,7 +80,68 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
   }
 });
 
-// Create parent (admin only or registration)
+// Public parent registration with student linking
+router.post('/register', async (req, res) => {
+  const client = await pool.connect();
+  try {
+    const { parent, students } = req.body;
+
+    if (!parent || !parent.name || !parent.email || !parent.password) {
+      return res.status(400).json({ error: 'Parent name, email, and password are required' });
+    }
+
+    await client.query('BEGIN');
+
+    // 1. Create user account
+    const passwordHash = await bcrypt.hash(parent.password, 10);
+    const userResult = await client.query(
+      'INSERT INTO users (full_name, email, phone, password, role, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+      [parent.name, parent.email, parent.phone || null, passwordHash, 'parent', 'approved']
+    );
+    const userId = userResult.rows[0].id;
+
+    // 2. Create parent profile
+    const parentResult = await client.query(
+      'INSERT INTO parents (user_id, name, email, phone) VALUES ($1, $2, $3, $4) RETURNING id',
+      [userId, parent.name, parent.email, parent.phone || null]
+    );
+    const parentId = parentResult.rows[0].id;
+
+    // 3. Link students (if any)
+    const linkedStudents = [];
+    if (Array.isArray(students) && students.length > 0) {
+      for (const s of students) {
+        if (!s.admission) continue;
+        const studentResult = await client.query(
+          'UPDATE students SET parent_id = $1, updated_at = CURRENT_TIMESTAMP WHERE UPPER(adm) = $2 RETURNING id, name',
+          [parentId, s.admission.toUpperCase()]
+        );
+        if (studentResult.rows.length > 0) {
+          linkedStudents.push(studentResult.rows[0]);
+        }
+      }
+    }
+
+    await client.query('COMMIT');
+
+    res.status(201).json({
+      message: 'Parent registered successfully',
+      user: { id: userId, email: parent.email, role: 'parent' },
+      linkedStudents
+    });
+  } catch (error) {
+    await client.query('ROLLBACK');
+    if (error.code === '23505') {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+    console.error('Parent registration error:', error);
+    res.status(500).json({ error: 'Failed to register parent account' });
+  } finally {
+    client.release();
+  }
+});
+
+// Create parent (admin only or registration - Legacy compatibility)
 router.post('/', async (req, res) => {
   const client = await pool.connect();
   try {
