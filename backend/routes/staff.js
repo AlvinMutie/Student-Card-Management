@@ -53,8 +53,8 @@ router.post('/', async (req, res) => {
     if (password && password.trim().length > 0) {
       passwordHash = await bcrypt.hash(password, 10);
       const userResult = await pool.query(
-        'INSERT INTO users (email, password_hash, role) VALUES ($1, $2, $3) RETURNING id',
-        [email || `${staff_no}@school.edu`, passwordHash, 'staff']
+        'INSERT INTO users (email, password_hash, role, name) VALUES ($1, $2, $3, $4) RETURNING id',
+        [email || `${staff_no}@school.edu`, passwordHash, 'staff', name]
       );
       userId = userResult.rows[0].id;
     }
