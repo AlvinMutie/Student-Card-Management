@@ -48,13 +48,13 @@ async function setup() {
 
         // Insert Admin
         await pool.query(
-            "INSERT INTO users (full_name, email, password, role, status) VALUES ($1, $2, $3, $4, $5)",
+            "INSERT INTO users (full_name, email, password, role, status) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status, full_name = EXCLUDED.full_name",
             ['System Administrator', 'admin@example.com', adminHash, 'admin', 'approved']
         );
 
         // Insert Parent
         await pool.query(
-            "INSERT INTO users (full_name, email, password, role, status) VALUES ($1, $2, $3, $4, $5)",
+            "INSERT INTO users (full_name, email, password, role, status) VALUES ($1, $2, $3, $4, $5) ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status, full_name = EXCLUDED.full_name",
             ['Sarah Onyango', 'parent@example.com', parentHash, 'parent', 'approved']
         );
 
