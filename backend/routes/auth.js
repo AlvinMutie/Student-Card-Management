@@ -26,8 +26,9 @@ router.post('/login', async (req, res) => {
     }
 
     const user = userResult.rows[0];
+    console.log('🔍 Login attempt for:', email, 'Status:', user.status);
 
-    // Check status
+    // 1. Check if user is approved
     if (user.status !== 'approved') {
       if (user.status === 'pending') {
         return res.status(403).json({ error: 'Account awaiting admin approval' });
@@ -36,7 +37,13 @@ router.post('/login', async (req, res) => {
       }
     }
 
-    // Verify password using bcrypt
+    // 2. Critical Check: Ensure password exists in DB to prevent bcrypt crash
+    if (!user.password) {
+      console.error('❌ Security Alert: User found but has NULL password in DB:', email);
+      return res.status(401).json({ error: 'Account not fully set up. Contact system administrator.' });
+    }
+
+    // 3. Verify password using bcrypt
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
       return res.status(401).json({ error: 'Invalid email or password' });
