@@ -10,8 +10,148 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #064e3b;
+      --accent: #8b5cf6;
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.3);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0%, #f0fdf4 40%, #fafaf9 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .garden-header {
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 99px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .garden-main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+    }
+
+    .section-lead {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-lead h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .section-lead p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .theme-grid-two {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+      padding: 3.5rem;
+      border-radius: 32px;
+      color: white;
+      box-shadow: 0 20px 40px rgba(5, 150, 105, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .feature-card h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      opacity: 0.9;
+    }
+
     .login-container {
-      padding: 3rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 3.5rem;
+      border-radius: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     }
 
     .input-group {
@@ -20,144 +160,91 @@
 
     .input-group label {
       display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 600;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
       color: var(--text-main);
-      font-size: 0.95rem;
+    }
+
+    .theme-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid rgba(0, 0, 0, 0.05);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.5);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .theme-input:focus {
+      border-color: #059669;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
     }
 
     .forgot-password {
       text-align: right;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
     }
 
     .forgot-password a {
       color: var(--primary);
       text-decoration: none;
+      font-weight: 700;
       font-size: 0.9rem;
-      font-weight: 500;
     }
 
-    .forgot-password a:hover {
-      text-decoration: underline;
-    }
-
-    .login-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .login-actions button {
+    .theme-btn.primary {
       width: 100%;
-      padding: 12px;
-      font-size: 1rem;
+      padding: 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
+      color: white;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(5, 150, 105, 0.2);
+    }
+
+    .theme-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
     }
 
     .register-link {
       text-align: center;
-      font-size: 0.95rem;
+      margin-top: 2rem;
+      font-weight: 600;
       color: var(--text-muted);
     }
 
     .register-link a {
       color: var(--primary);
-      font-weight: 600;
       text-decoration: none;
+      font-weight: 800;
     }
 
-    .feature-card {
+    .garden-footer {
       padding: 3rem;
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-      color: var(--text-white);
-      border-radius: 24px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0f4c3a 0%, #1a5f47 25%, #2d7a5f 50%, #8b1538 75%, #6b1a2f 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 20s ease infinite;
-      z-index: 0;
-    }
-
-    @keyframes gradientShift {
-      0% {
-        background-position: 0% 50%;
-      }
-
-      50% {
-        background-position: 100% 50%;
-      }
-
-      100% {
-        background-position: 0% 50%;
-      }
-    }
-
-    .feature-card>* {
-      position: relative;
-      z-index: 1;
-    }
-
-    .garden-body {
-      position: relative;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    .garden-body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #0f4c3a 0%, #1a5f47 25%, #2d7a5f 50%, #8b1538 75%, #6b1a2f 100%);
-      background-size: 400% 400%;
-      animation: gradientShift 20s ease infinite;
-      z-index: -1;
-      opacity: 0.1;
-    }
-
-    .feature-icon {
-      font-size: 3rem;
-      margin-bottom: 1.5rem;
-      color: var(--accent-light);
-    }
-
-    .feature-card h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-    }
-
-    .feature-card p {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 1.1rem;
-      line-height: 1.6;
+      text-align: center;
+      color: var(--text-muted);
+      font-weight: 500;
     }
 
     @media (max-width: 768px) {
-      .login-container {
-        padding: 2rem;
+      .theme-grid-two {
+        grid-template-columns: 1fr;
       }
 
-      .feature-card {
+      .section-lead h1 {
+        font-size: 2rem;
+      }
+
+      .login-container {
         padding: 2rem;
-        min-height: 300px;
       }
     }
   </style>
@@ -173,8 +260,7 @@
 
   <header class="garden-header">
     <div class="brand-pill">
-      <img src="/favicon.ico" alt="School Portal Logo" class="brand-icon"
-        onerror="this.style.display='none'">
+      <img src="/favicon.ico" alt="School Portal Logo" class="brand-icon" onerror="this.style.display='none'">
       <span>School Portal</span>
     </div>
   </header>
