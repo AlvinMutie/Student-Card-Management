@@ -66,10 +66,31 @@ async function setup() {
         console.log('- Parent: parent@example.com / parent123');
         console.log('--------------------------------------------------');
 
-        process.exit(0);
-    } catch (error) {
-        console.error('❌ Setup failed:', error.message);
+        // 4. Create Demo Parent for Client Presentation
+        console.log('📡 Seeding demo parent data...');
+        const demoHash = await bcrypt.hash('demo123', 10);
+        const demoParent = await pool.query(`
+            INSERT INTO users (full_name, email, phone, password, role, status)
+            VALUES ('Demo Parent', 'demo@example.com', '0700000000', $1, 'parent', 'approved')
+            ON CONFLICT (email) DO UPDATE 
+            SET full_name = EXCLUDED.full_name, phone = EXCLUDED.phone, status = EXCLUDED.status
+            RETURNING id
+        `, [demoHash]);
+
+        // Ensure a sample student exists to link to
+        await pool.query(`
+            INSERT INTO students (adm, name, class, stream, fee_balance, parent_email)
+            VALUES ('ST001', 'Sample Student (Demo)', 'Grade 4', 'North', 15000.00, 'demo@example.com')
+            ON CONFLICT (adm) DO NOTHING
+        `);
+
+        console.log('✅ Database setup complete! Demo account: demo@example.com / demo123');
+    } catch (err) {
+        console.error('❌ Setup failed:', err);
         process.exit(1);
+    } finally {
+        await pool.end();
+        process.exit(0);
     }
 }
 
