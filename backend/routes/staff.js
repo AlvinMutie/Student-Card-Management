@@ -17,13 +17,13 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
         u.phone, 
         u.role, 
         u.status,
-        s.staff_no,
-        s.department,
-        s.approved,
+        COALESCE(s.staff_no, 'PENDING') as staff_no,
+        COALESCE(s.department, 'Not Assigned') as department,
+        COALESCE(s.approved, false) as approved,
         u.created_at
       FROM users u
       LEFT JOIN staff s ON u.id = s.user_id
-      WHERE u.role NOT IN ('admin', 'parent')
+      WHERE u.role NOT IN ('admin')
       ORDER BY u.created_at DESC
     `);
     res.json(result.rows);
@@ -102,7 +102,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Create staff (Internal/Admin use)
+// Create staff (Internal/Admin use) - "Smart" Creation
 router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   const client = await pool.connect();
   try {
@@ -114,40 +114,64 @@ router.post('/', authenticateToken, authorizeRole('admin'), async (req, res) => 
 
     await client.query('BEGIN');
 
-    // Create user record
-    const passwordHash = await bcrypt.hash(password || 'Staff123!', 10);
-    const userRole = role || 'staff';
-    const userStatus = status || 'approved'; // Default to approved if admin adds them
+    // Check if user already exists
+    const existingUser = await client.query('SELECT id, role, status FROM users WHERE email = $1', [email]);
 
-    const userResult = await client.query(
-      'INSERT INTO users (full_name, email, phone, password, role, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-      [name, email, phone || null, passwordHash, userRole, userStatus]
-    );
-    const userId = userResult.rows[0].id;
+    let userId;
+    if (existingUser.rows.length > 0) {
+      userId = existingUser.rows[0].id;
+      // "Upgrade" existing user to staff if they are not admin/parent, or just update info
+      await client.query(
+        `UPDATE users 
+         SET full_name = $1, phone = COALESCE($2, phone), role = 'staff', status = $3, updated_at = CURRENT_TIMESTAMP 
+         WHERE id = $4`,
+        [name, phone || null, status || 'approved', userId]
+      );
+    } else {
+      // Create new user
+      const passwordHash = await bcrypt.hash(password || 'Staff123!', 10);
+      const userResult = await client.query(
+        'INSERT INTO users (full_name, email, phone, password, role, status) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+        [name, email, phone || null, passwordHash, 'staff', status || 'approved']
+      );
+      userId = userResult.rows[0].id;
+    }
 
-    // Create staff record
-    const isApproved = userStatus === 'approved';
-    const result = await client.query(
-      `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id as staff_table_id, staff_no, name, email, phone, department, approved, created_at`,
-      [userId, staff_no || `STF${Date.now()}`, name, email, phone || null, department || null, isApproved]
-    );
+    // Ensure staff record exists (UPSERT for staff table)
+    const staffCheck = await client.query('SELECT id FROM staff WHERE user_id = $1', [userId]);
+    let staffResult;
+
+    if (staffCheck.rows.length > 0) {
+      staffResult = await client.query(
+        `UPDATE staff 
+         SET staff_no = COALESCE($1, staff_no), name = $2, email = $3, phone = COALESCE($4, phone), 
+             department = COALESCE($5, department), approved = $6, updated_at = CURRENT_TIMESTAMP
+         WHERE user_id = $7
+         RETURNING id as staff_table_id, staff_no, name, email, phone, department, approved, created_at`,
+        [staff_no, name, email, phone || null, department || null, (status || 'approved') === 'approved', userId]
+      );
+    } else {
+      staffResult = await client.query(
+        `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         RETURNING id as staff_table_id, staff_no, name, email, phone, department, approved, created_at`,
+        [userId, staff_no || `STF${Date.now()}`, name, email, phone || null, department || null, (status || 'approved') === 'approved']
+      );
+    }
 
     await client.query('COMMIT');
 
-    // Return record where 'id' is the user ID to maintain UI consistency
     res.status(201).json({
-      ...result.rows[0],
+      ...staffResult.rows[0],
       id: userId
     });
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Create staff error:', error);
-    const isConflict = error.code === '23505';
-    res.status(isConflict ? 400 : 500).json({
-      error: isConflict ? 'Email or Staff Number already exists' : 'Internal server error'
-    });
+    if (error.code === '23505') {
+      return res.status(400).json({ error: 'Staff Number already exists for another account.' });
+    }
+    res.status(500).json({ error: 'Internal server error' });
   } finally {
     client.release();
   }
@@ -168,7 +192,7 @@ router.put('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
            department = COALESCE($5, department),
            approved = COALESCE($6, approved),
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $7
+       WHERE user_id = $7
        RETURNING id, staff_no, name, email, phone, department, approved, created_at`,
       [staff_no, name, email, phone, department, approved, id]
     );
