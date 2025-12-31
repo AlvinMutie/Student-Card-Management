@@ -341,9 +341,26 @@ const staffAPI = {
   },
 };
 
+// Admin API
+const adminAPI = {
+  async getPendingStaff() {
+    return apiRequest('/admin/pending-staff');
+  },
+  async approveStaff(userId) {
+    return apiRequest(`/admin/approve-staff/${userId}`, {
+      method: 'PUT',
+    });
+  },
+  async disableStaff(userId) {
+    return apiRequest(`/admin/disable-staff/${userId}`, {
+      method: 'PUT',
+    });
+  },
+};
+
 // Export API objects
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI };
+  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI, adminAPI };
 }
 
 // Make available globally for browser use
@@ -351,4 +368,5 @@ window.authAPI = authAPI;
 window.studentsAPI = studentsAPI;
 window.parentsAPI = parentsAPI;
 window.staffAPI = staffAPI;
+window.adminAPI = adminAPI;
 

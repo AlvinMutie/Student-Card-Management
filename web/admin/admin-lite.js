@@ -573,23 +573,28 @@ function renderStaffTable() {
   tbody.innerHTML = staffCache
     .map(
       (s) => {
-        const staffId = s.id || s._id || s.staff_no;
+        const userId = s.id;
+        // Staff is approved if either status='approved' or approved flag is true
         const isApproved = (s.status || '').toLowerCase() === 'approved' || s.approved === true || s.approved === 'true';
-        const statusLabel = isApproved ? 'Approved' : 'Pending';
+        const statusLabel = isApproved ? 'Approved' : (s.status === 'disabled' ? 'Disabled' : 'Pending');
+        const statusClass = isApproved ? 'approved' : (s.status === 'disabled' ? 'delete' : 'pending');
+
         return `<tr>
         <td>${s.name || ''}</td>
-        <td>${s.staff_no || ''}</td>
+        <td>${s.staff_no || '<span style="color:#94a3b8; font-style:italic;">Not Assigned</span>'}</td>
         <td>${s.email || ''}</td>
         <td>${s.phone || ''}</td>
         <td>${s.department || ''}</td>
-        <td>${statusLabel}</td>
+        <td><span class="status-chip ${statusClass}">${statusLabel}</span></td>
         <td>
-          ${isApproved
-            ? '<span class="status-chip approved">Approved</span>'
-            : `<button class="btn-small" data-approve-staff="${staffId}">Approve</button>`
+          <div style="display:flex; gap:6px;">
+            ${!isApproved
+            ? `<button class="btn-small" style="background:#10b981;" data-approve-staff="${userId}">Approve</button>`
+            : ''
           }
-          <button class="btn-small" data-edit-staff="${staffId}">Edit</button>
-          <button class="btn-small" data-delete-staff="${staffId}">Delete</button>
+            <button class="btn-small" data-edit-staff="${userId}">Edit</button>
+            <button class="btn-small" style="background:#ef4444;" data-delete-staff="${userId}">Delete</button>
+          </div>
         </td>
       </tr>`;
       }

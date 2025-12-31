@@ -6,25 +6,41 @@ const router = express.Router();
 
 // Approve staff account
 router.put('/approve-staff/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
+    const client = await pool.connect();
     try {
         const { id } = req.params;
 
-        const result = await pool.query(
+        await client.query('BEGIN');
+
+        // 1. Update users table
+        const userResult = await client.query(
             "UPDATE users SET status = 'approved', updated_at = CURRENT_TIMESTAMP WHERE id = $1 AND role NOT IN ('admin', 'parent') RETURNING id, full_name, email, role, status",
             [id]
         );
 
-        if (result.rows.length === 0) {
+        if (userResult.rows.length === 0) {
+            await client.query('ROLLBACK');
             return res.status(404).json({ error: 'Staff account not found or cannot be approved' });
         }
 
+        // 2. Update staff table (if entry exists)
+        await client.query(
+            "UPDATE staff SET approved = true WHERE user_id = $1",
+            [id]
+        );
+
+        await client.query('COMMIT');
+
         res.json({
             message: 'Staff account approved successfully',
-            user: result.rows[0]
+            user: userResult.rows[0]
         });
     } catch (error) {
+        await client.query('ROLLBACK');
         console.error('Approve staff error:', error);
         res.status(500).json({ error: 'Failed to approve staff account' });
+    } finally {
+        client.release();
     }
 });
 

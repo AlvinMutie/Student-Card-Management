@@ -8,9 +8,24 @@ const router = express.Router();
 // Get all staff (admin only)
 router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
-    const result = await pool.query(
-      'SELECT id, staff_no, name, email, phone, department, approved, created_at FROM staff ORDER BY created_at DESC'
-    );
+    // We join users and staff to see everyone, including those registered on web but not yet in staff table
+    const result = await pool.query(`
+      SELECT 
+        u.id, 
+        u.full_name as name, 
+        u.email, 
+        u.phone, 
+        u.role, 
+        u.status,
+        s.staff_no,
+        s.department,
+        s.approved,
+        u.created_at
+      FROM users u
+      LEFT JOIN staff s ON u.id = s.user_id
+      WHERE u.role NOT IN ('admin', 'parent')
+      ORDER BY u.created_at DESC
+    `);
     res.json(result.rows);
   } catch (error) {
     console.error('Get staff error:', error);
@@ -40,34 +55,50 @@ router.get('/:id', authenticateToken, authorizeRole('admin'), async (req, res) =
 
 // Public staff registration (Website only)
 router.post('/register', async (req, res) => {
+  const client = await pool.connect();
   try {
-    const { full_name, email, phone, password, role } = req.body;
+    const { full_name, email, phone, password, role, staff_no, department } = req.body;
 
     if (!full_name || !email || !password || !role) {
       return res.status(400).json({ error: 'Full name, email, password, and role are required' });
     }
 
+    await client.query('BEGIN');
+
     // Hash password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Insert into users table
-    const result = await pool.query(
+    // 1. Insert into users table
+    const userResult = await client.query(
       `INSERT INTO users (full_name, email, phone, password, role, status)
        VALUES ($1, $2, $3, $4, $5, 'pending')
-       RETURNING id, full_name, email, role, status, created_at`,
+       RETURNING id`,
       [full_name, email, phone || null, passwordHash, role]
     );
+    const userId = userResult.rows[0].id;
+
+    // 2. Insert into staff table (so they show up in Admin Dashboard)
+    await client.query(
+      `INSERT INTO staff (user_id, staff_no, name, email, phone, department, approved)
+       VALUES ($1, $2, $3, $4, $5, $6, false)`,
+      [userId, staff_no || `WEB-${Date.now()}`, full_name, email, phone || null, department || null]
+    );
+
+    await client.query('COMMIT');
 
     res.status(201).json({
       message: 'Registration successful. Waiting for admin approval.',
-      user: result.rows[0]
+      user: { id: userId, full_name, email, role, status: 'pending' }
     });
   } catch (error) {
+    await client.query('ROLLBACK');
     if (error.code === '23505') { // Unique violation
-      return res.status(400).json({ error: 'Email already exists' });
+      return res.status(400).json({ error: 'Email or Staff Number already exists' });
     }
     console.error('Staff registration error:', error);
     res.status(500).json({ error: 'Failed to register staff account' });
+  } finally {
+    client.release();
   }
 });
 
