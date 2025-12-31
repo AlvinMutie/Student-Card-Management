@@ -246,6 +246,23 @@
               <input type="text" id="staffNumber" class="theme-input" placeholder="Enter your staff ID" required>
             </div>
 
+            <div class="input-group">
+              <label for="department">Department</label>
+              <select id="department" class="theme-input" required>
+                <option value="" disabled selected>Select your department</option>
+                <option value="Administration">Administration</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Sciences">Sciences</option>
+                <option value="Languages">Languages</option>
+                <option value="Humanities">Humanities</option>
+                <option value="Technical">Technical</option>
+                <option value="Sports">Sports</option>
+                <option value="Boarding">Boarding</option>
+                <option value="Support Staff">Support Staff</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
             <div class="verification-note">
               <i class="fas fa-info-circle"></i>
               <div>
@@ -321,6 +338,8 @@
           return;
         }
 
+        const department = document.getElementById('department').value;
+
         // Call staff API
         const response = await staffAPI.create({
           staff_no: staffNumber,
@@ -328,7 +347,7 @@
           email: email,
           phone: phone,
           password: password,
-          department: null // Can be set later by admin
+          department: department
         });
 
         if (response && response.id) {
