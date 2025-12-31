@@ -8,34 +8,25 @@ async function setup() {
         // 1. Add/Verify Columns
         console.log('📡 Updating users table schema...');
 
-        await pool.query(`
-            DO $$ 
-            BEGIN 
-                -- Add full_name if missing
-                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='full_name') THEN
-                    ALTER TABLE users ADD COLUMN full_name VARCHAR(255);
-                END IF;
+        await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS full_name VARCHAR(255)`);
+        await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20)`);
+        await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'pending'`);
 
-                -- Add phone if missing
-                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='phone') THEN
-                    ALTER TABLE users ADD COLUMN phone VARCHAR(20);
-                END IF;
+        try {
+            await pool.query(`ALTER TABLE users RENAME COLUMN password_hash TO password`);
+            console.log('✅ Renamed password_hash to password');
+        } catch (e) {
+            if (e.code === '42703') { // Column does not exist (already renamed)
+                console.log('ℹ️ password_hash already renamed or does not exist');
+            } else if (e.code === '42701') { // Column "password" already exists
+                console.log('ℹ️ password column already exists');
+            } else {
+                throw e;
+            }
+        }
 
-                -- Add status if missing
-                IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='status') THEN
-                    ALTER TABLE users ADD COLUMN status VARCHAR(50) DEFAULT 'pending';
-                END IF;
-
-                -- Rename password_hash to password if it exists
-                IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password_hash') THEN
-                    ALTER TABLE users RENAME COLUMN password_hash TO password;
-                END IF;
-
-                -- Update role constraints to allow all types
-                ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
-                ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('admin', 'parent', 'staff', 'teacher', 'kitchen', 'accountant', 'guard', 'other'));
-            END $$;
-        `);
+        await pool.query(`ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check`);
+        await pool.query(`ALTER TABLE users ADD CONSTRAINT users_role_check CHECK (role IN ('admin', 'parent', 'staff', 'teacher', 'kitchen', 'accountant', 'guard', 'other'))`);
 
         // 2. Clear out any "broken" tests that might block registration
         console.log('🧹 Cleaning up old test data...');
