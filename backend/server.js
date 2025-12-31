@@ -95,6 +95,19 @@ async function testDatabaseConnection() {
 
     if (tableCheck.rows[0].exists) {
       console.log('✅ Users table exists');
+
+      // AUTO-HEAL: Ensure staff/parents have user_id
+      try {
+        await pool.query(`ALTER TABLE staff ADD COLUMN IF NOT EXISTS user_id INTEGER`);
+        await pool.query(`ALTER TABLE parents ADD COLUMN IF NOT EXISTS user_id INTEGER`);
+        // Foreign keys
+        await pool.query(`ALTER TABLE staff DROP CONSTRAINT IF EXISTS staff_user_id_fkey`);
+        await pool.query(`ALTER TABLE staff ADD CONSTRAINT staff_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE`);
+        console.log('✅ Schema patched: staff/parents user_id validated.');
+      } catch (patchErr) {
+        console.warn('⚠️ Schema patch warning:', patchErr.message);
+      }
+
     } else {
       console.warn('⚠️  WARNING: Users table does not exist. Run migrations!');
     }

@@ -69,6 +69,22 @@ async function setup() {
             )
         `);
 
+        // CRITICAL FIX: Patch existing tables that might lack user_id
+        console.log('🔧 Patching existing tables...');
+        try {
+            await pool.query(`ALTER TABLE staff ADD COLUMN IF NOT EXISTS user_id INTEGER`);
+            await pool.query(`ALTER TABLE parents ADD COLUMN IF NOT EXISTS user_id INTEGER`);
+
+            // Re-apply foreign keys to be safe
+            await pool.query(`ALTER TABLE staff DROP CONSTRAINT IF EXISTS staff_user_id_fkey`);
+            await pool.query(`ALTER TABLE staff ADD CONSTRAINT staff_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE`);
+
+            await pool.query(`ALTER TABLE parents DROP CONSTRAINT IF EXISTS parents_user_id_fkey`);
+            await pool.query(`ALTER TABLE parents ADD CONSTRAINT parents_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE`);
+        } catch (e) {
+            console.log('⚠️ Note on constraints:', e.message);
+        }
+
         // 2. Clear out any "broken" tests that might block registration
         console.log('🧹 Cleaning up old test data...');
         await pool.query("DELETE FROM users WHERE email IN ('admin@example.com', 'parent@example.com', 'kyaloalvin@hechlink.edu')");
