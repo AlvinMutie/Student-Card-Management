@@ -8,31 +8,31 @@ async function setup() {
         // 1. Add/Verify Columns
         console.log('📡 Updating users table schema...');
 
-        // Ensure new columns exist
+        // Ensure columns exist first (without constraints)
         await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS full_name VARCHAR(255)`);
         await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20)`);
         await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'pending'`);
+        await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS password VARCHAR(255)`);
 
-        // Aggressive Cleanup: If password_hash still exists, rename or drop it
+        // Handle the password_hash -> password migration safely
         await pool.query(`
             DO $$ 
             BEGIN 
-                -- If we have both, drop the old one (this is usually why it fails)
-                IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password') AND
-                   EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password_hash') THEN
+                -- If we have password_hash, migrate its data to 'password' if 'password' is null
+                IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password_hash') THEN
+                    UPDATE users SET password = password_hash WHERE password IS NULL;
+                    -- Now we can safely drop it
                     ALTER TABLE users DROP COLUMN password_hash CASCADE;
-                END IF;
-
-                -- If we ONLY have the old one, rename it to 'password'
-                IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password_hash') AND
-                   NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password') THEN
-                    ALTER TABLE users RENAME COLUMN password_hash TO password;
                 END IF;
             END $$;
         `);
 
-        // Final safety: ensuring the 'password' column exists and is NOT NULL
-        await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS password VARCHAR(255)`);
+        // CRITICAL FIX: Fill any remaining NULL passwords before setting NOT NULL
+        // This prevents the "column contains null values" error
+        const fallbackHash = await bcrypt.hash('ResetMe123!', 10);
+        await pool.query('UPDATE users SET password = $1 WHERE password IS NULL', [fallbackHash]);
+
+        // Now safe to set NOT NULL
         await pool.query(`ALTER TABLE users ALTER COLUMN password SET NOT NULL`);
 
         await pool.query(`ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check`);
