@@ -50,7 +50,7 @@
 
       // Role-based redirection for Secretary
       const currentPage = window.location.pathname.split('/').pop();
-      const secretaryAllowedPages = ['secretary_dashboard.html', 'visitors.html', 'admin_login.html'];
+      const secretaryAllowedPages = ['secretary_dashboard.html', 'secretary_visitors.html', 'secretary_settings.html', 'admin_login.html'];
 
       if (userData.role === 'secretary' && !secretaryAllowedPages.includes(currentPage) && currentPage !== '') {
         location.href = '/admin/secretary_dashboard.html';
