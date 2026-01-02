@@ -387,8 +387,8 @@ router.get('/parent/my-students', authenticateToken, authorizeRole('parent'), as
 
     res.json(result.rows);
   } catch (error) {
-    console.error('Get parent students error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(`[ERROR] Get parent students error for Parent ID ${parentId}:`, error);
+    res.status(500).json({ error: 'Failed to retrieve linked students', details: error.message });
   }
 });
 
