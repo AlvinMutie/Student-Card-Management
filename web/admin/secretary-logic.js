@@ -18,9 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
     logoutBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            // Clear all possible session tokens
             localStorage.removeItem('sv_token');
+            localStorage.removeItem('sv_admin_token');
+            localStorage.removeItem('sv_auth_token');
             localStorage.removeItem('sv_user_data');
-            window.location.href = '/admin_login.html';
+
+            // Redirect to landing page
+            window.location.href = '/';
         });
     });
 });
