@@ -351,6 +351,16 @@ const visitorsAPI = {
       method: 'PUT',
     });
   },
+  async approve(id) {
+    return apiRequest(`/visitors/approve/${id}`, {
+      method: 'PUT',
+    });
+  },
+  async reject(id) {
+    return apiRequest(`/visitors/reject/${id}`, {
+      method: 'PUT',
+    });
+  },
   async delete(id) {
     return apiRequest(`/visitors/${id}`, {
       method: 'DELETE',

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS visitors (
     plate_number VARCHAR(20),
     purpose TEXT,
     host_name VARCHAR(255), -- Who they are visiting
-    status VARCHAR(20) DEFAULT 'checked_in', -- checked_in, checked_out, blacklisted
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'checked_out', 'blacklisted')), -- pending, approved, rejected, checked_out, blacklisted
     check_in_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     check_out_time TIMESTAMP,
     qr_token VARCHAR(255) UNIQUE, -- Secure token for scanning
