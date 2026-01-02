@@ -4,6 +4,11 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Role Enforcement
+    if (typeof authAPI !== 'undefined') {
+        if (!authAPI.enforcePortalAccess(['secretary', 'staff'], '/public/admin_login.html')) return;
+    }
+
     // 1. Initial Data Load
     loadDashboardData();
 

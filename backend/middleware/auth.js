@@ -62,6 +62,11 @@ const authorizeRole = (...allowedRoles) => {
       return res.status(401).json({ error: 'Authentication required' });
     }
 
+    // BYPASS: Admins can access everything for support/monitoring
+    if (req.user.role === 'admin') {
+      return next();
+    }
+
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({ error: 'Insufficient permissions' });
     }

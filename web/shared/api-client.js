@@ -230,6 +230,35 @@ const authAPI = {
   isAuthenticated() {
     return !!getAuthToken();
   },
+
+  getCurrentUser() {
+    const data = localStorage.getItem('sv_user_data') || localStorage.getItem('sv_parent_user');
+    try {
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  enforcePortalAccess(allowedRoles, redirectPath = '/index.html') {
+    const user = this.getCurrentUser();
+    const token = getAuthToken();
+
+    if (!token || !user) {
+      window.location.href = redirectPath;
+      return false;
+    }
+
+    // Admins can go anywhere
+    if (user.role === 'admin') return true;
+
+    if (!allowedRoles.includes(user.role)) {
+      alert('Access Denied: You do not have permission to view this portal.');
+      window.location.href = redirectPath;
+      return false;
+    }
+    return true;
+  }
 };
 
 // Students API
