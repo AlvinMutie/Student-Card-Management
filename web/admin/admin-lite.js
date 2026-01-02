@@ -31,29 +31,36 @@ function setText(sel, value) {
 // ---------- dashboard ----------
 async function loadCounts() {
   try {
-    const [students, parents, staff] = await Promise.all([
+    const [students, parents, staff, visitors] = await Promise.all([
       studentsAPI.getAll().catch(() => []),
       parentsAPI.getAll().catch(() => []),
       staffAPI.getAll().catch(() => []),
+      visitorsAPI.getAll().catch(() => []),
     ]);
     const pendingStaff = staff.filter((s) => (s.status || '').toLowerCase() !== 'approved' && !s.approved).length;
     setText('#countStudents', students.length);
     setText('#countParents', parents.length);
     setText('#countStaff', staff.length);
     setText('#countPending', pendingStaff);
-    renderRecent(students, parents, staff);
+
+    // Update visitor count if element exists
+    const visitorCountEl = document.querySelector('#countVisitors');
+    if (visitorCountEl) visitorCountEl.textContent = visitors.length;
+
+    renderRecent(students, parents, staff, visitors);
   } catch (err) {
     console.error('loadCounts error', err);
   }
 }
 
-function renderRecent(students = [], parents = [], staff = []) {
+function renderRecent(students = [], parents = [], staff = [], visitors = []) {
   const list = document.querySelector('#recentList');
   if (!list) return;
   const items = [];
   if (students[0]) items.push(`New student: ${students[0].name || students[0].adm}`);
   if (parents[0]) items.push(`New parent: ${parents[0].name || parents[0].email}`);
   if (staff[0]) items.push(`New staff: ${staff[0].name || staff[0].staff_no}`);
+  if (visitors[0]) items.push(`New visitor: ${visitors[0].name || visitors[0].id}`);
   list.innerHTML = items.length
     ? items.map((t) => `<li>${t}</li>`).join('')
     : '<li>No recent activity yet.</li>';
@@ -743,6 +750,113 @@ function wireStaffEvents() {
   }
 }
 
+// ---------- visitors ----------
+let visitorsCache = [];
+
+function renderVisitorsTable(list) {
+  const tbody = document.querySelector('#visitorsBody');
+  if (!tbody) return;
+  if (!list || !list.length) {
+    tbody.innerHTML = '<tr><td colspan="10">No visitor records found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list
+    .map(
+      (v) => {
+        const checkIn = v.check_in_time ? new Date(v.check_in_time).toLocaleString() : '—';
+        const checkOut = v.check_out_time ? new Date(v.check_out_time).toLocaleString() : '—';
+        const isCheckedIn = v.status === 'checked_in';
+        const statusClass = isCheckedIn ? 'status-checked-in' : 'status-checked-out';
+        const statusLabel = isCheckedIn ? 'Checked In' : 'Checked Out';
+
+        return `<tr>
+        <td><span style="font-weight:600; color:#334155;">${v.name || ''}</span></td>
+        <td>${v.id_number || '—'}</td>
+        <td>${v.phone || '—'}</td>
+        <td>${v.plate_number || '—'}</td>
+        <td>${v.purpose || '—'}</td>
+        <td>${v.host_name || '—'}</td>
+        <td>${checkIn}</td>
+        <td>${checkOut}</td>
+        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+        <td>
+          <div style="display:flex; gap:6px;">
+            ${isCheckedIn
+            ? `<button class="btn-small" style="background:#10b981;" data-checkout-visitor="${v.id}">Check Out</button>`
+            : ''
+          }
+            <button class="btn-small" style="background:#ef4444;" data-delete-visitor="${v.id}">Delete</button>
+          </div>
+        </td>
+      </tr>`;
+      }
+    )
+    .join('');
+}
+
+async function loadVisitors() {
+  try {
+    visitorsCache = await visitorsAPI.getAll();
+    renderVisitorsTable(visitorsCache);
+  } catch (err) {
+    console.error('visitors load failed', err);
+    const tbody = document.querySelector('#visitorsBody');
+    if (tbody) tbody.innerHTML = `<tr><td colspan="10" style="color:red; padding:20px; text-align:center;">Error loading visitors: ${err.message}</td></tr>`;
+  }
+}
+
+function initVisitorsPage() {
+  loadVisitors();
+
+  const search = document.querySelector('#visitorSearch');
+  if (search) {
+    search.addEventListener('input', () => {
+      const q = search.value.trim().toLowerCase();
+      const filtered = visitorsCache.filter(v =>
+        [v.name, v.id_number, v.phone, v.plate_number, v.purpose, v.host_name]
+          .filter(Boolean)
+          .some(val => val.toLowerCase().includes(q))
+      );
+      renderVisitorsTable(filtered);
+    });
+  }
+
+  const refreshBtn = document.querySelector('#refreshVisitorsBtn');
+  if (refreshBtn) refreshBtn.onclick = loadVisitors;
+
+  const tbody = document.querySelector('#visitorsBody');
+  if (tbody) {
+    tbody.addEventListener('click', async (e) => {
+      const checkout = e.target.closest('[data-checkout-visitor]');
+      const del = e.target.closest('[data-delete-visitor]');
+
+      if (checkout) {
+        const id = checkout.dataset.checkoutVisitor;
+        if (confirm('Check out this visitor?')) {
+          try {
+            await visitorsAPI.checkOut(id);
+            await loadVisitors();
+          } catch (err) {
+            alert('Check out failed: ' + err.message);
+          }
+        }
+      }
+
+      if (del) {
+        const id = del.dataset.deleteVisitor;
+        if (confirm('Permanently delete this visitor record?')) {
+          try {
+            await visitorsAPI.delete(id);
+            await loadVisitors();
+          } catch (err) {
+            alert('Delete failed: ' + err.message);
+          }
+        }
+      }
+    });
+  }
+}
+
 // ---------- bootstrap ----------
 document.addEventListener('DOMContentLoaded', () => {
   setAdminWelcome();
@@ -759,6 +873,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'students') initStudentsPage();
   if (page === 'parents') initParentsPage();
   if (page === 'staff') initStaffPage();
+  if (page === 'visitors') initVisitorsPage();
   wireStaffEvents();
 });
 

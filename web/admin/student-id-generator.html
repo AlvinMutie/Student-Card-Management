@@ -458,6 +458,13 @@
           </svg>
           <span>Staff</span>
         </a></li>
+      <li><a href="visitors.html">
+          <svg class="nav-icon" viewBox="0 0 24 24">
+            <path
+              d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+          </svg>
+          <span>Visitors</span>
+        </a></li>
       <li><a href="student-id-generator.html" class="active">
           <svg class="nav-icon" viewBox="0 0 24 24">
             <path
@@ -649,22 +656,8 @@
       document.body.classList.remove('batch-mode');
       document.getElementById('batchIDCards').style.display = 'none';
 
-      // Generate QR code with comprehensive details
-      const qrData = {
-        adm: currentStudent.adm,
-        name: currentStudent.name,
-        class: currentStudent.class || 'N/A',
-        stream: currentStudent.stream || 'N/A',
-        house: currentStudent.house || 'N/A',
-        upi: currentStudent.upi || currentStudent.nemis || 'N/A',
-        gender: currentStudent.gender || 'N/A',
-        parent_phone: currentStudent.contacts || currentStudent.parent_phone || 'N/A',
-        fee_balance: currentStudent.fee_balance || 0,
-        meal_card_valid: currentStudent.meal_card_validity || 'N/A',
-        school: 'Shuleni Advantage School'
-      };
-
-      const qrDataString = JSON.stringify(qrData);
+      // Generate QR code with only admission number for better scanability
+      const qrDataString = currentStudent.adm;
 
       try {
         const tempDiv = document.createElement('div');
@@ -780,21 +773,8 @@
         const student = allStudents[i];
 
         try {
-          const qrData = {
-            adm: student.adm,
-            name: student.name,
-            class: student.class || 'N/A',
-            stream: student.stream || 'N/A',
-            house: student.house || 'N/A',
-            upi: student.upi || student.nemis || 'N/A',
-            gender: student.gender || 'N/A',
-            parent_phone: student.contacts || student.parent_phone || 'N/A',
-            fee_balance: student.fee_balance || 0,
-            meal_card_valid: student.meal_card_validity || 'N/A',
-            school: 'Shuleni Advantage School'
-          };
-
-          const qrDataString = JSON.stringify(qrData);
+          // Generate QR code with only admission number for better scanability
+          const qrDataString = student.adm;
 
           const tempDiv = document.createElement('div');
           tempDiv.style.cssText = 'position: absolute; left: -9999px; width: 100px; height: 100px;';

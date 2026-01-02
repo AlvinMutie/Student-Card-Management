@@ -341,6 +341,23 @@ const staffAPI = {
   },
 };
 
+// Visitors API
+const visitorsAPI = {
+  async getAll() {
+    return apiRequest('/visitors');
+  },
+  async checkOut(id) {
+    return apiRequest(`/visitors/check-out/${id}`, {
+      method: 'PUT',
+    });
+  },
+  async delete(id) {
+    return apiRequest(`/visitors/${id}`, {
+      method: 'DELETE',
+    });
+  }
+};
+
 // Admin API
 const adminAPI = {
   async getPendingStaff() {
@@ -360,7 +377,7 @@ const adminAPI = {
 
 // Export API objects
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI, adminAPI };
+  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI, adminAPI, visitorsAPI };
 }
 
 // Make available globally for browser use
@@ -369,4 +386,5 @@ window.studentsAPI = studentsAPI;
 window.parentsAPI = parentsAPI;
 window.staffAPI = staffAPI;
 window.adminAPI = adminAPI;
+window.visitorsAPI = visitorsAPI;
 

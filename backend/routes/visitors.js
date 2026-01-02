@@ -83,11 +83,30 @@ router.put('/check-out/:id', authenticateToken, authorizeRole(['admin', 'guard']
         if (result.rows.length === 0) {
             return res.status(404).json({ error: 'Visitor not found' });
         }
-
         res.json({ message: 'Visitor checked out successfully', visitor: result.rows[0] });
     } catch (error) {
         console.error('Check-out error:', error);
         res.status(500).json({ error: 'Failed to check out visitor' });
+    }
+});
+
+/**
+     * @desc    Delete a visitor record
+     * @access  Private (Admin)
+     */
+router.delete('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('DELETE FROM visitors WHERE id = $1 RETURNING *', [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Visitor not found' });
+        }
+
+        res.json({ message: 'Visitor record deleted successfully' });
+    } catch (error) {
+        console.error('Delete visitor error:', error);
+        res.status(500).json({ error: 'Failed to delete visitor record' });
     }
 });
 

@@ -236,14 +236,26 @@ router.post('/scan-qr', authenticateToken, authorizeRole(['admin', 'staff', 'gua
     const { qrData, scannedBy } = req.body;
 
     if (!qrData) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: 'QR data is required' 
+        message: 'QR data is required'
       });
     }
 
-    // QR code contains the admission number
-    const admissionNumber = qrData.trim();
+    // QR code might be a plain admission number or a legacy JSON string
+    let admissionNumber = qrData.trim();
+
+    // Check if it's JSON (legacy format)
+    if (qrData.trim().startsWith('{')) {
+      try {
+        const parsed = JSON.parse(qrData);
+        if (parsed.adm) {
+          admissionNumber = parsed.adm;
+        }
+      } catch (e) {
+        // Not valid JSON, treat as plain text
+      }
+    }
 
     // Fetch student details from database
     const result = await pool.query(
@@ -255,9 +267,9 @@ router.post('/scan-qr', authenticateToken, authorizeRole(['admin', 'staff', 'gua
     );
 
     if (result.rows.length === 0) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         success: false,
-        message: 'Student not found. Invalid QR code.' 
+        message: 'Student not found. Invalid QR code.'
       });
     }
 
@@ -288,9 +300,9 @@ router.post('/scan-qr', authenticateToken, authorizeRole(['admin', 'staff', 'gua
     });
   } catch (error) {
     console.error('QR scan error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: 'Internal server error during QR scan' 
+      message: 'Internal server error during QR scan'
     });
   }
 });
