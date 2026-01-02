@@ -30,7 +30,7 @@ const authenticateToken = async (req, res, next) => {
 
     // Fetch profile info using user_id
     const result = await pool.query(
-      `SELECT id as "profileRecordId", email, role, user_id FROM ${table} WHERE user_id = $1`,
+      `SELECT id as "profileRecordId", user_id FROM ${table} WHERE user_id = $1`,
       [payload.id]
     );
 
