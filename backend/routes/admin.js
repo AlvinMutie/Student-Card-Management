@@ -8,40 +8,59 @@ const router = express.Router();
 // Setup a test parent account from existing imported data (Admin only)
 router.post('/setup-test-parent', authenticateToken, authorizeRole('admin'), async (req, res) => {
     const client = await pool.connect();
+    const { adm } = req.body;
     try {
         await client.query('BEGIN');
 
-        // 1. Find a parent with students but no user_id (likely from import)
-        const parentResult = await client.query(`
-            SELECT p.id, p.name, p.email, p.phone, COUNT(s.id) as student_count
-            FROM parents p
-            JOIN students s ON s.parent_id = p.id
-            WHERE p.user_id IS NULL
-            GROUP BY p.id, p.name, p.email, p.phone
-            HAVING COUNT(s.id) > 0
-            LIMIT 1
-        `);
+        let parentQuery;
+        let queryParams = [];
+
+        if (adm) {
+            parentQuery = `
+                SELECT p.id, p.name, p.email, p.phone, COUNT(s.id) as student_count
+                FROM parents p
+                JOIN students s ON s.parent_id = p.id
+                WHERE p.user_id IS NULL AND s.adm = $1
+                GROUP BY p.id, p.name, p.email, p.phone
+                LIMIT 1
+            `;
+            queryParams = [adm];
+        } else {
+            parentQuery = `
+                SELECT p.id, p.name, p.email, p.phone, COUNT(s.id) as student_count
+                FROM parents p
+                JOIN students s ON s.parent_id = p.id
+                WHERE p.user_id IS NULL
+                GROUP BY p.id, p.name, p.email, p.phone
+                HAVING COUNT(s.id) > 0
+                LIMIT 1
+            `;
+        }
+
+        const parentResult = await client.query(parentQuery, queryParams);
 
         if (parentResult.rows.length === 0) {
             await client.query('ROLLBACK');
-            return res.status(404).json({ error: 'No suitable parent found in imported data without a user account.' });
+            return res.status(404).json({ error: adm ? `No suitable parent found for student ADM ${adm}.` : 'No suitable parent found in imported data.' });
         }
 
         const parent = parentResult.rows[0];
+        // Ensure email exists for account creation
+        const userEmail = parent.email || `${parent.name.toLowerCase().replace(/\s+/g, '.')}@example.com`;
         const defaultPassword = 'Parent123!';
         const passwordHash = await bcrypt.hash(defaultPassword, 10);
 
         // 2. Create user account
         const userResult = await client.query(
             "INSERT INTO users (full_name, email, phone, password, role, status) VALUES ($1, $2, $3, $4, 'parent', 'approved') RETURNING id",
-            [parent.name, parent.email, parent.phone, passwordHash]
+            [parent.name, userEmail, parent.phone, passwordHash]
         );
         const userId = userResult.rows[0].id;
 
-        // 3. Link parent to user
+        // 3. Link parent to user (and update email if it was missing)
         await client.query(
-            "UPDATE parents SET user_id = $1 WHERE id = $2",
-            [userId, parent.id]
+            "UPDATE parents SET user_id = $1, email = $2 WHERE id = $3",
+            [userId, userEmail, parent.id]
         );
 
         await client.query('COMMIT');
@@ -49,7 +68,7 @@ router.post('/setup-test-parent', authenticateToken, authorizeRole('admin'), asy
         res.json({
             message: 'Test parent account created successfully',
             credentials: {
-                email: parent.email,
+                email: userEmail,
                 password: defaultPassword
             },
             parentName: parent.name,
