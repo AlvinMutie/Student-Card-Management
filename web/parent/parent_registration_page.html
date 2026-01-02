@@ -164,6 +164,57 @@
       box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
     }
 
+    /* Validation Styles */
+    .was-validated .theme-input:invalid {
+      border-color: #ef4444;
+      background-color: #fef2f2;
+    }
+
+    .validation-message.error {
+      color: #ef4444;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .form-status {
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      font-weight: 600;
+      animation: slideDown 0.3s ease;
+    }
+
+    .form-status.info {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .form-status.success {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .form-status.error {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
     .password-input-container {
       position: relative;
     }
@@ -472,6 +523,9 @@
   <script src="/shared/api-client.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // API Base URL from config
+      const API_BASE = (window.StudentCardConfig && window.StudentCardConfig.apiBaseUrl) || '/api';
+
       const modal = document.getElementById('childModal');
       const addChildBtn = document.getElementById('openChildModal');
       const cancelModal = document.getElementById('cancelModal');
@@ -500,6 +554,11 @@
         formStatus.textContent = message;
         formStatus.className = `form-status ${variant}`;
         formStatus.style.display = 'block';
+
+        // Scroll to status if it's an error
+        if (variant === 'error') {
+          formStatus.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       }
 
       function renderChildList() {
@@ -577,7 +636,7 @@
       }
 
       async function submitForm() {
-        const submitBtn = registrationForm.querySelector('button[type="submit"]');
+        const submitBtn = document.getElementById('submitRegistration');
         const originalBtnText = submitBtn.textContent;
 
         try {
@@ -610,7 +669,9 @@
             students: children
           };
 
-          const response = await fetch('/api/parents/register', {
+          console.log('Submitting registration:', { ...requestBody, parent: { ...requestBody.parent, password: '***' } });
+
+          const response = await fetch(`${API_BASE}/parents/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(requestBody)
@@ -619,7 +680,8 @@
           const result = await response.json();
 
           if (!response.ok) {
-            throw new Error(result.message || 'Registration failed. Please try again.');
+            // Backend error structure uses .error or .message
+            throw new Error(result.error || result.message || 'Registration failed. Please try again.');
           }
 
           showStatus('Account created successfully! Redirecting...', 'success');
@@ -668,9 +730,11 @@
       registrationForm?.addEventListener('submit', (e) => {
         e.preventDefault();
 
+        // Show validation states
+        registrationForm.classList.add('was-validated');
+
         if (!registrationForm.checkValidity()) {
-          e.stopPropagation();
-          registrationForm.classList.add('was-validated');
+          showStatus('Please fill in all required fields correctly.', 'error');
           return;
         }
 
