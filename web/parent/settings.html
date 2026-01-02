@@ -6,352 +6,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Settings | Shuleni Advantage</title>
     <link rel="icon" href="/favicon.ico" type="image/png">
-    <link rel="stylesheet" href="/shared/portal-theme.css">
+    <link rel="stylesheet" href="/shared/portal-layout.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #059669;
-            --primary-dark: #064e3b;
-            --accent: #8b5cf6;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.3);
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: radial-gradient(circle at top left, #e0f2fe 0%, #f0fdf4 40%, #fafaf9 100%);
-            color: var(--text-main);
-            min-height: 100vh;
-        }
-
-        .dashboard-layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: rgba(6, 78, 59, 1);
-            backdrop-filter: blur(12px);
-            color: white;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            z-index: 50;
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-header {
-            padding: 2.5rem 1.5rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-logo {
-            width: 64px;
-            height: 64px;
-            margin-bottom: 1rem;
-            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
-        }
-
-        .sidebar-brand {
-            font-size: 1.4rem;
-            font-weight: 800;
-            display: block;
-            letter-spacing: -0.5px;
-        }
-
-        .sidebar-nav {
-            flex: 1;
-            padding: 2rem 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 20px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-weight: 500;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            transform: translateX(6px);
-        }
-
-        .nav-item i {
-            font-size: 1.2rem;
-            width: 24px;
-        }
-
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 3rem;
-        }
-
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 3rem;
-            padding: 1.5rem 2.5rem;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
-        }
-
-        .user-welcome h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0;
-        }
-
-        /* Settings Specific */
-        .settings-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-        }
-
-        .settings-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .card-title i {
-            color: #059669;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.75rem;
-            font-weight: 700;
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        .theme-input {
-            padding: 16px 20px;
-            border-radius: 14px;
-            border: 2px solid rgba(0, 0, 0, 0.05);
-            background: rgba(255, 255, 255, 0.5);
-            font-size: 1rem;
-            width: 100%;
-            outline: none;
-            transition: all 0.3s ease;
-            box-sizing: border-box;
-        }
-
-        .theme-input:focus {
-            border-color: #059669;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
-        }
-
-        .theme-btn.primary {
-            padding: 16px 32px;
-            border-radius: 16px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
-            border: none;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(5, 150, 105, 0.2);
-            width: 100%;
-        }
-
-        .theme-btn.primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
-        }
-
-        .theme-btn.outline {
-            padding: 16px 32px;
-            border-radius: 16px;
-            border: 2px solid #059669;
-            background: transparent;
-            color: #059669;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .theme-btn.outline:hover {
-            background: rgba(5, 150, 105, 0.05);
-            transform: translateY(-2px);
-        }
-
-        .status-msg {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            border-radius: 12px;
-            font-weight: 700;
-            text-align: center;
-            display: none;
-        }
-
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 85px;
-            }
-
-            .sidebar-brand,
-            .nav-item span {
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 85px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                padding: 1.5rem;
-            }
-
-            .settings-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
 </head>
 
-<body>
-    <div class="dashboard-layout">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <img src="/favicon.ico" alt="Logo" class="sidebar-logo">
-                <span class="sidebar-brand">Shuleni Advantage</span>
-            </div>
+<body data-page="parentSettings">
+    <!-- Vertical Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="/favicon.ico" alt="Logo" class="brand-icon">
+            <h1>Shuleni</h1>
+        </div>
 
-            <nav class="sidebar-nav">
-                <a href="student_info_page.html" class="nav-item">
-                    <i class="fas fa-th-large"></i>
+        <ul class="nav-links">
+            <li>
+                <a href="student_info_page.html">
+                    <i class="fa-solid fa-gauge-high"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="payments.html" class="nav-item">
-                    <i class="fas fa-credit-card"></i>
+            </li>
+            <li>
+                <a href="payments.html">
+                    <i class="fa-solid fa-credit-card"></i>
                     <span>Payments</span>
                 </a>
-                <a href="settings.html" class="nav-item active">
-                    <i class="fas fa-user-gear"></i>
+            </li>
+            <li>
+                <a href="settings.html" class="active">
+                    <i class="fa-solid fa-user-gear"></i>
                     <span>Settings</span>
                 </a>
-            </nav>
+            </li>
+        </ul>
 
-            <div style="padding:1.5rem;">
-                <a href="#" class="nav-item" id="logout-btn"
-                    style="background: rgba(239, 68, 68, 0.1); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.2);">
-                    <i class="fas fa-power-off"></i>
-                    <span>Logout</span>
-                </a>
+        <div class="logout-section">
+            <a href="#" class="logout-btn-link" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <header class="top-bar">
+            <div class="top-bar-title">
+                <h2>Account Settings</h2>
             </div>
-        </aside>
+            <div class="top-bar-user">
+                <span id="parentNamePill">Parent Account</span>
+            </div>
+        </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="top-bar">
-                <div class="user-welcome">
-                    <h1>Account Settings</h1>
-                    <p style="color:var(--text-muted); font-weight: 500; margin-top: 4px;">Manage your profile and
-                        security preferences</p>
-                </div>
-                <div class="top-actions">
-                    <div class="user-avatar"
-                        style="width:52px; height:52px; background:linear-gradient(135deg, #059669 0%, #064e3b 100%); border-radius:18px; color:white; display:flex; align-items:center; justify-content:center; font-weight:800; font-size: 1.2rem; box-shadow: 0 8px 16px rgba(5, 150, 105, 0.2);">
-                        P
+        <main class="content-body">
+            <div id="loadingOverlay" style="text-align:center; padding: 100px 0; display: none;">
+                <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: var(--forest-primary);"></i>
+            </div>
+
+            <div id="contentArea" class="form-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 32px;">
+                <!-- Profile Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-user-pen"
+                                style="margin-right: 10px; color: var(--forest-primary);"></i> Profile Information</h3>
                     </div>
-                </div>
-            </div>
-
-            <div id="loadingState" style="text-align:center;padding:2rem;display:none;">
-                <i class="fas fa-spinner fa-spin fa-2x" style="color:var(--primary);"></i>
-            </div>
-
-            <div class="settings-container" id="contentArea" style="display:none;">
-                <!-- Profile Settings -->
-                <div class="settings-card">
-                    <h3 class="card-title"><i class="fas fa-user-edit"></i> Profile Information</h3>
-                    <form id="profileForm">
+                    <form id="profileForm" class="form-container">
                         <div class="form-group">
                             <label>Full Name</label>
-                            <input type="text" id="profileName" class="theme-input" required>
+                            <input type="text" id="profileName" placeholder="Your Name" required>
                         </div>
                         <div class="form-group">
                             <label>Email Address</label>
-                            <input type="email" id="profileEmail" class="theme-input" required>
+                            <input type="email" id="profileEmail" placeholder="your@email.com" required>
                         </div>
                         <div class="form-group">
                             <label>Phone Number</label>
-                            <input type="tel" id="profilePhone" class="theme-input" required>
+                            <input type="tel" id="profilePhone" placeholder="07XX XXX XXX" required>
                         </div>
-                        <button type="submit" class="theme-btn primary">Save Changes</button>
-                        <div id="profileStatus" class="status-msg"></div>
+                        <button type="submit" class="btn-primary" style="width: 100%;">Save Profile Changes</button>
                     </form>
+                    <div id="profileStatus" class="status-badge"
+                        style="display:none; margin-top:15px; width:100%; text-align:center;"></div>
                 </div>
 
-                <!-- Security Settings -->
-                <div class="settings-card">
-                    <h3 class="card-title"><i class="fas fa-lock"></i> Change Password</h3>
-                    <form id="passwordForm">
+                <!-- Password Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-shield-halved"
+                                style="margin-right: 10px; color: var(--forest-primary);"></i> Security</h3>
+                    </div>
+                    <form id="passwordForm" class="form-container">
                         <div class="form-group">
                             <label>Current Password</label>
-                            <input type="password" id="currentPassword" class="theme-input" required>
+                            <input type="password" id="currentPassword" placeholder="••••••••" required>
                         </div>
                         <div class="form-group">
                             <label>New Password</label>
-                            <input type="password" id="newPassword" class="theme-input" required>
+                            <input type="password" id="newPassword" placeholder="••••••••" required>
                         </div>
                         <div class="form-group">
                             <label>Confirm New Password</label>
-                            <input type="password" id="confirmPassword" class="theme-input" required>
+                            <input type="password" id="confirmPassword" placeholder="••••••••" required>
                         </div>
-                        <button type="submit" class="theme-btn outline">Update Password</button>
-                        <div id="passwordStatus" class="status-msg"></div>
+                        <button type="submit" class="btn-secondary" style="width: 100%;">Update Password</button>
                     </form>
+                    <div id="passwordStatus" class="status-badge"
+                        style="display:none; margin-top:15px; width:100%; text-align:center;"></div>
                 </div>
             </div>
         </main>
@@ -360,11 +122,13 @@
     <script src="/runtime-config.js"></script>
     <script src="/shared/api-client.js"></script>
     <script>
-        const logoutBtn = document.getElementById('logout-btn');
+        const logoutBtn = document.getElementById('logoutBtn');
 
         async function loadProfile() {
-            document.getElementById('loadingState').style.display = 'block';
-            document.getElementById('contentArea').style.display = 'none';
+            const overlay = document.getElementById('loadingOverlay');
+            const content = document.getElementById('contentArea');
+            overlay.style.display = 'block';
+            content.style.opacity = '0.5';
 
             try {
                 if (!localStorage.getItem('sv_parent_token')) {
@@ -379,33 +143,40 @@
                 document.getElementById('profileEmail').value = profile.email || '';
                 document.getElementById('profilePhone').value = profile.phone || '';
 
-                document.getElementById('contentArea').style.display = 'grid';
+                if (profile.name) {
+                    document.getElementById('parentNamePill').textContent = profile.name;
+                }
             } catch (error) {
                 console.error('Error loading profile:', error);
-                // If API fails, try loading from local storage as fallback
+                // Fallback to local storage if API fails but we have some data
                 const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
-                if (userData.name) {
-                    document.getElementById('profileName').value = userData.name || '';
+                if (userData.full_name || userData.name) {
+                    document.getElementById('profileName').value = userData.full_name || userData.name || '';
                     document.getElementById('profileEmail').value = userData.email || '';
                     document.getElementById('profilePhone').value = userData.phone || '';
-                    document.getElementById('contentArea').style.display = 'grid';
-                } else {
-                    alert('Failed to load profile data.');
                 }
             } finally {
-                document.getElementById('loadingState').style.display = 'none';
+                overlay.style.display = 'none';
+                content.style.opacity = '1';
             }
+        }
+
+        function showStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = 'status-badge ' + (type === 'success' ? 'status-paid' : 'status-failed');
+            el.style.display = 'block';
+            el.style.padding = '12px';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
         }
 
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            const status = document.getElementById('profileStatus');
             const originalText = btn.textContent;
 
             btn.disabled = true;
             btn.textContent = 'Saving...';
-            status.style.display = 'none';
 
             try {
                 const data = {
@@ -418,16 +189,13 @@
 
                 // Update local storage
                 const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
-                const updatedUser = { ...userData, ...data };
+                const updatedUser = { ...userData, ...data, full_name: data.name };
                 localStorage.setItem('sv_parent_user', JSON.stringify(updatedUser));
+                document.getElementById('parentNamePill').textContent = data.name;
 
-                status.textContent = 'Profile updated successfully!';
-                status.style.color = 'var(--success)';
-                status.style.display = 'block';
+                showStatus('profileStatus', 'Profile updated successfully!', 'success');
             } catch (error) {
-                status.textContent = error.message || 'Failed to update profile.';
-                status.style.color = 'var(--danger)';
-                status.style.display = 'block';
+                showStatus('profileStatus', error.message || 'Failed to update profile.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
@@ -439,32 +207,23 @@
             const current = document.getElementById('currentPassword').value;
             const newPass = document.getElementById('newPassword').value;
             const confirmPass = document.getElementById('confirmPassword').value;
-            const status = document.getElementById('passwordStatus');
             const btn = e.target.querySelector('button');
 
             if (newPass !== confirmPass) {
-                status.textContent = 'New passwords do not match.';
-                status.style.color = 'var(--danger)';
-                status.style.display = 'block';
+                showStatus('passwordStatus', 'New passwords do not match.', 'error');
                 return;
             }
 
             const originalText = btn.textContent;
             btn.disabled = true;
             btn.textContent = 'Updating...';
-            status.style.display = 'none';
 
             try {
                 await parentsAPI.changePassword(current, newPass);
-
-                status.textContent = 'Password changed successfully!';
-                status.style.color = 'var(--success)';
-                status.style.display = 'block';
+                showStatus('passwordStatus', 'Password changed successfully!', 'success');
                 e.target.reset();
             } catch (error) {
-                status.textContent = error.message || 'Failed to change password.';
-                status.style.color = 'var(--danger)';
-                status.style.display = 'block';
+                showStatus('passwordStatus', error.message || 'Failed to change password.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.textContent = originalText;
@@ -472,6 +231,11 @@
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            const parentData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+            if (parentData.full_name) {
+                document.getElementById('parentNamePill').textContent = parentData.full_name;
+            }
+
             loadProfile();
 
             if (logoutBtn) logoutBtn.addEventListener('click', (e) => {

@@ -113,8 +113,8 @@ router.post('/register', async (req, res) => {
       for (const s of students) {
         if (!s.admission) continue;
         const studentResult = await client.query(
-          'UPDATE students SET parent_id = $1, updated_at = CURRENT_TIMESTAMP WHERE UPPER(adm) = $2 RETURNING id, name',
-          [parentId, s.admission.toUpperCase()]
+          'UPDATE students SET parent_id = $1, updated_at = CURRENT_TIMESTAMP WHERE TRIM(UPPER(adm)) = TRIM(UPPER($2)) RETURNING id, name',
+          [parentId, s.admission]
         );
         if (studentResult.rows.length > 0) {
           linkedStudents.push(studentResult.rows[0]);
@@ -323,7 +323,7 @@ router.post('/me/students/link', authenticateToken, authorizeRole('parent'), asy
 
     for (const admission of sanitizedAdmissions) {
       const studentResult = await pool.query(
-        'SELECT id, name, parent_id FROM students WHERE UPPER(adm) = $1',
+        'SELECT id, name, parent_id FROM students WHERE TRIM(UPPER(adm)) = TRIM(UPPER($1))',
         [admission]
       );
 
