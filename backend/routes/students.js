@@ -231,7 +231,7 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
 });
 
 // QR Code Scan endpoint (Mobile App)
-router.post('/scan-qr', authenticateToken, authorizeRole(['admin', 'staff', 'guard']), async (req, res) => {
+router.post('/scan-qr', authenticateToken, authorizeRole(['admin', 'staff', 'guard', 'teacher']), async (req, res) => {
   try {
     const { qrData, scannedBy } = req.body;
 
