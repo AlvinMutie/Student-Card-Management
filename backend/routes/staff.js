@@ -23,7 +23,7 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
         u.created_at
       FROM users u
       LEFT JOIN staff s ON u.id = s.user_id
-      WHERE u.role NOT IN ('admin')
+      WHERE u.role NOT IN ('admin', 'parent')
       ORDER BY u.created_at DESC
     `);
     res.json(result.rows);

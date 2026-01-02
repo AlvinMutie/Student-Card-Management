@@ -29,12 +29,20 @@ const authenticateToken = async (req, res, next) => {
     }
 
     // Fetch profile info using user_id
-    const result = await pool.query(`SELECT id, email, role, user_id FROM ${table} WHERE user_id = $1`, [payload.id]);
+    const result = await pool.query(
+      `SELECT id as "profileRecordId", email, role, user_id FROM ${table} WHERE user_id = $1`,
+      [payload.id]
+    );
 
     if (result.rows.length === 0) {
       req.user = payload;
     } else {
-      req.user = { ...payload, ...result.rows[0] };
+      // Prioritize payload (token) for core identity, add profile info
+      req.user = {
+        ...result.rows[0],
+        ...payload, // Ensure token payload (identity) wins if keys conflict
+        profileRecordId: result.rows[0].profileRecordId
+      };
     }
 
     next();
