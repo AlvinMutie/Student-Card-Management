@@ -1,8 +1,68 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const pool = require('../config/database');
 const { authenticateToken, authorizeRole } = require('../middleware/auth');
 
 const router = express.Router();
+
+// Setup a test parent account from existing imported data (Admin only)
+router.post('/setup-test-parent', authenticateToken, authorizeRole('admin'), async (req, res) => {
+    const client = await pool.connect();
+    try {
+        await client.query('BEGIN');
+
+        // 1. Find a parent with students but no user_id (likely from import)
+        const parentResult = await client.query(`
+            SELECT p.id, p.name, p.email, p.phone, COUNT(s.id) as student_count
+            FROM parents p
+            JOIN students s ON s.parent_id = p.id
+            WHERE p.user_id IS NULL
+            GROUP BY p.id, p.name, p.email, p.phone
+            HAVING COUNT(s.id) > 0
+            LIMIT 1
+        `);
+
+        if (parentResult.rows.length === 0) {
+            await client.query('ROLLBACK');
+            return res.status(404).json({ error: 'No suitable parent found in imported data without a user account.' });
+        }
+
+        const parent = parentResult.rows[0];
+        const defaultPassword = 'Parent123!';
+        const passwordHash = await bcrypt.hash(defaultPassword, 10);
+
+        // 2. Create user account
+        const userResult = await client.query(
+            "INSERT INTO users (full_name, email, phone, password, role, status) VALUES ($1, $2, $3, $4, 'parent', 'approved') RETURNING id",
+            [parent.name, parent.email, parent.phone, passwordHash]
+        );
+        const userId = userResult.rows[0].id;
+
+        // 3. Link parent to user
+        await client.query(
+            "UPDATE parents SET user_id = $1 WHERE id = $2",
+            [userId, parent.id]
+        );
+
+        await client.query('COMMIT');
+
+        res.json({
+            message: 'Test parent account created successfully',
+            credentials: {
+                email: parent.email,
+                password: defaultPassword
+            },
+            parentName: parent.name,
+            studentsLinked: parent.student_count
+        });
+    } catch (error) {
+        await client.query('ROLLBACK');
+        console.error('Setup test parent error:', error);
+        res.status(500).json({ error: 'Failed to setup test parent account' });
+    } finally {
+        client.release();
+    }
+});
 
 // Approve staff account
 router.put('/approve-staff/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {

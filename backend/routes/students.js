@@ -358,20 +358,22 @@ router.get('/:id', authenticateToken, async (req, res) => {
 router.get('/parent/my-students', authenticateToken, authorizeRole('parent'), async (req, res) => {
   try {
     const userId = req.user.id;
+    let parentId = req.user.profileRecordId;
 
-    // Get parent_id from user_id
-    const parentResult = await pool.query(
-      'SELECT id FROM parents WHERE user_id = $1',
-      [userId]
-    );
-
-    if (parentResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Parent not found' });
+    if (!parentId) {
+      // Fallback: Get parent_id from user_id if not in token/middleware cache
+      const parentResult = await pool.query(
+        'SELECT id FROM parents WHERE user_id = $1',
+        [userId]
+      );
+      if (parentResult.rows.length === 0) {
+        return res.status(404).json({ error: 'Parent not found' });
+      }
+      parentId = parentResult.rows[0].id;
     }
 
-    const parentId = parentResult.rows[0].id;
-
     // Get all students for this parent
+    console.log(`[DEBUG] Fetching students for Parent ID: ${parentId} (User ID: ${userId})`);
     const result = await pool.query(
       `SELECT s.*, p.name as parent_name, p.email as parent_email, p.phone as parent_phone
        FROM students s
@@ -380,6 +382,8 @@ router.get('/parent/my-students', authenticateToken, authorizeRole('parent'), as
        ORDER BY s.created_at DESC`,
       [parentId]
     );
+
+    console.log(`[DEBUG] Found ${result.rows.length} students for Parent ID: ${parentId}`);
 
     res.json(result.rows);
   } catch (error) {
