@@ -107,17 +107,32 @@ router.post('/register', async (req, res) => {
     );
     const parentId = parentResult.rows[0].id;
 
-    // 3. Link students (if any)
+    // 3. Link or Create students
     const linkedStudents = [];
     if (Array.isArray(students) && students.length > 0) {
       for (const s of students) {
         if (!s.admission) continue;
+
+        const adm = s.admission.trim().toUpperCase();
+
+        // Try to update existing student
         const studentResult = await client.query(
-          'UPDATE students SET parent_id = $1, updated_at = CURRENT_TIMESTAMP WHERE TRIM(UPPER(adm)) = TRIM(UPPER($2)) RETURNING id, name',
-          [parentId, s.admission]
+          'UPDATE students SET parent_id = $1, updated_at = CURRENT_TIMESTAMP WHERE TRIM(UPPER(adm)) = $2 RETURNING id, name',
+          [parentId, adm]
         );
+
         if (studentResult.rows.length > 0) {
           linkedStudents.push(studentResult.rows[0]);
+        } else {
+          // If student not found, create new student record
+          console.log(`Student ${adm} not found, creating new record...`);
+          const createResult = await client.query(
+            `INSERT INTO students (adm, name, class, parent_id, created_at, updated_at) 
+             VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP) 
+             RETURNING id, name`,
+            [adm, s.name || 'New Student', s.className || null, parentId]
+          );
+          linkedStudents.push(createResult.rows[0]);
         }
       }
     }
