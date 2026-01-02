@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(20),
     password VARCHAR(255) NOT NULL, -- Hashed password
-    role VARCHAR(50) NOT NULL CHECK (role IN ('admin', 'parent', 'staff', 'teacher', 'kitchen', 'accountant', 'guard', 'other')),
+    role VARCHAR(50) NOT NULL CHECK (role IN ('admin', 'parent', 'staff', 'teacher', 'secretary', 'kitchen', 'accountant', 'guard', 'other')),
     status VARCHAR(50) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'disabled')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

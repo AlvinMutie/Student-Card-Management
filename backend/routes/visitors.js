@@ -9,7 +9,7 @@ const router = express.Router();
  * @desc    Get all active visitors
  * @access  Private (Admin or Guard)
  */
-router.get('/', authenticateToken, authorizeRole(['admin', 'guard']), async (req, res) => {
+router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM visitors ORDER BY check_in_time DESC');
         res.json(result.rows);
@@ -23,7 +23,7 @@ router.get('/', authenticateToken, authorizeRole(['admin', 'guard']), async (req
  * @desc    Register a new visitor (Create QR Token)
  * @access  Private (Admin or Guard)
  */
-router.post('/check-in', authenticateToken, authorizeRole(['admin', 'guard']), async (req, res) => {
+router.post('/check-in', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
     try {
         const { name, id_number, phone, plate_number, purpose, host_name } = req.body;
 
@@ -50,7 +50,7 @@ router.post('/check-in', authenticateToken, authorizeRole(['admin', 'guard']), a
  * @desc    Verify visitor by QR token
  * @access  Private (Guard)
  */
-router.get('/verify/:token', authenticateToken, authorizeRole(['admin', 'guard']), async (req, res) => {
+router.get('/verify/:token', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
     try {
         const { token } = req.params;
         const result = await pool.query('SELECT * FROM visitors WHERE qr_token = $1', [token]);
@@ -70,7 +70,7 @@ router.get('/verify/:token', authenticateToken, authorizeRole(['admin', 'guard']
  * @desc    Check-out a visitor
  * @access  Private (Admin or Guard)
  */
-router.put('/check-out/:id', authenticateToken, authorizeRole(['admin', 'guard']), async (req, res) => {
+router.put('/check-out/:id', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
     try {
         const { id } = req.params;
         const result = await pool.query(

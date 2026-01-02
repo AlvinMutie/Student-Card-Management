@@ -358,9 +358,13 @@
             statusEl.textContent = 'Login successful! Redirecting...';
           }
 
-          // Redirect to admin dashboard
+          // Redirect to appropriate dashboard
           setTimeout(() => {
-            window.location.href = '/admin/admindashboard.html';
+            if (response.user.role === 'secretary') {
+              window.location.href = '/admin/secretary_dashboard.html';
+            } else {
+              window.location.href = '/admin/admindashboard.html';
+            }
           }, 800);
         } else {
           throw new Error('Invalid response from server');
