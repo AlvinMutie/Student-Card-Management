@@ -473,9 +473,13 @@
       document.getElementById('logoutBtn').addEventListener('click', (e) => {
         e.preventDefault();
         if (confirm('Are you sure you want to log out?')) {
-          localStorage.removeItem('sv_parent_token');
-          localStorage.removeItem('sv_parent_user');
-          window.location.href = 'parent_login_page.html';
+          if (typeof authAPI !== 'undefined' && authAPI.logout) {
+            authAPI.logout('parent_login_page.html');
+          } else {
+            const tokens = ['sv_auth_token', 'sv_parent_token', 'sv_admin_token', 'sv_user_data', 'sv_parent_user'];
+            tokens.forEach(t => localStorage.removeItem(t));
+            window.location.href = 'parent_login_page.html';
+          }
         }
       });
 

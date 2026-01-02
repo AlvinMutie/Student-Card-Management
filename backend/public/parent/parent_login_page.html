@@ -267,6 +267,7 @@
         if (response.token && response.user) {
           // Store parent-specific tokens
           localStorage.setItem('sv_parent_token', response.token);
+          localStorage.setItem('sv_auth_token', response.token);
           localStorage.setItem('sv_parent_user', JSON.stringify(response.user));
 
           // Show success message
