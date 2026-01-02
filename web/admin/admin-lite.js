@@ -1,6 +1,19 @@
 // Admin utilities and page initializers (dashboard, students, parents, staff)
 // Uses shared api-client.js: studentsAPI, parentsAPI, staffAPI, authAPI
 
+(function () {
+  const userData = JSON.parse(localStorage.getItem('sv_user_data') || '{}');
+  const currentPage = window.location.pathname.split('/').pop();
+
+  // If secretary is trying to access standard admin pages, redirect to professional secretary dashboard
+  const secretaryAllowedPages = ['secretary_dashboard.html', 'visitors.html', 'admin_login.html'];
+
+  if (userData.role === 'secretary' && !secretaryAllowedPages.includes(currentPage) && currentPage !== '') {
+    console.log('Redirecting secretary to professional dashboard...');
+    window.location.href = '/admin/secretary_dashboard.html';
+  }
+})();
+
 // ---------- shared helpers ----------
 function backToHome() {
   window.location.href = '/';

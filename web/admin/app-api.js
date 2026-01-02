@@ -41,8 +41,19 @@
     try {
       const adminToken = localStorage.getItem('sv_admin_token');
       const authToken = localStorage.getItem('sv_auth_token');
+      const userData = JSON.parse(localStorage.getItem('sv_user_data') || '{}');
+
       if (!adminToken && !authToken) {
         location.href = '/';
+        return;
+      }
+
+      // Role-based redirection for Secretary
+      const currentPage = window.location.pathname.split('/').pop();
+      const secretaryAllowedPages = ['secretary_dashboard.html', 'visitors.html', 'admin_login.html'];
+
+      if (userData.role === 'secretary' && !secretaryAllowedPages.includes(currentPage) && currentPage !== '') {
+        location.href = '/admin/secretary_dashboard.html';
       }
     } catch (e) {
       console.error('Error checking authentication:', e);
