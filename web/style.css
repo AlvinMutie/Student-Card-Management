@@ -482,11 +482,11 @@ h3 {
     width: 100%;
 }
 
-@media (max-width: 992px) {
+@media (max-width: 768px) {
     .portal-selection-grid {
         grid-template-columns: 1fr;
         max-width: 500px;
-        margin: 4rem auto 0;
+        margin: 3rem auto 0;
     }
 }
 
