@@ -1002,16 +1002,31 @@ async function deleteAllStudents() {
 
     let processed = 0;
     const total = allStudents.length + allParents.length || 1;
-    setProgressStatus('delete', 5, 'Deleting records…');
+
+    // Animate and delete students
     for (const s of allStudents) {
       try {
-        await studentsAPI.delete(s.id ?? s.adm);
+        // Visual animation
+        const id = s.id ?? s.adm;
+        const btn = document.querySelector(`button[data-delete-student="${id}"]`);
+        if (btn) {
+          const row = btn.closest('tr');
+          if (row) {
+            row.classList.add('delete-animation');
+            // Small visual delay for the "wave" effect
+            await new Promise(resolve => setTimeout(resolve, 50));
+          }
+        }
+
+        await studentsAPI.delete(id);
       } catch (err) {
         console.error('Delete failed for', s.id || s.adm, err);
       }
       processed++;
       setProgressStatus('delete', Math.min(90, Math.round((processed / total) * 90)), 'Deleting students…');
     }
+
+    // Delete parents
     for (const p of allParents) {
       try {
         await parentsAPI.delete(p.id ?? p._id);
@@ -1021,6 +1036,7 @@ async function deleteAllStudents() {
       processed++;
       setProgressStatus('delete', Math.min(95, Math.round((processed / total) * 95)), 'Deleting parents…');
     }
+
     await loadStudents();
     setProgressStatus('delete', 100, 'All students and parents deleted.', 'success');
     setTimeout(() => setProgressStatus('delete', 0, ''), 1200);

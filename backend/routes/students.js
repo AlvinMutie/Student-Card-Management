@@ -624,5 +624,16 @@ router.delete('/:id', authenticateToken, authorizeRole('admin'), async (req, res
   }
 });
 
+// Delete all students (admin only)
+router.delete('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
+  try {
+    const result = await pool.query('DELETE FROM students');
+    res.json({ message: `All students deleted successfully. Removed ${result.rowCount} records.` });
+  } catch (error) {
+    console.error('Delete all students error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 module.exports = router;
 

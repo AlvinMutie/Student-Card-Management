@@ -739,3 +739,56 @@ label {
     background-position: -200% 0;
   }
 }
+
+/* Animation for row deletion */
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+.delete-animation {
+  animation: slideOutLeft 0.5s ease forwards;
+  pointer-events: none; /* Prevent clicks while animating */
+}
+
+/* Enhanced Table Styles */
+.table-wrapper {
+  overflow: auto;
+  max-height: calc(100vh - 200px); /* Adjust based on header/footer height */
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+table thead th {
+  position: sticky;
+  top: 0;
+  background: var(--surface-off-white);
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* Scrollbar Styling */
+.table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

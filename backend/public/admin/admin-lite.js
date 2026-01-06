@@ -318,6 +318,21 @@ function initStudentsPage() {
   const addBtn = document.querySelector('#addStudentBtn');
   if (addBtn) addBtn.onclick = () => openStudentModal(null);
 
+  const deleteAllBtn = document.querySelector('#deleteAllStudentsBtn');
+  if (deleteAllBtn) {
+    deleteAllBtn.onclick = async () => {
+      if (!confirm('Are you certain you want to delete ALL students? This cannot be undone.')) return;
+      if (!confirm('Seriously, are you sure you want to wipe the entire database of students?')) return;
+      try {
+        await studentsAPI.deleteAll();
+        await loadStudents();
+        alert('All students have been deleted.');
+      } catch (err) {
+        alert('Delete all failed: ' + err.message);
+      }
+    };
+  }
+
   const modalForm = document.querySelector('#studentForm');
   if (modalForm) modalForm.addEventListener('submit', saveStudent);
   const modalClose = document.querySelector('#closeStudentModal');

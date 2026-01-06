@@ -252,6 +252,12 @@ const studentsAPI = {
       method: 'DELETE',
     });
   },
+
+  async deleteAll() {
+    return apiRequest('/students', {
+      method: 'DELETE',
+    });
+  },
 };
 
 // Parents API
