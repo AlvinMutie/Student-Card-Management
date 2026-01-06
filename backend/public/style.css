@@ -476,17 +476,30 @@ h3 {
 
 .portal-selection-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    margin-top: 3rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+    margin-top: 2rem;
     width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 850px) {
+    .portal-selection-grid {
+        gap: 1rem;
+    }
+
+    .portal-card {
+        padding: 1.5rem 1rem;
+    }
+}
+
+@media (max-width: 600px) {
     .portal-selection-grid {
         grid-template-columns: 1fr;
-        max-width: 500px;
-        margin: 3rem auto 0;
+        max-width: 400px;
+        margin: 2rem auto 0;
     }
 }
 
