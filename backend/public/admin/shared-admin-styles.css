@@ -214,10 +214,10 @@ body {
 /* Main Content - Full Width Left-Aligned Layout */
 .main-content {
   flex: 1;
-  padding: 40px 40px;
+  padding: clamp(20px, 4vw, 40px);
   overflow-y: auto;
   margin-left: 0;
-  background: var(--bg-body);
+  background: var(--surface-off-white);
   min-height: calc(100vh - 70px);
   max-width: 100%;
   margin: 0;
@@ -235,7 +235,7 @@ body {
 
 .top-row h1,
 .top-row h2 {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   color: var(--primary-dark);
   font-weight: 800;
   letter-spacing: -0.025em;
@@ -582,20 +582,13 @@ label {
     min-width: 640px;
   }
 
-  .top-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    margin-bottom: 24px;
-  }
-
-  .admin-section {
-    width: 100%;
-    justify-content: space-between;
+  .top-row h1,
+  .top-row h2 {
+    font-size: 1.5rem;
   }
 
   .stats-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
     gap: 16px !important;
   }
 }
@@ -746,6 +739,7 @@ label {
     transform: translateX(0);
     opacity: 1;
   }
+
   100% {
     transform: translateX(-100%);
     opacity: 0;
@@ -754,13 +748,15 @@ label {
 
 .delete-animation {
   animation: slideOutLeft 0.5s ease forwards;
-  pointer-events: none; /* Prevent clicks while animating */
+  pointer-events: none;
+  /* Prevent clicks while animating */
 }
 
 /* Enhanced Table Styles */
 .table-wrapper {
   overflow: auto;
-  max-height: calc(100vh - 200px); /* Adjust based on header/footer height */
+  max-height: calc(100vh - 200px);
+  /* Adjust based on header/footer height */
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -770,7 +766,7 @@ table thead th {
   top: 0;
   background: var(--surface-off-white);
   z-index: 10;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 /* Scrollbar Styling */

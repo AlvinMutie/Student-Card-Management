@@ -39,6 +39,19 @@ h2,
 h3 {
     font-family: 'Poppins', sans-serif;
     color: var(--primary-green);
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+}
+
+h2 {
+    font-size: clamp(2rem, 5vw, 3rem);
+}
+
+h3 {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
 }
 
 .container {
@@ -210,8 +223,8 @@ h3 {
 }
 
 .hero-text h1 {
-    font-size: clamp(2.5rem, 5vw, 3.5rem);
-    line-height: 1.1;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1;
     margin-bottom: 1.5rem;
     font-weight: 800;
 }
@@ -449,19 +462,22 @@ h3 {
 
 /* Portals Section - Landing Page */
 .portals-section {
-    padding: 4rem 0;
+    padding: clamp(3rem, 8vh, 6rem) 0;
     background: #f8fafc;
-    min-height: 80vh;
+    min-height: calc(100vh - 100px);
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
+
+
 .portal-selection-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2.5rem;
-    margin-top: 4rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin-top: 3rem;
+    width: 100%;
 }
 
 @media (max-width: 992px) {
