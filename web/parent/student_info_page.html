@@ -413,10 +413,10 @@
         const badge = document.getElementById('feeStatusBadge');
         if (balance > 0) {
           badge.className = 'status-badge status-pending';
-          badge.textContent = `Balance: KES ${balance.toLocaleString()}`;
+          badge.innerHTML = `<i class="fa-solid fa-clock"></i> Balance: KES ${balance.toLocaleString()}`;
         } else {
           badge.className = 'status-badge status-approved';
-          badge.textContent = 'Fees Cleared';
+          badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> Fees Cleared`;
         }
 
         // Data Rows

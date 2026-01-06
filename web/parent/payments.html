@@ -96,6 +96,95 @@
                 gap: 30px;
             }
         }
+
+        /* Improved Table Styling */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 8px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 20px 24px;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Refined Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .status-paid {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #d1fae5;
+        }
+
+        .status-pending {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fef3c7;
+        }
+
+        /* Refresh Button Enhance */
+        .btn-refresh {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-refresh:hover {
+            background: #f8fafc;
+            border-color: var(--text-muted);
+        }
+
+        .btn-refresh i {
+            font-size: 0.9rem;
+            color: var(--forest-primary);
+        }
     </style>
 </head>
 
@@ -174,8 +263,9 @@
                     <div class="card" style="padding: 0;">
                         <div class="card-header" style="padding: 24px; margin-bottom: 0;">
                             <h3>Recent Transactions</h3>
-                            <button class="btn-secondary" onclick="loadData()"><i class="fa-solid fa-rotate"></i>
-                                Refresh</button>
+                            <button class="btn-refresh" onclick="loadData()">
+                                <i class="fa-solid fa-rotate"></i> Refresh
+                            </button>
                         </div>
                         <div style="overflow-x: auto;">
                             <table>
@@ -277,39 +367,20 @@
                 if (students.length > 0) {
                     // Mock History (In a real app, this would come from a payments API)
                     const mockHistory = [
-                        { date: '2023-11-01', desc: 'Term 3 Fees', student: students[0].name, amount: 15000, status: 'Paid', icon: 'fa-money-check-dollar' },
-                        { date: '2023-09-15', desc: 'Library Fine', student: students[0].name, amount: 500, status: 'Paid', icon: 'fa-book' }
+                        { date: '2023-11-01', desc: 'Term 3 Fees', student: students[0].name, amount: 15000, status: 'Paid' },
+                        { date: '2023-09-15', desc: 'Library Fine', student: students[0].name, amount: 500, status: 'Paid' }
                     ];
 
                     if (students.length > 1) {
-                        mockHistory.push({ date: '2023-10-20', desc: 'Term 3 Fees', student: students[1].name, amount: 12000, status: 'Pending', icon: 'fa-money-check-dollar' });
+                        mockHistory.push({ date: '2023-10-20', desc: 'Term 3 Fees', student: students[1].name, amount: 12000, status: 'Pending' });
                     }
 
                     tbody.innerHTML = mockHistory.map(item => `
                         <tr>
-                            <td>
-                                <div style="display: flex; flex-direction: column;">
-                                    <span style="font-weight: 600; color: var(--text-primary);">${formatDate(item.date)}</span>
-                                    <span style="font-size: 0.75rem; color: var(--text-muted);">INV-${Math.floor(1000 + Math.random() * 9000)}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <div style="width: 32px; height: 32px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--forest-primary); font-size: 0.8rem;">
-                                        <i class="fa-solid fa-user-graduate"></i>
-                                    </div>
-                                    <span style="font-weight: 700; color: var(--text-primary);">${item.student}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-solid ${item.icon}" style="color: var(--text-muted); font-size: 0.9rem;"></i>
-                                    <span>${item.desc}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span style="font-weight: 800; color: var(--text-primary);">${formatCurrency(item.amount)}</span>
-                            </td>
+                            <td>${formatDate(item.date)}</td>
+                            <td><span style="font-weight: 700; color: var(--forest-primary);">${item.student}</span></td>
+                            <td>${item.desc}</td>
+                            <td><span style="font-weight: 600;">${formatCurrency(item.amount)}</span></td>
                             <td>
                                 <span class="status-badge ${item.status === 'Paid' ? 'status-paid' : 'status-pending'}">
                                     <i class="fa-solid ${item.status === 'Paid' ? 'fa-circle-check' : 'fa-clock'}"></i>
