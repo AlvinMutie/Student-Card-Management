@@ -462,12 +462,14 @@ h3 {
 
 /* Portals Section - Landing Page */
 .portals-section {
-    padding: clamp(3rem, 8vh, 6rem) 0;
+    padding: clamp(2rem, 5vh, 4rem) 0;
     background: #f8fafc;
-    min-height: calc(100vh - 100px);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    scroll-margin-top: 80px;
+    /* Precise navbar offset */
 }
 
 
