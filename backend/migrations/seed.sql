@@ -4,14 +4,14 @@
 -- Then update the password_hash values below with the generated hashes
 
 -- Insert admin user (password: admin123)
-INSERT INTO users (email, password_hash, role) VALUES
+INSERT INTO users (email, password, role) VALUES
 ('admin@example.com', '$2b$10$Qbh6FQoHiV9yNZba57Duqekx6wSwB31Y5BoswIyMbiIjJDqEi73Ou', 'admin')
-ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password;
 
 -- Insert sample parent user (password: parent123)
-INSERT INTO users (email, password_hash, role) VALUES
+INSERT INTO users (email, password, role) VALUES
 ('parent@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent')
-ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password;
 
 -- Get the parent user_id and create parent/student records
 DO $$
