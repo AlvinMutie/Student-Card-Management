@@ -53,28 +53,8 @@
       /* Keep header fixed size */
     }
 
-    .table-wrapper {
-      flex: 1;
-      /* Turn into a flex item that fills remaining space */
-      overflow-y: auto;
-      /* Vertical scroll only for table area */
-      overflow-x: auto;
-      /* Horizontal scroll if table is too wide */
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
-      border-radius: 10px;
-      position: relative;
-    }
+    /* .table-wrapper and table styles moved to shared-admin-styles.css */
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      /* Remove border/shadow from table itself as wrapper handles it */
-      border: none;
-      box-shadow: none;
-      border-radius: 0;
-    }
 
     thead {
       position: sticky;
@@ -160,8 +140,6 @@
       border-radius: 8px;
       width: 360px;
       max-width: 90vw;
-      max-height: 90vh;
-      overflow-y: auto;
     }
 
     .modal-content form {

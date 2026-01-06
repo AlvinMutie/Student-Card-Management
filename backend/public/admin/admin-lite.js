@@ -1,6 +1,19 @@
 // Admin utilities and page initializers (dashboard, students, parents, staff)
 // Uses shared api-client.js: studentsAPI, parentsAPI, staffAPI, authAPI
 
+(function () {
+  const userData = JSON.parse(localStorage.getItem('sv_user_data') || '{}');
+  const currentPage = window.location.pathname.split('/').pop();
+
+  // If secretary is trying to access standard admin pages, redirect to professional secretary dashboard
+  const secretaryAllowedPages = ['secretary_dashboard.html', 'secretary_visitors.html', 'secretary_settings.html', 'admin_login.html'];
+
+  if (userData.role === 'secretary' && !secretaryAllowedPages.includes(currentPage) && currentPage !== '') {
+    console.log('Redirecting secretary to professional dashboard...');
+    window.location.href = '/admin/secretary_dashboard.html';
+  }
+})();
+
 // ---------- shared helpers ----------
 function backToHome() {
   window.location.href = '/';
@@ -317,21 +330,6 @@ function initStudentsPage() {
 
   const addBtn = document.querySelector('#addStudentBtn');
   if (addBtn) addBtn.onclick = () => openStudentModal(null);
-
-  const deleteAllBtn = document.querySelector('#deleteAllStudentsBtn');
-  if (deleteAllBtn) {
-    deleteAllBtn.onclick = async () => {
-      if (!confirm('Are you certain you want to delete ALL students? This cannot be undone.')) return;
-      if (!confirm('Seriously, are you sure you want to wipe the entire database of students?')) return;
-      try {
-        await studentsAPI.deleteAll();
-        await loadStudents();
-        alert('All students have been deleted.');
-      } catch (err) {
-        alert('Delete all failed: ' + err.message);
-      }
-    };
-  }
 
   const modalForm = document.querySelector('#studentForm');
   if (modalForm) modalForm.addEventListener('submit', saveStudent);
@@ -1004,16 +1002,31 @@ async function deleteAllStudents() {
 
     let processed = 0;
     const total = allStudents.length + allParents.length || 1;
-    setProgressStatus('delete', 5, 'Deleting records…');
+
+    // Animate and delete students
     for (const s of allStudents) {
       try {
-        await studentsAPI.delete(s.id ?? s.adm);
+        // Visual animation
+        const id = s.id ?? s.adm;
+        const btn = document.querySelector(`button[data-delete-student="${id}"]`);
+        if (btn) {
+          const row = btn.closest('tr');
+          if (row) {
+            row.classList.add('delete-animation');
+            // Small visual delay for the "wave" effect
+            await new Promise(resolve => setTimeout(resolve, 50));
+          }
+        }
+
+        await studentsAPI.delete(id);
       } catch (err) {
         console.error('Delete failed for', s.id || s.adm, err);
       }
       processed++;
       setProgressStatus('delete', Math.min(90, Math.round((processed / total) * 90)), 'Deleting students…');
     }
+
+    // Delete parents
     for (const p of allParents) {
       try {
         await parentsAPI.delete(p.id ?? p._id);
@@ -1023,6 +1036,7 @@ async function deleteAllStudents() {
       processed++;
       setProgressStatus('delete', Math.min(95, Math.round((processed / total) * 95)), 'Deleting parents…');
     }
+
     await loadStudents();
     setProgressStatus('delete', 100, 'All students and parents deleted.', 'success');
     setTimeout(() => setProgressStatus('delete', 0, ''), 1200);
