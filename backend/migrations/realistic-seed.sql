@@ -3,9 +3,9 @@
 -- Each parent has 1-2 students with matching last names
 
 -- Insert Admin User (password: admin123)
-INSERT INTO users (email, password_hash, role) VALUES
-('admin@hechlink.edu', '$2b$10$Qbh6FQoHiV9yNZba57Duqekx6wSwB31Y5BoswIyMbiIjJDqEi73Ou', 'admin')
-ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+INSERT INTO users (email, password, role, status) VALUES
+('admin@hechlink.edu', '$2b$10$Qbh6FQoHiV9yNZba57Duqekx6wSwB31Y5BoswIyMbiIjJDqEi73Ou', 'admin', 'approved')
+ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status;
 
 -- Insert Parents with Students (password: parent123 for all)
 -- Each parent has 1-2 students with matching family names
@@ -41,9 +41,9 @@ BEGIN
     -- Each parent will have 1-2 students
     
     -- Parent 1: Onyango Family (2 students)
-    INSERT INTO users (email, password_hash, role) VALUES
-    ('sarah.onyango@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent')
-    ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash
+    INSERT INTO users (email, password, role, status) VALUES
+    ('sarah.onyango@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent', 'approved')
+    ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status
     RETURNING id INTO parent_user_id;
     
     INSERT INTO parents (user_id, name, email, phone) VALUES
@@ -57,9 +57,9 @@ BEGIN
     ON CONFLICT (adm) DO NOTHING;
     
     -- Parent 2: Mwangi Family (1 student)
-    INSERT INTO users (email, password_hash, role) VALUES
-    ('john.mwangi@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent')
-    ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash
+    INSERT INTO users (email, password, role, status) VALUES
+    ('john.mwangi@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent', 'approved')
+    ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status
     RETURNING id INTO parent_user_id;
     
     INSERT INTO parents (user_id, name, email, phone) VALUES
@@ -72,9 +72,9 @@ BEGIN
     ON CONFLICT (adm) DO NOTHING;
     
     -- Parent 3: Kipchoge Family (2 students)
-    INSERT INTO users (email, password_hash, role) VALUES
-    ('mary.kipchoge@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent')
-    ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash
+    INSERT INTO users (email, password, role, status) VALUES
+    ('mary.kipchoge@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent', 'approved')
+    ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status
     RETURNING id INTO parent_user_id;
     
     INSERT INTO parents (user_id, name, email, phone) VALUES
@@ -88,9 +88,9 @@ BEGIN
     ON CONFLICT (adm) DO NOTHING;
     
     -- Parent 4: Njoroge Family (1 student)
-    INSERT INTO users (email, password_hash, role) VALUES
-    ('peter.njoroge@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent')
-    ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash
+    INSERT INTO users (email, password, role, status) VALUES
+    ('peter.njoroge@example.com', '$2b$10$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent', 'approved')
+    ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status
     RETURNING id INTO parent_user_id;
     
     INSERT INTO parents (user_id, name, email, phone) VALUES

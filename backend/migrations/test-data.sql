@@ -29,8 +29,8 @@ DECLARE
 BEGIN
     FOR i IN 1..50 LOOP
         -- Create user account
-        INSERT INTO users (email, password_hash, role)
-        VALUES ('parent' || i || '@example.com', parent_hash, 'parent')
+        INSERT INTO users (email, password, role, status)
+        VALUES ('parent' || i || '@example.com', parent_hash, 'parent', 'approved')
         ON CONFLICT (email) DO NOTHING
         RETURNING id INTO user_id_var;
         

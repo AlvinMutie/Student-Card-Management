@@ -29,13 +29,13 @@ sudo -u postgres psql -d student_card_management -f "$PROJECT_ROOT/backend/migra
 # ROBUST SEEDING (Specify columns to avoid position errors)
 echo "🌱 Seeding data with robust inserts..."
 sudo -u postgres psql -d student_card_management -c "
-INSERT INTO users (email, password_hash, role, name) 
-VALUES ('admin@example.com', '\$2b\$10\$Qbh6FQoHiV9yNZba57Duqekx6wSwB31Y5BoswIyMbiIjJDqEi73Ou', 'admin', 'System Admin') 
-ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+INSERT INTO users (email, password, role, status, full_name) 
+VALUES ('admin@example.com', '\$2b\$10\$Qbh6FQoHiV9yNZba57Duqekx6wSwB31Y5BoswIyMbiIjJDqEi73Ou', 'admin', 'approved', 'System Admin') 
+ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status;
 
-INSERT INTO users (email, password_hash, role, name) 
-VALUES ('parent@example.com', '\$2b\$10\$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent', 'Demo Parent') 
-ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+INSERT INTO users (email, password, role, status, full_name) 
+VALUES ('parent@example.com', '\$2b\$10\$X4PgL.4CDQ4kAUn.vHbut.BpS1Dpewf6yha5/E1O14Nz3CppA0.pa', 'parent', 'approved', 'Demo Parent') 
+ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password, status = EXCLUDED.status;
 "
 echo "✅ Database initialized and constraint-fixed."
 
