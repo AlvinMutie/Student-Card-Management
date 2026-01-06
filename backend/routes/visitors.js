@@ -25,7 +25,13 @@ router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']
  */
 router.post('/check-in', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
     try {
-        const { name, id_number, phone, plate_number, purpose, host_name } = req.body;
+        // Support snake_case (web) and camelCase (mobile)
+        const name = req.body.name;
+        const id_number = req.body.id_number || req.body.idNumber;
+        const phone = req.body.phone;
+        const plate_number = req.body.plate_number || req.body.plateNumber;
+        const purpose = req.body.purpose;
+        const host_name = req.body.host_name || req.body.hostName;
 
         if (!name) return res.status(400).json({ error: 'Visitor name is required' });
 

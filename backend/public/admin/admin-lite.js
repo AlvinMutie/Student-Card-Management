@@ -765,6 +765,7 @@ function wireStaffEvents() {
 
 // ---------- visitors ----------
 let visitorsCache = [];
+let visitorsPollInterval = null;
 
 function renderVisitorsTable(list) {
   const tbody = document.querySelector('#visitorsBody');
@@ -778,9 +779,26 @@ function renderVisitorsTable(list) {
       (v) => {
         const checkIn = v.check_in_time ? new Date(v.check_in_time).toLocaleString() : '—';
         const checkOut = v.check_out_time ? new Date(v.check_out_time).toLocaleString() : '—';
-        const isCheckedIn = v.status === 'checked_in';
-        const statusClass = isCheckedIn ? 'status-checked-in' : 'status-checked-out';
-        const statusLabel = isCheckedIn ? 'Checked In' : 'Checked Out';
+
+        let statusLabel = 'Unknown';
+        let statusClass = 'status-checked-out'; // default gray
+        const s = (v.status || '').toLowerCase();
+
+        if (s === 'checked_in' || s === 'approved') {
+          statusLabel = 'Checked In';
+          statusClass = 'status-checked-in'; // green
+        } else if (s === 'pending') {
+          statusLabel = 'Pending';
+          statusClass = 'status-pending'; // we will style this yellow
+        } else if (s === 'checked_out') {
+          statusLabel = 'Checked Out';
+          statusClass = 'status-checked-out'; // gray
+        } else if (s === 'rejected' || s === 'blacklisted') {
+          statusLabel = 'Rejected';
+          statusClass = 'status-checked-out'; // gray/red
+        }
+
+        const canCheckOut = ['checked_in', 'approved', 'pending'].includes(s);
 
         return `<tr>
         <td><span style="font-weight:600; color:#334155;">${v.name || ''}</span></td>
@@ -791,14 +809,14 @@ function renderVisitorsTable(list) {
         <td>${v.host_name || '—'}</td>
         <td>${checkIn}</td>
         <td>${checkOut}</td>
-        <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
+        <td><span class="status-badge ${statusClass}" style="${s === 'pending' ? 'background:#fef3c7; color:#b45309;' : ''}">${statusLabel}</span></td>
         <td>
           <div style="display:flex; gap:6px;">
-            ${isCheckedIn
-            ? `<button class="btn-small" style="background:#10b981;" data-checkout-visitor="${v.id}">Check Out</button>`
-            : ''
+            ${canCheckOut
+            ? `<button class="btn-small" style="background:#ef4444;" data-delete-visitor="${v.id}">Delete</button>
+               <button class="btn-small" style="background:#10b981;" data-checkout-visitor="${v.id}">Check Out</button>`
+            : `<button class="btn-small" style="background:#ef4444;" data-delete-visitor="${v.id}">Delete</button>`
           }
-            <button class="btn-small" style="background:#ef4444;" data-delete-visitor="${v.id}">Delete</button>
           </div>
         </td>
       </tr>`;
@@ -818,8 +836,32 @@ async function loadVisitors() {
   }
 }
 
+async function checkOutVisitor(id) {
+  if (!confirm('Check out this visitor?')) return;
+  try {
+    await visitorsAPI.checkOut(id);
+    await loadVisitors();
+  } catch (err) {
+    alert('Check out failed: ' + err.message);
+  }
+}
+
+async function deleteVisitor(id) {
+  if (!confirm('Delete this visitor record?')) return;
+  try {
+    await visitorsAPI.delete(id);
+    await loadVisitors();
+  } catch (err) {
+    alert('Delete failed: ' + err.message);
+  }
+}
+
 function initVisitorsPage() {
   loadVisitors();
+
+  // Auto-refresh every 10 seconds
+  if (visitorsPollInterval) clearInterval(visitorsPollInterval);
+  visitorsPollInterval = setInterval(loadVisitors, 10000);
 
   const search = document.querySelector('#visitorSearch');
   if (search) {
@@ -839,32 +881,15 @@ function initVisitorsPage() {
 
   const tbody = document.querySelector('#visitorsBody');
   if (tbody) {
-    tbody.addEventListener('click', async (e) => {
+    tbody.addEventListener('click', (e) => {
       const checkout = e.target.closest('[data-checkout-visitor]');
       const del = e.target.closest('[data-delete-visitor]');
 
       if (checkout) {
-        const id = checkout.dataset.checkoutVisitor;
-        if (confirm('Check out this visitor?')) {
-          try {
-            await visitorsAPI.checkOut(id);
-            await loadVisitors();
-          } catch (err) {
-            alert('Check out failed: ' + err.message);
-          }
-        }
+        checkOutVisitor(checkout.dataset.checkoutVisitor);
       }
-
       if (del) {
-        const id = del.dataset.deleteVisitor;
-        if (confirm('Permanently delete this visitor record?')) {
-          try {
-            await visitorsAPI.delete(id);
-            await loadVisitors();
-          } catch (err) {
-            alert('Delete failed: ' + err.message);
-          }
-        }
+        deleteVisitor(del.dataset.deleteVisitor);
       }
     });
   }
