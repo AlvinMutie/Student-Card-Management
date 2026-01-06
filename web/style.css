@@ -165,8 +165,11 @@ h3 {
 
 /* Hero Section */
 .hero {
-    padding-top: 10rem;
-    padding-bottom: 5rem;
+    padding-top: 8rem;
+    padding-bottom: 4rem;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
     background: radial-gradient(circle at top right, rgba(20, 83, 45, 0.05), transparent 40%),
         radial-gradient(circle at bottom left, rgba(139, 21, 56, 0.05), transparent 40%);
 }
@@ -207,7 +210,7 @@ h3 {
 }
 
 .hero-text h1 {
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
     line-height: 1.1;
     margin-bottom: 1.5rem;
     font-weight: 800;
@@ -269,8 +272,8 @@ h3 {
 }
 
 .section-title h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    margin-bottom: 0.5rem;
 }
 
 .feature-grid {
@@ -446,7 +449,7 @@ h3 {
 
 /* Portals Section - Landing Page */
 .portals-section {
-    padding: 8rem 0;
+    padding: 4rem 0;
     background: #f8fafc;
     min-height: 80vh;
     display: flex;
@@ -474,7 +477,7 @@ h3 {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(20px);
     border: 1px solid #e2e8f0;
-    padding: 3rem 2rem;
+    padding: 2.5rem 1.5rem;
     border-radius: 32px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
@@ -491,9 +494,9 @@ h3 {
 }
 
 .card-lottie {
-    width: 200px;
-    height: 200px;
-    margin-bottom: 1rem;
+    width: 160px;
+    height: 160px;
+    margin-bottom: 0.5rem;
 }
 
 .card-content h3 {
