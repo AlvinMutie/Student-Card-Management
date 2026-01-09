@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings | Shuleni Advantage</title>
+    <meta name="description"
+        content="Manage your parent account settings and update your profile on Shuleni Advantage.">
+    <link rel="canonical" href="https://shuleniadvantage.co.ke/parent/settings.html">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.ico" type="image/png">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <meta name="theme-color" content="#064e3b">
+    <link rel="stylesheet" href="/shared/portal-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body data-page="parentSettings">
+    <!-- Vertical Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="/favicon.ico" alt="Logo" class="brand-icon" style="filter:none;">
+            <h1>Shuleni Advantage</h1>
+        </div>
+
+        <ul class="nav-links">
+            <li>
+                <a href="student_info_page.html">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="payments.html">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Payments</span>
+                </a>
+            </li>
+            <li>
+                <a href="settings.html" class="active">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="logout-section">
+            <a href="#" class="logout-btn-link" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <header class="top-bar">
+            <div class="top-bar-title">
+                <h2>Account Settings</h2>
+            </div>
+            <div class="top-bar-user">
+                <span id="parentNamePill">Parent Account</span>
+            </div>
+        </header>
+
+        <main class="content-body">
+            <div id="loadingOverlay" style="text-align:center; padding: 100px 0; display: none;">
+                <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: var(--forest-primary);"></i>
+            </div>
+
+            <div id="contentArea" class="form-grid"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 32px;">
+                <!-- Profile Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-user-pen"
+                                style="margin-right: 10px; color: var(--forest-primary);"></i> Profile Information</h3>
+                    </div>
+                    <form id="profileForm" class="form-container">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="profileName" placeholder="Your Name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="profileEmail" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="profilePhone" placeholder="07XX XXX XXX" required>
+                        </div>
+                        <button type="submit" class="btn-primary" style="width: 100%;">Save Profile Changes</button>
+                    </form>
+                    <div id="profileStatus" class="status-badge"
+                        style="display:none; margin-top:15px; width:100%; text-align:center;"></div>
+                </div>
+
+                <!-- Password Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-shield-halved"
+                                style="margin-right: 10px; color: var(--forest-primary);"></i> Security</h3>
+                    </div>
+                    <form id="passwordForm" class="form-container">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" id="currentPassword" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" id="newPassword" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-secondary" style="width: 100%;">Update Password</button>
+                    </form>
+                    <div id="passwordStatus" class="status-badge"
+                        style="display:none; margin-top:15px; width:100%; text-align:center;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/runtime-config.js"></script>
+    <script src="/shared/api-client.js"></script>
+    <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        async function loadProfile() {
+            const overlay = document.getElementById('loadingOverlay');
+            const content = document.getElementById('contentArea');
+            overlay.style.display = 'block';
+            content.style.opacity = '0.5';
+
+            try {
+                if (!localStorage.getItem('sv_parent_token')) {
+                    window.location.href = 'parent_login_page.html';
+                    return;
+                }
+
+                // Fetch profile
+                const profile = await parentsAPI.getMyProfile();
+
+                document.getElementById('profileName').value = profile.name || '';
+                document.getElementById('profileEmail').value = profile.email || '';
+                document.getElementById('profilePhone').value = profile.phone || '';
+
+                if (profile.name) {
+                    document.getElementById('parentNamePill').textContent = profile.name;
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                // Fallback to local storage if API fails but we have some data
+                const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+                if (userData.full_name || userData.name) {
+                    document.getElementById('profileName').value = userData.full_name || userData.name || '';
+                    document.getElementById('profileEmail').value = userData.email || '';
+                    document.getElementById('profilePhone').value = userData.phone || '';
+                }
+            } finally {
+                overlay.style.display = 'none';
+                content.style.opacity = '1';
+            }
+        }
+
+        function showStatus(elementId, message, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.className = 'status-badge ' + (type === 'success' ? 'status-paid' : 'status-failed');
+            el.style.display = 'block';
+            el.style.padding = '12px';
+            setTimeout(() => { el.style.display = 'none'; }, 5000);
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                const data = {
+                    name: document.getElementById('profileName').value,
+                    email: document.getElementById('profileEmail').value,
+                    phone: document.getElementById('profilePhone').value
+                };
+
+                await parentsAPI.updateMyProfile(data);
+
+                // Update local storage
+                const userData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+                const updatedUser = { ...userData, ...data, full_name: data.name };
+                localStorage.setItem('sv_parent_user', JSON.stringify(updatedUser));
+                document.getElementById('parentNamePill').textContent = data.name;
+
+                showStatus('profileStatus', 'Profile updated successfully!', 'success');
+            } catch (error) {
+                showStatus('profileStatus', error.message || 'Failed to update profile.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const btn = e.target.querySelector('button');
+
+            if (newPass !== confirmPass) {
+                showStatus('passwordStatus', 'New passwords do not match.', 'error');
+                return;
+            }
+
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Updating...';
+
+            try {
+                await parentsAPI.changePassword(current, newPass);
+                showStatus('passwordStatus', 'Password changed successfully!', 'success');
+                e.target.reset();
+            } catch (error) {
+                showStatus('passwordStatus', error.message || 'Failed to change password.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const parentData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+            if (parentData.full_name) {
+                document.getElementById('parentNamePill').textContent = parentData.full_name;
+            }
+
+            loadProfile();
+
+            if (logoutBtn) logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Are you sure you want to log out?')) {
+                    localStorage.removeItem('sv_parent_token');
+                    localStorage.removeItem('sv_parent_user');
+                    window.location.href = 'parent_login_page.html';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

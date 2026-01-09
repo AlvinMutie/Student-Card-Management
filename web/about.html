@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Shuleni Advantage</title>
+    <link rel="stylesheet" href="/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.11/dist/dotlottie-wc.js" type="module"></script>
+</head>
+
+<body class="subpage">
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="/index.html" class="brand">
+                <img src="/assets/logo.png" alt="Logo" class="logo">
+                <span class="brand-name">Shuleni<span>Advantage</span></span>
+            </a>
+            <nav class="nav-links" id="navLinks">
+                <a href="/#features">Features</a>
+                <a href="#" class="active">About</a>
+                <a href="/#portals" class="btn btn-maroon">Login</a>
+            </nav>
+            <div class="mobile-toggle" id="mobileToggle" style="display: none;">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="about-hero">
+        <div class="container">
+            <div class="about-content">
+                <div class="badge">Our Mission</div>
+                <h1>Beyond Digital Management.</h1>
+                <p class="lead">Shuleni Advantage is a security-first educational ERP designed to bridge the gap between
+                    school administration, parents, and ground-level security.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="core-pillars">
+        <div class="container">
+            <div class="pillar-row">
+                <div class="pillar-text">
+                    <div class="pillar-badge green">Visionary Growth</div>
+                    <h2>Scaling Education with Intelligence</h2>
+                    <p>We believe that school management should be effortless. From automatic fee allocation based on
+                        institutional priority to real-time academic tracking, our platform is built to grow alongside
+                        your institution.</p>
+                </div>
+                <div class="pillar-visual">
+                    <dotlottie-wc src="https://lottie.host/f5d6ccf4-6072-4ac0-9c93-a620062292fb/syWCXQGoxl.lottie"
+                        autoplay loop></dotlottie-wc>
+                </div>
+            </div>
+
+            <div class="pillar-row reverse">
+                <div class="pillar-text">
+                    <div class="pillar-badge maroon">Secure Connectivity</div>
+                    <h2>The Human-Centric Network</h2>
+                    <p>True security is about connection. We bridge the gap between administration and security staff
+                        with high-detail QR code generation and production-ready verification logic, ensuring every
+                        student ID is a key to a safer campus.</p>
+                </div>
+                <div class="pillar-visual">
+                    <dotlottie-wc src="https://lottie.host/b1abfe99-cc6b-4f37-9b8e-ee8379933af8/qtCc5p4uir.lottie"
+                        autoplay loop></dotlottie-wc>
+                </div>
+            </div>
+
+            <div class="pillar-row">
+                <div class="pillar-text">
+                    <div class="pillar-badge green">Management Efficiency</div>
+                    <h2>Precision at Every Level</h2>
+                    <p>Eliminate manual errors with automated workflows. Our system handles complex financial splitting
+                        and visitor logs with surgical precision, allowing you to focus on what matters most: education.
+                    </p>
+                </div>
+                <div class="pillar-visual">
+                    <dotlottie-wc src="https://lottie.host/4324886c-17b4-4105-a6d7-3c7810a85b64/x0RQwP6dZ8.lottie"
+                        autoplay loop></dotlottie-wc>
+                </div>
+            </div>
+            <!-- Integrated "Get Started" Layout -->
+            <div class="inline-cta">
+                <a href="/#portals" class="btn btn-green">Get Started Now</a>
+                <div class="inline-lottie">
+                    <dotlottie-wc src="https://lottie.host/440425d5-7a6f-4a16-9dc3-055319e6fb61/E2bbugJXZ7.lottie"
+                        autoplay loop></dotlottie-wc>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Removed per instruction to place CTA after text -->
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <p>&copy; 2025 Hechlink Ventures. Empowering professional education.</p>
+        </div>
+    </footer>
+    <!-- GSAP for Smooth Scroll Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        const animateIn = () => {
+            const sections = document.querySelectorAll('section, .pillar-row, .inline-cta');
+
+            sections.forEach(el => {
+                gsap.fromTo(el,
+                    { opacity: 0, y: 30 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: "power2.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 85%",
+                            end: "bottom 15%",
+                            toggleActions: el.classList.contains('inline-cta') ? "play none none none" : "play reverse play reverse",
+                        }
+                    }
+                );
+            });
+        };
+
+        window.onload = animateIn;
+
+        // Mobile Menu Toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (mobileToggle && navLinks) {
+            mobileToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                const icon = mobileToggle.querySelector('i');
+                if (navLinks.classList.contains('active')) {
+                    icon.classList.replace('fa-bars', 'fa-times');
+                } else {
+                    icon.classList.replace('fa-times', 'fa-bars');
+                }
+            });
+
+            // Close menu when clicking links
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    navLinks.classList.remove('active');
+                    mobileToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>

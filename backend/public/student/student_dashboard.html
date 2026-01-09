@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard | Shuleni Advantage</title>
+    <link rel="icon" href="/shared/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/shared/portal-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-text h1 {
+            font-size: 2rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-text p {
+            color: var(--text-muted);
+        }
+
+        .student-profile-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-light);
+        }
+
+        .profile-info h2 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .detail-item label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-item span {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(20, 83, 45, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: var(--primary-dark);
+        }
+
+        .list-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-good {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        @media (max-width: 768px) {
+            .student-profile-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="garden-body">
+    <div class="decorative-blob blob-1"></div>
+    <div class="decorative-blob blob-2"></div>
+
+    <header class="garden-header">
+        <div class="brand-pill">
+            <img src="/shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon"
+                onerror="this.style.display='none'">
+            <span>Shuleni Advantage</span>
+        </div>
+        <button class="theme-btn ghost" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="dashboard-header">
+            <div class="welcome-text">
+                <h1>Student Dashboard</h1>
+                <p>Welcome back to your academic portal</p>
+            </div>
+        </div>
+
+        <div class="student-profile-card">
+            <img src="https://via.placeholder.com/150" alt="Student Photo" class="profile-image" id="studentPhoto">
+            <div class="profile-info" style="flex: 1;">
+                <h2 id="studentName">Loading...</h2>
+                <div class="profile-details">
+                    <div class="detail-item">
+                        <label>Admission No</label>
+                        <span id="studentAdm">---</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Class</label>
+                        <span id="studentClass">---</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>Stream</label>
+                        <span id="studentStream">---</span>
+                    </div>
+                    <div class="detail-item">
+                        <label>House</label>
+                        <span id="studentHouse">---</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Academic Performance -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <span class="card-title">Academic Overview</span>
+                </div>
+                <div class="list-item">
+                    <span>Current Term</span>
+                    <span class="status-badge status-good">Term 2, 2023</span>
+                </div>
+                <div class="list-item">
+                    <span>Last Exam Grade</span>
+                    <span style="font-weight: bold;">B+</span>
+                </div>
+                <div class="list-item">
+                    <span>Class Position</span>
+                    <span>5 / 45</span>
+                </div>
+                <button class="theme-btn primary" style="width: 100%; margin-top: 1rem;">View Full Report</button>
+            </div>
+
+            <!-- Attendance -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <span class="card-title">Attendance Record</span>
+                </div>
+                <div class="list-item">
+                    <span>Days Present</span>
+                    <span>42</span>
+                </div>
+                <div class="list-item">
+                    <span>Days Absent</span>
+                    <span>2</span>
+                </div>
+                <div class="list-item">
+                    <span>Attendance Rate</span>
+                    <span class="status-badge status-good">95%</span>
+                </div>
+            </div>
+
+            <!-- Fee Status -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <span class="card-title">Fee Status</span>
+                </div>
+                <div class="list-item">
+                    <span>Total Billed</span>
+                    <span>KSh 50,000</span>
+                </div>
+                <div class="list-item">
+                    <span>Paid Amount</span>
+                    <span>KSh 30,000</span>
+                </div>
+                <div class="list-item">
+                    <span>Balance</span>
+                    <span class="status-badge status-warning" id="feeBalance">KSh 20,000</span>
+                </div>
+                <button class="theme-btn ghost" style="width: 100%; margin-top: 1rem;">Payment History</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="/runtime-config.js"></script>
+    <script src="/shared/api-client.js"></script>
+    <script>
+        // Mock data for demonstration
+        document.addEventListener('DOMContentLoaded', async () => {
+            // In a real app, we would fetch the logged-in student's data
+            // For now, we'll simulate it or fetch a random student
+
+            try {
+                // Simulate loading
+                const student = {
+                    name: "Alex Johnson",
+                    adm: "ST001",
+                    class: "Grade 5",
+                    stream: "Blue",
+                    house: "Simba",
+                    fee_balance: 20000,
+                    photo_url: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyLDEyQTUuNSw1LjUgMCwwLDAgMTcuNSw2LjVBNS41LDUuNSAwLDAsMCAxMiwxQTUuNSw1LjUgMCwwLDAgNi41LDYuNUE1LjUsNS41IDAsMCwwIDEyLDEyTTEyLDE0QzcuNTgsMTQgNCwxNS43OSA0LDE4VjIwSDIwVjE4QzIwLDE1Ljc5IDE2LjQyLDE0IDEyLDE0WiIvPjwvc3ZnPg=="
+                };
+
+                document.getElementById('studentName').textContent = student.name;
+                document.getElementById('studentAdm').textContent = student.adm;
+                document.getElementById('studentClass').textContent = student.class;
+                document.getElementById('studentStream').textContent = student.stream;
+                document.getElementById('studentHouse').textContent = student.house;
+                document.getElementById('studentPhoto').src = student.photo_url;
+
+                const feeEl = document.getElementById('feeBalance');
+                feeEl.textContent = 'KSh ' + student.fee_balance.toLocaleString();
+                if (student.fee_balance === 0) {
+                    feeEl.className = 'status-badge status-good';
+                    feeEl.textContent = 'Cleared';
+                }
+
+            } catch (error) {
+                console.error('Error loading student data:', error);
+            }
+        });
+
+        function logout() {
+            window.location.href = '/index.html';
+        }
+    </script>
+</body>
+
+</html>

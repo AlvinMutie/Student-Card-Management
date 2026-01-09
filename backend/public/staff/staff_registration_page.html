@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Staff Account | Shuleni Advantage</title>
+  <link rel="icon" href="/shared/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/shared/portal-theme.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    .form-container {
+      padding: 3rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--primary-dark);
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .input-group {
+      margin-bottom: 0;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .verification-note {
+      background-color: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--success);
+      padding: 1rem;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      color: var(--text-main);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .verification-note i {
+      color: var(--success);
+      margin-top: 3px;
+    }
+
+    .submit-btn {
+      display: flex;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .submit-btn button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1.05rem;
+    }
+
+    .feature-card {
+      padding: 3rem;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      color: var(--text-white);
+      border-radius: 24px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body,
+    html {
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .garden-body {
+      overflow-y: auto;
+      min-height: 100vh;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f4c3a 0%, #1a5f47 25%, #2d7a5f 50%, #8b1538 75%, #6b1a2f 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 20s ease infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .feature-card>* {
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+      color: var(--accent-light);
+    }
+
+    .feature-card h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .feature-card p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-list {
+      list-style: none;
+      margin-top: 1rem;
+    }
+
+    .feature-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .feature-list li i {
+      color: var(--accent-light);
+    }
+
+    @media (max-width: 768px) {
+      .form-container {
+        padding: 2rem;
+      }
+
+      .feature-card {
+        padding: 2rem;
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body class="garden-body">
+  <div class="decorative-blob blob-1"
+    style="position: fixed; top: -10%; left: -5%; width: 500px; height: 500px; background: #dcfce7; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.4;">
+  </div>
+  <div class="decorative-blob blob-2"
+    style="position: fixed; bottom: -10%; right: -5%; width: 600px; height: 600px; background: #fef3c7; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.4;">
+  </div>
+
+  <header class="garden-header">
+    <div class="brand-pill">
+      <a href="/index.html" class="brand-link"
+        style="display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;font-weight:700;">
+        <img src="/shared/Hechlink_logo.png" alt="Shuleni Advantage Logo" class="brand-icon">
+        <span>Shuleni Advantage</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="garden-main">
+    <a href="/index.html" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Home
+    </a>
+
+    <div class="section-lead">
+      <h1>Staff Registration</h1>
+      <p>Create your account to manage student records and access administrative tools.</p>
+    </div>
+
+    <div class="theme-grid-two">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chalkboard-teacher"></i>
+        </div>
+        <h2>Staff Benefits</h2>
+        <p>Join the digital administration platform to streamline your daily tasks.</p>
+
+        <ul class="feature-list">
+          <li><i class="fas fa-check-circle"></i> Real-time student attendance tracking</li>
+          <li><i class="fas fa-check-circle"></i> Digital grade recording and reporting</li>
+          <li><i class="fas fa-check-circle"></i> Instant communication with parents</li>
+          <li><i class="fas fa-check-circle"></i> Secure access to student medical records</li>
+        </ul>
+      </div>
+
+      <div class="theme-card form-container">
+        <form id="staffAccountForm">
+          <h2 class="section-title">Personal Details</h2>
+
+          <div class="form-grid">
+            <div class="input-group">
+              <label for="fullName">Full Name</label>
+              <input type="text" id="fullName" class="theme-input" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="input-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" class="theme-input" placeholder="Enter your phone number" required>
+            </div>
+
+            <div class="input-group">
+              <label for="staffNumber">Staff Registration Number</label>
+              <input type="text" id="staffNumber" class="theme-input" placeholder="Enter your staff ID" required>
+            </div>
+
+            <div class="verification-note">
+              <i class="fas fa-info-circle"></i>
+              <div>
+                <strong>Verification Required</strong><br>
+                Your staff number will be verified against the school registry before account activation.
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="email">Institutional Email</label>
+              <input type="email" id="email" class="theme-input" placeholder="name@school.edu" required>
+            </div>
+
+            <div class="input-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" class="theme-input" placeholder="Create a strong password" required>
+            </div>
+
+            <div class="input-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword" class="theme-input" placeholder="Confirm your password"
+                required>
+            </div>
+          </div>
+
+          <div class="submit-btn">
+            <button type="submit" class="theme-btn primary">
+              <i class="fas fa-user-check"></i> Verify & Register
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="garden-footer">
+    <p>By creating an account, you agree to our <a href="#" class="theme-link">Privacy Policy</a> and <a href="#"
+        class="theme-link">Terms of Service</a></p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights
+      reserved.</p>
+  </footer>
+
+  <script src="/runtime-config.js"></script>
+  <script src="/shared/api-client.js"></script>
+  <script>
+    document.getElementById('staffAccountForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const submitBtn = this.querySelector('button[type="submit"]');
+
+      if (password !== confirmPassword) {
+        alert('Passwords do not match. Please try again.');
+        return;
+      }
+
+      // Show loading state
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+      try {
+        const fullName = document.getElementById('fullName').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const staffNumber = document.getElementById('staffNumber').value.trim();
+        const email = document.getElementById('email').value.trim();
+
+        if (password.length < 6) {
+          alert('Password must be at least 6 characters long.');
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+          return;
+        }
+
+        // Call staff API
+        const response = await staffAPI.create({
+          staff_no: staffNumber,
+          name: fullName,
+          email: email,
+          phone: phone,
+          password: password,
+          department: null // Can be set later by admin
+        });
+
+        if (response && response.id) {
+          alert('Account registration submitted successfully! Your staff number will be verified by an administrator before you can access the system.');
+          // Clear form
+          document.getElementById('staffAccountForm').reset();
+        } else {
+          throw new Error('Invalid response from server');
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        const errorMessage = error.message || 'Registration failed. Please try again.';
+        alert(`Registration failed: ${errorMessage}`);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
+  </script>
+</body>
+
+</html>

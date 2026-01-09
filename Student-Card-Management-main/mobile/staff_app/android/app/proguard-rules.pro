@@ -1,0 +1,5 @@
+-dontwarn java.awt.**
+-dontwarn java.beans.**
+-dontwarn javax.security.**
+-dontwarn com.sun.jna.**
+-keep class com.sun.jna.** { *; }

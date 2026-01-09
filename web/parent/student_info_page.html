@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Dashboard | Shuleni Advantage</title>
+  <meta name="description"
+    content="Manage your children's school details, track attendance, and view academic reports.">
+  <link rel="canonical" href="https://shuleniadvantage.co.ke/parent/student_info_page.html">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.ico" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.ico">
+  <meta name="theme-color" content="#064e3b">
+  <link rel="stylesheet" href="/shared/portal-layout.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Page-specific refinements */
+    .profile-container {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      background: linear-gradient(135deg, var(--forest-primary) 0%, #059669 100%);
+      padding: 40px;
+      border-radius: 24px;
+      color: white;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .profile-container::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.05);
+      transform: rotate(25deg);
+    }
+
+    .profile-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      background: white;
+      padding: 5px;
+      object-fit: cover;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .profile-info h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .profile-info p {
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .student-chips {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .student-chip {
+      padding: 12px 24px;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .student-chip.active {
+      border-color: var(--forest-primary);
+      background: rgba(6, 78, 59, 0.05);
+      color: var(--forest-primary);
+    }
+
+    .student-chip i {
+      font-size: 0.9rem;
+    }
+
+    .data-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .data-label {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .data-value {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .link-child-box {
+      background: #f8fafc;
+      border: 2px dashed var(--border-color);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .link-child-box h4 {
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .link-child-box p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .link-form {
+      display: flex;
+      gap: 12px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .profile-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 30px;
+      }
+
+      .link-form {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body data-page="parentDashboard">
+  <!-- Vertical Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="/favicon.ico" alt="Logo" class="brand-icon" style="filter:none;">
+      <h1>Shuleni Advantage</h1>
+    </div>
+
+    <ul class="nav-links">
+      <li>
+        <a href="student_info_page.html" class="active">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a href="payments.html">
+          <i class="fa-solid fa-credit-card"></i>
+          <span>Payments</span>
+        </a>
+      </li>
+      <li>
+        <a href="settings.html">
+          <i class="fa-solid fa-user-gear"></i>
+          <span>Settings</span>
+        </a>
+      </li>
+    </ul>
+
+    <div class="logout-section">
+      <a href="#" class="logout-btn-link" id="logoutBtn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        <span>Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="main-wrapper">
+    <header class="top-bar">
+      <div class="top-bar-title">
+        <h2>Parent Dashboard</h2>
+      </div>
+      <div class="top-bar-user">
+        <span id="parentNamePill">Parent Account</span>
+        <button class="btn-secondary" id="refreshBtn" title="Refresh Data">
+          <i class="fa-solid fa-rotate"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="content-body">
+      <div id="loadingOverlay" style="text-align:center; padding: 100px 0; display: none;">
+        <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: var(--forest-primary);"></i>
+        <p style="margin-top: 20px; font-weight: 600; color: var(--text-muted);">Loading student data...</p>
+      </div>
+
+      <div id="dashboardContent" style="display: none;">
+        <!-- Student Selection -->
+        <div class="student-chips" id="studentChips">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Active Student Profile -->
+        <div class="profile-container">
+          <img src="" alt="Student Profile" class="profile-photo" id="studentPhoto"
+            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2NjYyI+PHBhdGggZD0iTTEyLDEyQTUuNSw1LjUgMCwwLDAgMTcuNSw2LjVBNS41LDUuNSAwLDAsMCAxMiwxQTUuNSw1LjUgMCwwLDAgNi41LDYuNUE1LjUsNS41IDAsMCwwIDEyLDEyTTEyLDE0QzcuNTgsMTQgNCwxNS43OSA0LDE4VjIwSDIwVjE4QzIwLDE1Ljc5IDE2LjQyLDE0IDEyLDE0WiIvPjwvc3ZnPg=='">
+          <div class="profile-info">
+            <h1 id="studentNameDisplay">Student Name</h1>
+            <p id="studentClassDisplay">Class | Admission Number</p>
+            <div style="margin-top: 15px;">
+              <span class="status-badge" id="feeStatusBadge">Loading Fee Status...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <!-- Academic Details -->
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-school"></i> Academic Details</h3>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Full Name</span>
+              <span class="data-value" id="valName">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Admission No</span>
+              <span class="data-value" id="valAdm">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Current Class</span>
+              <span class="data-value" id="valClass">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Stream</span>
+              <span class="data-value" id="valStream">—</span>
+            </div>
+          </div>
+
+          <!-- Fee Status Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-coins"></i> Fee Information</h3>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Current Balance</span>
+              <span class="data-value" id="valFeeBalance" style="font-size: 1.2rem; color: #ef4444;">KES 0.00</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Last Updated</span>
+              <span class="data-value" id="valFeeDate">—</span>
+            </div>
+            <div style="margin-top: 20px;">
+              <a href="payments.html" class="btn-primary" style="width: 100%; justify-content: center;">
+                <i class="fa-solid fa-wallet"></i> Pay Now
+              </a>
+            </div>
+          </div>
+
+          <!-- Other Details -->
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-circle-info"></i> Other Information</h3>
+            </div>
+            <div class="data-row">
+              <span class="data-label">NEMIS Number</span>
+              <span class="data-value" id="valNemis">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">Meal Card Validity</span>
+              <span class="data-value" id="valMeal">—</span>
+            </div>
+            <div class="data-row">
+              <span class="data-label">House</span>
+              <span class="data-value" id="valHouse">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Link Another Student -->
+        <div class="link-child-box">
+          <h4>Link Another Student</h4>
+          <p>Enter the Admission Number provided by the school to link another child to your dashboard.</p>
+          <form id="linkForm" class="link-form">
+            <input type="text" id="linkAdmissionInput" class="form-control" placeholder="e.g. ST1234" required>
+            <button type="submit" class="btn-primary" id="linkBtn">
+              <i class="fa-solid fa-link"></i> Link Student
+            </button>
+          </form>
+          <div id="linkFeedback" style="margin-top: 15px; font-weight: 600;"></div>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" style="text-align:center; padding: 100px 20px; display: none;">
+        <div style="font-size: 5rem; color: #cbd5e1; margin-bottom: 24px;">
+          <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h3>No Students Linked</h3>
+        <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto 32px;">You haven't linked any students to
+          your account yet. Use the form below to get started.</p>
+        <div class="link-child-box" style="max-width: 600px; margin: 0 auto;">
+          <h4>Link Your First Student</h4>
+          <form id="emptyLinkForm" class="link-form">
+            <input type="text" id="emptyLinkInput" class="form-control" placeholder="Admission Number" required>
+            <button type="submit" class="btn-primary">Link Account</button>
+          </form>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="/runtime-config.js"></script>
+  <script src="/shared/api-client.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof authAPI !== 'undefined') {
+        if (!authAPI.enforcePortalAccess(['parent'], 'parent_login_page.html')) return;
+      } else {
+        const token = localStorage.getItem('sv_parent_token') || localStorage.getItem('sv_auth_token');
+        if (!token) {
+          window.location.href = 'parent_login_page.html';
+          return;
+        }
+      }
+
+      const parentData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+      if (parentData.full_name) {
+        document.getElementById('parentNamePill').textContent = parentData.full_name;
+      }
+
+      const loadingOverlay = document.getElementById('loadingOverlay');
+      const dashboardContent = document.getElementById('dashboardContent');
+      const emptyState = document.getElementById('emptyState');
+      const studentChips = document.getElementById('studentChips');
+
+      let studentsCache = [];
+      let activeAdmission = null;
+
+      async function loadData() {
+        loadingOverlay.style.display = 'block';
+        dashboardContent.style.display = 'none';
+        emptyState.style.display = 'none';
+
+        try {
+          const students = await studentsAPI.getMyStudents();
+          studentsCache = students || [];
+
+          if (studentsCache.length === 0) {
+            emptyState.style.display = 'block';
+            loadingOverlay.style.display = 'none';
+            return;
+          }
+
+          renderChips();
+
+          // Select first student by default or keep active one
+          const defaultAdm = activeAdmission || (studentsCache[0].adm || studentsCache[0].admission);
+          selectStudent(defaultAdm);
+
+          dashboardContent.style.display = 'block';
+        } catch (error) {
+          console.error('Failed to load students:', error);
+          alert('Could not load student information: ' + (error.message || 'Unknown error'));
+        } finally {
+          loadingOverlay.style.display = 'none';
+        }
+      }
+
+      function renderChips() {
+        studentChips.innerHTML = studentsCache.map(s => `
+                    <div class="student-chip ${activeAdmission === (s.adm || s.admission) ? 'active' : ''}" 
+                         onclick="selectStudent('${s.adm || s.admission}')">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        <span>${s.name}</span>
+                    </div>
+                `).join('');
+      }
+
+      window.selectStudent = function (adm) {
+        activeAdmission = adm;
+        const student = studentsCache.find(s => (s.adm || s.admission) === adm);
+        if (!student) return;
+
+        renderChips();
+
+        // Profile Section
+        document.getElementById('studentNameDisplay').textContent = student.name;
+        document.getElementById('studentClassDisplay').textContent = `${student.class || 'No Class'} | Admission: ${student.adm || student.admission}`;
+
+        const balance = Number(student.fee_balance || 0);
+        const badge = document.getElementById('feeStatusBadge');
+        if (balance > 0) {
+          badge.className = 'status-badge status-pending';
+          badge.innerHTML = `<i class="fa-solid fa-clock"></i> Balance: KES ${balance.toLocaleString()}`;
+        } else {
+          badge.className = 'status-badge status-approved';
+          badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> Fees Cleared`;
+        }
+
+        // Data Rows
+        document.getElementById('valName').textContent = student.name;
+        document.getElementById('valAdm').textContent = student.adm || student.admission;
+        document.getElementById('valClass').textContent = student.class || '—';
+        document.getElementById('valStream').textContent = student.stream || '—';
+        document.getElementById('valNemis').textContent = student.nemis || '—';
+        document.getElementById('valHouse').textContent = student.house || '—';
+        document.getElementById('valFeeBalance').textContent = `KES ${balance.toLocaleString()}`;
+        document.getElementById('valFeeDate').textContent = student.updated_at ? new Date(student.updated_at).toLocaleDateString() : '—';
+        document.getElementById('valMeal').textContent = student.meal_card_validity ? new Date(student.meal_card_validity).toLocaleDateString() : 'Not Set';
+
+        if (student.photo_url) {
+          document.getElementById('studentPhoto').src = student.photo_url;
+        }
+      }
+
+      // Linking Logic
+      async function handleLink(admInput, feedbackEl) {
+        const admission = admInput.value.trim();
+        if (!admission) return;
+
+        feedbackEl.textContent = 'Processing...';
+        feedbackEl.style.color = 'var(--forest-primary)';
+
+        try {
+          const result = await parentsAPI.linkStudents([admission]);
+          const summary = result.summary[0];
+
+          if (summary.status === 'linked') {
+            feedbackEl.textContent = `Successfully linked ${summary.studentName}!`;
+            feedbackEl.style.color = '#10b981';
+            admInput.value = '';
+            setTimeout(loadData, 1500);
+          } else if (summary.status === 'not_found') {
+            feedbackEl.textContent = 'Admission number not found in school records.';
+            feedbackEl.style.color = '#ef4444';
+          } else if (summary.status === 'already_linked') {
+            feedbackEl.textContent = 'This student is already linked to your account.';
+            feedbackEl.style.color = '#f59e0b';
+          } else {
+            feedbackEl.textContent = 'Could not link student. It may be linked to another parent.';
+            feedbackEl.style.color = '#ef4444';
+          }
+        } catch (error) {
+          feedbackEl.textContent = error.message || 'Error linking student.';
+          feedbackEl.style.color = '#ef4444';
+        }
+      }
+
+      document.getElementById('linkForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleLink(document.getElementById('linkAdmissionInput'), document.getElementById('linkFeedback'));
+      });
+
+      document.getElementById('emptyLinkForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        handleLink(document.getElementById('emptyLinkInput'), document.createElement('div')); // Temporary feedback
+      });
+
+      document.getElementById('refreshBtn').addEventListener('click', loadData);
+
+      document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to log out?')) {
+          if (typeof authAPI !== 'undefined' && authAPI.logout) {
+            authAPI.logout('parent_login_page.html');
+          } else {
+            const tokens = ['sv_auth_token', 'sv_parent_token', 'sv_admin_token', 'sv_user_data', 'sv_parent_user'];
+            tokens.forEach(t => localStorage.removeItem(t));
+            window.location.href = 'parent_login_page.html';
+          }
+        }
+      });
+
+      loadData();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Login | Shuleni Advantage</title>
+  <meta name="description"
+    content="Securely access your student's cards, fee statements, and attendance records on the Shuleni Advantage Parent Portal.">
+  <meta name="keywords" content="parent portal, school management, student tracking, Shuleni Advantage">
+  <link rel="canonical" href="https://shuleniadvantage.co.ke/parent/parent_login_page.html">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Parent Login | Shuleni Advantage">
+  <meta property="og:description" content="Access your student's school records and manage payments securely.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://shuleniadvantage.co.ke/parent/parent_login_page.html">
+  <link rel="icon" href="/favicon.ico" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon.ico">
+  <meta name="theme-color" content="#064e3b">
+  <link rel="stylesheet" href="/shared/portal-theme.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #059669;
+      --primary-dark: #064e3b;
+      --accent: #8b5cf6;
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.3);
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0%, #f0fdf4 40%, #fafaf9 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .garden-header {
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .brand-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 99px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .garden-main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .back-link:hover {
+      transform: translateX(-4px);
+    }
+
+    .section-lead {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-lead h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+
+    .section-lead p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .theme-grid-two {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+      padding: 3.5rem;
+      border-radius: 32px;
+      color: white;
+      box-shadow: 0 20px 40px rgba(5, 150, 105, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .feature-card h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      opacity: 0.9;
+    }
+
+    .login-container {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 3.5rem;
+      border-radius: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .theme-input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid rgba(0, 0, 0, 0.05);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.5);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .theme-input:focus {
+      border-color: #059669;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-bottom: 2rem;
+    }
+
+    .forgot-password a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .theme-btn.primary {
+      width: 100%;
+      padding: 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #059669 0%, #064e3b 100%);
+      color: white;
+      font-weight: 800;
+      border: none;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(5, 150, 105, 0.2);
+    }
+
+    .theme-btn.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 30px rgba(5, 150, 105, 0.3);
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 2rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .register-link a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .garden-footer {
+      padding: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .theme-grid-two {
+        grid-template-columns: 1fr;
+      }
+
+      .section-lead h1 {
+        font-size: 2rem;
+      }
+
+      .login-container {
+        padding: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<body class="garden-body">
+  <div class="decorative-blob blob-1"
+    style="position: fixed; top: -10%; right: -5%; width: 500px; height: 500px; background: #dcfce7; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.4;">
+  </div>
+  <div class="decorative-blob blob-2"
+    style="position: fixed; bottom: -10%; left: -5%; width: 600px; height: 600px; background: #fef3c7; border-radius: 50%; filter: blur(80px); z-index: -1; opacity: 0.4;">
+  </div>
+
+  <header class="garden-header">
+    <div class="brand-pill">
+      <img src="/favicon.ico" alt="School Portal Logo" class="brand-icon" onerror="this.style.display='none'">
+      <span>School Portal</span>
+    </div>
+  </header>
+
+  <main class="garden-main">
+    <a href="/index.html" class="back-link">
+      <i class="fas fa-arrow-left"></i>
+      Back to Home
+    </a>
+
+    <div class="section-lead">
+      <h1>Parent Portal Login</h1>
+      <p>Securely access your child's academic records and school updates.</p>
+    </div>
+
+    <div class="theme-grid-two">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h2>Secure & Private</h2>
+        <p>Your child's data is protected with enterprise-grade security. Access fee statements and
+          attendance records with peace of mind.</p>
+      </div>
+      <div class="theme-card login-container">
+        <form id="parentLoginForm">
+          <div class="input-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" class="theme-input" placeholder="you@example.com" required>
+          </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" class="theme-input" placeholder="Enter your password" required>
+          </div>
+
+          <div class="forgot-password">
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <div id="loginStatus" class="muted"
+            style="min-height:20px; text-align:center; margin-bottom: 1rem; color: var(--danger); font-size: 0.9rem;">
+          </div>
+
+          <div class="login-actions">
+            <button type="submit" class="theme-btn primary" id="loginBtn">
+              <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            <div class="register-link">
+              Don't have an account? <a href="parent_registration_page.html">Create one now</a>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="garden-footer">
+    <p>Need help? Email <a href="mailto:support@shuleniadvantage.com"
+        style="color: var(--primary); text-decoration: none; font-weight: 600;">support@shuleniadvantage.com</a></p>
+    <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">© 2025 Hechlink Ventures. All rights
+      reserved.</p>
+  </footer>
+
+  <script src="/runtime-config.js"></script>
+  <script src="/shared/api-client.js"></script>
+  <script>
+    document.getElementById('parentLoginForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const submitBtn = this.querySelector('button[type="submit"]');
+      const statusEl = document.getElementById('loginStatus');
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+      if (statusEl) statusEl.textContent = '';
+
+      try {
+        // Login via API
+        // Assuming authAPI is available from api-client.js
+        if (typeof authAPI === 'undefined') {
+          throw new Error('API Client not loaded properly');
+        }
+
+        const response = await authAPI.login(email, password, 'parent');
+
+        if (response.token && response.user) {
+          // Store parent-specific tokens
+          localStorage.setItem('sv_parent_token', response.token);
+          localStorage.setItem('sv_auth_token', response.token);
+          localStorage.setItem('sv_parent_user', JSON.stringify(response.user));
+
+          // Show success message
+          if (statusEl) {
+            statusEl.style.color = 'var(--success)';
+            statusEl.textContent = 'Login successful! Redirecting...';
+          }
+
+          // Redirect to student info page
+          setTimeout(() => {
+            window.location.href = 'student_info_page.html';
+          }, 800);
+        } else {
+          throw new Error('Invalid response from server');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        if (statusEl) {
+          statusEl.style.color = 'var(--danger)';
+          statusEl.textContent = error.message || 'Login failed. Please check your credentials.';
+        }
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+      }
+    });
+  </script>
+</body>
+
+</html>

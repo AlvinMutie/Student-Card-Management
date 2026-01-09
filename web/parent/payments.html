@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payments | Shuleni Advantage</title>
+    <meta name="description"
+        content="View fee statements, payment history, and manage school finances for your student.">
+    <link rel="canonical" href="https://shuleniadvantage.co.ke/parent/payments.html">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.ico" type="image/png">
+    <link rel="apple-touch-icon" href="/favicon.ico">
+    <meta name="theme-color" content="#064e3b">
+    <link rel="stylesheet" href="/shared/portal-layout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .balance-hero {
+            background: linear-gradient(135deg, var(--forest-primary) 0%, #065f46 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 24px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.05);
+            transform: rotate(25deg);
+        }
+
+        .balance-amount {
+            font-size: 3rem;
+            font-weight: 850;
+            margin: 10px 0;
+            letter-spacing: -1.5px;
+        }
+
+        .balance-label {
+            opacity: 0.9;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .method-card {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .method-card:hover {
+            border-color: var(--forest-primary);
+            transform: translateY(-4px);
+        }
+
+        .method-card img {
+            height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .method-card span {
+            display: block;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .balance-hero {
+                flex-direction: column;
+                text-align: center;
+                gap: 30px;
+            }
+        }
+
+        /* Improved Table Styling */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 8px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 20px 24px;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Refined Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .status-paid {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #d1fae5;
+        }
+
+        .status-pending {
+            background: #fffbeb;
+            color: #d97706;
+            border: 1px solid #fef3c7;
+        }
+
+        /* Refresh Button Enhance */
+        .btn-refresh {
+            background: white;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-refresh:hover {
+            background: #f8fafc;
+            border-color: var(--text-muted);
+        }
+
+        .btn-refresh i {
+            font-size: 0.9rem;
+            color: var(--forest-primary);
+        }
+    </style>
+</head>
+
+<body data-page="parentPayments">
+    <!-- Vertical Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="/favicon.ico" alt="Logo" class="brand-icon" style="filter:none;">
+            <h1>Shuleni Advantage</h1>
+        </div>
+
+        <ul class="nav-links">
+            <li>
+                <a href="student_info_page.html">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="payments.html" class="active">
+                    <i class="fa-solid fa-credit-card"></i>
+                    <span>Payments</span>
+                </a>
+            </li>
+            <li>
+                <a href="settings.html">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="logout-section">
+            <a href="#" class="logout-btn-link" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+        <header class="top-bar">
+            <div class="top-bar-title">
+                <h2>Fee Payments</h2>
+            </div>
+            <div class="top-bar-user">
+                <span id="parentNamePill">Parent Account</span>
+            </div>
+        </header>
+
+        <main class="content-body">
+            <div id="loadingOverlay" style="text-align:center; padding: 100px 0; display: none;">
+                <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color: var(--forest-primary);"></i>
+                <p style="margin-top: 20px; font-weight: 600; color: var(--text-muted);">Loading payment data...</p>
+            </div>
+
+            <div id="contentArea">
+                <!-- Balance Hero -->
+                <div class="balance-hero">
+                    <div>
+                        <div class="balance-label">Outstanding Balance</div>
+                        <div class="balance-amount" id="totalBalance">KES 0.00</div>
+                        <div id="studentNameLabel" style="opacity: 0.8; font-weight: 500;">For your linked students
+                        </div>
+                    </div>
+                    <button class="btn-primary"
+                        style="background: white; color: var(--forest-primary); font-size: 1.1rem; padding: 16px 32px;"
+                        onclick="alert('Payment integration coming soon!')">
+                        <i class="fa-solid fa-shield-halved"></i> Secure Pay
+                    </button>
+                </div>
+
+                <div class="grid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+                    <!-- History Table -->
+                    <div class="card" style="padding: 0;">
+                        <div class="card-header" style="padding: 24px; margin-bottom: 0;">
+                            <h3>Recent Transactions</h3>
+                            <button class="btn-refresh" onclick="loadData()">
+                                <i class="fa-solid fa-rotate"></i> Refresh
+                            </button>
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Student</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Payment Support -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Payment Help</h3>
+                        </div>
+                        <div style="font-size: 0.9rem; line-height: 1.6;">
+                            <p style="margin-bottom: 16px;">Having issues with your payment? Our support team is here to
+                                help.</p>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                <i class="fa-solid fa-envelope" style="color: var(--forest-primary);"></i>
+                                <span style="font-weight: 600;">billing@shuleniadvantage.com</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                                <i class="fa-solid fa-phone" style="color: var(--forest-primary);"></i>
+                                <span style="font-weight: 600;">+254 700 000 000</span>
+                            </div>
+                            <hr style="border: none; border-top: 1px solid var(--border-color); margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 12px;">Bank Details</h4>
+                            <p style="color: var(--text-muted); font-size: 0.8rem;">
+                                Bank: Shuleni Advantage Bank<br>
+                                Account No: 1234567890<br>
+                                Paybill: 999 888
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/runtime-config.js"></script>
+    <script src="/shared/api-client.js"></script>
+    <script>
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        function formatCurrency(value) {
+            return 'KES ' + Number(value || 0).toLocaleString();
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            return new Date(dateStr).toLocaleDateString('en-US', {
+                year: 'numeric', month: 'short', day: 'numeric'
+            });
+        }
+
+        async function loadData() {
+            const overlay = document.getElementById('loadingOverlay');
+            const content = document.getElementById('contentArea');
+            overlay.style.display = 'block';
+            content.style.opacity = '0.5';
+
+            try {
+                if (!localStorage.getItem('sv_parent_token')) {
+                    window.location.href = 'parent_login_page.html';
+                    return;
+                }
+
+                // Ensure API client is loaded
+                if (typeof studentsAPI === 'undefined') {
+                    throw new Error('API client not found');
+                }
+
+                const students = await studentsAPI.getMyStudents();
+                let totalBalance = 0;
+                let studentNames = [];
+
+                students.forEach(s => {
+                    totalBalance += Number(s.fee_balance || s.feeBalance || 0);
+                    studentNames.push(s.name);
+                });
+
+                document.getElementById('totalBalance').textContent = formatCurrency(totalBalance);
+                document.getElementById('studentNameLabel').textContent = studentNames.length ?
+                    `For: ${studentNames.join(', ')}` : 'No students linked';
+
+                const tbody = document.getElementById('historyTableBody');
+                tbody.innerHTML = '';
+
+                if (students.length > 0) {
+                    // Mock History (In a real app, this would come from a payments API)
+                    const mockHistory = [
+                        { date: '2023-11-01', desc: 'Term 3 Fees', student: students[0].name, amount: 15000, status: 'Paid' },
+                        { date: '2023-09-15', desc: 'Library Fine', student: students[0].name, amount: 500, status: 'Paid' }
+                    ];
+
+                    if (students.length > 1) {
+                        mockHistory.push({ date: '2023-10-20', desc: 'Term 3 Fees', student: students[1].name, amount: 12000, status: 'Pending' });
+                    }
+
+                    tbody.innerHTML = mockHistory.map(item => `
+                        <tr>
+                            <td>${formatDate(item.date)}</td>
+                            <td><span style="font-weight: 700; color: var(--forest-primary);">${item.student}</span></td>
+                            <td>${item.desc}</td>
+                            <td><span style="font-weight: 600;">${formatCurrency(item.amount)}</span></td>
+                            <td>
+                                <span class="status-badge ${item.status === 'Paid' ? 'status-paid' : 'status-pending'}">
+                                    <i class="fa-solid ${item.status === 'Paid' ? 'fa-circle-check' : 'fa-clock'}"></i>
+                                    ${item.status}
+                                </span>
+                            </td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:60px; color: var(--text-muted);">No transaction history found.</td></tr>';
+                }
+
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Failed to load payment history.');
+            } finally {
+                overlay.style.display = 'none';
+                content.style.opacity = '1';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const parentData = JSON.parse(localStorage.getItem('sv_parent_user') || '{}');
+            if (parentData.full_name) {
+                document.getElementById('parentNamePill').textContent = parentData.full_name;
+            }
+
+            loadData();
+
+            if (logoutBtn) logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Are you sure you want to log out?')) {
+                    localStorage.removeItem('sv_parent_token');
+                    localStorage.removeItem('sv_parent_user');
+                    window.location.href = 'parent_login_page.html';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

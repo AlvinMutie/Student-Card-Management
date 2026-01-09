@@ -1,0 +1,25 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Redirect root to landing page
+RewriteRule ^$ /index.html [L]
+
+# Redirect old landing page path to root
+RewriteRule ^public/landingpage.html$ / [R=301,L]
+
+# Allow access to all files
+# Added |[^.]+$ to allow extensionless files like Certbot challenges
+<FilesMatch "\.(html|css|js|png|jpg|jpeg|gif|svg|ico|json|mp4|woff|woff2|ttf|eot|txt|xml)|[^.]+$">
+    Require all granted
+</FilesMatch>
+
+# Set default index file
+DirectoryIndex index.html
+
+# Enable CORS for API requests (if needed)
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
