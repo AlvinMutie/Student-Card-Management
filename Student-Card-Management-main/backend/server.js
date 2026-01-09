@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth');
 const studentsRoutes = require('./routes/students');
 const parentsRoutes = require('./routes/parents');
 const staffRoutes = require('./routes/staff');
+const visitorsRoutes = require('./routes/visitors');
 const setupRoutes = require('./routes/setup');
 
 const app = express();
@@ -126,6 +127,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/students', studentsRoutes);
 app.use('/api/parents', parentsRoutes);
 app.use('/api/staff', staffRoutes);
+app.use('/api/visitors', visitorsRoutes);
 app.use('/api/setup', setupRoutes);
 
 // Health check endpoint
@@ -179,3 +181,4 @@ app.listen(PORT, async () => {
 });
 
 module.exports = app;
+
