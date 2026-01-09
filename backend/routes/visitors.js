@@ -6,6 +6,7 @@ const crypto = require('crypto');
 
 // Get all visitors (with optional filtering)
 router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
+<<<<<<< HEAD
   try {
     const { status, search } = req.query;
     let query = `
@@ -21,6 +22,14 @@ router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']
       query += ` AND v.status = $${paramCount}`;
       params.push(status);
       paramCount++;
+=======
+    try {
+        const result = await pool.query('SELECT * FROM visitors ORDER BY check_in DESC');
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Get visitors error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+>>>>>>> 276ce5a (Updates)
     }
 
     if (search) {
@@ -41,6 +50,7 @@ router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']
   }
 });
 
+<<<<<<< HEAD
 // Check-in new visitor
 router.post('/check-in', async (req, res) => {
   try {
@@ -60,11 +70,32 @@ router.post('/check-in', async (req, res) => {
     const finalHostName = host_name || hostName || person_visited || personVisited;
     const finalVehicleModel = vehicle_model || vehicleModel;
     const finalPlateNumber = plate_number || plateNumber;
+=======
+/**
+ * @desc    Register a new visitor (Create QR Token)
+ * @access  Private (Admin or Guard)
+ */
+router.post('/check-in', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
+    console.log('Check-in Request Body:', req.body);
+    try {
+        // Support snake_case (web) and camelCase (mobile)
+        const name = req.body.name;
+        const id_number = req.body.id_number || req.body.idNumber;
+        const phone = req.body.phone;
+        const vehicle = req.body.vehicle || req.body.plate_number || req.body.plateNumber;
+        const purpose = req.body.purpose;
+        const host = req.body.host || req.body.host_name || req.body.hostName;
+
+        // Validation
+        if (!name) return res.status(400).json({ error: 'Visitor name is required' });
+        if (!purpose) return res.status(400).json({ error: 'Purpose of visit is required' });
+>>>>>>> 276ce5a (Updates)
 
     if (!name || !finalIdNumber || !finalPhone || !purpose || !finalHostName) {
       return res.status(400).json({ error: 'Missing required visitor fields', required: ['name', 'id_number', 'phone', 'purpose', 'host_name'] });
     }
 
+<<<<<<< HEAD
     // Generate a unique token for the QR code
     const qr_token = crypto.randomBytes(16).toString('hex');
 
@@ -86,6 +117,22 @@ router.post('/check-in', async (req, res) => {
     console.error('Check-in visitor error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
+=======
+        const result = await pool.query(
+            `INSERT INTO visitors (name, id_number, phone, vehicle, purpose, host, qr_token, status)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, 'WAITING')
+             RETURNING *`,
+            [name, id_number || null, phone || null, vehicle || null, purpose, host || null, qr_token]
+        );
+
+        const visitor = result.rows[0];
+        console.log('Saved Visitor:', visitor);
+        res.status(201).json(visitor);
+    } catch (error) {
+        console.error('Check-in error:', error);
+        res.status(500).json({ error: 'Failed to register visitor' });
+    }
+>>>>>>> 276ce5a (Updates)
 });
 
 // Verify visitor by token or ID
@@ -111,7 +158,38 @@ router.get('/verify/:token', authenticateToken, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 // Approve visitor
+=======
+/**
+ * @desc    Check-out a visitor
+ * @access  Private (Admin or Guard)
+ */
+router.put('/check-out/:id', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query(
+            `UPDATE visitors 
+       SET status = 'checked_out', check_out = CURRENT_TIMESTAMP 
+       WHERE id = $1 RETURNING *`,
+            [id]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Visitor not found' });
+        }
+        res.json({ message: 'Visitor checked out successfully', visitor: result.rows[0] });
+    } catch (error) {
+        console.error('Check-out error:', error);
+        res.status(500).json({ error: 'Failed to check out visitor' });
+    }
+});
+
+/**
+ * @desc    Approve a visitor
+ * @access  Private (Admin or Secretary)
+ */
+>>>>>>> 276ce5a (Updates)
 router.put('/approve/:id', authenticateToken, authorizeRole(['admin', 'secretary']), async (req, res) => {
   try {
     const { id } = req.params;

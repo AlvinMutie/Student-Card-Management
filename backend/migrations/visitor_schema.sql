@@ -7,13 +7,13 @@ CREATE TABLE IF NOT EXISTS visitors (
     name VARCHAR(255) NOT NULL,
     id_number VARCHAR(50),
     phone VARCHAR(50),
-    plate_number VARCHAR(20),
+    vehicle VARCHAR(20), -- Changed from plate_number
     purpose TEXT,
-    host_name VARCHAR(255), -- Who they are visiting
-    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'checked_out', 'blacklisted')), -- pending, approved, rejected, checked_out, blacklisted
-    check_in_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    check_out_time TIMESTAMP,
-    qr_token VARCHAR(255) UNIQUE, -- Secure token for scanning
+    host VARCHAR(255), -- Changed from host_name
+    status VARCHAR(20) DEFAULT 'WAITING', -- Changed default to WAITING
+    check_in TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Changed from check_in_time
+    check_out TIMESTAMP, -- Changed from check_out_time
+    qr_token VARCHAR(255) UNIQUE, 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
