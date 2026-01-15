@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root {
+            --maseno-green: #004d2c;
+            --shuleni-red: #e31e24;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* 1. FIXED PHYSICAL CARD SIZE */
+        .id-card {
+            width: 5.5cm;
+            height: 8.5cm;
+            background-color: white;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        /* 2. SCALED HEADER */
+        .header-container {
+            position: relative;
+            height: 65px; /* Reduced from 120px */
+            width: 100%;
+        }
+
+        .header-red-accent {
+            position: absolute;
+            top: 0;
+            left: 70%;
+            width: 50px;
+            height: 45px;
+            background-color: var(--shuleni-red);
+            z-index: 1;
+            clip-path: polygon(10% 0, 100% 0, 42% 100%, 10% 100%);
+        }
+
+        .header-green-main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 85%; 
+            height: 50px;
+            background-color: var(--maseno-green);
+            clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+            z-index: 2;
+            padding: 8px 12px;
+            box-sizing: border-box;
+            color: white;
+        }
+
+        .header-green-main h1 { margin: 0; font-size: 11px; text-transform: uppercase; font-weight: 800; }
+        .header-green-main p { margin: 0; font-size: 6px; font-style: italic; }
+
+        .logo-crest {
+            position: absolute;
+            top: 8px;
+            right: 12px; 
+            width: 45px;
+            height: 45px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #e0e0e0;
+            box-shadow: inset 0 0 0 1.5px var(--shuleni-red);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .background-slant {
+            position: absolute;
+            top: 100px;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f4f4f4; 
+            clip-path: polygon(100% 0, 100% 100%, 0% 100%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* 3. SCALED FOOTER */
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer-notice {
+            text-align: center;
+            font-size: 4px; /* Tiny to fit small card */
+            color: var(--maseno-green);
+            font-weight: bold;
+            padding-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .footer-branding { height: 45px; display: flex; position: relative; }
+        .footer-logo { width: 25px; margin-bottom: 10px; display: block; }
+
+        .footer-red-part {
+            position: absolute;
+            left: 0; bottom: 0; width: 28%; height: 100%;
+            background-color: var(--shuleni-red);
+            clip-path: url(#red-clip-final);
+            z-index: 2;
+            padding-left: 6px;
+            display: flex; align-items: center;
+        }
+
+        .footer-green-part {
+            position: absolute;
+            right: 0; bottom: 0; width: 78%; height: 100%;
+            background-color: var(--maseno-green);
+            clip-path: url(#green-clip-final);
+            z-index: 1;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-end;
+            padding-right: 12px; color: white;
+        }
+
+        .shuleni-text { font-size: 20px; font-family: 'Brush Script MT', cursive; line-height: 0.7; }
+        .advantage-text { font-size: 11px; font-weight: bold; }
+        .smart-card-text { font-size: 5px; letter-spacing: 2px; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+<div class="id-card">
+    <div class="header-container">
+        <div class="header-red-accent"></div>
+        <div class="header-green-main">
+            <h1>MASENO SCHOOL</h1>
+            <p>Perseverance shall win through</p>
+        </div>
+        <div class="logo-crest"><span style="font-size: 5px; font-weight: bold;">CREST</span></div>
+    </div>
+    
+    <div class="background-slant"></div>
+
+    <div style="position: relative; z-index: 5; text-align: center; margin-top: 5px; height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+        
+        <div style="width: 2.5cm; height: 3.2cm; border-radius: 4px; overflow: hidden; border: 1px solid #ddd; background: #eee;">
+            <div style="padding-top: 50%; font-size: 8px; color: #888;">PHOTO</div>
+        </div>
+
+        <h2 style="color: var(--maseno-green); margin: 4px 0 0 0; font-size: 12px; font-weight: bold;">Star Rahayi</h2>
+        
+        <div style="border-bottom: 1px solid var(--shuleni-red); margin-bottom: 2px;">
+            <p style="color: var(--maseno-green); margin: 0; font-size: 9px; font-weight: bold; font-style: italic;">Grade 10 Yellow</p>
+        </div>
+        <p style="margin: 0; font-size: 7px; color: #333; font-weight: bold;">ADM NO: 12345</p>
+
+        <div style="margin-top: 5px; display: flex; flex-direction: column; align-items: center;">
+            <div style="width: 35px; height: 35px; border: 1px solid #000; padding: 2px; background: white;"></div>
+            <div style="background: black; color: white; padding: 1px 4px; font-size: 5px; font-weight: bold; margin-top: -3px;">SCAN ME</div>
+        </div>
+    </div>
+
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <clipPath id="red-clip-final" clipPathUnits="objectBoundingBox">
+                <path d="M0,0 L1,0 L0.25,0.85 Q0.15,0.95 0,1 L0,0 Z" />
+            </clipPath>
+            <clipPath id="green-clip-final" clipPathUnits="objectBoundingBox">
+                <path d="M0.25,0.15 Q0.3,0 0.45,0 L1,0 L1,1 L0,1 L0.25,0.15 Z" />
+            </clipPath>
+        </defs>
+    </svg>
+
+    <div class="footer">
+        <div class="footer-notice">MASENO SCHOOL. - 0738 934 812 / 0713 715 956</div>
+        <div class="footer-branding">
+            <div class="footer-red-part"></div>
+            <div class="footer-green-part">
+                <div class="shuleni-text">Shuleni</div>
+                <div class="advantage-text">Advantage<sup>+</sup></div>
+                <div class="smart-card-text">Smart Card</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
