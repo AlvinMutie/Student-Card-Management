@@ -111,6 +111,29 @@
 
         .footer-branding { height: 45px; display: flex; position: relative; }
         .footer-logo { width: 25px; margin-bottom: 10px; display: block; }
+        .footer-red-part {
+    position: absolute;
+    left: 0; 
+    bottom: 0; 
+    width: 28%; 
+    height: 100%;
+    background-color: var(--shuleni-red);
+    clip-path: url(#red-clip-final);
+    z-index: 2;
+    /* Adjust these to move the logo away from the cut-off edge */
+    padding-left: 4px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: flex-start; 
+}
+
+.footer-logo {
+    width: 20px; /* Reduced slightly to fit the safety zone */
+    height: auto;
+    display: block;
+    margin-bottom: 2px;
+}
+       
 
         .footer-red-part {
             position: absolute;
@@ -185,7 +208,11 @@
     <div class="footer">
         <div class="footer-notice">MASENO SCHOOL. - 0738 934 812 / 0713 715 956</div>
         <div class="footer-branding">
-            <div class="footer-red-part"></div>
+            <div class="footer-red-part">
+                
+    <img src="whitelogo.png" alt="Logo" class="footer-logo">
+</div>
+            </div>
             <div class="footer-green-part">
                 <div class="shuleni-text">Shuleni</div>
                 <div class="advantage-text">Advantage<sup>+</sup></div>
