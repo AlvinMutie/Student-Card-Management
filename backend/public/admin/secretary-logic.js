@@ -193,7 +193,8 @@ async function handleApprove(id) {
         showFeedback('Visitor approved successfully!', 'success');
     } catch (error) {
         console.error('Approve failed:', error);
-        showFeedback('Failed to approve visitor', 'error');
+        const msg = error.message || 'Error occurred';
+        showFeedback(`Failed to approve visitor: ${msg}`, 'error');
     }
 }
 
@@ -208,7 +209,8 @@ async function handleReject(id) {
         showFeedback('Visitor rejected.', 'info');
     } catch (error) {
         console.error('Reject failed:', error);
-        showFeedback('Failed to reject visitor', 'error');
+        const msg = error.message || 'Error occurred';
+        showFeedback(`Failed to reject visitor: ${msg}`, 'error');
     }
 }
 

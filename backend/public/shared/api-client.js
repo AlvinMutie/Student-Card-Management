@@ -100,7 +100,19 @@ if (typeof window !== 'undefined') {
 }
 
 // Get auth token from localStorage (check multiple possible keys)
+// Get auth token from localStorage with proper priority
 function getAuthToken() {
+  const path = typeof window !== 'undefined' ? window.location.pathname : '';
+
+  // If on a specific portal, prefer that portal's token
+  if (path.includes('/parent/')) {
+    return localStorage.getItem('sv_parent_token') || localStorage.getItem('sv_auth_token');
+  }
+  if (path.includes('/admin/') || path.includes('/secretary/')) {
+    return localStorage.getItem('sv_admin_token') || localStorage.getItem('sv_auth_token');
+  }
+
+  // Fallback priority
   return localStorage.getItem('sv_auth_token') ||
     localStorage.getItem('sv_parent_token') ||
     localStorage.getItem('sv_admin_token');
@@ -112,9 +124,10 @@ function setAuthToken(token) {
 }
 
 // Remove auth token from localStorage
+// Remove ALL auth tokens from localStorage
 function removeAuthToken() {
-  localStorage.removeItem('sv_auth_token');
-  localStorage.removeItem('sv_user_data');
+  const tokens = ['sv_auth_token', 'sv_parent_token', 'sv_admin_token', 'sv_user_data', 'sv_parent_user', 'sv_admin_email'];
+  tokens.forEach(t => localStorage.removeItem(t));
 }
 
 // Make API request
@@ -217,6 +230,35 @@ const authAPI = {
   isAuthenticated() {
     return !!getAuthToken();
   },
+
+  getCurrentUser() {
+    const data = localStorage.getItem('sv_user_data') || localStorage.getItem('sv_parent_user');
+    try {
+      return data ? JSON.parse(data) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  enforcePortalAccess(allowedRoles, redirectPath = '/index.html') {
+    const user = this.getCurrentUser();
+    const token = getAuthToken();
+
+    if (!token || !user) {
+      window.location.href = redirectPath;
+      return false;
+    }
+
+    // Admins can go anywhere
+    if (user.role === 'admin') return true;
+
+    if (!allowedRoles.includes(user.role)) {
+      alert('Access Denied: You do not have permission to view this portal.');
+      window.location.href = redirectPath;
+      return false;
+    }
+    return true;
+  }
 };
 
 // Students API
@@ -249,12 +291,6 @@ const studentsAPI = {
 
   async delete(id) {
     return apiRequest(`/students/${id}`, {
-      method: 'DELETE',
-    });
-  },
-
-  async deleteAll() {
-    return apiRequest('/students', {
       method: 'DELETE',
     });
   },
@@ -357,6 +393,16 @@ const visitorsAPI = {
       method: 'PUT',
     });
   },
+  async approve(id) {
+    return apiRequest(`/visitors/approve/${id}`, {
+      method: 'PUT',
+    });
+  },
+  async reject(id) {
+    return apiRequest(`/visitors/reject/${id}`, {
+      method: 'PUT',
+    });
+  },
   async delete(id) {
     return apiRequest(`/visitors/${id}`, {
       method: 'DELETE',
@@ -381,22 +427,9 @@ const adminAPI = {
   },
 };
 
-// Settings API
-const settingsAPI = {
-  async getSchoolSettings() {
-    return apiRequest('/admin/school-settings');
-  },
-  async updateSchoolSettings(settingsData) {
-    return apiRequest('/admin/school-settings', {
-      method: 'POST',
-      body: JSON.stringify(settingsData),
-    });
-  },
-};
-
 // Export API objects
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI, adminAPI, visitorsAPI, settingsAPI };
+  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI, adminAPI, visitorsAPI };
 }
 
 // Make available globally for browser use
@@ -406,5 +439,4 @@ window.parentsAPI = parentsAPI;
 window.staffAPI = staffAPI;
 window.adminAPI = adminAPI;
 window.visitorsAPI = visitorsAPI;
-window.settingsAPI = settingsAPI;
 

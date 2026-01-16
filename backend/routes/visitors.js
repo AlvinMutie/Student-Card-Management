@@ -155,14 +155,19 @@ router.put('/check-out/:id', authenticateToken, authorizeRole(['admin', 'guard',
 });
 
 // Approve visitor
-router.put('/approve/:id', authenticateToken, authorizeRole(['admin', 'secretary']), async (req, res) => {
+router.put('/approve/:id', authenticateToken, authorizeRole(['admin', 'secretary', 'guard', 'staff', 'teacher']), async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(`[DEBUG] Approving visitor ID: ${id} by user: ${req.user.email} (Role: ${req.user.role})`);
+
     const result = await pool.query(
       "UPDATE visitors SET status = 'approved' WHERE id = $1 RETURNING *",
       [id]
     );
-    if (result.rows.length === 0) return res.status(404).json({ error: 'Visitor not found' });
+    if (result.rows.length === 0) {
+      console.warn(`[DEBUG] Visitor ID: ${id} not found for approval`);
+      return res.status(404).json({ error: 'Visitor not found' });
+    }
     res.json({ message: 'Visitor approved successfully', visitor: result.rows[0] });
   } catch (error) {
     console.error('Approve error:', error);
@@ -171,14 +176,19 @@ router.put('/approve/:id', authenticateToken, authorizeRole(['admin', 'secretary
 });
 
 // Reject visitor
-router.put('/reject/:id', authenticateToken, authorizeRole(['admin', 'secretary']), async (req, res) => {
+router.put('/reject/:id', authenticateToken, authorizeRole(['admin', 'secretary', 'guard', 'staff', 'teacher']), async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(`[DEBUG] Rejecting visitor ID: ${id} by user: ${req.user.email} (Role: ${req.user.role})`);
+
     const result = await pool.query(
       "UPDATE visitors SET status = 'rejected' WHERE id = $1 RETURNING *",
       [id]
     );
-    if (result.rows.length === 0) return res.status(404).json({ error: 'Visitor not found' });
+    if (result.rows.length === 0) {
+      console.warn(`[DEBUG] Visitor ID: ${id} not found for rejection`);
+      return res.status(404).json({ error: 'Visitor not found' });
+    }
     res.json({ message: 'Visitor rejected successfully', visitor: result.rows[0] });
   } catch (error) {
     console.error('Reject error:', error);
