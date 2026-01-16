@@ -41,6 +41,7 @@ async function loadDashboardData() {
         updateStats(visitors);
         renderPendingList(visitors.filter(v => v.status === 'pending'));
         renderActivityList(visitors.slice(0, 10)); // Top 10 recent
+        loadCharts(visitors);
     } catch (error) {
         console.error('Error loading dashboard:', error);
         // showNotification('Failed to load dashboard data', 'error');
@@ -132,6 +133,38 @@ function renderActivityList(visitors) {
             </div>
         `;
     }).join('');
+}
+
+function loadCharts(visitors) {
+    const ctxVisitor = document.getElementById('chartVisitorStatus');
+    if (!ctxVisitor || typeof Chart === 'undefined') return;
+
+    const checkedIn = visitors.filter(v => (v.status || '').toLowerCase() === 'checked_in' || (v.status || '').toLowerCase() === 'approved').length;
+    const checkedOut = visitors.filter(v => (v.status || '').toLowerCase() === 'checked_out').length;
+    const pending = visitors.length - checkedIn - checkedOut;
+
+    // Check if chart instance exists to destroy it (avoid canvas reuse errors)
+    if (window.visitorChart) window.visitorChart.destroy();
+
+    window.visitorChart = new Chart(ctxVisitor, {
+        type: 'doughnut',
+        data: {
+            labels: ['In', 'Out', 'Pending'],
+            datasets: [{
+                data: [checkedIn, checkedOut, pending],
+                backgroundColor: ['#10b981', '#64748b', '#f59e0b']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
 }
 
 // --- Specific Initialization for Visitors Page ---

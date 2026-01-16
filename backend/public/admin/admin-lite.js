@@ -966,6 +966,27 @@ async function loadCharts() {
       });
     }
 
+    // Visitor status
+    const ctxVisitor = document.getElementById('chartVisitorStatus');
+    if (ctxVisitor) {
+      const visitors = await window.visitorsAPI.getAll().catch(() => []);
+      const checkedIn = visitors.filter(v => (v.status || '').toLowerCase() === 'checked_in' || (v.status || '').toLowerCase() === 'approved').length;
+      const checkedOut = visitors.filter(v => (v.status || '').toLowerCase() === 'checked_out').length;
+      const pending = visitors.length - checkedIn - checkedOut;
+
+      new Chart(ctxVisitor, {
+        type: 'doughnut',
+        data: {
+          labels: ['In', 'Out', 'Pending'],
+          datasets: [{
+            data: [checkedIn, checkedOut, pending],
+            backgroundColor: ['#22c55e', '#64748b', '#f59e0b']
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
   } catch (err) {
     console.error('charts load failed', err);
   }
