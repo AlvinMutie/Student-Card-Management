@@ -5,6 +5,10 @@ const { authenticateToken, authorizeRole } = require('../middleware/auth');
 const crypto = require('crypto');
 
 // Get all visitors (with optional filtering)
+router.get('/debug-test', (req, res) => {
+  res.json({ message: 'Visitors API is working', time: new Date().toISOString() });
+});
+
 router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']), async (req, res) => {
   try {
     const { status, search } = req.query;
