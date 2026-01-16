@@ -13,8 +13,6 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;700&family=Montserrat:wght@500;600;800&display=swap"
     rel="stylesheet">
-  <!-- Cropper.js CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
   <style>
     :root {
       /* Default Maseno Theme */
@@ -121,8 +119,9 @@
     /* ID Card Styles - Version 3 Premium */
     .id-card-wrapper {
       display: flex;
+      flex-direction: column;
       gap: 40px;
-      justify-content: center;
+      align-items: center;
       perspective: 1000px;
       margin-bottom: 30px;
     }
@@ -546,26 +545,9 @@
         </select>
       </div>
       <button class="btn btn-primary" onclick="generateIDCard()">Generate ID Card</button>
-      <button class="btn btn-secondary" id="adjustPhotoBtn" onclick="openCropModal()" style="display: none;">Adjust
-        Photo</button>
       <button class="btn btn-secondary" onclick="printIDCard()">Print ID Card</button>
       <button class="btn btn-secondary" onclick="exportToPDF()">Download PDF</button>
       <button class="btn btn-secondary" onclick="generateBatchIDCards()">Batch Generation</button>
-    </div>
-
-    <!-- Cropping Modal -->
-    <div id="cropModal" class="modal">
-      <div class="modal-content">
-        <h3>Adjust Student Photo</h3>
-        <p>Drag to position and zoom. Photo will be cropped to ID card dimensions.</p>
-        <div class="crop-container">
-          <img id="imageToCrop" src="" style="max-width: 100%;">
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" onclick="closeCropModal()">Cancel</button>
-          <button class="btn btn-primary" onclick="applyCrop()">Apply & Save</button>
-        </div>
-      </div>
     </div>
 
     <div class="id-card-container" id="idCardContainer" style="display: none;">
@@ -592,14 +574,11 @@
   <script src="../shared/api-client.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
     let allStudents = [];
-    let cropper = null;
     let selectedStudent = null;
-    let croppedImageData = null;
 
     // Helper to generate the card HTML (Double Sided)
     function getCardHTML(student, qrDataUrl) {
@@ -762,61 +741,15 @@
       document.getElementById('idCard').innerHTML = getCardHTML(student, qr);
       document.getElementById('idCardContainer').style.display = 'flex';
       document.getElementById('batchIDCards').innerHTML = '';
-
-      // If we have a cropped image, apply it immediately
-      if (croppedImageData) {
-        setTimeout(() => {
-          const cardImg = document.getElementById(`card-photo-${student.id}`);
-          if (cardImg) cardImg.src = croppedImageData;
-        }, 100);
-      }
     }
 
     function enablePhotoAdjustment() {
       const id = document.getElementById('studentSelect').value;
-      const btn = document.getElementById('adjustPhotoBtn');
       if (id) {
-        btn.style.display = 'inline-block';
         selectedStudent = allStudents.find(s => s.id == id);
-        croppedImageData = null; // Reset crop for new student
       } else {
-        btn.style.display = 'none';
         selectedStudent = null;
       }
-    }
-
-    function openCropModal() {
-      if (!selectedStudent) return;
-      const modal = document.getElementById('cropModal');
-      const image = document.getElementById('imageToCrop');
-      image.src = selectedStudent.photo_url || '/assets/placeholder-student.png';
-      modal.style.display = 'block';
-
-      if (cropper) cropper.destroy();
-
-      setTimeout(() => {
-        cropper = new Cropper(image, {
-          aspectRatio: 2.5 / 3.2, // ID card photo ratio
-          viewMode: 1,
-          autoCropArea: 0.8,
-        });
-      }, 100);
-    }
-
-    function closeCropModal() {
-      document.getElementById('cropModal').style.display = 'none';
-      if (cropper) cropper.destroy();
-    }
-
-    function applyCrop() {
-      if (!cropper) return;
-      croppedImageData = cropper.getCroppedCanvas({
-        width: 300,
-        height: 384
-      }).toDataURL('image/jpeg', 0.9);
-
-      closeCropModal();
-      generateIDCard(); // Re-generate with cropped photo
     }
 
     async function exportToPDF() {
@@ -840,9 +773,12 @@
       const canvasBack = await html2canvas(cards[1], { scale: 3 });
       const imgBack = canvasBack.toDataURL('image/png');
 
-      // Add to PDF (approx 55mm x 85mm)
-      doc.addImage(imgFront, 'PNG', 10, 10, 55, 85);
-      doc.addImage(imgBack, 'PNG', 70, 10, 55, 85);
+      // Page 1: Front (Centered)
+      doc.addImage(imgFront, 'PNG', 77.5, 20, 55, 85);
+
+      // Page 2: Back (Centered)
+      doc.addPage();
+      doc.addImage(imgBack, 'PNG', 77.5, 20, 55, 85);
 
       doc.save(`ID_Card_${selectedStudent.adm}.pdf`);
     }
