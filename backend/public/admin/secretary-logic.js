@@ -184,6 +184,7 @@ window.initSecretaryVisitorsPage = function () {
 };
 
 async function handleApprove(id) {
+    console.log('[DEBUG] handleApprove called for ID:', id);
     try {
         await visitorsAPI.approve(id);
         const isDashboard = document.body.dataset.page === 'secretaryDashboard';
@@ -199,6 +200,7 @@ async function handleApprove(id) {
 }
 
 async function handleReject(id) {
+    console.log('[DEBUG] handleReject called for ID:', id);
     if (!confirm('Are you sure you want to reject this visitor?')) return;
     try {
         await visitorsAPI.reject(id);
