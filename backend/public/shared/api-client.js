@@ -381,9 +381,22 @@ const adminAPI = {
   },
 };
 
+// Settings API
+const settingsAPI = {
+  async getSchoolSettings() {
+    return apiRequest('/admin/school-settings');
+  },
+  async updateSchoolSettings(settingsData) {
+    return apiRequest('/admin/school-settings', {
+      method: 'POST',
+      body: JSON.stringify(settingsData),
+    });
+  },
+};
+
 // Export API objects
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI, adminAPI, visitorsAPI };
+  module.exports = { authAPI, studentsAPI, parentsAPI, staffAPI, adminAPI, visitorsAPI, settingsAPI };
 }
 
 // Make available globally for browser use
@@ -393,4 +406,5 @@ window.parentsAPI = parentsAPI;
 window.staffAPI = staffAPI;
 window.adminAPI = adminAPI;
 window.visitorsAPI = visitorsAPI;
+window.settingsAPI = settingsAPI;
 

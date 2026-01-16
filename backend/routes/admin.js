@@ -160,4 +160,49 @@ router.get('/pending-staff', authenticateToken, authorizeRole('admin'), async (r
     }
 });
 
+// Get school settings
+router.get('/school-settings', authenticateToken, async (req, res) => {
+    try {
+        const result = await pool.query("SELECT * FROM school_settings LIMIT 1");
+        if (result.rows.length === 0) {
+            // Return defaults if not set in DB
+            return res.json({
+                school_name: "ST. MARY'S ACADEMY",
+                school_motto: "Excellence in Education",
+                school_logo_url: "../favicon.ico",
+                contact_phone_1: "0738 934 812",
+                contact_phone_2: "0713 715 956"
+            });
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Get school settings error:', error);
+        res.status(500).json({ error: 'Failed to retrieve school settings' });
+    }
+});
+
+// Update school settings (Admin only)
+router.post('/school-settings', authenticateToken, authorizeRole('admin'), async (req, res) => {
+    const { school_name, school_motto, school_logo_url, contact_phone_1, contact_phone_2, address } = req.body;
+    try {
+        const check = await pool.query("SELECT id FROM school_settings LIMIT 1");
+        let result;
+        if (check.rows.length === 0) {
+            result = await pool.query(
+                "INSERT INTO school_settings (school_name, school_motto, school_logo_url, contact_phone_1, contact_phone_2, address) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+                [school_name, school_motto, school_logo_url, contact_phone_1, contact_phone_2, address]
+            );
+        } else {
+            result = await pool.query(
+                "UPDATE school_settings SET school_name = $1, school_motto = $2, school_logo_url = $3, contact_phone_1 = $4, contact_phone_2 = $5, address = $6, updated_at = CURRENT_TIMESTAMP WHERE id = $7 RETURNING *",
+                [school_name, school_motto, school_logo_url, contact_phone_1, contact_phone_2, address, check.rows[0].id]
+            );
+        }
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Update school settings error:', error);
+        res.status(500).json({ error: 'Failed to update school settings' });
+    }
+});
+
 module.exports = router;
