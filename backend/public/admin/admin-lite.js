@@ -57,10 +57,11 @@ async function loadCounts() {
     setText('#countPending', pendingStaff);
 
     // Update visitor count if element exists
+    const visitorList = Array.isArray(visitors) ? visitors : (visitors.visitors || visitors.data || []);
     const visitorCountEl = document.querySelector('#countVisitors');
-    if (visitorCountEl) visitorCountEl.textContent = visitors.length;
+    if (visitorCountEl) visitorCountEl.textContent = visitorList.length;
 
-    renderRecent(students, parents, staff, visitors);
+    renderRecent(students, parents, staff, visitorList);
   } catch (err) {
     console.error('loadCounts error', err);
   }
@@ -969,10 +970,15 @@ async function loadCharts() {
     // Visitor status
     const ctxVisitor = document.getElementById('chartVisitorStatus');
     if (ctxVisitor) {
-      const visitors = await window.visitorsAPI.getAll().catch(() => []);
+      const rawVisitors = await window.visitorsAPI.getAll().catch(() => []);
+      const visitors = Array.isArray(rawVisitors) ? rawVisitors : (rawVisitors.visitors || rawVisitors.data || []);
+
       const checkedIn = visitors.filter(v => (v.status || '').toLowerCase() === 'checked_in' || (v.status || '').toLowerCase() === 'approved').length;
       const checkedOut = visitors.filter(v => (v.status || '').toLowerCase() === 'checked_out').length;
-      const pending = visitors.length - checkedIn - checkedOut;
+      const pending = visitors.filter(v => {
+        const s = (v.status || '').toLowerCase();
+        return s === 'pending' || s === 'waiting';
+      }).length;
 
       new Chart(ctxVisitor, {
         type: 'doughnut',

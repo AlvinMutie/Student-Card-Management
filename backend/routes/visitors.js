@@ -58,7 +58,7 @@ router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']
     query += ' ORDER BY v.check_in DESC';
 
     const result = await pool.query(query, params);
-    res.json({ visitors: result.rows, data: result.rows });
+    res.json(result.rows);
   } catch (error) {
     console.error('Get visitors error:', error);
 
@@ -70,7 +70,7 @@ router.get('/', authenticateToken, authorizeRole(['admin', 'guard', 'secretary']
             ORDER BY check_in_time DESC
         `;
       const result = await pool.query(fallbackQuery);
-      res.json({ visitors: result.rows, data: result.rows });
+      res.json(result.rows);
     } catch (fallbackError) {
       console.error('Fallback query also failed:', fallbackError);
       res.status(500).json({ error: 'Internal server error' });
@@ -105,7 +105,7 @@ router.post('/check-in', async (req, res) => {
     try {
       const result = await pool.query(
         `INSERT INTO visitors (name, id_number, phone, vehicle, purpose, host, qr_token, status, check_in)
-             VALUES ($1, $2, $3, $4, $5, $6, $7, 'WAITING', CURRENT_TIMESTAMP)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, 'pending', CURRENT_TIMESTAMP)
              RETURNING id, name, id_number, phone, vehicle as plate_number, purpose, host as host_name, qr_token, status, check_in as check_in_time`,
         [name, finalIdNumber, finalPhone, finalVehicle, purpose, finalHost, qr_token]
       );
