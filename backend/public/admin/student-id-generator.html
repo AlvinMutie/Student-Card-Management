@@ -755,13 +755,8 @@
     // Load school settings from database
     async function loadSchoolSettings() {
       try {
-        // Assuming an API endpoint exists or we can get it from a generic settings API
-        // For now, we'll try to fetch from /api/school-settings if it exists
-        const response = await fetch(`${API_BASE_URL}/admin/school-settings`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('sv_admin_token')}` }
-        });
-        if (response.ok) {
-          const data = await response.json();
+        if (typeof settingsAPI !== 'undefined' && settingsAPI.getSchoolSettings) {
+          const data = await settingsAPI.getSchoolSettings();
           if (data && data.school_name) {
             schoolSettings = data;
           }
@@ -833,7 +828,11 @@
         console.error('Error loading QR Code library:', error);
       }
 
-      await loadSchoolSettings();
+      try {
+        await loadSchoolSettings();
+      } catch (e) {
+        console.error('Failed to load school settings:', e);
+      }
 
       try {
         allStudents = await studentsAPI.getAll();
