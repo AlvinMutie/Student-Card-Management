@@ -154,6 +154,38 @@ router.put('/check-out/:id', authenticateToken, authorizeRole(['admin', 'guard',
   }
 });
 
+// Approve visitor
+router.put('/approve/:id', authenticateToken, authorizeRole(['admin', 'secretary']), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      "UPDATE visitors SET status = 'approved' WHERE id = $1 RETURNING *",
+      [id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Visitor not found' });
+    res.json({ message: 'Visitor approved successfully', visitor: result.rows[0] });
+  } catch (error) {
+    console.error('Approve error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Reject visitor
+router.put('/reject/:id', authenticateToken, authorizeRole(['admin', 'secretary']), async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await pool.query(
+      "UPDATE visitors SET status = 'rejected' WHERE id = $1 RETURNING *",
+      [id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Visitor not found' });
+    res.json({ message: 'Visitor rejected successfully', visitor: result.rows[0] });
+  } catch (error) {
+    console.error('Reject error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // Delete record
 router.delete('/:id', authenticateToken, authorizeRole('admin'), async (req, res) => {
   try {
