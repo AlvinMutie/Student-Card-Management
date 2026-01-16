@@ -130,35 +130,6 @@
       border: 1px solid #e0e0e0;
     }
 
-    /* Holographic Overlay Effect */
-    .id-card::after {
-      content: '';
-      position: absolute;
-      top: -150%;
-      left: -150%;
-      width: 400%;
-      height: 400%;
-      background: linear-gradient(135deg,
-          rgba(255, 255, 255, 0) 0%,
-          rgba(255, 255, 255, 0) 45%,
-          rgba(255, 255, 255, 0.2) 50%,
-          rgba(255, 255, 255, 0) 55%,
-          rgba(255, 255, 255, 0) 100%);
-      transform: rotate(0deg);
-      transition: none;
-      pointer-events: none;
-      z-index: 20;
-      opacity: 0;
-    }
-
-    .id-card:hover::after {
-      opacity: 0.5;
-      top: -50%;
-      left: -50%;
-      transition: all 1.5s ease;
-    }
-
-    /* Security Watermark */
     .watermark-layer {
       position: absolute;
       inset: 0;
@@ -174,7 +145,6 @@
       height: 65px;
       width: 100%;
       background: white;
-      border-bottom: 2px solid #eee;
     }
 
     .header-red-accent {
@@ -183,7 +153,6 @@
       left: 70%;
       width: 50px;
       height: 45px;
-      background-color: var(--secondary-accent);
       z-index: 1;
       clip-path: polygon(10% 0, 100% 0, 42% 100%, 10% 100%);
     }
@@ -194,12 +163,10 @@
       left: 0;
       width: 85%;
       height: 50px;
-      background-color: var(--primary-accent);
       clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
       z-index: 2;
       padding: 8px 12px;
       box-sizing: border-box;
-      color: white;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -219,7 +186,7 @@
       margin: 0;
       font-size: 6px;
       font-style: italic;
-      color: rgba(255, 255, 255, 0.9) !important;
+      color: white !important;
       font-family: 'Inter', sans-serif;
     }
 
@@ -231,8 +198,6 @@
       height: 45px;
       background: white;
       border-radius: 50%;
-      border: 2px solid var(--primary-accent);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), inset 0 0 0 1px var(--secondary-accent);
       z-index: 10;
       display: flex;
       align-items: center;
@@ -268,7 +233,6 @@
       height: 3.0cm;
       border-radius: 6px;
       overflow: hidden;
-      border: 2px solid var(--primary-accent);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       background: #f1f5f9;
       display: flex;
@@ -278,7 +242,6 @@
     }
 
     .student-name {
-      color: var(--primary-accent);
       margin: 12px 0 2px 0;
       font-size: 13px;
       font-weight: 800;
@@ -288,13 +251,11 @@
     }
 
     .grade-bar {
-      border-bottom: 2px solid var(--secondary-accent);
       margin-bottom: 2px;
       padding: 0 8px;
     }
 
     .grade-text {
-      color: var(--primary-accent);
       margin: 0;
       font-size: 10px;
       font-weight: 700;
@@ -354,7 +315,6 @@
     .footer-notice {
       text-align: center;
       font-size: 5px;
-      color: var(--primary-accent);
       font-weight: 900;
       padding-bottom: 3px;
       text-transform: uppercase;
@@ -373,7 +333,6 @@
       bottom: 0;
       width: 28%;
       height: 100%;
-      background-color: var(--secondary-accent);
       clip-path: url(#red-clip-final);
       z-index: 2;
       display: flex;
@@ -387,7 +346,6 @@
       bottom: 0;
       width: 78%;
       height: 100%;
-      background-color: var(--primary-accent);
       clip-path: url(#green-clip-final);
       z-index: 1;
       display: flex;
@@ -420,6 +378,11 @@
 
     /* Print Styles */
     @media print {
+      body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
 
       .sidebar,
       .controls,
@@ -429,16 +392,39 @@
       }
 
       .main-content {
-        padding: 0;
-        margin: 0;
-        background: white;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+        width: 100% !important;
+      }
+
+      .id-card-wrapper {
+        margin: 0 !important;
+        padding: 10mm 0 !important;
+        display: block !important;
       }
 
       .id-card {
-        margin: 20mm auto;
-        box-shadow: none;
-        border: 1px solid #eee;
-        page-break-inside: avoid;
+        margin: 0 auto 10mm auto !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      #batchIDCards {
+        display: grid !important;
+        grid-template-columns: repeat(2, 5.4cm) !important;
+        gap: 10mm !important;
+        justify-content: center !important;
+        padding: 10mm !important;
+        background: white !important;
+      }
+
+      #batchIDCards .id-card {
+        margin: 0 !important;
+        border: 1px solid #eee !important;
       }
     }
   </style>
@@ -509,8 +495,8 @@
       <button class="btn btn-secondary" onclick="generateBatchIDCards()">Batch Generation</button>
     </div>
 
-    <div class="id-card-wrapper" id="idCardWrapper">
-      <div class="id-card" id="idCard"></div>
+    <div class="id-card-wrapper" id="idCardWrapper" style="display: none;">
+      <div id="idCard"></div>
     </div>
 
     <div id="batchIDCards"
@@ -556,13 +542,13 @@
       return `
         <div class="id-card" ${themeStyle}>
           <div class="watermark-layer"></div>
-          <div class="header-container">
+          <div class="header-container" style="background: white;">
             <div class="header-red-accent" style="background-color: var(--secondary-accent);"></div>
             <div class="header-green-main" style="background-color: var(--primary-accent);">
               <h1>MASENO SCHOOL</h1>
               <p>Perseverance shall win through</p>
             </div>
-            <div class="logo-crest">
+            <div class="logo-crest" style="border: 2px solid var(--primary-accent);">
               <img src="/favicon.ico" alt="Crest" style="width: 80%; object-fit: contain;">
             </div>
           </div>
@@ -570,14 +556,14 @@
           <div class="background-slant"></div>
 
           <div class="id-card-content">
-            <div class="photo-frame">
+            <div class="photo-frame" style="border: 2px solid var(--primary-accent);">
               <img id="card-photo-${student.id}" src="${student.photo_url || '/assets/placeholder-student.png'}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23004d2c\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\'/></svg>'">
             </div>
 
-            <h2 class="student-name">${student.name || 'N/A'}</h2>
+            <h2 class="student-name" style="color: var(--primary-accent);">${student.name || 'N/A'}</h2>
             
-            <div class="grade-bar">
-              <p class="grade-text">${student.class || 'N/A'} ${student.stream || ''}</p>
+            <div class="grade-bar" style="border-bottom: 2px solid var(--secondary-accent);">
+              <p class="grade-text" style="color: var(--primary-accent);">${student.class || 'N/A'} ${student.stream || ''}</p>
             </div>
             <p class="adm-text">ADM NO: ${student.adm || 'N/A'}</p>
 
@@ -590,12 +576,12 @@
           </div>
 
           <div class="footer">
-            <div class="footer-notice">MASENO SCHOOL. TEL: 0738 934 812</div>
+            <div class="footer-notice" style="color: var(--primary-accent);">MASENO SCHOOL. TEL: 0738 934 812</div>
             <div class="footer-branding">
-              <div class="footer-red-part">
+              <div class="footer-red-part" style="background-color: var(--secondary-accent);">
                 <img src="/favicon.ico" style="width:15px; height:15px; filter:brightness(0) invert(1);">
               </div>
-              <div class="footer-green-part">
+              <div class="footer-green-part" style="background-color: var(--primary-accent);">
                 <div class="shuleni-text">Shuleni</div>
                 <div class="advantage-text">Advantage<sup>+</sup></div>
                 <div class="smart-card-text">Smart Card</div>
@@ -661,6 +647,7 @@
       document.getElementById('idCard').innerHTML = getCardHTML(student, qr);
       document.getElementById('idCardWrapper').style.display = 'flex';
       document.getElementById('batchIDCards').innerHTML = '';
+      document.getElementById('batchIDCards').style.display = 'none';
     }
 
     async function exportToPDF() {
@@ -695,9 +682,12 @@
     }
 
     async function generateBatchIDCards() {
+      if (!allStudents.length) return alert('No students loaded yet');
       if (!confirm(`Generate ${allStudents.length} cards?`)) return;
+
       const container = document.getElementById('batchIDCards');
-      container.innerHTML = 'Generating...';
+      container.innerHTML = '<div style="padding: 20px; text-align: center; grid-column: 1/-1;">Generating cards, please wait...</div>';
+      container.style.display = 'grid';
       document.getElementById('idCardWrapper').style.display = 'none';
 
       let html = '';

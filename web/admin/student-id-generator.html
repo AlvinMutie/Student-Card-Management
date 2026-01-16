@@ -420,6 +420,11 @@
 
     /* Print Styles */
     @media print {
+      body {
+        background: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
 
       .sidebar,
       .controls,
@@ -429,16 +434,39 @@
       }
 
       .main-content {
-        padding: 0;
-        margin: 0;
-        background: white;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: white !important;
+        width: 100% !important;
+      }
+
+      .id-card-wrapper {
+        margin: 0 !important;
+        padding: 10mm 0 !important;
+        display: block !important;
       }
 
       .id-card {
-        margin: 20mm auto;
-        box-shadow: none;
-        border: 1px solid #eee;
-        page-break-inside: avoid;
+        margin: 0 auto 10mm auto !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        page-break-inside: avoid !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      #batchIDCards {
+        display: grid !important;
+        grid-template-columns: repeat(2, 5.4cm) !important;
+        gap: 10mm !important;
+        justify-content: center !important;
+        padding: 10mm !important;
+        background: white !important;
+      }
+
+      #batchIDCards .id-card {
+        margin: 0 !important;
+        border: 1px solid #eee !important;
       }
     }
   </style>
@@ -509,8 +537,8 @@
       <button class="btn btn-secondary" onclick="generateBatchIDCards()">Batch Generation</button>
     </div>
 
-    <div class="id-card-wrapper" id="idCardWrapper">
-      <div class="id-card" id="idCard"></div>
+    <div class="id-card-wrapper" id="idCardWrapper" style="display: none;">
+      <div id="idCard"></div>
     </div>
 
     <div id="batchIDCards"
@@ -661,6 +689,7 @@
       document.getElementById('idCard').innerHTML = getCardHTML(student, qr);
       document.getElementById('idCardWrapper').style.display = 'flex';
       document.getElementById('batchIDCards').innerHTML = '';
+      document.getElementById('batchIDCards').style.display = 'none';
     }
 
     async function exportToPDF() {
@@ -695,9 +724,12 @@
     }
 
     async function generateBatchIDCards() {
+      if (!allStudents.length) return alert('No students loaded yet');
       if (!confirm(`Generate ${allStudents.length} cards?`)) return;
+
       const container = document.getElementById('batchIDCards');
-      container.innerHTML = 'Generating...';
+      container.innerHTML = '<div style="padding: 20px; text-align: center; grid-column: 1/-1;">Generating cards, please wait...</div>';
+      container.style.display = 'grid';
       document.getElementById('idCardWrapper').style.display = 'none';
 
       let html = '';
