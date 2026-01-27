@@ -81,36 +81,42 @@ body {
   background: #052e16 !important;
   color: #ffffff !important;
   padding: 0 40px;
-  transition: var(--transition);
+  transition: all 0.3s ease;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* Brand/Nav on left, Logout on right */
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
-  height: 64px;
-  /* Professional standard height */
+  height: 80px;
+  /* More presentable height */
   z-index: 1000;
+  border-bottom: 2px solid #fbbf24;
+  /* Subtle gold accent border */
+}
+
+/* Container to keep brand and nav together */
+.sidebar>.brand,
+.sidebar>.nav-links {
+  display: flex;
+  align-items: center;
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 0;
-  border-bottom: none;
-  margin-bottom: 0;
-  background: transparent;
+  gap: 15px;
+  margin-right: 40px;
+  /* Space before nav links */
 }
 
 .brand-icon {
-  width: 32px;
-  /* Standard professional size */
-  height: 32px;
+  width: 42px;
+  /* Larger, more presentable size */
+  height: 42px;
   object-fit: contain;
   transition: var(--transition);
-  margin-right: 10px;
+  margin-right: 12px;
 }
 
 .brand:hover .brand-icon {
@@ -130,12 +136,13 @@ body {
   list-style: none;
   display: flex;
   flex-direction: row;
-  gap: 8px;
-  padding: 0 24px;
+  gap: 12px;
+  padding: 0;
+  margin-right: auto;
 }
 
 .nav-links li {
-  margin-bottom: 0;
+  margin: 0;
 }
 
 .nav-links a {
@@ -161,13 +168,14 @@ body {
 
 .nav-links a.active {
   background: rgba(255, 255, 255, 0.15);
-  color: var(--text-white);
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: #fbbf24 !important;
+  /* Gold active text */
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.3);
 }
 
 .nav-links a.active .nav-icon {
-  fill: var(--accent-light);
+  fill: #fbbf24;
 }
 
 .nav-icon {
