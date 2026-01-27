@@ -391,13 +391,13 @@
               <h2 class="student-name">${student.name || 'N/A'}</h2>
               <p class="student-class">${student.class || 'N/A'} ${student.stream || ''}</p>
               <p class="student-adm">ADM NO: ${student.adm || 'N/A'}</p>
-            </div>
-
-            <div class="qr-container">
-              <div class="qr-code">
-                <img src="${qrDataUrl}" alt="QR Code">
+              
+              <div class="qr-container">
+                <div class="qr-code">
+                  <img src="${qrDataUrl}" alt="QR Code">
+                </div>
+                <div class="qr-label">SCAN ME</div>
               </div>
-              <div class="qr-label">SCAN ME</div>
             </div>
           </div>
         </div>
