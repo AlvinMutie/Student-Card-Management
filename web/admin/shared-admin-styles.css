@@ -79,19 +79,18 @@ body {
 .sidebar {
   width: 100%;
   background: #052e16 !important;
-  /* Hardcoded Deepest Forest Green */
   color: #ffffff !important;
-  padding: 0 28px;
+  padding: 0 40px;
   transition: var(--transition);
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
-  height: 80px;
-  /* Fixed height for better control */
+  height: 64px;
+  /* Professional standard height */
   z-index: 1000;
 }
 
@@ -106,11 +105,12 @@ body {
 }
 
 .brand-icon {
-  width: 55px;
-  height: 55px;
+  width: 32px;
+  /* Standard professional size */
+  height: 32px;
   object-fit: contain;
   transition: var(--transition);
-  margin-right: 12px;
+  margin-right: 10px;
 }
 
 .brand:hover .brand-icon {
@@ -118,14 +118,12 @@ body {
 }
 
 .brand h1 {
-  font-size: 1.6rem !important;
-  font-weight: 800 !important;
-  letter-spacing: 1px;
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em;
   color: #ffffff !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
   margin: 0;
   text-transform: none;
-  /* Revert to normal case */
 }
 
 .nav-links {
