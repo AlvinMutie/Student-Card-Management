@@ -110,179 +110,117 @@
       color: white !important;
     }
 
-    /* ID Card Styles - Revised Template */
+    /* ID Card Styles - New Template Background */
     .id-card-wrapper {
       display: flex;
       justify-content: center;
       margin-bottom: 30px;
     }
 
-    /* 1. FIXED PHYSICAL CARD SIZE */
+    /* 1. FIXED PHYSICAL CARD SIZE WITH BACKGROUND IMAGE */
     .id-card {
       width: 5.5cm;
       height: 8.5cm;
-      background-color: white;
+      background-image: url('/assets/id_bg_2026.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       position: relative;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       overflow: hidden;
-      border-radius: 5px;
-      font-family: 'Arial', sans-serif;
+      border-radius: 8px;
+      font-family: 'Inter', 'Arial', sans-serif;
     }
 
-    /* 2. SCALED HEADER */
-    .header-container {
-      position: relative;
-      height: 65px;
-      width: 100%;
-    }
-
-    .header-red-accent {
+    /* 2. CONTENT OVERLAY - Position over the white area of the background */
+    .card-content {
       position: absolute;
-      top: 0;
-      left: 70%;
-      width: 50px;
-      height: 45px;
-      background-color: var(--secondary-accent);
-      z-index: 1;
-      clip-path: polygon(10% 0, 100% 0, 42% 100%, 10% 100%);
-    }
-
-    .header-green-main {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 85%;
-      height: 50px;
-      background-color: var(--primary-accent);
-      clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
-      z-index: 2;
-      padding: 8px 12px;
-      box-sizing: border-box;
-      color: white;
+      top: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-    }
-
-    .header-green-main h1 {
-      margin: 0;
-      font-size: 11px;
-      text-transform: uppercase;
-      font-weight: 800;
-    }
-
-    .header-green-main p {
-      margin: 0;
-      font-size: 6px;
-      font-style: italic;
-    }
-
-    .logo-crest {
-      position: absolute;
-      top: 8px;
-      right: 12px;
-      width: 45px;
-      height: 45px;
-      background: white;
-      border-radius: 50%;
-      border: 2px solid #e0e0e0;
-      box-shadow: inset 0 0 0 1.5px var(--secondary-accent);
+      align-items: center;
+      gap: 8px;
       z-index: 10;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    }
+
+    .student-photo {
+      width: 2.8cm;
+      height: 3.5cm;
+      border-radius: 6px;
       overflow: hidden;
+      border: 2px solid #004d2c;
+      background: #f0f0f0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
-    .background-slant {
-      position: absolute;
-      top: 100px;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #f4f4f4;
-      clip-path: polygon(100% 0, 100% 100%, 0% 100%);
-      z-index: 0;
-      pointer-events: none;
+    .student-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
-    /* 3. SCALED FOOTER */
-    .footer {
-      position: absolute;
-      bottom: 0;
+    .student-details {
+      text-align: center;
       width: 100%;
     }
 
-    .footer-notice {
-      text-align: center;
-      font-size: 4px;
-      color: var(--primary-accent);
-      font-weight: bold;
-      padding-bottom: 2px;
+    .student-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #004d2c;
+      margin: 0 0 3px 0;
       text-transform: uppercase;
+      letter-spacing: 0.3px;
     }
 
-    .footer-branding {
-      height: 45px;
-      display: flex;
-      position: relative;
+    .student-class {
+      font-size: 10px;
+      font-weight: 600;
+      color: #333;
+      margin: 0 0 2px 0;
     }
 
-    .footer-red-part {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 28%;
-      height: 100%;
-      background-color: var(--secondary-accent);
-      clip-path: url(#red-clip-final);
-      z-index: 2;
-      padding-left: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
+    .student-adm {
+      font-size: 9px;
+      font-weight: 600;
+      color: #666;
+      margin: 0;
     }
 
-    .footer-logo {
-      width: 20px;
-      height: auto;
-      display: block;
-      margin-bottom: 2px;
-      filter: brightness(0) invert(1);
-    }
-
-    .footer-green-part {
-      position: absolute;
-      right: 0;
-      bottom: 0;
-      width: 78%;
-      height: 100%;
-      background-color: var(--primary-accent);
-      clip-path: url(#green-clip-final);
-      z-index: 1;
+    .qr-container {
+      margin-top: 5px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: flex-end;
-      padding-right: 12px;
+      align-items: center;
+    }
+
+    .qr-code {
+      width: 40px;
+      height: 40px;
+      border: 2px solid #004d2c;
+      padding: 3px;
+      background: white;
+      border-radius: 4px;
+    }
+
+    .qr-code img {
+      width: 100%;
+      height: 100%;
+      image-rendering: pixelated;
+    }
+
+    .qr-label {
+      background: #004d2c;
       color: white;
-    }
-
-    .shuleni-text {
-      font-size: 20px;
-      font-family: 'Brush Script MT', cursive;
-      line-height: 0.7;
-    }
-
-    .advantage-text {
-      font-size: 11px;
+      padding: 2px 8px;
+      font-size: 6px;
       font-weight: bold;
-    }
-
-    .smart-card-text {
-      font-size: 5px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+      margin-top: 2px;
+      border-radius: 2px;
+      letter-spacing: 0.5px;
     }
 
     /* Print Styles */
@@ -434,80 +372,30 @@
     let allStudents = [];
     let selectedStudent = null;
 
-    // Helper to generate the card HTML (Single Sided Professional)
+    // Helper to generate the card HTML (New Template with Background Image)
     function getCardHTML(student, qrDataUrl) {
-      // Determine House Theme
-      let houseName = (student.house || 'Maseno').toLowerCase();
-      let primary = 'var(--maseno-green)';
-      let secondary = 'var(--shuleni-red)';
-
-      if (houseName.includes('mara')) { primary = 'var(--house-mara)'; secondary = '#ffd700'; }
-      else if (houseName.includes('nakuru')) { primary = 'var(--house-nakuru)'; secondary = '#c0c0c0'; }
-      else if (houseName.includes('turkana')) { primary = 'var(--house-turkana)'; secondary = '#ffd700'; }
-      else if (houseName.includes('baringo')) { primary = 'var(--house-baringo)'; secondary = '#0047ab'; }
-
-      const themeStyle = `style="--primary-accent: ${primary}; --secondary-accent: ${primary === 'var(--maseno-green)' ? 'var(--shuleni-red)' : secondary};"`;
+      const photoUrl = student.photo_url || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23004d2c\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\'/></svg>';
 
       return `
-        <div class="id-card" ${themeStyle}>
-            <div class="header-container">
-                <div class="header-red-accent" style="background-color: var(--secondary-accent);"></div>
-                <div class="header-green-main" style="background-color: var(--primary-accent);">
-                    <h1>MASENO SCHOOL</h1>
-                    <p>Perseverance shall win through</p>
-                </div>
-                <div class="logo-crest">
-                    <img src="/assets/hechlink_final.png" alt="Crest" style="width: 80%; object-fit: contain;">
-                </div>
+        <div class="id-card">
+          <div class="card-content">
+            <div class="student-photo">
+              <img src="${photoUrl}" alt="${student.name || 'Student'}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23004d2c\\'><path d=\\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\\'/></svg>'">
             </div>
             
-            <div class="background-slant"></div>
-
-            <div style="position: relative; z-index: 5; text-align: center; margin-top: 5px; height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                
-                <div style="width: 2.5cm; height: 3.2cm; border-radius: 4px; overflow: hidden; border: 1px solid #ddd; background: #eee;">
-                    <img id="card-photo-${student.id}" src="${student.photo_url || '/assets/placeholder-student.png'}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23004d2c\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\'/></svg>'">
-                </div>
-
-                <h2 style="color: var(--primary-accent); margin: 4px 0 0 0; font-size: 12px; font-weight: bold;">${student.name || 'N/A'}</h2>
-                
-                <div style="border-bottom: 1px solid var(--secondary-accent); margin-bottom: 2px;">
-                    <p style="color: var(--primary-accent); margin: 0; font-size: 9px; font-weight: bold; font-style: italic;">${student.class || 'N/A'} ${student.stream || ''}</p>
-                </div>
-                <p style="margin: 0; font-size: 7px; color: #333; font-weight: bold;">ADM NO: ${student.adm || 'N/A'}</p>
-
-                <div style="margin-top: 5px; display: flex; flex-direction: column; align-items: center;">
-                    <div style="width: 35px; height: 35px; border: 1px solid #000; padding: 2px; background: white;">
-                        <img src="${qrDataUrl}" alt="QR" style="width: 100%; height: 100%; image-rendering: pixelated;">
-                    </div>
-                    <div style="background: black; color: white; padding: 1px 4px; font-size: 5px; font-weight: bold; margin-top: -3px;">SCAN ME</div>
-                </div>
+            <div class="student-details">
+              <h2 class="student-name">${student.name || 'N/A'}</h2>
+              <p class="student-class">${student.class || 'N/A'} ${student.stream || ''}</p>
+              <p class="student-adm">ADM NO: ${student.adm || 'N/A'}</p>
             </div>
 
-            <svg width="0" height="0" style="position: absolute;">
-                <defs>
-                    <clipPath id="red-clip-final" clipPathUnits="objectBoundingBox">
-                        <path d="M0,0 L1,0 L0.25,0.85 Q0.15,0.95 0,1 L0,0 Z" />
-                    </clipPath>
-                    <clipPath id="green-clip-final" clipPathUnits="objectBoundingBox">
-                        <path d="M0.25,0.15 Q0.3,0 0.45,0 L1,0 L1,1 L0,1 L0.25,0.15 Z" />
-                    </clipPath>
-                </defs>
-            </svg>
-
-            <div class="footer">
-                <div class="footer-notice" style="color: var(--primary-accent);">MASENO SCHOOL. - 0738 934 812 / 0713 715 956</div>
-                <div class="footer-branding">
-                    <div class="footer-red-part" style="background-color: var(--secondary-accent);">
-                        <img src="/assets/hechlink_final.png" alt="Logo" class="footer-logo">
-                    </div>
-                    <div class="footer-green-part" style="background-color: var(--primary-accent);">
-                        <div class="shuleni-text">Shuleni</div>
-                        <div class="advantage-text">Advantage<sup>+</sup></div>
-                        <div class="smart-card-text">Smart Card</div>
-                    </div>
-                </div>
+            <div class="qr-container">
+              <div class="qr-code">
+                <img src="${qrDataUrl}" alt="QR Code">
+              </div>
+              <div class="qr-label">SCAN ME</div>
             </div>
+          </div>
         </div>
       `;
     }
