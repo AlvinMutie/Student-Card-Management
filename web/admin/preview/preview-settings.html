@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Preview | Pelio Theme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="preview-styles.css">
+    <style>
+        .settings-sec {
+            margin-bottom: 32px;
+        }
+
+        .settings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--p-bg);
+        }
+
+        .settings-info h4 {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .settings-info p {
+            font-size: 0.85rem;
+            color: var(--p-text-muted);
+        }
+
+        .p-toggle {
+            width: 44px;
+            height: 24px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .p-toggle::after {
+            content: '';
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .p-toggle.on {
+            background: var(--p-blue);
+        }
+
+        .p-toggle.on::after {
+            left: 22px;
+        }
+    </style>
+</head>
+
+<body data-page="Settings">
+
+    <main class="p-main">
+        <header class="p-header">
+            <h1 class="p-page-title">System Settings</h1>
+            <div class="p-header-actions">
+                <div class="p-user-profile">
+                    <img src="https://i.pravatar.cc/100?u=admin" alt="User" class="p-avatar">
+                    <div class="p-user-info">
+                        <span>Admin Profile</span>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-panel" style="max-width: 800px;">
+            <section class="settings-sec">
+                <h3>General Configuration</h3>
+                <div class="settings-row">
+                    <div class="settings-info">
+                        <h4>Real-time Notifications</h4>
+                        <p>Receive push alerts for new visitor arrivals</p>
+                    </div>
+                    <div class="p-toggle on"></div>
+                </div>
+                <div class="settings-row">
+                    <div class="settings-info">
+                        <h4>Auto-Backup</h4>
+                        <p>Sync student photo database daily to cloud</p>
+                    </div>
+                    <div class="p-toggle on"></div>
+                </div>
+            </section>
+
+            <section class="settings-sec">
+                <h3>Account Security</h3>
+                <div class="settings-row">
+                    <div class="settings-info">
+                        <h4>Multi-factor Authentication</h4>
+                        <p>Secure your administrator portal</p>
+                    </div>
+                    <button
+                        style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--p-blue); color: var(--p-blue); background: white; font-weight: 700; cursor: pointer;">Setup
+                        MFA</button>
+                </div>
+            </section>
+
+            <div style="margin-top: 24px; text-align: right;">
+                <button
+                    style="padding: 12px 24px; border-radius: 12px; border: none; background: var(--p-blue); color: white; font-weight: 700; cursor: pointer;">Save
+                    All Changes</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="preview-layout.js"></script>
+</body>
+
+</html>

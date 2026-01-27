@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Plans | Shuleni Advantage</title>
+    <link rel="stylesheet" href="./trial_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem;
+            border: 1px solid #eef2f6;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+        }
+
+        .pricing-card.featured {
+            border: 2px solid var(--primary-purple);
+            box-shadow: var(--shadow-lg);
+            transform: scale(1.05);
+        }
+
+        .plan-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+        }
+
+        .plan-price span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-bottom: 3rem;
+            flex-grow: 1;
+        }
+
+        .feature-list li {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .feature-list i {
+            color: #22c55e;
+        }
+
+        .badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: var(--primary-purple);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div class="container nav-container">
+            <a href="./trial_index.html" class="brand">
+                <img src="./assets/maseno_logo.png" alt="Logo">
+                <span class="brand-font">Shuleni<span style="color: var(--primary-purple);">Advantage</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="./trial_index.html">Home</a>
+                <a href="./trial_about.html">About Us</a>
+                <a href="./trial_contact.html">Contact Us</a>
+                <a href="./trial_login.html" class="btn btn-primary" style="margin-left: 1.5rem;">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <section style="padding: 6rem 0;">
+        <div class="container">
+            <div class="section-header reveal active">
+                <h1 style="font-size: 3rem; line-height: 1.1; margin-bottom: 1.5rem;">The Investment in
+                    <br>Institutional Excellence</h1>
+                <p style="max-width: 600px; margin: 0 auto;">Transparent, school-friendly pricing designed to scale with
+                    your growth.</p>
+            </div>
+
+            <div class="pricing-grid reveal active">
+                <!-- Basic -->
+                <div class="pricing-card">
+                    <div class="plan-name">Legacy</div>
+                    <div class="plan-price">Quote <span>/ per term</span></div>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> Student Management</li>
+                        <li><i class="fas fa-check-circle"></i> Basic ID Generation</li>
+                        <li><i class="fas fa-check-circle"></i> Fee Tracking</li>
+                        <li><i class="fas fa-check-circle"></i> Daily Email Support</li>
+                    </ul>
+                    <a href="./trial_contact.html" class="btn btn-outline"
+                        style="width: 100%; justify-content: center;">Get Started</a>
+                </div>
+
+                <!-- Standard -->
+                <div class="pricing-card featured">
+                    <div class="badge">Most Popular</div>
+                    <div class="plan-name">Professional</div>
+                    <div class="plan-price">Quote <span>/ per term</span></div>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> Everything in Legacy</li>
+                        <li><i class="fas fa-check-circle"></i> Smart QR ID Ecosystem</li>
+                        <li><i class="fas fa-check-circle"></i> Visitor Management</li>
+                        <li><i class="fas fa-check-circle"></i> Parent Connect Portal</li>
+                        <li><i class="fas fa-check-circle"></i> Priority 24/7 Support</li>
+                    </ul>
+                    <a href="./trial_contact.html" class="btn btn-primary"
+                        style="width: 100%; justify-content: center;">Request Demo</a>
+                </div>
+
+                <!-- Premium -->
+                <div class="pricing-card">
+                    <div class="plan-name">Enterprise</div>
+                    <div class="plan-price">Custom <span>/ flat rate</span></div>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> Everything in Professional</li>
+                        <li><i class="fas fa-check-circle"></i> Custom ID Templates</li>
+                        <li><i class="fas fa-check-circle"></i> Advanced Data Analytics</li>
+                        <li><i class="fas fa-check-circle"></i> Dedicated Success Manager</li>
+                        <li><i class="fas fa-check-circle"></i> Multi-Campus Support</li>
+                    </ul>
+                    <a href="./trial_contact.html" class="btn btn-outline"
+                        style="width: 100%; justify-content: center;">Talk to Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 3rem;">
+                <div>
+                    <a href="./trial_index.html" class="brand">
+                        <img src="./assets/maseno_logo.png" alt="Logo">
+                        <span class="brand-font">Shuleni<span
+                                style="color: var(--primary-purple);">Advantage</span></span>
+                    </a>
+                    <p style="margin-top: 1rem; max-width: 300px; color: var(--text-muted);">Empowering professional
+                        education through intelligent management cycles.</p>
+                </div>
+                <div style="display: flex; gap: 4rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Company</h4>
+                        <p><a href="./trial_about.html" style="text-decoration:none; color:inherit;">About Us</a></p>
+                        <p><a href="./trial_contact.html" style="text-decoration:none; color:inherit;">Contact</a></p>
+                        <p><a href="./trial_faq.html" style="text-decoration:none; color:inherit;">FAQ</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hechlink Ventures. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

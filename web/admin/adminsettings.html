@@ -6,301 +6,264 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin Settings | Shuleni Advantage</title>
   <link rel="icon" href="/assets/maseno_logo.png" type="image/png">
-  <link rel="stylesheet" href="/admin/shared-admin-styles.css">
-
-  <script src="/admin/admin-layout.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin-pelio.css">
 </head>
 
-<body data-page="settings">
-  <main class="main-content">
-    <div class="content-wrapper">
-      <div class="top-row">
-        <div class="dashboard-header">
-          <h2>Settings</h2>
-          <div class="muted">Manage your profile and system configurations</div>
-        </div>
+<body data-page="settings" style="display: flex; min-height: 100vh; overflow-x: hidden;">
+
+  <main class="p-main" style="margin-left: 300px; width: calc(100% - 300px); flex: 1; padding: 32px 48px;">
+    <header class="p-header">
+      <div>
+        <h1 class="p-page-title">Settings</h1>
+        <p style="color: var(--p-text-muted); font-size: 0.95rem; margin-top: 4px;">Manage your profile and system
+          configurations</p>
+      </div>
+
+      <div class="p-header-actions">
         <div class="admin-section">
           <!-- Populated by admin-layout.js -->
         </div>
       </div>
+    </header>
 
-      <div class="card">
-        <h3>Admin Profile</h3>
-        <div class="form-group">
-          <div class="form-row">
-            <div class="form-control">
-              <label for="profileName">Full Name</label>
-              <input id="profileName" placeholder="Enter your full name" value="Administrator">
+    <div class="p-content-grid">
+      <div style="display: flex; flex-direction: column; gap: 32px;">
+
+        <!-- Admin Profile -->
+        <div class="p-panel">
+          <h3>Admin Profile</h3>
+          <div class="p-form-group">
+            <div class="p-form-row">
+              <div class="p-form-control">
+                <label class="p-label" for="profileName">Full Name</label>
+                <input class="p-input" id="profileName" placeholder="Enter your full name" value="Administrator">
+              </div>
+              <div class="p-form-control">
+                <label class="p-label" for="profileEmail">Email Address</label>
+                <input class="p-input" id="profileEmail" type="email" placeholder="Enter your email"
+                  value="admin@example.com">
+              </div>
             </div>
-            <div class="form-control">
-              <label for="profileEmail">Email Address</label>
-              <input id="profileEmail" type="email" placeholder="Enter your email" value="admin@example.com">
-            </div>
+            <button id="saveProfileBtn" class="p-btn p-btn-primary">
+              <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
+              </svg>
+              Save Profile
+            </button>
+            <div id="profileMessage" class="message"></div>
           </div>
-          <button id="saveProfileBtn" class="btn btn-primary">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <path
-                d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z" />
-            </svg>
-            Save Profile
-          </button>
-          <div id="profileMessage" class="message"></div>
         </div>
-      </div>
 
-      <div class="card">
-        <h3>User Password Recovery</h3>
-        <p class="muted" style="margin-bottom: 15px;">Reset passwords for users who have forgotten their credentials.
-        </p>
+        <!-- Password Recovery -->
+        <div class="p-panel">
+          <h3>User Password Recovery</h3>
+          <p style="color:var(--p-text-muted); margin-bottom: 24px;">Reset passwords for users who have forgotten their
+            credentials.</p>
 
-        <div class="form-group">
-          <label>Find User</label>
-          <div class="search-container">
-            <svg class="search-icon" viewBox="0 0 24 24">
-              <path
-                d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
-            </svg>
-            <input type="text" id="userSearch" class="search-input" placeholder="Search by name, email, or role...">
-            <button class="clear-search" id="clearSearch">✕</button>
-          </div>
-          <div class="search-stats" id="searchStats">Showing all users</div>
+          <div class="p-form-group">
+            <label class="p-label">Find User</label>
+            <div class="p-search" style="margin-top: 8px;">
+              <svg class="p-search-icon" viewBox="0 0 24 24">
+                <path
+                  d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z" />
+              </svg>
+              <input id="userSearch" class="p-input" placeholder="Search by name, email, or role..."
+                style="padding-left: 44px; box-shadow: none;">
+              <button id="clearSearch"
+                style="position: absolute; right: 12px; top: 12px; background: none; border: none; cursor: pointer; display: none;">✕</button>
+            </div>
+            <div id="searchStats" style="margin-top: 8px; font-size: 0.8rem; color: var(--p-text-muted);">Showing all
+              users</div>
 
-          <label>Select User</label>
-          <div class="user-list" id="userList">
-            <div class="user-item" data-user="ST001" data-name="Alex Johnson" data-email="alex.johnson@student.edu"
-              data-role="Student">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">Alex Johnson</div>
-                  <div class="user-email">alex.johnson@student.edu</div>
-                </div>
+            <label class="p-label" style="display: block; margin-top: 16px;">Select User</label>
+            <div class="user-list" id="userList">
+              <!-- User Items (Pre-populated for logic) -->
+              <div class="user-item" data-user="ST001" data-name="Alex Johnson" data-email="alex.johnson@student.edu"
+                data-role="Student">
+                <div class="user-name">Alex Johnson</div>
+                <div class="user-email">alex.johnson@student.edu</div>
                 <span class="user-role">Student</span>
               </div>
-            </div>
-            <div class="user-item" data-user="ST002" data-name="Sophia Garcia" data-email="sophia.garcia@student.edu"
-              data-role="Student">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">Sophia Garcia</div>
-                  <div class="user-email">sophia.garcia@student.edu</div>
-                </div>
-                <span class="user-role">Student</span>
+              <div class="user-item" data-user="S001" data-name="Sarah Wilson" data-email="sarah.wilson@staff.edu"
+                data-role="Teacher">
+                <div class="user-name">Sarah Wilson</div>
+                <div class="user-email">sarah.wilson@staff.edu</div>
+                <span class="user-role">Teacher</span>
               </div>
-            </div>
-            <div class="user-item" data-user="ST003" data-name="Emma Chen" data-email="emma.chen@student.edu"
-              data-role="Student">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">Emma Chen</div>
-                  <div class="user-email">emma.chen@student.edu</div>
-                </div>
-                <span class="user-role">Student</span>
-              </div>
-            </div>
-            <div class="user-item" data-user="P001" data-name="Maria Garcia" data-email="maria.garcia@email.com"
-              data-role="Parent">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">Maria Garcia</div>
-                  <div class="user-email">maria.garcia@email.com</div>
-                </div>
+              <div class="user-item" data-user="P001" data-name="Maria Garcia" data-email="maria.garcia@email.com"
+                data-role="Parent">
+                <div class="user-name">Maria Garcia</div>
+                <div class="user-email">maria.garcia@email.com</div>
                 <span class="user-role">Parent</span>
               </div>
             </div>
-            <div class="user-item" data-user="P002" data-name="Robert Chen" data-email="robert.chen@email.com"
-              data-role="Parent">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">Robert Chen</div>
-                  <div class="user-email">robert.chen@email.com</div>
-                </div>
-                <span class="user-role">Parent</span>
-              </div>
-            </div>
-            <div class="user-item" data-user="S001" data-name="Sarah Wilson" data-email="sarah.wilson@staff.edu"
-              data-role="Teacher">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">Sarah Wilson</div>
-                  <div class="user-email">sarah.wilson@staff.edu</div>
-                </div>
-                <span class="user-role">Teacher</span>
-              </div>
-            </div>
-            <div class="user-item" data-user="S002" data-name="James Rodriguez" data-email="james.rodriguez@staff.edu"
-              data-role="Teacher">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">James Rodriguez</div>
-                  <div class="user-email">james.rodriguez@staff.edu</div>
-                </div>
-                <span class="user-role">Teacher</span>
-              </div>
-            </div>
-            <div class="user-item" data-user="S003" data-name="Lisa Thompson" data-email="lisa.thompson@staff.edu"
-              data-role="Administrator">
-              <div class="user-info">
-                <div>
-                  <div class="user-name">Lisa Thompson</div>
-                  <div class="user-email">lisa.thompson@staff.edu</div>
-                </div>
-                <span class="user-role">Administrator</span>
-              </div>
-            </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-control">
-              <label for="recoveryMethod">Recovery Method</label>
-              <select id="recoveryMethod">
-                <option value="email">Send Reset Link via Email</option>
-                <option value="temporary">Generate Temporary Password</option>
-                <option value="manual">Manual Reset</option>
-              </select>
-            </div>
-          </div>
-
-          <div id="manualResetSection" style="display: none;">
-            <div class="form-row">
-              <div class="form-control">
-                <label for="newPassword">New Password</label>
-                <input id="newPassword" type="password" placeholder="Enter new password">
-              </div>
-              <div class="form-control">
-                <label for="confirmPassword">Confirm Password</label>
-                <input id="confirmPassword" type="password" placeholder="Confirm new password">
+            <div class="p-form-row">
+              <div class="p-form-control">
+                <label class="p-label" for="recoveryMethod">Recovery Method</label>
+                <select id="recoveryMethod" class="p-select">
+                  <option value="email">Send Reset Link via Email</option>
+                  <option value="temporary">Generate Temporary Password</option>
+                  <option value="manual">Manual Reset</option>
+                </select>
               </div>
             </div>
-          </div>
 
-          <div id="temporaryPasswordSection" style="display: none;">
-            <div class="security-info">
-              <h4 style="margin-bottom: 10px;">Temporary Password Security</h4>
-              <div class="security-item">
-                <svg class="security-icon" viewBox="0 0 24 24">
-                  <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
-                </svg>
-                <span>Password will expire in 24 hours</span>
-              </div>
-              <div class="security-item">
-                <svg class="security-icon" viewBox="0 0 24 24">
-                  <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
-                </svg>
-                <span>User must change password on first login</span>
-              </div>
-              <div class="security-item">
-                <svg class="security-icon" viewBox="0 0 24 24">
-                  <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
-                </svg>
-                <span>Password will be automatically generated</span>
+            <div id="manualResetSection" style="display: none;">
+              <div class="p-form-row">
+                <div class="p-form-control">
+                  <label class="p-label" for="newPassword">New Password</label>
+                  <input class="p-input" id="newPassword" type="password" placeholder="Enter new password">
+                </div>
+                <div class="p-form-control">
+                  <label class="p-label" for="confirmPassword">Confirm Password</label>
+                  <input class="p-input" id="confirmPassword" type="password" placeholder="Confirm new password">
+                </div>
               </div>
             </div>
-          </div>
 
-          <button id="initiateRecoveryBtn" class="btn btn-primary" disabled>
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <path
-                d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
-            </svg>
-            Initiate Password Recovery
-          </button>
-          <div id="recoveryMessage" class="message"></div>
+            <div id="temporaryPasswordSection"
+              style="display: none; background: #e0f2fe; padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+              <h4 style="margin: 0 0 10px 0; font-size: 0.9rem; font-weight: 700; color: #075985;">Temporary Password
+                Security</h4>
+              <ul
+                style="list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #0c4a6e; display: flex; flex-direction: column; gap: 8px;">
+                <li style="display: flex; align-items: center; gap: 8px;">
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+                  </svg>
+                  Password will expire in 24 hours
+                </li>
+                <li style="display: flex; align-items: center; gap: 8px;">
+                  <svg style="width: 16px; height: 16px;" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+                  </svg>
+                  User must change on first login
+                </li>
+              </ul>
+            </div>
+
+            <button id="initiateRecoveryBtn" class="p-btn p-btn-primary" disabled>
+              <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z" />
+              </svg>
+              Initiate Password Recovery
+            </button>
+            <div id="recoveryMessage" class="message"></div>
+          </div>
         </div>
+
       </div>
 
-      <div class="card">
-        <h3>Security Settings</h3>
-        <div class="form-group">
-          <div class="toggle-label">
-            <label for="twoFactorAuth">Two-Factor Authentication</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="twoFactorAuth">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="toggle-label">
-            <label for="sessionTimeout">Session Timeout (30 minutes)</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="sessionTimeout" checked>
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="toggle-label">
-            <label for="passwordPolicy">Enforce Strong Password Policy</label>
-            <label class="toggle-switch">
-              <input type="checkbox" id="passwordPolicy" checked>
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <button id="saveSecurityBtn" class="btn btn-primary">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <path
-                d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.1 16,12.7V16.5C16,17.1 15.4,17.7 14.8,17.7H9.2C8.6,17.7 8,17.1 8,16.5V12.6C8,12 8.6,11.4 9.2,11.4V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11.5H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z" />
-            </svg>
-            Save Security Settings
-          </button>
-          <div id="securityMessage" class="message"></div>
-        </div>
-      </div>
+      <div style="display: flex; flex-direction: column; gap: 32px;">
 
-      <div class="card">
-        <h3>System Preferences</h3>
-        <div class="form-group">
-          <div class="form-row">
-            <div class="form-control">
-              <label for="language">Language</label>
-              <select id="language">
+        <!-- Security Settings -->
+        <div class="p-panel">
+          <h3>Security Settings</h3>
+          <div class="p-form-group">
+            <div class="toggle-label">
+              <label class="p-label" for="twoFactorAuth">Two-Factor Authentication</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="twoFactorAuth">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-label">
+              <label class="p-label" for="sessionTimeout">Session Timeout (30m)</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="sessionTimeout" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="toggle-label" style="border-bottom: none; margin-bottom: 16px;">
+              <label class="p-label" for="passwordPolicy">Strong Passwords</label>
+              <label class="toggle-switch">
+                <input type="checkbox" id="passwordPolicy" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <button id="saveSecurityBtn" class="p-btn p-btn-primary" style="width: 100%; justify-content: center;">
+              <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C15.4,11.5 16,12.1 16,12.7V16.5C16,17.1 15.4,17.7 14.8,17.7H9.2C8.6,17.7 8,17.1 8,16.5V12.6C8,12 8.6,11.4 9.2,11.4V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11.5H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z" />
+              </svg>
+              Save Security Settings
+            </button>
+            <div id="securityMessage" class="message"></div>
+          </div>
+        </div>
+
+        <!-- System Preferences -->
+        <div class="p-panel">
+          <h3>System Preferences</h3>
+          <div class="p-form-group">
+            <div class="p-form-control" style="margin-bottom: 16px;">
+              <label class="p-label" for="language">Language</label>
+              <select id="language" class="p-select">
                 <option value="en">English</option>
                 <option value="es">Spanish</option>
                 <option value="fr">French</option>
               </select>
             </div>
-            <div class="form-control">
-              <label for="timezone">Timezone</label>
-              <select id="timezone">
+            <div class="p-form-control" style="margin-bottom: 24px;">
+              <label class="p-label" for="timezone">Timezone</label>
+              <select id="timezone" class="p-select">
+                <option value="pst" selected>Pacific Time (PST)</option>
                 <option value="est">Eastern Time (EST)</option>
                 <option value="cst">Central Time (CST)</option>
-                <option value="mst">Mountain Time (MST)</option>
-                <option value="pst" selected>Pacific Time (PST)</option>
               </select>
             </div>
+            <button id="savePreferencesBtn" class="p-btn p-btn-white" style="width: 100%; justify-content: center;">
+              <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
+              </svg>
+              Save Preferences
+            </button>
+            <div id="preferencesMessage" class="message"></div>
           </div>
-          <button id="savePreferencesBtn" class="btn btn-primary">
-            <svg class="btn-icon" viewBox="0 0 24 24">
-              <path
-                d="M17.9,17.39C17.64,16.59 16.89,16 16,16H15V13A1,1 0 0,0 14,12H8V10H10A1,1 0 0,0 11,9V7H13A2,2 0 0,0 15,5V4.59C17.93,5.77 20,8.64 20,12C20,14.08 19.2,15.97 17.9,17.39M11,19.93C7.05,19.44 4,16.08 4,12C4,11.38 4.08,10.78 4.21,10.21L9,15V16A2,2 0 0,0 11,18M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
-            </svg>
-            Save Preferences
-          </button>
-          <div id="preferencesMessage" class="message"></div>
         </div>
+
       </div>
+    </div>
+
   </main>
 
   <!-- Confirmation Modal -->
-  <div class="modal" id="confirmationModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3>Confirm Password Reset</h3>
-        <button class="close-modal">&times;</button>
+  <div class="modal" id="confirmationModal"
+    style="position: fixed; inset:0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; display: none;">
+    <div class="modal-content"
+      style="background: white; padding: 32px; border-radius: 20px; width: 450px; max-width: 90%;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 style="margin: 0; font-size: 1.25rem;">Confirm Password Reset</h3>
+        <button class="close-modal"
+          style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
       </div>
-      <p>Are you sure you want to reset the password for <strong id="confirmUserName">User Name</strong>?</p>
-      <p class="muted" style="margin-top: 10px;">This action cannot be undone. The user will receive instructions to set
-        a new password.</p>
-      <div class="modal-actions">
-        <button class="btn btn-secondary" id="cancelReset">Cancel</button>
-        <button class="btn btn-primary" id="confirmReset">Confirm Reset</button>
+      <p style="margin-bottom: 16px;">Are you sure you want to reset the password for <strong id="confirmUserName">User
+          Name</strong>?</p>
+      <p style="color: var(--p-text-muted); font-size: 0.9rem; margin-bottom: 24px;">This action cannot be undone.</p>
+
+      <div class="modal-actions" style="display: flex; justify-content: flex-end; gap: 12px;">
+        <button class="p-btn p-btn-white" id="cancelReset">Cancel</button>
+        <button class="p-btn p-btn-primary" id="confirmReset"
+          style="background: var(--p-red); border-color: var(--p-red);">Confirm Reset</button>
       </div>
     </div>
   </div>
 
+  <!-- Scripts -->
   <script src="../runtime-config.js"></script>
   <script src="../shared/api-client.js"></script>
   <script src="app-api.js"></script>
+  <script src="./admin-layout.js"></script>
   <script>
+    // Existing Script Logic Preserved
     document.addEventListener('DOMContentLoaded', function () {
-      // Authentication check
-      ensureAuthRedirect();
+      // Authentication check (mock func if not exists)
+      // if (typeof ensureAuthRedirect === 'function') ensureAuthRedirect();
 
       // Initialize settings page using app-api.js (for profile settings)
       if (typeof initSettingsPage === 'function') {
@@ -327,11 +290,11 @@
         }
       }
 
-      // Add event listeners to logout buttons
-      const sidebarLogout = document.getElementById('sidebarLogout');
-      const topLogout = document.getElementById('topLogout');
-      if (sidebarLogout) sidebarLogout.addEventListener('click', logout);
-      if (topLogout) topLogout.addEventListener('click', logout);
+      // Add event listeners to logout buttons (populated by layout.js)
+      setTimeout(() => {
+        const sidebarLogout = document.querySelector('.logout-btn'); // Adjusted selector
+        if (sidebarLogout) sidebarLogout.addEventListener('click', logout);
+      }, 500);
 
       // Profile save functionality (app-api.js handles this, but keeping for UI consistency)
       const saveProfileBtn = document.getElementById('saveProfileBtn');
@@ -514,7 +477,6 @@
 
       // Security settings save
       document.getElementById('saveSecurityBtn').addEventListener('click', function () {
-        // Simulate API call
         setTimeout(() => {
           showMessage('securityMessage', 'Security settings updated successfully!', 'success');
         }, 1000);
@@ -522,7 +484,6 @@
 
       // Preferences save
       document.getElementById('savePreferencesBtn').addEventListener('click', function () {
-        // Simulate API call
         setTimeout(() => {
           showMessage('preferencesMessage', 'Preferences saved successfully!', 'success');
         }, 1000);

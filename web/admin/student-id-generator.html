@@ -4,68 +4,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student ID Card Generator | Shuleni Advantage</title>
+  <title>ID Generator | Shuleni Advantage</title>
   <link rel="icon" href="/assets/maseno_logo.png" type="image/png">
-  <link rel="stylesheet" href="/shared/portal-theme.css">
-  <link rel="stylesheet" href="/admin/shared-admin-styles.css">
-  
-  <!-- Premium Typography -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;700&family=Montserrat:wght@500;600;800&family=Brush+Script+MT&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin-pelio.css">
+
   <style>
-    :root {
-      --maseno-green: #004d2c;
-      --shuleni-red: #e31e24;
-      --primary-accent: var(--maseno-green);
-      --secondary-accent: var(--shuleni-red);
-      --text-on-accent: #ffffff;
-      --house-mara: #b22222;
-      --house-nakuru: #0047ab;
-      --house-turkana: #008080;
-      --house-baringo: #daa520;
-    }
-
-    .controls {
-      background: var(--surface-card);
-      padding: 24px;
-      border-radius: 20px;
-      box-shadow: var(--shadow-bento);
-      margin-bottom: 30px;
-      border: 1px solid var(--border-light);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      gap: 16px;
-    }
-
-    .form-group {
-      flex: 1;
-      min-width: 250px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-      color: var(--primary-color);
-    }
-
-    .form-group select {
-      width: 100%;
-      padding: 10px;
-      border: 2px solid rgba(102, 126, 234, 0.3);
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      background-color: white !important;
-      color: var(--primary-color) !important;
-      font-weight: 500;
-    }
-
+    /* Specific ID Card Styles - Preserved */
     .id-card-wrapper {
       display: flex;
       justify-content: center;
-      margin-bottom: 30px;
+      padding: 40px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      min-height: 400px;
+      align-items: center;
     }
 
     .id-card {
@@ -80,6 +33,7 @@
       overflow: hidden;
       border-radius: 8px;
       font-family: 'Inter', 'Arial', sans-serif;
+      flex-shrink: 0;
     }
 
     .card-content {
@@ -185,35 +139,34 @@
         background: white !important;
         margin: 0 !important;
         padding: 0 !important;
+        color: black !important;
       }
 
-      .sidebar,
-      .controls,
-      .top-row,
+      .p-header,
+      .p-sidebar,
+      .controls-panel,
       .no-print {
         display: none !important;
       }
 
-      .main-content {
-        padding: 0 !important;
+      .p-main {
         margin: 0 !important;
-        background: white !important;
+        padding: 0 !important;
         width: 100% !important;
       }
 
       .id-card-wrapper {
-        margin: 0 !important;
-        padding: 10mm 0 !important;
+        background: none !important;
+        padding: 0 !important;
+        min-height: auto !important;
         display: block !important;
       }
 
       .id-card {
-        margin: 0 auto 10mm auto !important;
-        box-shadow: none !important;
-        border: 1px solid #ddd !important;
-        page-break-inside: avoid !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        margin: 0 auto;
+        page-break-inside: avoid;
+        border: 1px solid #ccc;
+        box-shadow: none;
       }
 
       #batchIDCards {
@@ -221,62 +174,56 @@
         grid-template-columns: repeat(2, 5.5cm) !important;
         gap: 10mm !important;
         justify-content: center !important;
-        padding: 10mm !important;
-        background: white !important;
-      }
-
-      #batchIDCards .id-card {
-        margin: 0 !important;
-        border: 1px solid #eee !important;
       }
     }
   </style>
-  <script src="/admin/admin-layout.js"></script>
 </head>
 
 <body data-page="id-generator">
-  <main class="main-content">
-    <div class="content-wrapper">
-      <div class="top-row no-print">
-        <div class="dashboard-header">
-          <h2>Student ID Card Generator</h2>
-          <div class="muted">Generate and print professional school ID cards</div>
-        </div>
-        <div class="admin-section">
-          <!-- Populated by admin-layout.js -->
-        </div>
+
+  <main class="p-main" style="flex-direction: row; align-items: flex-start; gap: 32px;">
+
+    <!-- Controls Sidebar -->
+    <div class="controls-panel no-print"
+      style="width: 320px; background: white; padding: 24px; border-radius: 20px; border: 1px solid var(--p-border); position: sticky; top: 32px; flex-shrink: 0;">
+      <h2 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 24px;">Generator Controls</h2>
+
+      <div style="margin-bottom: 24px;">
+        <label style="display: block; font-weight: 600; margin-bottom: 8px;">Select Student</label>
+        <select id="studentSelect"
+          style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--p-border); background: var(--p-bg);">
+          <option value="">Loading students...</option>
+        </select>
       </div>
 
-      <div class="controls no-print">
-        <div class="form-group">
-          <label for="studentSelect">Select Student</label>
-          <select id="studentSelect">
-            <option value="">-- Select a student --</option>
-          </select>
-        </div>
-        <button class="btn btn-primary" onclick="generateIDCard()">
-          <svg style="width:18px;height:18px" viewBox="0 0 24 24">
-            <path fill="currentColor"
-              d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
+      <div style="display: grid; gap: 12px; grid-template-columns: 1fr 1fr;">
+        <button onclick="generateIDCard()"
+          style="grid-column: 1/-1; padding: 16px; background: var(--p-blue); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
           </svg>
           Generate Card
         </button>
-        <button class="btn btn-secondary" onclick="printIDCard()">
+
+        <button onclick="printIDCard()" class="p-btn p-btn-white" style="justify-content: center;">
           <svg style="width:18px;height:18px" viewBox="0 0 24 24">
             <path fill="currentColor"
               d="M18,3H6V7H18M19,12A1,1 0 1,1 18,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z" />
           </svg>
-          Print Card
+          Print
         </button>
-        <button class="btn ghost" onclick="exportToPDF()">
+
+        <button onclick="exportToPDF()" class="p-btn p-btn-white" style="justify-content: center;">
           <svg style="width:18px;height:18px" viewBox="0 0 24 24">
             <path fill="currentColor"
               d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M13,13V18H15V13H13M10,10V18H12V10H10Z" />
           </svg>
-          PDF Export
+          PDF
         </button>
-        <button class="btn btn-primary" onclick="generateBatchIDCards()">
-          <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+
+        <button onclick="generateBatchIDCards()"
+          style="grid-column: 1/-1; padding: 16px; background: var(--p-blue-soft); color: var(--p-blue); border: 2px solid var(--p-blue-soft); border-radius: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg style="width:20px;height:20px" viewBox="0 0 24 24">
             <path fill="currentColor"
               d="M15,14V11H18V9L22,12.5L18,16V14H15M11,11H5V13H11V11M5,15H11V17H5V15M5,7H11V9H5V7Z" />
           </svg>
@@ -284,34 +231,49 @@
         </button>
       </div>
 
-      <div class="id-card-wrapper" id="idCardWrapper" style="display: none;">
+      <div style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--p-border);">
+        <div class="admin-section">
+          <!-- Populated by admin-layout.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview Area -->
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 24px;">
+      <header class="p-header">
+        <div>
+          <h1 class="p-page-title">ID Preview</h1>
+          <p style="color: var(--p-text-muted);">Real-time card generation</p>
+        </div>
+      </header>
+
+      <div class="id-card-wrapper" id="idCardWrapper" style="display: flex;">
+        <div style="text-align: center; color: var(--p-text-light);">
+          <svg style="width: 48px; height: 48px; opacity: 0.5; margin-bottom: 1rem;" viewBox="0 0 24 24">
+            <path fill="currentColor"
+              d="M4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M4,6V18H20V6H4M12,9H14V11H12V9M12,13H14V15H12V13M8,9H10V11H8V9M8,13H10V15H8V13Z" />
+          </svg>
+          <p>Select a student to generate card</p>
+        </div>
         <div id="idCard"></div>
       </div>
 
       <div id="batchIDCards"
-        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 30px;">
-      </div>
-
-      <svg width="0" height="0" style="position: absolute;">
-        <defs>
-          <clipPath id="red-clip-final" clipPathUnits="objectBoundingBox">
-            <path d="M0,0 L1,0 L0.25,0.85 Q0.15,0.95 0,1 L0,0 Z" />
-          </clipPath>
-          <clipPath id="green-clip-final" clipPathUnits="objectBoundingBox">
-            <path d="M0.25,0.15 Q0.3,0 0.45,0 L1,0 L1,1 L0,1 L0.25,0.15 Z" />
-          </clipPath>
-        </defs>
-      </svg>
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;"></div>
     </div>
+
   </main>
 
-  <script src="/runtime-config.js"></script>
-  <script src="/shared/api-client.js"></script>
+  <!-- Scripts -->
+  <script src="../runtime-config.js"></script>
+  <script src="../shared/api-client.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="./admin-layout.js"></script>
 
   <script>
+    // Existing Logic Ported
     let allStudents = [];
     let selectedStudent = null;
 
@@ -319,31 +281,32 @@
       const photoUrl = student.photo_url || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23004d2c\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\'/></svg>';
 
       return `
-        <div class="id-card">
-          <div class="card-content">
-            <div class="student-photo">
-              <img src="${photoUrl}" alt="${student.name || 'Student'}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23004d2c\\'><path d=\\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\\'/></svg>'">
+            <div class="id-card">
+              <div class="card-content">
+                <div class="student-photo">
+                  <img src="${photoUrl}" alt="${student.name || 'Student'}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 24 24\\' fill=\\'%23004d2c\\'><path d=\\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\\'/></svg>'">
+                </div>
+                <div class="student-details">
+                  <h2 class="student-name">${student.name || 'N/A'}</h2>
+                  <p class="student-class">${student.class || 'N/A'} ${student.stream || ''}</p>
+                  <p class="student-adm">ADM NO: ${student.adm || 'N/A'}</p>
+                </div>
+              </div>
+              <div class="qr-container">
+                <div class="qr-code">
+                  <img src="${qrDataUrl}" alt="QR Code">
+                </div>
+                <div class="qr-label">SCAN ME</div>
+              </div>
             </div>
-            <div class="student-details">
-              <h2 class="student-name">${student.name || 'N/A'}</h2>
-              <p class="student-class">${student.class || 'N/A'} ${student.stream || ''}</p>
-              <p class="student-adm">ADM NO: ${student.adm || 'N/A'}</p>
-            </div>
-          </div>
-          <div class="qr-container">
-            <div class="qr-code">
-              <img src="${qrDataUrl}" alt="QR Code">
-            </div>
-            <div class="qr-label">SCAN ME</div>
-          </div>
-        </div>
-      `;
+          `;
     }
 
     async function loadData() {
       try {
         allStudents = await studentsAPI.getAll();
         const select = document.getElementById('studentSelect');
+        select.innerHTML = '<option value="">-- Select a student --</option>'; // Reset
         allStudents.forEach(s => {
           const opt = document.createElement('option');
           opt.value = s.id;
@@ -391,8 +354,11 @@
       selectedStudent = allStudents.find(s => s.id == id);
       const student = selectedStudent;
       const qr = await generateQRCode(student.adm || 'N/A');
+
+      document.querySelector('#idCardWrapper > div:first-child').style.display = 'none'; // Hide placeholder
       document.getElementById('idCard').innerHTML = getCardHTML(student, qr);
       document.getElementById('idCardWrapper').style.display = 'flex';
+
       document.getElementById('batchIDCards').innerHTML = '';
       document.getElementById('batchIDCards').style.display = 'none';
     }
@@ -424,6 +390,7 @@
       container.innerHTML = '<div style="padding: 20px; text-align: center; grid-column: 1/-1;">Generating cards, please wait...</div>';
       container.style.display = 'grid';
       document.getElementById('idCardWrapper').style.display = 'none';
+
       let html = '';
       for (const s of allStudents) {
         const qr = await generateQRCode(s.adm || 'N/A');

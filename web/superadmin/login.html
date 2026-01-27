@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperAdmin Login | Shuleni Advantage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="superadmin.css">
+</head>
+
+<body class="sa-login-body"
+    style="background: #0f172a; margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;">
+
+    <div class="sa-login-card">
+        <div style="text-align: center; margin-bottom: 32px;">
+            <div
+                style="width: 64px; height: 64px; background: #2563eb; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px;">
+                <svg style="width: 32px; height: 32px; fill: white;" viewBox="0 0 24 24">
+                    <path
+                        d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,11.95L5.5,8.04L7.54,4.5L12,7.11L16.46,4.5L18.5,8.04L12,11.95Z" />
+                </svg>
+            </div>
+            <h1 style="font-size: 1.75rem; color: #1e293b; margin-bottom: 8px;">Platform Access</h1>
+            <span class="sa-badge sa-badge-warning" style="font-size: 0.7rem; letter-spacing: 0.05em;">SUPERADMIN
+                ONLY</span>
+        </div>
+
+        <form id="loginForm">
+            <div style="margin-bottom: 20px;">
+                <label
+                    style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 8px;">Admin
+                    Email</label>
+                <input type="email" class="sa-input" placeholder="root@shuleni.com" required>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+                <label
+                    style="display: block; font-size: 0.9rem; font-weight: 600; color: #475569; margin-bottom: 8px;">Password</label>
+                <input type="password" class="sa-input" placeholder="••••••••••••" required>
+            </div>
+
+            <button type="submit" class="sa-btn sa-btn-primary"
+                style="width: 100%; justify-content: center; padding: 14px;">
+                Authenticate System Access
+            </button>
+        </form>
+
+        <div style="margin-top: 24px; text-align: center; margin-bottom: 0;">
+            <a href="#" style="color: #64748b; font-size: 0.85rem; text-decoration: none;">Forgot secure diagnostics
+                key?</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalText = btn.innerText;
+
+            btn.innerText = 'Verifying Credentials...';
+            btn.disabled = true;
+
+            // Simulate API Check
+            setTimeout(() => {
+                localStorage.setItem('sa_token', 'super-secret-token');
+                window.location.href = 'dashboard.html';
+            }, 1500);
+        });
+    </script>
+</body>
+
+</html>

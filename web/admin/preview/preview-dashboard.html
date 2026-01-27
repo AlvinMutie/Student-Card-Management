@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Preview | Pelio Theme</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="preview-styles.css">
+</head>
+
+<body>
+
+    <main class="p-main">
+        <!-- Header -->
+        <header class="p-header">
+            <h1 class="p-page-title">Dashboard</h1>
+            <div class="p-header-actions">
+                <div class="p-search">
+                    <svg class="p-search-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M15.5,14H14.71L14.43,13.73C15.41,12.59 16,11.11 16,9.5A6.5,6.5 0 0,0 9.5,3A6.5,6.5 0 0,0 3,9.5A6.5,6.5 0 0,0 9.5,16C11.11,16 12.59,15.41 13.73,14.43L14,14.71V15.5L19,20.5L20.5,19L15.5,14M9.5,14A4.5,4.5 0 0,1 5,9.5A4.5,4.5 0 0,1 9.5,5A4.5,4.5 0 0,1 14,9.5A4.5,4.5 0 0,1 9.5,14Z" />
+                    </svg>
+                    <input type="text" placeholder="Search for anything...">
+                </div>
+                <div class="p-user-profile">
+                    <img src="https://i.pravatar.cc/100?u=admin" alt="User" class="p-avatar">
+                    <div class="p-user-info">
+                        <span>Admin Profile</span>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Metrics Grid -->
+        <section class="p-metrics-grid">
+            <div class="p-metric-card green">
+                <span class="p-metric-label">Total Students</span>
+                <span class="p-metric-value" id="dispStudents">1,284</span>
+            </div>
+            <div class="p-metric-card blue">
+                <span class="p-metric-label">Active Staff</span>
+                <span class="p-metric-value" id="dispStaff">86</span>
+            </div>
+            <div class="p-metric-card amber">
+                <span class="p-metric-label">Pending Staff</span>
+                <span class="p-metric-value" id="dispPending">12</span>
+            </div>
+            <div class="p-metric-card red">
+                <span class="p-metric-label">Visitors Today</span>
+                <span class="p-metric-value" id="dispVisitors">45</span>
+            </div>
+        </section>
+
+        <!-- Content Grid -->
+        <div class="p-content-grid">
+            <section class="p-panel">
+                <h3>Latest Activity</h3>
+                <ul class="p-trans-list">
+                    <li class="p-trans-item">
+                        <div class="p-trans-info">
+                            <div class="p-trans-icon" style="background: var(--p-blue);">S</div>
+                            <div class="p-trans-meta">
+                                <span>Student Enrollment</span>
+                                <small>John Doe registered for Grade 10</small>
+                            </div>
+                        </div>
+                        <div class="p-trans-amount">5 min ago</div>
+                    </li>
+                    <li class="p-trans-item">
+                        <div class="p-trans-info">
+                            <div class="p-trans-icon" style="background: var(--p-amber);">F</div>
+                            <div class="p-trans-meta">
+                                <span>Fee Payment</span>
+                                <small>Invoice #4592 received</small>
+                            </div>
+                        </div>
+                        <div class="p-trans-amount" style="color: var(--p-green);">+ $1,250</div>
+                    </li>
+                    <li class="p-trans-item">
+                        <div class="p-trans-info">
+                            <div class="p-trans-icon" style="background: var(--p-red);">V</div>
+                            <div class="p-trans-meta">
+                                <span>Visitor Alert</span>
+                                <small>Unscheduled access attempt blocked</small>
+                            </div>
+                        </div>
+                        <div class="p-trans-amount">12 min ago</div>
+                    </li>
+                    <li class="p-trans-item">
+                        <div class="p-trans-info">
+                            <div class="p-trans-icon" style="background: var(--p-green);">I</div>
+                            <div class="p-trans-meta">
+                                <span>ID Generated</span>
+                                <small>Staff ID card printed</small>
+                            </div>
+                        </div>
+                        <div class="p-trans-amount">1 hour ago</div>
+                    </li>
+                </ul>
+            </section>
+            <section class="p-panel">
+                <h3>Insights & Compliance</h3>
+                <div class="p-info-grid">
+                    <div class="p-info-card">
+                        <svg viewBox="0 0 36 36" class="p-circular-chart blue">
+                            <path class="p-circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="p-circle" stroke-dasharray="78, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" class="p-percentage">78%</text>
+                        </svg>
+                        <div class="p-info-content">
+                            <h4>Fee Clearance</h4>
+                            <p>Global student body</p>
+                        </div>
+                    </div>
+                    <div class="p-info-card">
+                        <svg viewBox="0 0 36 36" class="p-circular-chart green">
+                            <path class="p-circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="p-circle" stroke-dasharray="92, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" class="p-percentage">92%</text>
+                        </svg>
+                        <div class="p-info-content">
+                            <h4>Attendance</h4>
+                            <p>Staff & Students</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-micro-stats">
+                    <div class="p-micro-item">
+                        <span class="p-micro-val">64%</span>
+                        <span class="p-micro-label">Visitor Comp.</span>
+                    </div>
+                    <div class="p-micro-item" style="text-align: right;">
+                        <span class="p-micro-val">12</span>
+                        <span class="p-micro-label">Open Alerts</span>
+                    </div>
+                </div>
+                <div class="p-micro-stats" style="margin-top: 8px; background: var(--p-blue-soft);">
+                    <div class="p-micro-item">
+                        <span class="p-micro-val" style="color: var(--p-blue);">Ready</span>
+                        <span class="p-micro-label">Sync Status</span>
+                    </div>
+                    <div class="p-micro-item" style="text-align: right;">
+                        <span class="p-micro-val" style="color: var(--p-blue);">1.2s</span>
+                        <span class="p-micro-label">Avg Load</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Activity Bottom Grid -->
+        <div class="p-activity-grid">
+            <div class="p-balance-card" style="background: linear-gradient(135deg, #004d2c 0%, #065f46 100%);">
+                <div class="p-card-header">
+                    <div class="p-card-name">Institutional Account</div>
+                    <img src="/assets/maseno_logo.png"
+                        style="width: 32px; height: 32px; object-fit: contain; filter: brightness(0) invert(1);">
+                </div>
+                <div class="p-card-amount">KES 1,484,900</div>
+                <div class="p-card-footer">
+                    <div>SHULENI ADVANTAGE LEGACY</div>
+                    <div style="font-weight: 800; letter-spacing: 1px;">EST. 1906</div>
+                </div>
+            </div>
+            <div class="p-panel p-stats-mini">
+                <h3>System Health</h3>
+                <div style="display: flex; justify-content: space-around; align-items: center; flex: 1;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--p-blue);">99.9%</div>
+                        <small style="color: var(--p-text-light);">Uptime</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 800; color: var(--p-green);">12ms</div>
+                        <small style="color: var(--p-text-light);">Latency</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="preview-layout.js"></script>
+</body>
+
+</html>

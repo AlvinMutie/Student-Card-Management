@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Features | Shuleni Advantage</title>
+    <link rel="stylesheet" href="./trial_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .feature-detail-section {
+            padding: 6rem 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .feature-detail-section:nth-child(even) {
+            background-color: var(--bg-gray);
+        }
+
+        .feature-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+        }
+
+        .feature-detail-content h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-purple);
+        }
+
+        .feature-detail-content p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .feature-list-detailed {
+            list-style: none;
+        }
+
+        .feature-list-detailed li {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 1rem;
+            font-weight: 500;
+        }
+
+        .feature-list-detailed i {
+            color: var(--primary-purple);
+            margin-top: 0.25rem;
+        }
+
+        .feature-visual {
+            background: white;
+            padding: 2rem;
+            border-radius: 40px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .feature-visual i {
+            font-size: 6rem;
+            color: var(--primary-purple);
+            opacity: 0.15;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div class="container nav-container">
+            <a href="./trial_index.html" class="brand">
+                <img src="./assets/maseno_logo.png" alt="Logo">
+                <span class="brand-font">Shuleni<span style="color: var(--primary-purple);">Advantage</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="./trial_index.html">Home</a>
+                <a href="./trial_index.html#features" class="active"
+                    style="color: var(--primary-purple); font-weight: 800;">Features</a>
+                <a href="./trial_about.html">About Us</a>
+                <a href="./trial_contact.html">Contact Us</a>
+                <a href="./trial_login.html" class="btn btn-primary" style="margin-left: 1.5rem;">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="hero-tier reveal active" style="padding: 6rem 0; border-radius: 0 0 40px 40px; text-align: center;">
+        <div class="container">
+            <h1 class="hero-title">Powerful Tools for Precise Management</h1>
+            <p class="hero-subtitle" style="margin: 0 auto;">Discover how Shuleni Advantage transforms every layer of
+                institutional administration.</p>
+        </div>
+    </section>
+
+    <!-- Student Management -->
+    <section class="feature-detail-section reveal">
+        <div class="container">
+            <div class="feature-detail-grid">
+                <div class="feature-detail-content">
+                    <h2>Student Records & Profiles</h2>
+                    <p>Beyond basic data storage. We provide a 360-degree view of every student, linking academic
+                        standing with financial health and attendance history.</p>
+                    <ul class="feature-list-detailed">
+                        <li><i class="fas fa-circle-check"></i> Robust digital dossiers with photo integration.</li>
+                        <li><i class="fas fa-circle-check"></i> Automated admission number sequencing.</li>
+                        <li><i class="fas fa-circle-check"></i> Instant academic progress snapshots.</li>
+                    </ul>
+                </div>
+                <div class="feature-visual"><i class="fas fa-user-graduate"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ID Generation -->
+    <section class="feature-detail-section reveal">
+        <div class="container">
+            <div class="feature-detail-grid">
+                <div class="feature-visual"><i class="fas fa-qrcode"></i></div>
+                <div class="feature-detail-content">
+                    <h2>Smart ID Card Generator</h2>
+                    <p>Turn student data into architectural-grade identification cards with high-fidelity QR codes for
+                        mobile-first verification.</p>
+                    <ul class="feature-list-detailed">
+                        <li><i class="fas fa-circle-check"></i> Batch generation for entire campuses in seconds.</li>
+                        <li><i class="fas fa-circle-check"></i> Customizable school-branded templates.</li>
+                        <li><i class="fas fa-circle-check"></i> Integrated QR encryption for security audits.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visitor Management -->
+    <section class="feature-detail-section reveal">
+        <div class="container">
+            <div class="feature-detail-grid">
+                <div class="feature-detail-content">
+                    <h2>Campus Guard & Security</h2>
+                    <p>A specialized mobile interface for gatekeepers to verify IDs and log visitors with surgical
+                        precision, ensuring a documented safety perimeter.</p>
+                    <ul class="feature-list-detailed">
+                        <li><i class="fas fa-circle-check"></i> Real-time mobile verification of student/staff IDs.</li>
+                        <li><i class="fas fa-circle-check"></i> Digital visitor logs with timestamp accuracy.</li>
+                        <li><i class="fas fa-circle-check"></i> Instant security-wide alerts and reporting.</li>
+                    </ul>
+                </div>
+                <div class="feature-visual"><i class="fas fa-shield-halved"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="padding: 10rem 0; text-align: center;">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 2rem;">Experience the Advantage</h2>
+            <p style="margin-bottom: 3rem; color: var(--text-muted);">Ready to see these features in action at your
+                school?</p>
+            <a href="./trial_contact.html" class="btn btn-primary"
+                style="padding: 1.5rem 4rem; font-size: 1.2rem;">Request a Private Demo</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 3rem;">
+                <div>
+                    <a href="./trial_index.html" class="brand">
+                        <img src="./assets/maseno_logo.png" alt="Logo">
+                        <span class="brand-font">Shuleni<span
+                                style="color: var(--primary-purple);">Advantage</span></span>
+                    </a>
+                </div>
+                <div style="display: flex; gap: 4rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Platform</h4>
+                        <p><a href="./trial_features.html" style="text-decoration:none; color:inherit;">Features</a></p>
+                        <p><a href="./trial_pricing.html" style="text-decoration:none; color:inherit;">Pricing</a></p>
+                        <p><a href="./trial_faq.html" style="text-decoration:none; color:inherit;">FAQ</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hechlink Ventures. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

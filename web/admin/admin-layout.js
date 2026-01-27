@@ -18,31 +18,40 @@
         const currentPage = window.location.pathname.split('/').pop() || 'admindashboard.html';
         const sidebarHTML = `
             <div class="sidebar">
-                <div class="sidebar-left">
+                <div class="sidebar-content">
                     <div class="brand">
-                        <img src="/assets/maseno_logo.png" alt="Logo" class="brand-icon">
-                        <h1>Shuleni Advantage</h1>
+                        <img src="../assets/maseno_logo.png" alt="Maseno School" class="brand-icon" style="width: 60px; height: 60px; object-fit: contain;">
+                        <div class="brand-text">
+                            <span class="brand-title">Shuleni</span>
+                            <span class="brand-subtitle">Advantage</span>
+                        </div>
                     </div>
-                    <ul class="nav-links">
-                        ${navItems.map(item => `
-                            <li>
-                                <a href="${item.url}" class="${currentPage === item.url ? 'active' : ''}">
-                                    <svg class="nav-icon" viewBox="0 0 24 24">
-                                        <path d="${item.icon}" />
-                                    </svg>
-                                    <span>${item.name}</span>
-                                </a>
-                            </li>
-                        `).join('')}
-                    </ul>
+                    
+                    <div class="nav-section">
+                        <div class="nav-label">Menu</div>
+                        <ul class="nav-links">
+                            ${navItems.map(item => `
+                                <li>
+                                    <a href="${item.url}" class="${currentPage === item.url ? 'active' : ''}">
+                                        <svg class="nav-icon" viewBox="0 0 24 24">
+                                            <path d="${item.icon}" />
+                                        </svg>
+                                        <span>${item.name}</span>
+                                    </a>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
                 </div>
-                <div class="logout-section">
+
+                <div class="sidebar-footer">
                     <button class="logout-btn" data-logout>
                         <svg class="logout-icon" viewBox="0 0 24 24">
                             <path d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
                         </svg>
                         <span>Log Out</span>
                     </button>
+                    <div class="app-version">Ver 2.4.0</div>
                 </div>
             </div>
         `;

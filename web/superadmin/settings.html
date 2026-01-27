@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | SuperAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="superadmin.css">
+</head>
+
+<body>
+    <main class="sa-main">
+        <header class="sa-header"></header>
+        <div class="sa-content">
+            <h1>Platform Settings</h1>
+            <p style="color: var(--sa-slate-500); margin-bottom: 24px;">Configure global system parameters and defaults.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+                <div class="sa-card">
+                    <h3>General Configuration</h3>
+                    <form style="margin-top: 20px;">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Platform Name</label>
+                            <input type="text" class="sa-input" value="Shuleni Advantage" disabled
+                                style="background: var(--sa-slate-100);">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; font-weight: 600; margin-bottom: 8px;">Support Contact
+                                Email</label>
+                            <input type="email" class="sa-input" value="support@shuleni.com">
+                        </div>
+                        <button type="button" class="sa-btn sa-btn-primary">Save Changes</button>
+                    </form>
+                </div>
+
+                <div class="sa-card">
+                    <h3>Feature Toggles</h3>
+                    <div style="margin-top: 20px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--sa-slate-100);">
+                            <div>
+                                <h4 style="font-size: 0.95rem;">New Signups</h4>
+                                <p style="font-size: 0.8rem; color: var(--sa-slate-500);">Allow new schools to register
+                                    via the public portal.</p>
+                            </div>
+                            <div
+                                style="width: 44px; height: 24px; background: var(--sa-primary); border-radius: 12px; position: relative; cursor: pointer;">
+                                <div
+                                    style="width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; right: 2px; top: 2px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--sa-slate-100);">
+                            <div>
+                                <h4 style="font-size: 0.95rem;">System Maintenance Mode</h4>
+                                <p style="font-size: 0.8rem; color: var(--sa-slate-500);">Disable access for all
+                                    non-superadmin users.</p>
+                            </div>
+                            <div
+                                style="width: 44px; height: 24px; background: var(--sa-slate-200); border-radius: 12px; position: relative; cursor: pointer;">
+                                <div
+                                    style="width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; left: 2px; top: 2px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="superadmin.js"></script>
+</body>
+
+</html>

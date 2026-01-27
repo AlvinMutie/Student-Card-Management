@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ID Generator Preview | Pelio Theme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="preview-styles.css">
+</head>
+
+<body data-page="ID Generator">
+
+    <main class="p-main">
+        <header class="p-header">
+            <h1 class="p-page-title">ID Card Generator</h1>
+            <div class="p-header-actions">
+                <div class="p-user-profile">
+                    <img src="https://i.pravatar.cc/100?u=admin" alt="User" class="p-avatar">
+                    <div class="p-user-info">
+                        <span>Admin Profile</span>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-id-workspace">
+            <!-- Controls Pane -->
+            <section class="p-id-controls">
+                <h3>Generation Settings</h3>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 0.9rem; font-weight: 700;">Select Target Group</label>
+                    <select
+                        style="padding: 12px; border-radius: 12px; border: 1px solid var(--p-border); background: var(--p-bg); font-weight: 600;">
+                        <option>Students (All Classes)</option>
+                        <option>Grade 10 - Blue</option>
+                        <option>Grade 9 - Yellow</option>
+                        <option>Staff Members</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <label style="font-size: 0.9rem; font-weight: 700;">Card Template</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div
+                            style="padding: 12px; border: 2px solid var(--p-blue); border-radius: 12px; text-align: center; cursor: pointer; font-weight: 700; font-size: 0.8rem; background: var(--p-blue-soft); color: var(--p-blue);">
+                            Standard 2026
+                        </div>
+                        <div
+                            style="padding: 12px; border: 2px solid var(--p-border); border-radius: 12px; text-align: center; cursor: pointer; font-weight: 700; font-size: 0.8rem; color: var(--p-text-muted);">
+                            Eco Minimalist
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <!-- Generate Card -->
+                    <button id="btn-generate-single"
+                        style="padding: 16px; border-radius: 12px; border: none; background: var(--p-blue); color: white; font-weight: 800; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; grid-column: 1 / -1;">
+                        <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,17H13V11H11V17Z" />
+                        </svg>
+                        Generate Card
+                    </button>
+
+                    <!-- Print Card -->
+                    <button id="btn-print"
+                        style="padding: 12px; border-radius: 12px; border: 1px solid var(--p-border); background: white; color: var(--p-text-main); font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                        <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M18,3H6V7H18M19,12A1,1 0 1,1 18,11A1,1 0 0,1 19,12M16,19H8V14H16M19,8H5A3,3 0 0,0 2,11V17H6V21H18V17H22V11A3,3 0 0,0 19,8Z" />
+                        </svg>
+                        Print Card
+                    </button>
+
+                    <!-- PDF Export -->
+                    <button id="btn-export-pdf"
+                        style="padding: 12px; border-radius: 12px; border: 1px solid var(--p-border); background: white; color: var(--p-text-main); font-weight: 700; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                        <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M13,13V18H15V13H13M10,10V18H12V10H10Z" />
+                        </svg>
+                        PDF Export
+                    </button>
+
+                    <!-- Batch Multi -->
+                    <button id="btn-generate-batch"
+                        style="padding: 16px; border-radius: 12px; border: none; background: var(--p-blue-soft); color: var(--p-blue); font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; grid-column: 1 / -1; border: 2px solid var(--p-blue-soft);">
+                        <svg style="width:20px;height:20px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M15,14V11H18V9L22,12.5L18,16V14H15M11,11H5V13H11V11M5,15H11V17H5V15M5,7H11V9H5V7Z" />
+                        </svg>
+                        Batch Generation (Multi)
+                    </button>
+                </div>
+            </section>
+
+            <!-- Preview Pane -->
+            <section class="p-id-preview-area" id="preview-container"
+                style="align-items: center; justify-content: center; overflow-y: auto;">
+                <div id="preview-placeholder" style="text-align: center; color: var(--p-text-light);">
+                    <svg style="width: 48px; height: 48px; opacity: 0.5; margin-bottom: 1rem;" viewBox="0 0 24 24">
+                        <path fill="currentColor"
+                            d="M4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M4,6V18H20V6H4M12,9H14V11H12V9M12,13H14V15H12V13M8,9H10V11H8V9M8,13H10V15H8V13Z" />
+                    </svg>
+                    <p>Select settings and click <strong>Generate</strong> to view ID cards.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="preview-layout.js"></script>
+    <script>
+        const cardTemplate = (name, adm, grade, photoColor) => `
+            <div class="p-id-card" style="animation: fadeInUp 0.5s ease;">
+                <div class="p-id-card-header-wrap">
+                    <div class="p-id-header-red"></div>
+                    <div class="p-id-header-green">
+                        <h4>Shuleni Advantage</h4>
+                        <p>Perseverance shall win through</p>
+                    </div>
+                    <div class="p-id-crest">
+                        <img src="/assets/maseno_logo.png" style="width: 100%; height: 100%; object-fit: contain;">
+                    </div>
+                </div>
+                <div class="p-id-background-slant"></div>
+                <div class="p-id-photo-frame">
+                    <div class="p-id-photo-placeholder" style="color: ${photoColor || '#0ea5e9'};">
+                        <svg style="width:48px;height:48px" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-id-name">${name}</div>
+                <div class="p-id-meta">${grade}</div>
+                <div class="p-id-meta" style="font-size: 0.6rem; font-style: normal; margin-top: 2px;">ADM NO: ${adm}</div>
+                <div class="p-id-qr-area">
+                    <div class="p-id-qr-placeholder" style="width: 35px; height: 35px; background: url('https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${adm}') center/cover;"></div>
+                    <span style="font-size: 4px; font-weight: 900; color: black; margin-top: 2px;">SCAN ME</span>
+                </div>
+                <div class="p-id-barcode"></div>
+                <div class="p-id-notice">Shuleni Advantage. - 0738 934 812</div>
+                <div class="p-id-footer-wrap">
+                    <div class="p-id-footer-left">
+                        <img src="/assets/hechlink_final.png" style="width: 20px; height: 20px; border-radius: 50%; background: white;">
+                    </div>
+                    <div class="p-id-footer-right">
+                        <h5>Shuleni</h5>
+                        <p>Advantage<sup>+</sup></p>
+                        <small>SMART CARD</small>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('btn-generate-single').addEventListener('click', () => {
+            const container = document.getElementById('preview-container');
+            container.innerHTML = cardTemplate('JOHN DOE RAHAYI', '12345', 'GRADE 10 YELLOW');
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+        });
+
+        document.getElementById('btn-generate-batch').addEventListener('click', () => {
+            const container = document.getElementById('preview-container');
+            container.style.display = 'grid';
+            container.style.gridTemplateColumns = 'repeat(auto-fit, 250px)';
+            container.style.gap = '20px';
+            container.style.alignItems = 'start';
+            container.style.padding = '20px'; // Add padding for grid scroll
+
+            let html = '';
+            const names = ['JAMES KAMAU', 'SARAH OCHIENG', 'DAVID KIPROP', 'MARY WAMBUI', 'BRIAN JUMA', 'LUCY NJERI'];
+            for (let i = 0; i < 6; i++) {
+                html += cardTemplate(names[i], 12345 + i, 'GRADE 10 YELLOW', '#004d2c');
+            }
+            container.innerHTML = html;
+        });
+
+        document.getElementById('btn-print').addEventListener('click', () => window.print());
+    </script>
+</body>
+
+</html>

@@ -6,55 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visitors | Shuleni Advantage</title>
     <link rel="icon" href="/assets/maseno_logo.png" type="image/png">
-    <link rel="stylesheet" href="/shared/portal-theme.css">
-    <link rel="stylesheet" href="/admin/shared-admin-styles.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./admin-pelio.css">
     <style>
-        /* Page-specific overrides if any */
-
-
-        .status-checked-in {
-            background: #dcfce7;
-            color: #166534;
-            padding: 4px 8px;
-            border-radius: 99px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        /* Custom Overrides for Modal */
+        .modal {
+            display: none;
         }
 
-        .status-checked-out {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 4px 8px;
-            border-radius: 99px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .modal.show {
+            display: flex !important;
         }
     </style>
 </head>
 
 <body data-page="visitors">
-    <main class="main-content">
-        <div class="content-wrapper">
-            <div class="top-row">
-                <div class="dashboard-header">
-                    <h2>Visitor Records</h2>
-                    <div class="muted">Monitor school access and visitor check-ins</div>
-                </div>
-                <div class="admin-section">
-                    <!-- Populated by admin-layout.js -->
-                </div>
+
+    <main class="p-main">
+        <header class="p-header">
+            <div>
+                <h1 class="p-page-title">Visitor Records</h1>
+                <p style="color: var(--p-text-muted); font-size: 0.95rem; margin-top: 4px;">Monitor school access and
+                    visitor check-ins</p>
             </div>
 
-            <div class="action-bar">
-                <div class="search-container">
-                    <svg class="search-icon" viewBox="0 0 24 24">
+            <div class="p-header-actions">
+                <div class="p-search">
+                    <svg class="p-search-icon" viewBox="0 0 24 24">
                         <path
                             d="M15.5,14H14.71L14.43,13.73C15.41,12.59 16,11.11 16,9.5A6.5,6.5 0 0,0 9.5,3A6.5,6.5 0 0,0 3,9.5A6.5,6.5 0 0,0 9.5,16C11.11,16 12.59,15.41 13.73,14.43L14,14.71V15.5L19,20.5L20.5,19L15.5,14M9.5,14A4.5,4.5 0 0,1 5,9.5A4.5,4.5 0 0,1 9.5,5A4.5,4.5 0 0,1 14,9.5A4.5,4.5 0 0,1 9.5,14Z" />
                     </svg>
                     <input id="visitorSearch" placeholder="Search visitors...">
                 </div>
-                <button id="refreshVisitorsBtn" class="btn btn-secondary">
+                <div class="admin-section">
+                    <!-- Populated by admin-layout.js -->
+                </div>
+            </div>
+        </header>
+
+        <div class="p-panel" style="overflow-x: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3>Visitor Logs</h3>
+                <button class="p-btn p-btn-white" id="refreshVisitorsBtn">
                     <svg style="width:18px;height:18px" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" />
@@ -63,35 +56,37 @@
                 </button>
             </div>
 
-            <div class="table-wrapper">
-                <table class="fade-in">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>ID Number</th>
-                            <th>Phone</th>
-                            <th>Vehicle</th>
-                            <th>Purpose</th>
-                            <th>Host</th>
-                            <th>Check In</th>
-                            <th>Check Out</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="visitorsBody">
-                        <tr>
-                            <td colspan="10">Loading...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <table class="p-table fade-in">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID Number</th>
+                        <th>Phone</th>
+                        <th>Vehicle</th>
+                        <th>Purpose</th>
+                        <th>Host</th>
+                        <th>Check In</th>
+                        <th>Check Out</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="visitorsBody">
+                    <tr>
+                        <td colspan="10" style="text-align:center; padding: 32px; color: var(--p-text-muted);">
+                            Loading...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+
     </main>
 
-    <script src="/runtime-config.js"></script>
-    <script src="/shared/api-client.js"></script>
-    <script src="/admin/admin-lite.js"></script>
+    <!-- Scripts -->
+    <script src="../runtime-config.js"></script>
+    <script src="../shared/api-client.js"></script>
+    <script src="./admin-layout.js"></script>
+    <script src="./admin-lite.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Shuleni Advantage</title>
+    <link rel="stylesheet" href="./trial_style.css">
+    <link rel="icon" href="./assets/maseno_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <div class="container nav-container">
+            <a href="./trial_index.html" class="brand">
+                <img src="./assets/maseno_logo.png" alt="Logo">
+                <span class="brand-font">Shuleni<span style="color: var(--primary-purple);">Advantage</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="./trial_index.html">Home</a>
+                <a href="./trial_index.html#features">Features</a>
+                <a href="./trial_about.html" class="active"
+                    style="color: var(--primary-purple); font-weight: 800;">About Us</a>
+                <a href="./trial_contact.html">Contact Us</a>
+                <a href="./trial_login.html" class="btn btn-primary" style="margin-left: 1.5rem;">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="hero-tier reveal active" style="padding: 6rem 0; border-radius: 0 0 30px 30px; text-align: center;">
+        <div class="container">
+            <h1 class="hero-title">The Standard of Institutional Logic</h1>
+            <p class="hero-subtitle" style="margin: 0 auto;">Empowering schools across the region with tools that
+                transform administration into a strategic advantage.</p>
+        </div>
+    </section>
+
+    <!-- About Content -->
+    <section style="padding: 6rem 0;">
+        <div class="container">
+            <div class="feature-grid reveal active">
+                <div class="feature-card">
+                    <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-eye"></i></div>
+                    <h3>Mission: Clarity</h3>
+                    <p>To provide school administrators with absolute transparency and control, reducing human error and
+                        maximizing institutional efficiency.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-bullseye"></i></div>
+                    <h3>Vision: Integration</h3>
+                    <p>To create a perfectly unified educational ecosystem where data flows seamlessly between parents,
+                        staff, and security for a safer campus.</p>
+                </div>
+            </div>
+
+            <div class="section-header reveal" style="margin-top: 6rem;">
+                <h2>Digital Transformation Inspired by Excellence</h2>
+                <p>Shuleni Advantage was developed with a deep respect for the rigorous administrative standards
+                    required by modern educational institutions. We bridge the gap between traditional record-keeping
+                    and intelligent, data-driven management. Our platform isn't just software; it's a commitment to
+                    precision, safety, and institutional growth across the region.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 3rem;">
+                <div>
+                    <a href="./trial_index.html" class="brand">
+                        <img src="./assets/maseno_logo.png" alt="Logo">
+                        <span class="brand-font">Shuleni<span
+                                style="color: var(--primary-purple);">Advantage</span></span>
+                    </a>
+                    <p style="margin-top: 1rem; max-width: 300px; color: var(--text-muted);">Empowering professional
+                        education through intelligent management cycles.</p>
+                </div>
+                <div style="display: flex; gap: 4rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Platform</h4>
+                        <p><a href="./trial_index.html#features"
+                                style="text-decoration:none; color:inherit;">Features</a></p>
+                        <p><a href="./trial_index.html#get-started" style="text-decoration:none; color:inherit;">Get
+                                Started</a></p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Company</h4>
+                        <p><a href="./trial_about.html" style="text-decoration:none; color:inherit;">About Us</a></p>
+                        <p><a href="./trial_contact.html" style="text-decoration:none; color:inherit;">Contact</a></p>
+                        <p><a href="./trial_faq.html" style="text-decoration:none; color:inherit;">FAQ</a></p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Legal</h4>
+                        <p><a href="./trial_privacy.html" style="text-decoration:none; color:inherit;">Privacy
+                                Policy</a></p>
+                        <p><a href="./trial_terms.html" style="text-decoration:none; color:inherit;">Terms of
+                                Service</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hechlink Ventures. All Rights Reserved.</p>
+                <p>Email: mutiealvin0@gmail.com | Website: shuleniadvantage.co.ke</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

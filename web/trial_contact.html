@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Shuleni Advantage</title>
+    <link rel="stylesheet" href="./trial_style.css">
+    <link rel="icon" href="./assets/maseno_logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+
+        .contact-form {
+            background: white;
+            padding: 2.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        @media (max-width: 968px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="top-nav">
+        <div class="container nav-container">
+            <a href="./trial_index.html" class="brand">
+                <img src="./assets/maseno_logo.png" alt="Logo">
+                <span class="brand-font">Shuleni<span style="color: var(--primary-purple);">Advantage</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="./trial_index.html">Home</a>
+                <a href="./trial_index.html#features">Features</a>
+                <a href="./trial_about.html">About Us</a>
+                <a href="./trial_contact.html" class="active"
+                    style="color: var(--primary-purple); font-weight: 800;">Contact Us</a>
+                <a href="./trial_login.html" class="btn btn-primary" style="margin-left: 1.5rem;">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="hero-tier reveal active" style="padding: 6rem 0; border-radius: 0 0 30px 30px; text-align: center;">
+        <div class="container">
+            <h1 class="hero-title">Get in Touch</h1>
+            <p class="hero-subtitle" style="margin: 0 auto;">Have questions? Our team is ready to assist you with
+                precision and speed.</p>
+        </div>
+    </section>
+
+    <!-- Contact Content -->
+    <section style="padding: 6rem 0;">
+        <div class="container">
+            <div class="contact-grid reveal active">
+                <div class="contact-info">
+                    <div class="feature-card" style="margin-bottom: 2rem;">
+                        <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-envelope"></i></div>
+                        <h3>Email Us</h3>
+                        <p>mutiealvin0@gmail.com</p>
+                        <p>support@shuleniadvantage.co.ke</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-map-marker-alt"></i></div>
+                        <h3>Visit Us</h3>
+                        <p>Hechlink Ventures Headquarters</p>
+                        <p>Nairobi, Kenya</p>
+                    </div>
+                </div>
+
+                <div class="contact-form">
+                    <form action="#">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" placeholder="John Doe">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" placeholder="john@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Message</label>
+                            <textarea rows="5" placeholder="How can we help you?"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send
+                            Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 3rem;">
+                <div>
+                    <a href="./trial_index.html" class="brand">
+                        <img src="./assets/maseno_logo.png" alt="Logo">
+                        <span class="brand-font">Shuleni<span
+                                style="color: var(--primary-purple);">Advantage</span></span>
+                    </a>
+                    <p style="margin-top: 1rem; max-width: 300px; color: var(--text-muted);">Empowering professional
+                        education through intelligent management cycles.</p>
+                </div>
+                <div style="display: flex; gap: 4rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Platform</h4>
+                        <p><a href="./trial_index.html#features"
+                                style="text-decoration:none; color:inherit;">Features</a></p>
+                        <p><a href="./trial_index.html#get-started" style="text-decoration:none; color:inherit;">Get
+                                Started</a></p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Company</h4>
+                        <p><a href="./trial_about.html" style="text-decoration:none; color:inherit;">About Us</a></p>
+                        <p><a href="./trial_contact.html" style="text-decoration:none; color:inherit;">Contact</a></p>
+                        <p><a href="./trial_faq.html" style="text-decoration:none; color:inherit;">FAQ</a></p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Legal</h4>
+                        <p><a href="./trial_privacy.html" style="text-decoration:none; color:inherit;">Privacy
+                                Policy</a></p>
+                        <p><a href="./trial_terms.html" style="text-decoration:none; color:inherit;">Terms of
+                                Service</a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Hechlink Ventures. All Rights Reserved.</p>
+                <p>Email: mutiealvin0@gmail.com | Website: shuleniadvantage.co.ke</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

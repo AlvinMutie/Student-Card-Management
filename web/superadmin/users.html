@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users | SuperAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="superadmin.css">
+</head>
+
+<body>
+    <main class="sa-main">
+        <header class="sa-header"></header>
+        <div class="sa-content">
+            <h1>Platform Users</h1>
+            <p style="color: var(--sa-slate-500); margin-bottom: 24px;">Manage administrative access across all tenant
+                schools.</p>
+
+            <div class="sa-card">
+                <div class="sa-table-container">
+                    <table class="sa-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>School Context</th>
+                                <th>Last Login</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>John Doe</strong><br><small>john@maseno.sc.ke</small></td>
+                                <td>School Admin</td>
+                                <td>Maseno School</td>
+                                <td>2 mins ago</td>
+                                <td><span class="sa-badge sa-badge-success">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jane Smith</strong><br><small>jane@stmarys.ac.ke</small></td>
+                                <td>Staff (Editor)</td>
+                                <td>St. Mary's Yala</td>
+                                <td>2 days ago</td>
+                                <td><span class="sa-badge sa-badge-success">Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="superadmin.js"></script>
+</body>
+
+</html>

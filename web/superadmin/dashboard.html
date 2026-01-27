@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Overview | SuperAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="superadmin.css">
+</head>
+
+<body>
+
+    <!-- Sidebar injected by superadmin.js -->
+
+    <main class="sa-main">
+        <header class="sa-header">
+            <!-- Breadcrumbs injected by superadmin.js -->
+        </header>
+
+        <div class="sa-content">
+
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px;">
+                <div>
+                    <h1 style="font-size: 1.8rem; margin-bottom: 4px;">Platform Overview</h1>
+                    <p style="color: var(--sa-slate-500);">Live monitoring of system health and tenant activity.</p>
+                </div>
+                <button class="sa-btn sa-btn-primary" onclick="window.location.href='schools.html'">
+                    <svg style="width: 18px; height: 18px; fill: white;" viewBox="0 0 24 24">
+                        <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                    </svg>
+                    Onboard New School
+                </button>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="sa-stat-grid">
+                <div class="sa-card sa-stat-card">
+                    <span class="sa-stat-label">Total Schools</span>
+                    <span class="sa-stat-value">142</span>
+                    <div class="sa-stat-trend trend-up">
+                        <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                            <path d="M16 6L6 16L2 12L16 6Z" />
+                        </svg>
+                        <span>+12% vs last month</span>
+                    </div>
+                </div>
+                <div class="sa-card sa-stat-card">
+                    <span class="sa-stat-label">Active Users</span>
+                    <span class="sa-stat-value">3,890</span>
+                    <div class="sa-stat-trend trend-up">
+                        <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                            <path d="M16 6L6 16L2 12L16 6Z" />
+                        </svg>
+                        <span>+5% organic growth</span>
+                    </div>
+                </div>
+                <div class="sa-card sa-stat-card">
+                    <span class="sa-stat-label">Pending Reviews</span>
+                    <span class="sa-stat-value" style="color: var(--sa-warning);">8</span>
+                    <div class="sa-stat-trend" style="color: var(--sa-slate-500);">
+                        <span>Requires immediate action</span>
+                    </div>
+                </div>
+                <div class="sa-card sa-stat-card">
+                    <span class="sa-stat-label">Monthly Revenue</span>
+                    <span class="sa-stat-value">KSh 1.2M</span>
+                    <div class="sa-stat-trend trend-up">
+                        <svg style="width: 16px; height: 16px; fill: currentColor;" viewBox="0 0 24 24">
+                            <path d="M16 6L6 16L2 12L16 6Z" />
+                        </svg>
+                        <span>+8% (Recurring)</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+
+                <!-- Onboarding Queue -->
+                <div class="sa-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                        <h3>Onboarding Queue</h3>
+                        <a href="schools.html"
+                            style="color: var(--sa-primary); text-decoration: none; font-weight: 600; font-size: 0.9rem;">View
+                            All</a>
+                    </div>
+
+                    <div class="sa-table-container">
+                        <table class="sa-table">
+                            <thead>
+                                <tr>
+                                    <th>School Name</th>
+                                    <th>Plan</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>St.arlight Academy</strong><br><small
+                                            style="color: var(--sa-slate-500);">Nairobi, KE</small></td>
+                                    <td>Premium</td>
+                                    <td>Oct 24</td>
+                                    <td><span class="sa-badge sa-badge-warning">Pending</span></td>
+                                    <td><button class="sa-btn sa-btn-primary"
+                                            style="padding: 6px 12px; font-size: 0.8rem;">Review</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Greenwood High</strong><br><small
+                                            style="color: var(--sa-slate-500);">Mombasa, KE</small></td>
+                                    <td>Standard</td>
+                                    <td>Oct 23</td>
+                                    <td><span class="sa-badge sa-badge-warning">Pending</span></td>
+                                    <td><button class="sa-btn sa-btn-primary"
+                                            style="padding: 6px 12px; font-size: 0.8rem;">Review</button></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Riverbank Primary</strong><br><small
+                                            style="color: var(--sa-slate-500);">Kisumu, KE</small></td>
+                                    <td>Basic</td>
+                                    <td>Oct 22</td>
+                                    <td><span class="sa-badge sa-badge-warning">Pending</span></td>
+                                    <td><button class="sa-btn sa-btn-primary"
+                                            style="padding: 6px 12px; font-size: 0.8rem;">Review</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- System Health / Quick Logs -->
+                <div class="sa-card">
+                    <h3>System Health</h3>
+                    <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 20px;">
+
+                        <div style="display: flex; gap: 16px; align-items: flex-start;">
+                            <div
+                                style="width: 32px; height: 32px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #15803d; flex-shrink: 0;">
+                                ✔</div>
+                            <div>
+                                <h4 style="font-size: 0.95rem;">Database Cluster</h4>
+                                <p style="font-size: 0.85rem; color: var(--sa-slate-500); margin-top: 4px;">Optimal
+                                    latency (12ms). Backups verified at 04:00 AM.</p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 16px; align-items: flex-start;">
+                            <div
+                                style="width: 32px; height: 32px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #0369a1; flex-shrink: 0;">
+                                ℹ</div>
+                            <div>
+                                <h4 style="font-size: 0.95rem;">Storage Usage</h4>
+                                <p style="font-size: 0.85rem; color: var(--sa-slate-500); margin-top: 4px;">Volume 2 at
+                                    78% capacity. Auto-scale triggers at 85%.</p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 16px; align-items: flex-start;">
+                            <div
+                                style="width: 32px; height: 32px; background: #dcfce7; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #15803d; flex-shrink: 0;">
+                                ✔</div>
+                            <div>
+                                <h4 style="font-size: 0.95rem;">API Gateway</h4>
+                                <p style="font-size: 0.85rem; color: var(--sa-slate-500); margin-top: 4px;">Uptime
+                                    99.99%. No incidents reported.</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div style="border-top: 1px solid var(--sa-slate-200); margin-top: 24px; padding-top: 24px;">
+                        <h4 style="font-size: 0.9rem; margin-bottom: 12px;">Recent Critical Audit</h4>
+                        <ul
+                            style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 12px; font-size: 0.85rem;">
+                            <li style="display: flex; justify-content: space-between; color: var(--sa-slate-600);">
+                                <span>Suspended School #441</span>
+                                <span style="font-weight: 500;">10m ago</span>
+                            </li>
+                            <li style="display: flex; justify-content: space-between; color: var(--sa-slate-600);">
+                                <span>Updated Global Fee Config</span>
+                                <span style="font-weight: 500;">2h ago</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script src="superadmin.js"></script>
+</body>
+
+</html>

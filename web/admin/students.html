@@ -6,68 +6,90 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Students | Shuleni Advantage</title>
   <link rel="icon" href="/assets/maseno_logo.png" type="image/png">
-  <link rel="stylesheet" href="/shared/portal-theme.css">
-  <link rel="stylesheet" href="/admin/shared-admin-styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin-pelio.css">
+  <style>
+    /* Custom Overrides for Modal */
+    .modal {
+      display: none;
+    }
 
-
+    .modal.show {
+      display: flex !important;
+    }
+  </style>
 </head>
 
 <body data-page="students">
-  <main class="main-content">
-    <div class="content-wrapper">
-      <div id="importProgressWrap" class="progress-wrap" style="display:none;">
-        <div class="progress-text" id="importProgressText">Importing…</div>
-        <div class="progress-track">
-          <div class="progress-bar" id="importProgressBar" style="width:0%"></div>
-        </div>
+
+  <main class="p-main">
+    <!-- Progress Bars (Hidden by default) -->
+    <div id="importProgressWrap"
+      style="display:none; background:white; padding:16px; border-radius:12px; margin-bottom:16px; border:1px solid #e2e8f0;">
+      <div style="font-weight:700; margin-bottom:8px;" id="importProgressText">Importing…</div>
+      <div style="width:100%; height:8px; background:#f1f5f9; border-radius:99px; overflow:hidden;">
+        <div id="importProgressBar" style="width:0%; height:100%; background:var(--p-blue);"></div>
       </div>
-      <div id="deleteProgressWrap" class="progress-wrap" style="display:none;">
-        <div class="progress-text" id="deleteProgressText">Deleting…</div>
-        <div class="progress-track">
-          <div class="progress-bar danger" id="deleteProgressBar" style="width:0%"></div>
-        </div>
+    </div>
+    <div id="deleteProgressWrap"
+      style="display:none; background:white; padding:16px; border-radius:12px; margin-bottom:16px; border:1px solid #fee2e2;">
+      <div style="font-weight:700; margin-bottom:8px; color:#991b1b;" id="deleteProgressText">Deleting…</div>
+      <div style="width:100%; height:8px; background:#fef2f2; border-radius:99px; overflow:hidden;">
+        <div id="deleteProgressBar" style="width:0%; height:100%; background:var(--p-red);"></div>
+      </div>
+    </div>
+
+    <header class="p-header">
+      <div>
+        <h1 class="p-page-title">Students</h1>
+        <p style="color: var(--p-text-muted); font-size: 0.95rem; margin-top: 4px;">Manage student records, enrollment,
+          and fees</p>
       </div>
 
-      <div class="top-row">
-        <div class="dashboard-header">
-          <h2>Students</h2>
-          <div class="muted">Manage student records, enrollment, and fees</div>
-        </div>
-        <div class="admin-section">
-          <!-- Populated by admin-layout.js -->
-        </div>
-      </div>
-
-      <div class="action-bar">
-        <div class="search-container">
-          <svg class="search-icon" viewBox="0 0 24 24">
+      <div class="p-header-actions">
+        <div class="p-search">
+          <svg class="p-search-icon" viewBox="0 0 24 24">
             <path
               d="M15.5,14H14.71L14.43,13.73C15.41,12.59 16,11.11 16,9.5A6.5,6.5 0 0,0 9.5,3A6.5,6.5 0 0,0 3,9.5A6.5,6.5 0 0,0 9.5,16C11.11,16 12.59,15.41 13.73,14.43L14,14.71V15.5L19,20.5L20.5,19L15.5,14M9.5,14A4.5,4.5 0 0,1 5,9.5A4.5,4.5 0 0,1 9.5,5A4.5,4.5 0 0,1 14,9.5A4.5,4.5 0 0,1 9.5,14Z" />
           </svg>
           <input id="studentSearch" placeholder="Search by name, adm, or UPI...">
         </div>
-        <div style="display:flex; gap:12px; align-items:center;">
+        <div class="admin-section">
+          <!-- Populated by admin-layout.js -->
+        </div>
+      </div>
+    </header>
+
+    <div class="p-panel" style="overflow-x: auto;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <h3>Student List</h3>
+        <div style="display: flex; gap: 12px; align-items: center;">
           <label
-            style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--text-main); cursor:pointer;">
-            <input type="checkbox" id="filterUnpaid" style="width:18px; height:18px;">
+            style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--p-text-main); cursor:pointer; font-weight: 600;">
+            <input type="checkbox" id="filterUnpaid" style="width:18px; height:18px; accent-color: var(--p-blue);">
             <span>Unpaid Fees</span>
           </label>
+
           <input type="file" id="importStudentsInput" accept=".csv, .xlsx, .xls" style="display:none;">
-          <button class="btn ghost" onclick="document.getElementById('importStudentsInput').click();">
+          <button class="p-btn p-btn-white" onclick="document.getElementById('importStudentsInput').click();">
             <svg style="width:18px;height:18px" viewBox="0 0 24 24">
               <path fill="currentColor"
                 d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13V18H11V16H8L12,12Z" />
             </svg>
             Import
           </button>
-          <button id="addStudentBtn" class="btn btn-primary">
+
+          <button class="p-btn p-btn-primary" id="addStudentBtn">
             <svg style="width:18px;height:18px" viewBox="0 0 24 24">
               <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
             </svg>
             Add Student
           </button>
+
           <input type="file" id="photoBatchInput" accept="image/*" multiple style="display:none;">
-          <button class="btn btn-secondary" onclick="document.getElementById('photoBatchInput').click();">
+          <button class="p-btn p-btn-white" onclick="document.getElementById('photoBatchInput').click();"
+            style="color: #6366f1; border-color: #6366f1;">
             <svg style="width:18px;height:18px" viewBox="0 0 24 24">
               <path fill="currentColor" d="M14,12L10,8V11H2V13H10V16L14,12M22,12A10,10 0 1,1 12,2A10,10 0 0,1 22,12Z" />
             </svg>
@@ -76,68 +98,93 @@
         </div>
       </div>
 
-      <div class="table-wrapper">
-        <table class="fade-in">
-          <thead>
-            <tr>
-              <th style="width:40px;"><input type="checkbox"></th>
-              <th>Adm</th>
-              <th>Name</th>
-              <th>UPI</th>
-              <th>House</th>
-              <th>Class</th>
-              <th>Stream</th>
-              <th>KCPE</th>
-              <th>Contacts</th>
-              <th>Gender</th>
-              <th>Parent/Guardian</th>
-              <th>Meal Card</th>
-              <th>Fee Balance</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="studentsBody">
-            <tr>
-              <td colspan="13">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <table class="p-table fade-in">
+        <thead>
+          <tr>
+            <th style="width:40px;"><input type="checkbox"></th>
+            <th>Adm</th>
+            <th>Name</th>
+            <th>UPI</th>
+            <th>House</th>
+            <th>Class</th>
+            <th>Stream</th>
+            <th>KCPE</th>
+            <th>Contacts</th>
+            <th>Gender</th>
+            <th>Parent/Guardian</th>
+            <th>Meal Card</th>
+            <th>Fee Balance</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="studentsBody">
+          <tr>
+            <td colspan="14" style="text-align:center; padding: 32px; color: var(--p-text-muted);">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
   </main>
 
-  <!-- Student Modal -->
-  <div class="modal" id="studentModal">
-    <div class="modal-content">
-      <h3 style="margin-top:0;">Student</h3>
-      <form id="studentForm">
-        <label>Admission <input id="studentAdm" required></label>
-        <label>Name <input id="studentName" required></label>
-        <label>UPI <input id="studentUpi"></label>
-        <label>Class <input id="studentClass"></label>
-        <label>Stream <input id="studentStream"></label>
-        <label>House <input id="studentHouse"></label>
-        <label>KCPE <input id="studentKCPE"></label>
-        <label>Contacts <input id="studentContacts" placeholder="Phone"></label>
-        <label>Gender <input id="studentGender" placeholder="Boy/Girl"></label>
-        <label>Meal Card Validity <input type="date" id="studentMealValid"></label>
-        <label>Fee Balance <input id="studentFee" type="number" step="0.01"></label>
-        <label>Parent Name <input id="studentParentName"></label>
-        <label>Parent Email <input id="studentParentEmail" type="email"></label>
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" id="closeStudentModal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Student</button>
+  <!-- Student Modal (Keeping exact IDs for JS compatibility) -->
+  <div class="modal" id="studentModal"
+    style="position: fixed; inset:0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+    <div class="modal-content"
+      style="background: white; padding: 32px; border-radius: 20px; width: 600px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
+      <h3 style="margin: 0 0 24px 0; font-size: 1.5rem; color: var(--p-text-main);">Student Details</h3>
+      <form id="studentForm" style="display: grid; gap: 16px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label class="p-label">Admission <input id="studentAdm" required
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+          <label class="p-label">Name <input id="studentName" required
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label class="p-label">UPI <input id="studentUpi"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+          <label class="p-label">Class <input id="studentClass"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label class="p-label">Stream <input id="studentStream"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+          <label class="p-label">House <input id="studentHouse"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label class="p-label">KCPE <input id="studentKCPE"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+          <label class="p-label">Gender <input id="studentGender" placeholder="Boy/Girl"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        </div>
+        <label class="p-label">Contacts <input id="studentContacts" placeholder="Phone"
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <label class="p-label">Meal Card Validity <input type="date" id="studentMealValid"
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <label class="p-label">Fee Balance <input id="studentFee" type="number" step="0.01"
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <label class="p-label">Parent Name <input id="studentParentName"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+          <label class="p-label">Parent Email <input id="studentParentEmail" type="email"
+              style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        </div>
+
+        <div class="modal-actions" style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+          <button type="button" class="p-btn p-btn-white" id="closeStudentModal">Cancel</button>
+          <button type="submit" class="p-btn p-btn-primary">Save Student</button>
         </div>
       </form>
     </div>
   </div>
 
-  <script src="/runtime-config.js"></script>
-  <script src="/shared/api-client.js"></script>
+  <!-- Scripts -->
+  <script src="../runtime-config.js"></script>
+  <script src="../shared/api-client.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="/admin/admin-layout.js"></script>
-  <script src="/admin/admin-lite.js"></script>
-
+  <script src="./admin-layout.js"></script>
+  <script src="./admin-lite.js"></script>
 </body>
 
 </html>

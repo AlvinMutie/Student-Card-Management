@@ -6,37 +6,50 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Staff | Shuleni Advantage</title>
   <link rel="icon" href="/assets/maseno_logo.png" type="image/png">
-  <link rel="stylesheet" href="/shared/portal-theme.css">
-  <link rel="stylesheet" href="/admin/shared-admin-styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin-pelio.css">
+  <style>
+    /* Custom Overrides for Modal */
+    .modal {
+      display: none;
+    }
 
-
+    .modal.show {
+      display: flex !important;
+    }
+  </style>
 </head>
 
 <body data-page="staff">
-  <main class="main-content">
-    <div class="content-wrapper">
-      <div class="top-row">
-        <div class="dashboard-header">
-          <h2>Staff Management</h2>
-          <div class="muted">Manage school teaching and support staff</div>
-        </div>
+
+  <main class="p-main">
+    <header class="p-header">
+      <div>
+        <h1 class="p-page-title">Staff Management</h1>
+        <p style="color: var(--p-text-muted); font-size: 0.95rem; margin-top: 4px;">Manage school teaching and support
+          staff</p>
+      </div>
+
+      <div class="p-header-actions">
         <div class="admin-section">
           <!-- Populated by admin-layout.js -->
         </div>
       </div>
+    </header>
 
-      <div class="action-bar">
-        <div style="flex:1;"></div> <!-- Spacer -->
-        <div style="display:flex; gap:12px; align-items:center;">
+    <div class="p-panel" style="overflow-x: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h3>Staff List</h3>
+        <div style="display: flex; gap: 12px;">
           <input type="file" id="importStaffInput" accept=".csv, .xlsx, .xls" style="display:none;">
-          <button onclick="document.getElementById('importStaffInput').click()" class="btn ghost">
+          <button onclick="document.getElementById('importStaffInput').click()" class="p-btn p-btn-white">
             <svg style="width:18px;height:18px" viewBox="0 0 24 24">
               <path fill="currentColor"
                 d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13V18H11V16H8L12,12Z" />
             </svg>
             Import Staff
           </button>
-          <button id="addStaffBtn" class="btn btn-primary">
+          <button class="p-btn p-btn-primary" id="addStaffBtn">
             <svg style="width:18px;height:18px" viewBox="0 0 24 24">
               <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
             </svg>
@@ -44,58 +57,67 @@
           </button>
         </div>
       </div>
-      <div class="table-wrapper">
-        <table class="fade-in">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Staff No</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Department</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="staffBody">
-            <tr>
-              <td colspan="7">Loading...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+
+      <table class="p-table fade-in">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Staff No</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="staffBody">
+          <tr>
+            <td colspan="7" style="text-align:center; padding: 32px; color: var(--p-text-muted);">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+
   </main>
 
   <!-- Staff Modal -->
-  <div class="modal" id="staffModal">
-    <div class="modal-content">
-      <h3 style="margin-top:0;">Staff</h3>
-      <form id="staffForm">
-        <label>Name <input id="staffName" required></label>
-        <label>Staff No <input id="staffNo" required></label>
-        <label>Email <input id="staffEmail" type="email"></label>
-        <label>Phone <input id="staffPhone"></label>
-        <label>Department <input id="staffDept"></label>
-        <label>Status
-          <select id="staffStatus">
+  <div class="modal" id="staffModal"
+    style="position: fixed; inset:0; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+    <div class="modal-content"
+      style="background: white; padding: 32px; border-radius: 20px; width: 500px; max-width: 90%; max-height: 90vh; overflow-y: auto;">
+      <h3 style="margin: 0 0 24px 0; font-size: 1.5rem; color: var(--p-text-main);">Staff Details</h3>
+      <form id="staffForm" style="display: grid; gap: 16px;">
+        <label class="p-label">Name <input id="staffName" required
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <label class="p-label">Staff No <input id="staffNo" required
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <label class="p-label">Email <input id="staffEmail" type="email"
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <label class="p-label">Phone <input id="staffPhone"
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <label class="p-label">Department <input id="staffDept"
+            style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;"></label>
+        <label class="p-label">Status
+          <select id="staffStatus" style="width:100%; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0;">
             <option value="pending">Pending</option>
             <option value="approved">Approved</option>
           </select>
         </label>
-        <div class="modal-actions">
-          <button type="button" class="btn btn-secondary" id="closeStaffModal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Staff</button>
+
+        <div class="modal-actions" style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+          <button type="button" class="p-btn p-btn-white" id="closeStaffModal">Cancel</button>
+          <button type="submit" class="p-btn p-btn-primary">Save Staff</button>
         </div>
       </form>
     </div>
   </div>
 
-  <script src="/runtime-config.js"></script>
-  <script src="/shared/api-client.js"></script>
+  <!-- Scripts -->
+  <script src="../runtime-config.js"></script>
+  <script src="../shared/api-client.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-  <script src="/admin/admin-layout.js"></script>
-  <script src="/admin/admin-lite.js"></script>
+  <script src="./admin-layout.js"></script>
+  <script src="./admin-lite.js"></script>
 </body>
 
 </html>

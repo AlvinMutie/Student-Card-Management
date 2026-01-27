@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscriptions | SuperAdmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="superadmin.css">
+</head>
+
+<body>
+    <main class="sa-main">
+        <header class="sa-header"></header>
+        <div class="sa-content">
+            <h1>Subscription Management</h1>
+            <p style="color: var(--sa-slate-500); margin-bottom: 24px;">Monitor plan usage and recurring revenue.</p>
+
+            <div class="sa-stat-grid">
+                <div class="sa-card sa-stat-card">
+                    <span class="sa-stat-label">Total MRR</span>
+                    <span class="sa-stat-value">KSh 1.2M</span>
+                </div>
+                <div class="sa-card sa-stat-card">
+                    <span class="sa-stat-label">Active Subscriptions</span>
+                    <span class="sa-stat-value">138</span>
+                </div>
+            </div>
+
+            <div class="sa-card">
+                <h3>Active Plans</h3>
+                <div class="sa-table-container">
+                    <table class="sa-table">
+                        <thead>
+                            <tr>
+                                <th>Plan Name</th>
+                                <th>Schools</th>
+                                <th>Price</th>
+                                <th>Features</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Enterprise</strong></td>
+                                <td>12</td>
+                                <td>KSh 50,000/mo</td>
+                                <td>Unlimited Students, Priority Support, API Access</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Standard</strong></td>
+                                <td>85</td>
+                                <td>KSh 15,000/mo</td>
+                                <td>Up to 1000 Students, Standard Support</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Basic</strong></td>
+                                <td>45</td>
+                                <td>KSh 5,000/mo</td>
+                                <td>Up to 200 Students, Email Support</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="superadmin.js"></script>
+</body>
+
+</html>

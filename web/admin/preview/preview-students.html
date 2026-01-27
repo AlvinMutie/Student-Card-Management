@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Preview | Pelio Theme</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="preview-styles.css">
+</head>
+
+<body data-page="Students">
+
+    <main class="p-main">
+        <header class="p-header">
+            <h1 class="p-page-title">Student Management</h1>
+            <div class="p-header-actions">
+                <div class="p-search">
+                    <svg class="p-search-icon" viewBox="0 0 24 24">
+                        <path
+                            d="M15.5,14H14.71L14.43,13.73C15.41,12.59 16,11.11 16,9.5A6.5,6.5 0 0,0 9.5,3A6.5,6.5 0 0,0 3,9.5A6.5,6.5 0 0,0 9.5,16C11.11,16 12.59,15.41 13.73,14.43L14,14.71V15.5L19,20.5L20.5,19L15.5,14M9.5,14A4.5,4.5 0 0,1 5,9.5A4.5,4.5 0 0,1 9.5,5A4.5,4.5 0 0,1 14,9.5A4.5,4.5 0 0,1 9.5,14Z" />
+                    </svg>
+                    <input type="text" placeholder="Search students...">
+                </div>
+                <div class="p-user-profile">
+                    <img src="https://i.pravatar.cc/100?u=admin" alt="User" class="p-avatar">
+                    <div class="p-user-info">
+                        <span>Admin Profile</span>
+                        <small>Administrator</small>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-panel" style="overflow-x: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3>Student List</h3>
+                <div style="display: flex; gap: 12px;">
+                    <button
+                        style="padding: 10px 20px; border-radius: 12px; border: 1px solid var(--p-border); background: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13V18H11V16H8L12,12Z" />
+                        </svg>
+                        Import
+                    </button>
+                    <button
+                        style="padding: 10px 20px; border-radius: 12px; border: none; background: var(--p-blue); color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+                        </svg>
+                        Add Student
+                    </button>
+                    <button
+                        style="padding: 10px 20px; border-radius: 12px; border: none; background: #6366f1; color: white; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+                            <path fill="currentColor"
+                                d="M14,12L10,8V11H2V13H10V16L14,12M22,12A10,10 0 1,1 12,2A10,10 0 0,1 22,12Z" />
+                        </svg>
+                        Upload Photos
+                    </button>
+                </div>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; min-width: 1200px;">
+                <thead>
+                    <tr
+                        style="text-align: left; border-bottom: 2px solid var(--p-bg); color: var(--p-text-muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                        <th style="padding: 16px; width: 40px;"><input type="checkbox"></th>
+                        <th style="padding: 16px;">Adm</th>
+                        <th style="padding: 16px;">Name</th>
+                        <th style="padding: 16px;">UPI</th>
+                        <th style="padding: 16px;">House</th>
+                        <th style="padding: 16px;">Class</th>
+                        <th style="padding: 16px;">Stream</th>
+                        <th style="padding: 16px;">KCPE</th>
+                        <th style="padding: 16px;">Contacts</th>
+                        <th style="padding: 16px;">Gender</th>
+                        <th style="padding: 16px;">Parent/Guardian</th>
+                        <th style="padding: 16px;">Meal Card</th>
+                        <th style="padding: 16px;">Fee Balance</th>
+                        <th style="padding: 16px; text-align: right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid var(--p-bg);">
+                        <td style="padding: 16px;"><input type="checkbox"></td>
+                        <td style="padding: 16px; font-weight: 600;">12345</td>
+                        <td style="padding: 16px; display: flex; align-items: center; gap: 10px;">
+                            <img src="https://i.pravatar.cc/100?u=1"
+                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <span style="font-weight: 700;">John Doe Rahayi</span>
+                        </td>
+                        <td style="padding: 16px; font-family: monospace;">ABC-123456</td>
+                        <td style="padding: 16px;">Mara</td>
+                        <td style="padding: 16px;">Grade 10</td>
+                        <td style="padding: 16px;">Blue</td>
+                        <td style="padding: 16px;">385</td>
+                        <td style="padding: 16px;">0712345678</td>
+                        <td style="padding: 16px;">Boy</td>
+                        <td style="padding: 16px;">Robert Smith</td>
+                        <td style="padding: 16px;"><small style="color:var(--p-text-muted)">Valid until
+                                2026-12-31</small></td>
+                        <td style="padding: 16px; font-weight: 700; color: var(--p-red);">$ 1,200</td>
+                        <td
+                            style="padding: 16px; text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                            <button
+                                style="color: var(--p-blue); background: none; border: none; font-weight: 700; cursor: pointer;">Edit</button>
+                            <button
+                                style="color: var(--p-red); background: none; border: none; font-weight: 700; cursor: pointer;">Delete</button>
+                        </td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid var(--p-bg);">
+                        <td style="padding: 16px;"><input type="checkbox"></td>
+                        <td style="padding: 16px; font-weight: 600;">12346</td>
+                        <td style="padding: 16px; display: flex; align-items: center; gap: 10px;">
+                            <img src="https://i.pravatar.cc/100?u=2"
+                                style="width: 32px; height: 32px; border-radius: 50%;">
+                            <span style="font-weight: 700;">Jane Smith</span>
+                        </td>
+                        <td style="padding: 16px; font-family: monospace;">XYZ-789012</td>
+                        <td style="padding: 16px;">Turkana</td>
+                        <td style="padding: 16px;">Grade 9</td>
+                        <td style="padding: 16px;">Yellow</td>
+                        <td style="padding: 16px;">412</td>
+                        <td style="padding: 16px;">0787654321</td>
+                        <td style="padding: 16px;">Girl</td>
+                        <td style="padding: 16px;">Alice Brown</td>
+                        <td style="padding: 16px;"><small style="color:var(--p-text-muted)">Valid until
+                                2026-11-15</small></td>
+                        <td style="padding: 16px; font-weight: 700; color: var(--p-green);">$ 0</td>
+                        <td
+                            style="padding: 16px; text-align: right; display: flex; gap: 8px; justify-content: flex-end;">
+                            <button
+                                style="color: var(--p-blue); background: none; border: none; font-weight: 700; cursor: pointer;">Edit</button>
+                            <button
+                                style="color: var(--p-red); background: none; border: none; font-weight: 700; cursor: pointer;">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="preview-layout.js"></script>
+</body>
+
+</html>

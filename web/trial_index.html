@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shuleni Advantage | Smart School Management</title>
     <link rel="stylesheet" href="./trial_style.css">
+    <link rel="icon" href="./assets/maseno_logo.png" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
@@ -14,173 +15,214 @@
     <!-- Navigation -->
     <nav class="top-nav">
         <div class="container nav-container">
-            <a href="#" class="brand">
-                <img src="./assets/hechlink_final.png" alt="Logo">
-                <span class="brand-font">Shuleni<span style="color:var(--primary-purple)">Advantage</span></span>
+            <a href="./trial_index.html" class="brand">
+                <img src="./assets/maseno_logo.png" alt="Logo">
+                <span class="brand-font">Shuleni<span style="color: var(--primary-purple);">Advantage</span></span>
             </a>
             <div class="nav-links">
-                <a href="#features">Features</a>
-                <a href="#portals">Portals</a>
-                <a href="#team">Management</a>
-                <a href="#portals" class="btn btn-primary" style="margin-left: 1.5rem;">Login</a>
+                <a href="./trial_index.html">Home</a>
+                <a href="./trial_index.html#features">Features</a>
+                <a href="./trial_about.html">About Us</a>
+                <a href="./trial_contact.html">Contact Us</a>
+                <a href="./trial_login.html" class="btn btn-primary" style="margin-left: 1.5rem;">Sign In</a>
             </div>
         </div>
     </nav>
 
     <!-- Hero Tier -->
-    <section class="hero-tier">
+    <section class="hero-tier reveal">
         <div class="container hero-grid">
             <div class="hero-text-content">
-                <h1 class="hero-title">The Intelligent Pulse of Your School.</h1>
+                <h1 class="hero-title">Professional School Management, Simplified.</h1>
                 <p class="hero-subtitle">
-                    Manage ID cards, fee allocations, and visitor tracking with surgical precision. Professional,
-                    secure, and ready for growth.
+                    The most intuitive way to manage your school ecosystem. From student IDs to fee tracking,
+                    Shuleni Advantage brings surgical precision to your administration.
                 </p>
                 <div style="display: flex; gap: 1rem;">
-                    <a href="#portals" class="btn btn-primary"
-                        style="background: white; color: var(--primary-purple);">Explore Portals</a>
-                    <a href="#features" class="btn btn-outline" style="border-color: white; color: white;">Core
+                    <a href="./trial_contact.html" class="btn btn-primary"
+                        style="background: white; color: var(--primary-purple);">Request Demo</a>
+                    <a href="#features" class="btn btn-outline" style="border-color: white; color: white;">Explore
                         Features</a>
                 </div>
             </div>
-            <div class="hero-card">
+            <div class="hero-card blended">
                 <img src="./assets/mockup.png" alt="Dashboard Mockup">
                 <div style="padding-top: 1rem; text-align: center;">
                     <span
-                        style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted);">Real-time
+                        style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; color: rgba(255,255,255,0.6);">Real-time
                         School Ecosystem Tracking</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Stats Bar -->
-    <div class="container">
+    <!-- Stats Bar (Animated Ticker) -->
+    <div class="container reveal">
         <div class="stats-bar">
-            <div class="stat-item">
-                <div class="stat-icon"><i class="fas fa-users-viewfinder"></i></div>
-                <div class="stat-number">99+</div>
-                <div class="stat-label">Verified Staff</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
-                <div class="stat-number">42</div>
-                <div class="stat-label">Active Students</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
-                <div class="stat-number">730</div>
-                <div class="stat-label">Secure Check-ins</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-                <div class="stat-number">24%</div>
-                <div class="stat-label">Fee Accuracy Boost</div>
+            <div class="ticker-wrapper">
+                <div class="ticker-track">
+                    <!-- Set 1 -->
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-users-viewfinder"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-id-card"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-money-bill-transfer"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-family"></i></div>
+                    </div>
+                    <!-- Set 2 (for loop) -->
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-users-viewfinder"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-shield-halved"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-id-card"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-money-bill-transfer"></i></div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-family"></i></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Features Section -->
-    <section id="features" style="padding: 5rem 0;">
+    <section id="features" class="reveal" style="padding: 5rem 0;">
         <div class="container">
             <div class="section-header">
-                <h2>Precision Features</h2>
-                <p>Designed for administrative excellence and student safety.</p>
+                <h2>Precision Modules</h2>
+                <p>Built for administrative excellence and institutional safety.</p>
             </div>
             <div class="feature-grid">
                 <div class="feature-card">
                     <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-id-card"></i></div>
-                    <h3>Smart ID Generation</h3>
-                    <p>Instant student ID cards with high-detail QR codes for rapid mobile scanning and verification.
-                    </p>
+                    <h3>Smart ID Ecosystem</h3>
+                    <p>High-fidelity QR-backed identification for instant mobile verification and security logging.</p>
                 </div>
                 <div class="feature-card">
                     <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-money-bill-transfer"></i></div>
-                    <h3>Priority Fee Split</h3>
-                    <p>Automatically allocate parent payments to tuition and meals based on institutional priority.</p>
+                    <h3>Fee Status Monitoring</h3>
+                    <p>Real-time tracking of tuition and meal allocations with intelligent priority splitting logic.</p>
                 </div>
                 <div class="feature-card">
                     <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-user-lock"></i></div>
-                    <h3>Guard Verification</h3>
-                    <p>Empower security staff with a dedicated mobile interface for visitor and student checks.</p>
+                    <h3>Gatekeeper Interface</h3>
+                    <p>Dedicated mobile tracking for visitors and staff, ensuring every entry is codified and secure.
+                    </p>
+                </div>
+                <div class="feature-card">
+                    <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-users-gear"></i></div>
+                    <h3>Staff Management</h3>
+                    <p>Centralized profiles for academic and support staff with role-based approval workflows.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-family"></i></div>
+                    <h3>Parent Connect</h3>
+                    <p>Transparent portal for guardians to monitor fees, progress, and institutional notifications.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="stat-icon" style="margin-left: 0;"><i class="fas fa-shield-halved"></i></div>
+                    <h3>Role-Based Security</h3>
+                    <p>Surgical precision in access control. Admins, Teachers, and Guards see only what they need.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Management Team -->
-    <section id="team" style="padding: 5rem 0; background-color: var(--bg-gray);">
+
+    <!-- Why Choose Section -->
+    <section class="reveal" style="padding: 10rem 0;">
         <div class="container">
-            <div class="section-header">
-                <h2>Expert Advisors</h2>
-                <p>The visionaries behind Shuleni Advantage management logic.</p>
-            </div>
-            <div class="advisor-grid">
-                <div class="advisor-card">
-                    <div class="advisor-avatar">
-                        <img src="https://i.pravatar.cc/150?u=a" alt="Alvin Mutie">
+            <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center;">
+                <div>
+                    <h2 style="font-size: 2.8rem; line-height: 1.2; margin-bottom: 2rem;">Why Choose Shuleni Advantage
+                    </h2>
+                    <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem;">We bridge the gap
+                        between traditional educational excellence and modern institutional logic.</p>
+
+                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <i class="fas fa-circle-check" style="color: #22c55e; margin-top: 0.3rem;"></i>
+                            <div>
+                                <strong>Cloud-Based Stability</strong>
+                                <p style="font-size: 0.9rem; color: var(--text-muted);">Access your management hub from
+                                    any device, anywhere, with 99.9% uptime.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <i class="fas fa-circle-check" style="color: #22c55e; margin-top: 0.3rem;"></i>
+                            <div>
+                                <strong>Local Relevance</strong>
+                                <p style="font-size: 0.9rem; color: var(--text-muted);">Tailored for Kenyan schools with
+                                    specific fee splitting and ID formatting logic.</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                            <i class="fas fa-circle-check" style="color: #22c55e; margin-top: 0.3rem;"></i>
+                            <div>
+                                <strong>Enterprise-Grade Security</strong>
+                                <p style="font-size: 0.9rem; color: var(--text-muted);">Your data is encrypted and
+                                    protected by the highest industry standards.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="advisor-name">Alvin Mutie</div>
-                    <div class="advisor-role">Lead Architect</div>
                 </div>
-                <div class="advisor-card">
-                    <div class="advisor-avatar">
-                        <img src="https://i.pravatar.cc/150?u=b" alt="Sarah J.">
-                    </div>
-                    <div class="advisor-name">Sarah J.</div>
-                    <div class="advisor-role">Success Manager</div>
-                </div>
-                <div class="advisor-card">
-                    <div class="advisor-avatar">
-                        <img src="https://i.pravatar.cc/150?u=c" alt="John Doe">
-                    </div>
-                    <div class="advisor-name">John Doe</div>
-                    <div class="advisor-role">Security Liaison</div>
-                </div>
-                <div class="advisor-card">
-                    <div class="advisor-avatar">
-                        <img src="https://i.pravatar.cc/150?u=d" alt="Jane Smith">
-                    </div>
-                    <div class="advisor-name">Jane Smith</div>
-                    <div class="advisor-role">Operations Lead</div>
+                <div
+                    style="background: var(--primary-purple-light); padding: 3rem; border-radius: 40px; text-align: center;">
+                    <i class="fas fa-graduation-cap"
+                        style="font-size: 5rem; color: var(--primary-purple); margin-bottom: 2rem;"></i>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 1rem;">Built for the Future of Education</h3>
+                    <p style="margin-bottom: 2rem;">Join us and transform your institution digitally with administrative
+                        workflow.</p>
+                    <a href="./trial_contact.html" class="btn btn-primary"
+                        style="width: 100%; justify-content: center;">Talk to an Expert</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Portals Section -->
-    <section id="portals" style="padding: 8rem 0;">
+
+    <!-- Get Started Section -->
+    <section id="get-started" class="reveal"
+        style="padding: 6rem 0; background: var(--bg-gray); text-align: center; border-radius: 60px 60px 0 0;">
         <div class="container">
-            <div class="section-header">
-                <h2>Authorized Access</h2>
-                <p>Join the ecosystem through your specialized portal.</p>
+            <div class="section-header" style="margin-bottom: 2rem;">
+                <h2 style="font-size: 2.2rem;">Ready to Transform Your School?</h2>
+                <p style="font-size: 1.1rem; max-width: 600px; margin: 0 auto; color: var(--text-muted);">Join the
+                    growing list of institutions leveraging Shuleni Advantage for surgical precision in management.</p>
             </div>
-            <div class="grid-3">
-                <div class="portal-card">
-                    <div>
-                        <h3 style="color: var(--primary-purple);">School Admin</h3>
-                        <p>Complete control over records & analytics. Management at your fingertips.</p>
-                    </div>
-                    <a href="./public/admin_login.html" class="btn btn-outline" style="margin-top: 2rem;">Admin
-                        Portal</a>
-                </div>
-                <div class="portal-card active">
-                    <div>
-                        <h3>Parent Portal</h3>
-                        <p>Track your child's progress, fees, and school notices in real-time.</p>
-                    </div>
-                    <a href="./parent/parent_login_page.html" class="btn btn-primary" style="margin-top: 2rem;">Parent
-                        Login</a>
-                </div>
-                <div class="portal-card">
-                    <div>
-                        <h3 style="color: var(--primary-purple);">Staff / Guard</h3>
-                        <p>Mobile verification tools and visitor tracking for campus security.</p>
-                    </div>
-                    <a href="./staff/staff_registration_page.html" class="btn btn-outline"
-                        style="margin-top: 2rem;">Staff Access</a>
-                </div>
+            <div style="display: flex; gap: 1.5rem; justify-content: center;">
+                <a href="./trial_contact.html" class="btn btn-primary"
+                    style="padding: 1rem 2.5rem; font-size: 1.1rem;">Request a Demo</a>
+                <a href="./trial_login.html" class="btn btn-outline"
+                    style="padding: 1rem 2.5rem; font-size: 1.1rem;">Sign In</a>
             </div>
+            <p style="margin-top: 2rem; opacity: 0.7; font-size: 0.9rem; color: var(--text-muted);">Experience the
+                future of administrative excellence today.</p>
         </div>
     </section>
 
@@ -189,9 +231,10 @@
         <div class="container">
             <div style="display: flex; justify-content: space-between; margin-bottom: 3rem;">
                 <div>
-                    <a href="#" class="brand">
-                        <img src="./assets/hechlink_final.png" alt="Logo">
-                        <span class="brand-font">Shuleni<span>Advantage</span></span>
+                    <a href="./trial_index.html" class="brand">
+                        <img src="./assets/maseno_logo.png" alt="Logo">
+                        <span class="brand-font">Shuleni<span
+                                style="color: var(--primary-purple);">Advantage</span></span>
                     </a>
                     <p style="margin-top: 1rem; max-width: 300px; color: var(--text-muted);">Empowering professional
                         education through intelligent management cycles.</p>
@@ -200,13 +243,20 @@
                     <div>
                         <h4 style="margin-bottom: 1rem;">Platform</h4>
                         <p><a href="#features" style="text-decoration:none; color:inherit;">Features</a></p>
-                        <p><a href="#portals" style="text-decoration:none; color:inherit;">Portals</a></p>
+                        <p><a href="#get-started" style="text-decoration:none; color:inherit;">Get Started</a></p>
                     </div>
                     <div>
                         <h4 style="margin-bottom: 1rem;">Company</h4>
-                        <p><a href="#" style="text-decoration:none; color:inherit;">About Us</a></p>
-                        <p><a href="mailto:mutiealvin0@gmail.com"
-                                style="text-decoration:none; color:inherit;">Contact</a></p>
+                        <p><a href="./trial_about.html" style="text-decoration:none; color:inherit;">About Us</a></p>
+                        <p><a href="./trial_contact.html" style="text-decoration:none; color:inherit;">Contact</a></p>
+                        <p><a href="./trial_faq.html" style="text-decoration:none; color:inherit;">FAQ</a></p>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Legal</h4>
+                        <p><a href="./trial_privacy.html" style="text-decoration:none; color:inherit;">Privacy
+                                Policy</a></p>
+                        <p><a href="./trial_terms.html" style="text-decoration:none; color:inherit;">Terms of
+                                Service</a></p>
                     </div>
                 </div>
             </div>
@@ -217,6 +267,24 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
 </body>
 
 </html>
