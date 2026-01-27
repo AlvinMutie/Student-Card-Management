@@ -1205,6 +1205,9 @@ function initPhotoBatchUpload() {
         }
       } catch (err) {
         console.error(`Upload failed for ${student.adm}:`, err);
+        if (failures === 0) {
+          alert(`First error: ${err.message}\nCheck console for more.`);
+        }
         failures++;
       }
 
