@@ -263,6 +263,24 @@
     }
 
     @media print {
+
+      /* Hide all UI elements */
+      .sidebar,
+      .p-sidebar,
+      .p-header,
+      .controls-panel,
+      .no-print,
+      button,
+      select,
+      label,
+      .p-btn,
+      .admin-section,
+      nav,
+      header {
+        display: none !important;
+      }
+
+      /* Reset body */
       body {
         background: white !important;
         margin: 0 !important;
@@ -270,38 +288,43 @@
         color: black !important;
       }
 
-      .p-header,
-      .p-sidebar,
-      .controls-panel,
-      .no-print {
-        display: none !important;
-      }
-
+      /* Reset main container */
       .p-main {
         margin: 0 !important;
         padding: 0 !important;
         width: 100% !important;
       }
 
+      /* Reset card wrapper */
       .id-card-wrapper {
-        background: none !important;
+        background: white !important;
         padding: 0 !important;
         min-height: auto !important;
         display: block !important;
       }
 
-      .id-card {
-        margin: 0 auto;
+      /* Style individual cards for print */
+      .p-id-card {
+        margin: 0 auto 5mm;
         page-break-inside: avoid;
-        border: 1px solid #ccc;
+        border: 1px solid #ddd;
         box-shadow: none;
       }
 
+      /* Batch cards grid layout */
       #batchIDCards {
         display: grid !important;
         grid-template-columns: repeat(2, 250px) !important;
-        gap: 10mm !important;
+        gap: 5mm !important;
         justify-content: center !important;
+        padding: 5mm !important;
+      }
+
+      /* Single card preview */
+      #idCardPreview {
+        display: flex !important;
+        justify-content: center !important;
+        padding: 5mm !important;
       }
     }
   </style>
