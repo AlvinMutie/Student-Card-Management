@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="/admin/admin-layout-utils.css">
   <!-- Premium Typography -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;700&family=Montserrat:wght@500;600;800&family=Brush+Script+MT&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;500;700&family=Montserrat:wght@500;600;800&display=swap"
     rel="stylesheet">
   <style>
     :root {
@@ -110,30 +110,71 @@
       color: white !important;
     }
 
-    /* ID Card Styles - Revised Template */
+    /* ID Card Styles - Version 4 Professional */
     .id-card-wrapper {
       display: flex;
       justify-content: center;
       margin-bottom: 30px;
     }
 
-    /* 1. FIXED PHYSICAL CARD SIZE */
     .id-card {
-      width: 5.5cm;
-      height: 8.5cm;
+      width: 5.4cm;
+      height: 8.6cm;
       background-color: white;
       position: relative;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border-radius: 12px;
       overflow: hidden;
-      border-radius: 5px;
-      font-family: 'Arial', sans-serif;
+      text-align: left;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid #e0e0e0;
     }
 
-    /* 2. SCALED HEADER */
+    /* Holographic Overlay Effect */
+    .id-card::after {
+      content: '';
+      position: absolute;
+      top: -150%;
+      left: -150%;
+      width: 400%;
+      height: 400%;
+      background: linear-gradient(135deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0) 45%,
+          rgba(255, 255, 255, 0.2) 50%,
+          rgba(255, 255, 255, 0) 55%,
+          rgba(255, 255, 255, 0) 100%);
+      transform: rotate(0deg);
+      transition: none;
+      pointer-events: none;
+      z-index: 20;
+      opacity: 0;
+    }
+
+    .id-card:hover::after {
+      opacity: 0.5;
+      top: -50%;
+      left: -50%;
+      transition: all 1.5s ease;
+    }
+
+    /* Security Watermark */
+    .watermark-layer {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cpath d='M50 10 L80 30 L80 70 L50 90 L20 70 L20 30 Z' stroke='%23000' fill='none' stroke-width='2'/%3E%3C/svg%3E");
+      background-size: 80px 80px;
+    }
+
     .header-container {
       position: relative;
       height: 65px;
       width: 100%;
+      background: white;
+      border-bottom: 2px solid #eee;
     }
 
     .header-red-accent {
@@ -166,15 +207,20 @@
 
     .header-green-main h1 {
       margin: 0;
+      font-family: 'Cinzel', serif;
       font-size: 11px;
       text-transform: uppercase;
       font-weight: 800;
+      color: white !important;
+      letter-spacing: 0.5px;
     }
 
     .header-green-main p {
       margin: 0;
       font-size: 6px;
       font-style: italic;
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-family: 'Inter', sans-serif;
     }
 
     .logo-crest {
@@ -185,8 +231,8 @@
       height: 45px;
       background: white;
       border-radius: 50%;
-      border: 2px solid #e0e0e0;
-      box-shadow: inset 0 0 0 1.5px var(--secondary-accent);
+      border: 2px solid var(--primary-accent);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1), inset 0 0 0 1px var(--secondary-accent);
       z-index: 10;
       display: flex;
       align-items: center;
@@ -200,13 +246,105 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: #f4f4f4;
+      background-color: #f8fafc;
       clip-path: polygon(100% 0, 100% 100%, 0% 100%);
       z-index: 0;
-      pointer-events: none;
     }
 
-    /* 3. SCALED FOOTER */
+    .id-card-content {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      margin-top: 10px;
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-frame {
+      width: 2.3cm;
+      height: 3.0cm;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 2px solid var(--primary-accent);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .student-name {
+      color: var(--primary-accent);
+      margin: 12px 0 2px 0;
+      font-size: 13px;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -0.2px;
+    }
+
+    .grade-bar {
+      border-bottom: 2px solid var(--secondary-accent);
+      margin-bottom: 2px;
+      padding: 0 8px;
+    }
+
+    .grade-text {
+      color: var(--primary-accent);
+      margin: 0;
+      font-size: 10px;
+      font-weight: 700;
+      font-style: italic;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .adm-text {
+      margin: 0;
+      font-size: 8px;
+      color: #1a1a1a;
+      font-weight: 800;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .qr-container {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .qr-box {
+      width: 65px;
+      height: 65px;
+      border: 1px solid #1a1a1a;
+      padding: 4px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qr-box img {
+      width: 100% !important;
+      height: 100% !important;
+      image-rendering: pixelated;
+    }
+
+    .scan-me {
+      background: #1a1a1a;
+      color: white;
+      padding: 2px 6px;
+      font-size: 6px;
+      font-weight: 900;
+      margin-top: -4px;
+      border-radius: 2px;
+      z-index: 10;
+    }
+
     .footer {
       position: absolute;
       bottom: 0;
@@ -215,11 +353,12 @@
 
     .footer-notice {
       text-align: center;
-      font-size: 4px;
+      font-size: 5px;
       color: var(--primary-accent);
-      font-weight: bold;
-      padding-bottom: 2px;
+      font-weight: 900;
+      padding-bottom: 3px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .footer-branding {
@@ -237,18 +376,9 @@
       background-color: var(--secondary-accent);
       clip-path: url(#red-clip-final);
       z-index: 2;
-      padding-left: 4px;
       display: flex;
       align-items: center;
-      justify-content: flex-start;
-    }
-
-    .footer-logo {
-      width: 20px;
-      height: auto;
-      display: block;
-      margin-bottom: 2px;
-      filter: brightness(0) invert(1);
+      justify-content: center;
     }
 
     .footer-green-part {
@@ -272,17 +402,20 @@
       font-size: 20px;
       font-family: 'Brush Script MT', cursive;
       line-height: 0.7;
+      color: white !important;
     }
 
     .advantage-text {
       font-size: 11px;
       font-weight: bold;
+      color: white !important;
     }
 
     .smart-card-text {
       font-size: 5px;
       letter-spacing: 2px;
       text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.8) !important;
     }
 
     /* Print Styles */
@@ -324,7 +457,7 @@
 
       #batchIDCards {
         display: grid !important;
-        grid-template-columns: repeat(2, 5.5cm) !important;
+        grid-template-columns: repeat(2, 5.4cm) !important;
         gap: 10mm !important;
         justify-content: center !important;
         padding: 10mm !important;
@@ -367,7 +500,7 @@
           </svg><span>Visitors</span></a></li>
       <li><a href="student-id-generator.html" class="active"><svg class="nav-icon" viewBox="0 0 24 24">
             <path
-              d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
+              d="M14,21H10V19H14M17.71,5.29L19.79,7.37L18.37,8.79L16.29,6.71M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8M12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12A2,2 0 0,0 12,10Z" />
           </svg><span>ID Generator</span></a></li>
       <li><a href="adminsettings.html"><svg class="nav-icon" viewBox="0 0 24 24">
             <path
@@ -450,64 +583,53 @@
 
       return `
         <div class="id-card" ${themeStyle}>
-            <div class="header-container">
-                <div class="header-red-accent" style="background-color: var(--secondary-accent);"></div>
-                <div class="header-green-main" style="background-color: var(--primary-accent);">
-                    <h1>MASENO SCHOOL</h1>
-                    <p>Perseverance shall win through</p>
-                </div>
-                <div class="logo-crest">
-                    <img src="/assets/hechlink_final.png" alt="Crest" style="width: 80%; object-fit: contain;">
-                </div>
+          <div class="watermark-layer"></div>
+          <div class="header-container">
+            <div class="header-red-accent" style="background-color: var(--secondary-accent);"></div>
+            <div class="header-green-main" style="background-color: var(--primary-accent);">
+              <h1>MASENO SCHOOL</h1>
+              <p>Perseverance shall win through</p>
             </div>
+            <div class="logo-crest">
+              <img src="/assets/hechlink_final.png" alt="Crest" style="width: 80%; object-fit: contain;">
+            </div>
+          </div>
+          
+          <div class="background-slant"></div>
+
+          <div class="id-card-content">
+            <div class="photo-frame">
+              <img id="card-photo-${student.id}" src="${student.photo_url || '/assets/placeholder-student.png'}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23004d2c\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\'/></svg>'">
+            </div>
+
+            <h2 class="student-name">${student.name || 'N/A'}</h2>
             
-            <div class="background-slant"></div>
-
-            <div style="position: relative; z-index: 5; text-align: center; margin-top: 5px; height: 180px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                
-                <div style="width: 2.5cm; height: 3.2cm; border-radius: 4px; overflow: hidden; border: 1px solid #ddd; background: #eee;">
-                    <img id="card-photo-${student.id}" src="${student.photo_url || '/assets/placeholder-student.png'}" style="width:100%; height:100%; object-fit:cover;" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23004d2c\'><path d=\'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z\'/></svg>'">
-                </div>
-
-                <h2 style="color: var(--primary-accent); margin: 4px 0 0 0; font-size: 12px; font-weight: bold;">${student.name || 'N/A'}</h2>
-                
-                <div style="border-bottom: 1px solid var(--secondary-accent); margin-bottom: 2px;">
-                    <p style="color: var(--primary-accent); margin: 0; font-size: 9px; font-weight: bold; font-style: italic;">${student.class || 'N/A'} ${student.stream || ''}</p>
-                </div>
-                <p style="margin: 0; font-size: 7px; color: #333; font-weight: bold;">ADM NO: ${student.adm || 'N/A'}</p>
-
-                <div style="margin-top: 5px; display: flex; flex-direction: column; align-items: center;">
-                    <div style="width: 35px; height: 35px; border: 1px solid #000; padding: 2px; background: white;">
-                        <img src="${qrDataUrl}" alt="QR" style="width: 100%; height: 100%; image-rendering: pixelated;">
-                    </div>
-                    <div style="background: black; color: white; padding: 1px 4px; font-size: 5px; font-weight: bold; margin-top: -3px;">SCAN ME</div>
-                </div>
+            <div class="grade-bar">
+              <p class="grade-text">${student.class || 'N/A'} ${student.stream || ''}</p>
             </div>
+            <p class="adm-text">ADM NO: ${student.adm || 'N/A'}</p>
 
-            <svg width="0" height="0" style="position: absolute;">
-                <defs>
-                    <clipPath id="red-clip-final" clipPathUnits="objectBoundingBox">
-                        <path d="M0,0 L1,0 L0.25,0.85 Q0.15,0.95 0,1 L0,0 Z" />
-                    </clipPath>
-                    <clipPath id="green-clip-final" clipPathUnits="objectBoundingBox">
-                        <path d="M0.25,0.15 Q0.3,0 0.45,0 L1,0 L1,1 L0,1 L0.25,0.15 Z" />
-                    </clipPath>
-                </defs>
-            </svg>
-
-            <div class="footer">
-                <div class="footer-notice" style="color: var(--primary-accent);">MASENO SCHOOL. - 0738 934 812 / 0713 715 956</div>
-                <div class="footer-branding">
-                    <div class="footer-red-part" style="background-color: var(--secondary-accent);">
-                        <img src="/assets/hechlink_final.png" alt="Logo" class="footer-logo">
-                    </div>
-                    <div class="footer-green-part" style="background-color: var(--primary-accent);">
-                        <div class="shuleni-text">Shuleni</div>
-                        <div class="advantage-text">Advantage<sup>+</sup></div>
-                        <div class="smart-card-text">Smart Card</div>
-                    </div>
-                </div>
+            <div class="qr-container">
+              <div class="qr-box">
+                <img src="${qrDataUrl}" alt="QR">
+              </div>
+              <div class="scan-me">SCAN ME</div>
             </div>
+          </div>
+
+          <div class="footer">
+            <div class="footer-notice">MASENO SCHOOL. TEL: 0738 934 812</div>
+            <div class="footer-branding">
+              <div class="footer-red-part">
+                <img src="/assets/hechlink_final.png" style="width:15px; height:15px; filter:brightness(0) invert(1);">
+              </div>
+              <div class="footer-green-part">
+                <div class="shuleni-text">Shuleni</div>
+                <div class="advantage-text">Advantage<sup>+</sup></div>
+                <div class="smart-card-text">Smart Card</div>
+              </div>
+            </div>
+          </div>
         </div>
       `;
     }
@@ -586,9 +708,9 @@
       const imgData = canvas.toDataURL('image/png');
 
       // Center horizontally on A4 (210mm wide)
-      // Card is 5.5cm wide ≈ 55mm
-      const x = (210 - 55) / 2;
-      doc.addImage(imgData, 'PNG', x, 20, 55, 85);
+      // Card is 54mm wide
+      const x = (210 - 54) / 2;
+      doc.addImage(imgData, 'PNG', x, 20, 54, 86);
 
       const fileName = `ID_Card_${selectedStudent.adm || selectedStudent.name}.pdf`;
       doc.save(fileName.replace(/\s+/g, '_'));
