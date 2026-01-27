@@ -131,7 +131,13 @@ server {
         try_files \$uri \$uri/ =404;
     }
 
+    location /uploads {
+        root $APP_DIR/backend/public;
+        try_files \$uri \$uri/ =404;
+    }
+
     location /api {
+        client_max_body_size 50M;
         proxy_pass http://localhost:$PORT;
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade;
