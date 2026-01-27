@@ -72,11 +72,15 @@ function resolveBaseFromProcess() {
 }
 
 function resolveApiBaseUrl() {
-  return (
-    resolveBaseFromWindow() ||
-    resolveBaseFromProcess() ||
-    DEFAULT_LOCAL_API
-  );
+  const base = resolveBaseFromWindow() || resolveBaseFromProcess();
+  if (base) return base;
+
+  // If in browser, default to relative /api for production compatibility
+  if (typeof window !== 'undefined') {
+    return '/api';
+  }
+
+  return DEFAULT_LOCAL_API;
 }
 
 const API_BASE_URL = resolveApiBaseUrl();
