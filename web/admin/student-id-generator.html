@@ -307,24 +307,112 @@
       .p-id-card {
         margin: 0 auto 5mm;
         page-break-inside: avoid;
-        border: 1px solid #ddd;
-        box-shadow: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      /* Preserve all colors */
+      .p-id-header-red {
+        background-color: #e31e24 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-header-green {
+        background-color: #004d2c !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-crest {
+        background: white !important;
+        border: 3px solid #e0e0e0 !important;
+        box-shadow: inset 0 0 0 2px #e31e24, 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-crest img {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .p-id-background-slant {
+        background-color: #f8fafc !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-photo-frame {
+        background: #f1f5f9 !important;
+        border: 3px solid white !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-name,
+      .p-id-meta {
+        color: #004d2c !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-barcode {
+        background: #000 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-footer-wrap {
+        background: #004d2c !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-footer-left {
+        background: #e31e24 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-footer-left img {
+        width: 28px !important;
+        height: 28px !important;
+      }
+
+      .p-id-footer-right {
+        color: white !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-id-notice {
+        color: #004d2c !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .p-main {
+        padding: 10mm !important;
       }
 
       /* Batch cards grid layout */
       #batchIDCards {
         display: grid !important;
         grid-template-columns: repeat(2, 250px) !important;
-        gap: 5mm !important;
+        gap: 8mm !important;
         justify-content: center !important;
-        padding: 5mm !important;
+        padding: 0 !important;
       }
 
       /* Single card preview */
       #idCardPreview {
         display: flex !important;
         justify-content: center !important;
-        padding: 5mm !important;
+        padding: 0 !important;
       }
     }
   </style>
