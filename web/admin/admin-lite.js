@@ -138,7 +138,7 @@ function renderStudentsTable(list) {
         <td>${s.adm || ''}</td>
         <td>
           <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${s.localPhoto || s.photo_url || STUDENT_PHOTO_PLACEHOLDER}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;" alt="Img">
+            <img src='${s.localPhoto || s.photo_url || STUDENT_PHOTO_PLACEHOLDER}' style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;" alt="Img">
             <span style="font-weight:600; color:#334155;">${s.name || ''}</span>
           </div>
         </td>

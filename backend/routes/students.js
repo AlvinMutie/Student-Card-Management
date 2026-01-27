@@ -258,6 +258,7 @@ router.get('/', authenticateToken, authorizeRole('admin'), async (req, res) => {
        LEFT JOIN parents p ON s.parent_id = p.id
        ORDER BY s.created_at DESC`
     );
+    res.set('Cache-Control', 'no-store');
     res.json(result.rows);
   } catch (error) {
     console.error('Get students error:', error);
