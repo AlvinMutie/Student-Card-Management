@@ -6,10 +6,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800&display=swap');
 
 :root {
-    --primary-purple: #6366f1;
-    /* Vibrant violet/purple */
-    --primary-purple-dark: #4f46e5;
-    --primary-purple-light: #eef2ff;
+    --primary-purple: #004d2c;
+    /* Maseno Green */
+    --primary-purple-dark: #00331d;
+    --primary-purple-light: #e6f7ef;
 
     --bg-white: #ffffff;
     --bg-gray: #f8fafc;
@@ -25,10 +25,15 @@
     --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 }
 
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -37,6 +42,18 @@ body {
     color: var(--text-dark);
     line-height: 1.6;
     overflow-x: hidden;
+}
+
+/* --- Scroll Reveal --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 h1,
@@ -112,7 +129,7 @@ nav.top-nav {
 }
 
 .brand img {
-    height: 36px;
+    height: 64px;
 }
 
 .nav-links a {
@@ -153,13 +170,27 @@ nav.top-nav {
 }
 
 .hero-card {
-    background: white;
+    background: var(--bg-white);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
     box-shadow: var(--shadow-lg);
     color: var(--text-dark);
     position: relative;
     overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.hero-card.blended {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    backdrop-filter: blur(5px);
+}
+
+.hero-card.blended img {
+    opacity: 0.8;
+    mix-blend-mode: luminosity;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
 }
 
 .hero-card img {
@@ -168,21 +199,44 @@ nav.top-nav {
     display: block;
 }
 
-/* --- Stats Bar --- */
+/* --- Stats Bar / Ticker --- */
 .stats-bar {
-    display: flex;
-    justify-content: space-around;
-    background: white;
-    padding: 3rem 2rem;
+    background: var(--bg-white);
+    padding: 2rem;
     border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
     margin-bottom: 5rem;
     position: relative;
     z-index: 10;
+    overflow: hidden;
+    /* Hide overflow for ticker */
+}
+
+.ticker-wrapper {
+    display: flex;
+    white-space: nowrap;
+}
+
+.ticker-track {
+    display: flex;
+    gap: 10rem;
+    animation: ticker-slide 20s linear infinite;
+    padding-right: 10rem;
+}
+
+@keyframes ticker-slide {
+    0% {
+        transform: translateX(-50%);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
 }
 
 .stat-item {
     text-align: center;
+    flex-shrink: 0;
 }
 
 .stat-icon {
