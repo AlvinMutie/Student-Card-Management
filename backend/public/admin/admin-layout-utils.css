@@ -1,0 +1,135 @@
+/* Admin Layout Utility Classes - Top Navigation Optimized */
+
+/* Container for admin content */
+.admin-container {
+    max-width: 2000px;
+    margin: 0 auto;
+    padding: 40px 40px;
+    width: 100%;
+}
+
+/* Responsive grid system */
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.admin-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 24px;
+}
+
+.admin-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Section cards */
+.admin-section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.admin-section:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Page headers */
+.admin-page-header {
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.admin-page-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+}
+
+.admin-page-header p {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* Responsive tables */
+.admin-table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.admin-table th {
+    background: var(--forest-900);
+    color: white;
+    padding: 16px;
+    text-align: left;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-table tr:hover {
+    background: #f8fafc;
+}
+
+/* Form containers */
+.admin-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 1024px) {
+
+    .admin-container,
+    .main-content {
+        padding: 32px 40px;
+    }
+
+    .admin-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+
+    .admin-container,
+    .main-content {
+        padding: 24px 20px;
+    }
+
+    .admin-grid,
+    .admin-grid-2,
+    .admin-grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-form-container {
+        padding: 24px 20px;
+    }
+}

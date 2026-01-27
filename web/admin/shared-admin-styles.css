@@ -102,11 +102,11 @@ body {
 }
 
 .brand-icon {
-  width: 48px;
-  height: 48px;
-  /* filter: brightness(0) invert(1); */
+  width: 68px;
+  height: 68px;
   object-fit: contain;
   transition: var(--transition);
+  margin-right: 4px;
 }
 
 .brand:hover .brand-icon {
@@ -114,11 +114,12 @@ body {
 }
 
 .brand h1 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
   color: var(--text-white);
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  line-height: 1.1;
 }
 
 .nav-links {
