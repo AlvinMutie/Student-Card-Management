@@ -1,10 +1,6 @@
 const express = require('express');
 const pool = require('../config/database');
 const { authenticateToken, authorizeRole } = require('../middleware/auth');
-
-const express = require('express');
-const pool = require('../config/database');
-const { authenticateToken, authorizeRole } = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -671,6 +667,50 @@ router.delete('/', authenticateToken, authorizeRole('admin'), async (req, res) =
   } catch (error) {
     console.error('Delete all students error:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Upload student photo
+router.post('/:id/photo', authenticateToken, authorizeRole('admin'), upload.single('photo'), async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!req.file) {
+      return res.status(400).json({ error: 'No photo uploaded' });
+    }
+
+    // Determine if id is numeric (database ID) or alphanumeric (admission number)
+    const identifierIsNumeric = /^\d+$/.test(id);
+    const identifierColumn = identifierIsNumeric ? 'id' : 'adm';
+
+    // The photo_url should be accessible via the static file middleware
+    const photoUrl = `/uploads/students/${req.file.filename}`;
+
+    const result = await pool.query(
+      `UPDATE students 
+       SET photo_url = $1, updated_at = CURRENT_TIMESTAMP 
+       WHERE ${identifierColumn} = $2 
+       RETURNING *`,
+      [photoUrl, id]
+    );
+
+    if (result.rows.length === 0) {
+      // If we failed to update, delete the uploaded file to keep system clean
+      fs.unlinkSync(req.file.path);
+      return res.status(404).json({ error: 'Student not found' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Photo uploaded successfully',
+      photo_url: photoUrl,
+      student: result.rows[0]
+    });
+  } catch (error) {
+    console.error('Photo upload error:', error);
+    if (req.file && fs.existsSync(req.file.path)) {
+      fs.unlinkSync(req.file.path);
+    }
+    res.status(500).json({ error: 'Internal server error', message: error.message });
   }
 });
 

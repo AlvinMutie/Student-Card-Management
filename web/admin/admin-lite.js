@@ -1150,15 +1150,19 @@ function initPhotoBatchUpload() {
     // 1. Map files to students
     const toUpload = [];
     for (const file of files) {
-      const name = file.name.toLowerCase();
-      // Heuristic: check if filename contains adm number
-      // Be careful of partial matches (e.g. "1" matches "10", "12")
-      // Better: find student where adm is contained in filename
+      const fileName = file.name.toLowerCase();
+
+      // Use regex to find potential admission number in filename
+      // Matches alphanumeric strings that exist in our student cache
       const admMatch = studentsCache.find((s) => {
         const adm = (s.adm || '').toString().toLowerCase();
-        // Check if filename contains the admission number (surrounded by non-digits or end of string ideally, but simplistic contains is start)
-        // Let's assume filename is like "1234.jpg" or "std_1234.jpg"
-        return adm && name.includes(adm);
+        if (!adm) return false;
+
+        // Escape adm for regex use
+        const escapedAdm = adm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // Look for adm as a whole word or surrounded by common delimiters
+        const regex = new RegExp(`(^|[^a-z0-9])${escapedAdm}([^a-z0-9]|$)`, 'i');
+        return regex.test(file.name);
       });
 
       if (admMatch) {
@@ -1191,11 +1195,11 @@ function initPhotoBatchUpload() {
       try {
         // Use fetch directly as our API wrapper might not handle FormData yet
         // Assuming /api/students/:id/photo endpoint exists
-        const token = localStorage.getItem('sv_admin_token');
+        const token = localStorage.getItem('sv_admin_token') || localStorage.getItem('sv_auth_token');
         const res = await fetch(`/api/students/${student.id || student.adm}/photo`, {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}` // Assuming Bearer auth
+            'Authorization': `Bearer ${token}`
           },
           body: formData
         });
