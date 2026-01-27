@@ -135,10 +135,11 @@
     /* 2. CONTENT OVERLAY - Position over the white area of the background */
     .card-content {
       position: absolute;
-      top: 23%;
+      top: 22%;
+      /* Center content better in the white space */
       left: 50%;
       transform: translateX(-50%);
-      width: 88%;
+      width: 90%;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -147,13 +148,14 @@
     }
 
     .student-photo {
-      width: 3cm;
-      height: 3.8cm;
+      width: 2.8cm;
+      /* Reduced size to allow more space for text/QR */
+      height: 3.5cm;
       border-radius: 8px;
       overflow: hidden;
-      border: 3.2px solid #004d2c;
-      background: #fdfdfd;
-      box-shadow: 0 4px 12px rgba(0, 77, 44, 0.2);
+      border: 3px solid #004d2c;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 77, 44, 0.2);
     }
 
     .student-photo img {
