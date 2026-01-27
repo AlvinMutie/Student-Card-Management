@@ -10,199 +10,31 @@
   <link rel="stylesheet" href="/admin/shared-admin-styles.css">
   <link rel="stylesheet" href="/admin/admin-layout-utils.css">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', 'Segoe UI', sans-serif;
-      background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
-      color: #0f172a;
-      height: 100vh;
-      /* Full viewport height */
-      overflow: hidden;
-      /* Prevent body scroll */
-      display: flex;
-      /* Flex layout for sidebar + main */
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 0;
-      margin-left: 0;
-      background: var(--beige-bg);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      /* No scroll on main container, child will scroll */
-    }
-
-    .content-wrapper {
-      padding: 35px 40px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      box-sizing: border-box;
-    }
-
+    /* Student-specific overrides if needed */
     .topbar {
       display: flex;
-      gap: 10px;
+      gap: 16px;
       align-items: center;
       flex-wrap: wrap;
-      margin-bottom: 12px;
-      flex-shrink: 0;
-      /* Keep header fixed size */
+      margin-bottom: 24px;
     }
 
-    /* .table-wrapper and table styles moved to shared-admin-styles.css */
-
-
-    thead {
-      position: sticky;
-      top: 0;
-      background: #f8fafc;
-      z-index: 10;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    }
-
-    th,
-    td {
-      padding: 12px 10px;
-      border-bottom: 1px solid #e2e8f0;
-      /* Use bottom border only for cleaner look */
-      border-left: none;
-      border-right: none;
-      border-top: none;
-      text-align: left;
-      font-size: 0.85rem;
-      vertical-align: middle;
-      white-space: nowrap;
-      /* Prevent wrapping for neatness */
+    .table-wrapper {
+      background: var(--surface-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-bento);
+      overflow: auto;
+      max-height: calc(100vh - 250px);
+      border: 1px solid var(--border-light);
     }
 
     th {
-      font-weight: 600;
-      color: #475569;
-    }
-
-    /* Column widths optimization */
-    th:first-child,
-    td:first-child {
-      width: 60px;
-      text-align: center;
-    }
-
-    /* Photo */
-    th:last-child,
-    td:last-child {
-      width: 140px;
-      text-align: center;
-    }
-
-    /* Actions */
-
-    button {
-      cursor: pointer;
-    }
-
-    .btn-small {
-      padding: 8px 12px;
-      border: none;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 14px rgba(102, 126, 234, 0.35);
-      transition: transform .2s, box-shadow .2s;
-    }
-
-    .btn-small:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
-    }
-
-    /* ... modal styles ... */
-    .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-    }
-
-    .modal.show {
-      display: flex;
-    }
-
-    .modal-content {
-      background: #fff;
-      padding: 16px;
-      border-radius: 8px;
-      width: 360px;
-      max-width: 90vw;
-    }
-
-    .modal-content form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .modal-content label {
-      font-size: 0.9rem;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-
-    /* Progress bar styles */
-    .progress-wrap {
-      /* ... keep existing ... */
-      gap: 10px;
-      display: flex;
-      flex-direction: column;
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      border-radius: 10px;
-      background: #fff;
-      border: 1px solid #e2e8f0;
-    }
-
-    /* Responsive tweaks */
-    @media (max-width: 900px) {
-      body {
-        flex-direction: column;
-        /* Stack sidebar on top */
-        overflow: auto;
-        /* Allow scroll on mobile */
-      }
-
-      .main-content {
-        margin-left: 0;
-        height: auto;
-        /* Allow growth */
-        overflow: visible;
-      }
-
-      .content-wrapper {
-        padding: 20px;
-        height: auto;
-      }
-
-      .table-wrapper {
-        overflow: visible;
-        /* Let table expand page on mobile */
-      }
-
-      .sidebar {
-        /* inherited from shared-admin-styles but checked here */
-        position: relative;
-        width: 100%;
-        height: auto;
-      }
+      background: var(--surface-off-white);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
     }
   </style>
 </head>
@@ -274,20 +106,44 @@
       </div>
 
       <div class="topbar">
-        <h2 style="margin:0;">Students</h2>
-        <input id="studentSearch" placeholder="Search students..."
-          style="padding:8px; border:1px solid #cbd5e1; border-radius:6px; flex:1; min-width:220px;">
-        <div style="display:flex; gap:8px; align-items:center;">
-          <label style="display:flex; align-items:center; gap:5px; font-size:0.9rem; color:#4a3510; cursor:pointer;">
-            <input type="checkbox" id="filterUnpaid"> Unpaid Fees Only
+        <div class="dashboard-header">
+          <h2 style="margin:0;">Students</h2>
+          <div class="muted">Manage student records, enrollment, and fees</div>
+        </div>
+        <div class="search-container">
+          <svg class="search-icon" viewBox="0 0 24 24">
+            <path
+              d="M15.5,14H14.71L14.43,13.73C15.41,12.59 16,11.11 16,9.5A6.5,6.5 0 0,0 9.5,3A6.5,6.5 0 0,0 3,9.5A6.5,6.5 0 0,0 9.5,16C11.11,16 12.59,15.41 13.73,14.43L14,14.71V15.5L19,20.5L20.5,19L15.5,14M9.5,14A4.5,4.5 0 0,1 5,9.5A4.5,4.5 0 0,1 9.5,5A4.5,4.5 0 0,1 14,9.5A4.5,4.5 0 0,1 9.5,14Z" />
+          </svg>
+          <input id="studentSearch" placeholder="Search by name, adm, or UPI...">
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <label
+            style="display:flex; align-items:center; gap:8px; font-size:0.9rem; color:var(--text-main); cursor:pointer;">
+            <input type="checkbox" id="filterUnpaid" style="width:18px; height:18px;">
+            <span>Unpaid Fees</span>
           </label>
           <input type="file" id="importStudentsInput" accept=".csv, .xlsx, .xls" style="display:none;">
-          <button class="btn-small" onclick="document.getElementById('importStudentsInput').click();">Import
-            Excel/CSV</button>
-          <button id="addStudentBtn" class="btn-small">Add Student</button>
+          <button class="btn ghost" onclick="document.getElementById('importStudentsInput').click();">
+            <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+              <path fill="currentColor"
+                d="M14,2L20,8V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V4A2,2 0 0,1 6,2H14M18,20V9H13V4H6V20H18M12,12L16,16H13V18H11V16H8L12,12Z" />
+            </svg>
+            Import
+          </button>
+          <button id="addStudentBtn" class="btn btn-primary">
+            <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+            </svg>
+            Add Student
+          </button>
           <input type="file" id="photoBatchInput" accept="image/*" multiple style="display:none;">
-          <button class="btn-small" onclick="document.getElementById('photoBatchInput').click();">Upload Photos
-            (Batch)</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('photoBatchInput').click();">
+            <svg style="width:18px;height:18px" viewBox="0 0 24 24">
+              <path fill="currentColor" d="M14,12L10,8V11H2V13H10V16L14,12M22,12A10,10 0 1,1 12,2A10,10 0 0,1 22,12Z" />
+            </svg>
+            Upload Photos
+          </button>
         </div>
       </div>
 

@@ -9,168 +9,21 @@
   <link rel="stylesheet" href="/shared/portal-theme.css">
   <link rel="stylesheet" href="/admin/shared-admin-styles.css">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', 'Segoe UI', sans-serif;
-      background: #f6f8fb;
-      color: #0f172a;
+    /* Local dashboard-specific tweaks if any, but mostly using shared-admin-styles.css now */
+    .dashboard-header {
+      margin-bottom: 32px;
     }
 
-    .main-content {
-      flex: 1;
-      padding: 24px 24px;
-      overflow-y: auto;
-      margin-left: 0;
-      background: #f6f8fb;
-      min-height: 100vh;
-      max-width: 2000px;
-      margin: 0 auto;
-    }
-
-    .top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .top h2 {
-      margin: 0;
+    .dashboard-header h2 {
+      font-size: 2rem;
       font-weight: 800;
-      letter-spacing: -0.4px;
-    }
-
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      margin: 24px 0;
-    }
-
-    .metric-card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 18px 16px;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .metric-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(59, 130, 246, 0.05));
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .metric-card .metric-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .metric-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      font-size: 20px;
-      font-weight: 700;
-      color: #fff;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .metric-label {
-      font-weight: 700;
-      color: #0f172a;
-    }
-
-    .metric-value {
-      font-size: 28px;
-      font-weight: 800;
-      margin: 4px 0 2px;
-      color: #0f172a;
-      letter-spacing: -0.5px;
-    }
-
-    .metric-sub {
-      color: #6b7280;
-      font-size: 13px;
-    }
-
-    .metric-card.students .metric-icon {
-      background: #16a34a;
-    }
-
-    .metric-card.parents .metric-icon {
-      background: #0ea5e9;
-    }
-
-    .metric-card.staff .metric-icon {
-      background: #6366f1;
-    }
-
-    .metric-card.pending .metric-icon {
-      background: #f59e0b;
-    }
-
-    .panel-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 18px;
-    }
-
-    .panel {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 18px;
-      padding: 18px;
-      box-shadow: 0 15px 40px rgba(15, 23, 42, 0.08);
-    }
-
-    .panel h4,
-    .panel h3 {
-      margin: 0 0 12px;
-      font-weight: 700;
+      color: var(--primary-dark);
+      margin: 0;
     }
 
     canvas {
-      background: #fff;
-      border-radius: 12px;
-    }
-
-    .recent-list {
-      list-style: disc;
-      padding-left: 18px;
-      color: #334155;
-    }
-
-    .recent-list li {
-      margin: 6px 0;
-    }
-
-    @media (max-width: 900px) {
-      .main-content {
-        margin-left: 0;
-        padding: 22px;
-      }
-
-      .sidebar {
-        width: 100%;
-        position: relative;
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
-
-      .nav-links {
-        flex-direction: row;
-        flex-wrap: wrap;
-      }
+      width: 100% !important;
+      height: 260px !important;
     }
   </style>
 </head>
@@ -227,100 +80,117 @@
   </div>
 
   <main class="main-content">
-    <div class="top">
-      <div>
-        <h2>Dashboard</h2>
+    <div class="content-wrapper">
+      <div class="top-row">
+        <div class="dashboard-header">
+          <h2>Admin Dashboard</h2>
+          <div class="muted">Monitor school activities and key metrics</div>
+        </div>
+        <div class="admin-section">
+          <div id="adminInfo">Hi, <span data-admin-name>Admin</span></div>
+          <button class="logout-btn-top" data-logout>
+            <svg class="logout-icon-top" viewBox="0 0 24 24">
+              <path
+                d="M16,17V14H9V10H16V7L21,12L16,17M14,2A2,2 0 0,1 16,4V6H14V4H5V20H14V18H16V20A2,2 0 0,1 14,22H5A2,2 0 0,1 3,20V4A2,2 0 0,1 5,2H14Z" />
+            </svg>
+            <span>Log Out</span>
+          </button>
+        </div>
       </div>
-      <div>Hi, <span data-admin-name>Admin</span></div>
-    </div>
 
-    <div class="metrics-grid">
-      <div class="metric-card students">
-        <div class="metric-top">
-          <div class="metric-label">Total Students</div>
-          <div class="metric-icon">
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+      <div class="metrics-grid">
+        <div class="metric-card students">
+          <div class="metric-top">
+            <div class="metric-label">Total Students</div>
+            <div class="metric-icon">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+              </svg>
+            </div>
+          </div>
+          <div class="metric-value" id="countStudents">0</div>
+          <div class="metric-sub">
+            <svg style="width:16px;height:16px" viewBox="0 0 24 24">
               <path fill="currentColor"
-                d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+                d="M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5Z" />
             </svg>
+            Live enrollment data
           </div>
         </div>
-        <div class="metric-value" id="countStudents">0</div>
-        <div class="metric-sub">Live total of enrolled students</div>
-      </div>
-      <div class="metric-card parents">
-        <div class="metric-top">
-          <div class="metric-label">Parents</div>
-          <div class="metric-icon">
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path fill="currentColor"
-                d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" />
-            </svg>
+        <div class="metric-card parents">
+          <div class="metric-top">
+            <div class="metric-label">Total Parents</div>
+            <div class="metric-icon">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M16 17V19H2V17S2 13 9 13 16 17 16 17M12.5 7.5A3.5 3.5 0 1 0 9 11A3.5 3.5 0 0 0 12.5 7.5M15.94 13A5.32 5.32 0 0 1 18 17V19H22V17S22 13.37 15.94 13M15 4A3.39 3.39 0 0 0 13.07 4.59A5 5 0 0 1 13.07 10.41A3.39 3.39 0 0 0 15 11A3.5 3.5 0 0 0 15 4Z" />
+              </svg>
+            </div>
           </div>
+          <div class="metric-value" id="countParents">0</div>
+          <div class="metric-sub">Registered guardians</div>
         </div>
-        <div class="metric-value" id="countParents">0</div>
-        <div class="metric-sub">Registered guardians</div>
-      </div>
-      <div class="metric-card staff">
-        <div class="metric-top">
-          <div class="metric-label">Staff</div>
-          <div class="metric-icon">
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path fill="currentColor"
-                d="M12 5.5A3.5 3.5 0 0 1 15.5 9A3.5 3.5 0 0 1 12 12.5A3.5 3.5 0 0 1 8.5 9A3.5 3.5 0 0 1 12 5.5M5 8C5.56 8 6.08 8.15 6.53 8.42C6.38 9.85 6.8 11.27 7.66 12.38C7.16 13.34 6.16 14 5 14A3 3 0 0 1 2 11A3 3 0 0 1 5 8M19 8A3 3 0 0 1 22 11A3 3 0 0 1 19 14C17.84 14 16.84 13.34 16.34 12.38C17.2 11.27 17.62 9.85 17.47 8.42C17.92 8.15 18.44 8 19 8M5.5 18.25C5.5 16.18 8.41 14.5 12 14.5C15.59 14.5 18.5 16.18 18.5 18.25V19H5.5V18.25M0 20V18.5C0 17.11 1.89 15.94 4.45 15.6C3.86 16.28 3.5 17.22 3.5 18.25V20H0M24 20H20.5V18.25C20.5 17.22 20.14 16.28 19.55 15.6C22.11 15.94 24 17.11 24 18.5V20Z" />
-            </svg>
+        <div class="metric-card staff">
+          <div class="metric-top">
+            <div class="metric-label">Active Staff</div>
+            <div class="metric-icon">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12 5.5A3.5 3.5 0 0 1 15.5 9A3.5 3.5 0 0 1 12 12.5A3.5 3.5 0 0 1 8.5 9A3.5 3.5 0 0 1 12 5.5M5 8C5.56 8 6.08 8.15 6.53 8.42C6.38 9.85 6.8 11.27 7.66 12.38C7.16 13.34 6.16 14 5 14A3 3 0 0 1 2 11A3 3 0 0 1 5 8M19 8A3 3 0 0 1 22 11A3 3 0 0 1 19 14C17.84 14 16.84 13.34 16.34 12.38C17.2 11.27 17.62 9.85 17.47 8.42C17.92 8.15 18.44 8 19 8M5.5 18.25C5.5 16.18 8.41 14.5 12 14.5C15.59 14.5 18.5 16.18 18.5 18.25V19H5.5V18.25M0 20V18.5C0 17.11 1.89 15.94 4.45 15.6C3.86 16.28 3.5 17.22 3.5 18.25V20H0M24 20H20.5V18.25C20.5 17.22 20.14 16.28 19.55 15.6C22.11 15.94 24 17.11 24 18.5V20Z" />
+              </svg>
+            </div>
           </div>
+          <div class="metric-value" id="countStaff">0</div>
+          <div class="metric-sub">School teaching & support staff</div>
         </div>
-        <div class="metric-value" id="countStaff">0</div>
-        <div class="metric-sub">Active school staff</div>
-      </div>
-      <div class="metric-card pending">
-        <div class="metric-top">
-          <div class="metric-label">Pending Staff</div>
-          <div class="metric-icon">
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path fill="currentColor"
-                d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z" />
-            </svg>
+        <div class="metric-card pending">
+          <div class="metric-top">
+            <div class="metric-label">Pending Staff</div>
+            <div class="metric-icon">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12 2C6.5 2 2 6.5 2 12S6.5 22 12 22 22 17.5 22 12 17.5 2 12 2M12 20C7.59 20 4 16.41 4 12S7.59 4 12 4 20 7.59 20 12 16.41 20 12 20M12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z" />
+              </svg>
+            </div>
           </div>
+          <div class="metric-value" id="countPending">0</div>
+          <div class="metric-sub">Awaiting verification</div>
         </div>
-        <div class="metric-value" id="countPending">0</div>
-        <div class="metric-sub">Awaiting approval</div>
-      </div>
-      <div class="metric-card visitors" style="--accent: #8b5cf6;">
-        <div class="metric-top">
-          <div class="metric-label">Total Visitors</div>
-          <div class="metric-icon" style="background:#8b5cf6;">
-            <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-              <path fill="currentColor"
-                d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
-            </svg>
+        <div class="metric-card visitors">
+          <div class="metric-top">
+            <div class="metric-label">Today's Visitors</div>
+            <div class="metric-icon">
+              <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                <path fill="currentColor"
+                  d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+              </svg>
+            </div>
           </div>
+          <div class="metric-value" id="countVisitors">0</div>
+          <div class="metric-sub">Access logs recorded</div>
         </div>
-        <div class="metric-value" id="countVisitors">0</div>
-        <div class="metric-sub">Access logs recorded</div>
       </div>
-    </div>
 
-    <div class="panel-grid">
-      <!-- "Students by Class" removed -->
-      <div class="panel">
-        <h4>Fee Status</h4>
-        <canvas id="chartFeeStatus" height="260"></canvas>
+      <div class="panel-grid">
+        <div class="panel">
+          <h3>Fee Status Breakdown</h3>
+          <canvas id="chartFeeStatus"></canvas>
+        </div>
+        <div class="panel">
+          <h3>Staff Distribution</h3>
+          <canvas id="chartStaffStatus"></canvas>
+        </div>
+        <div class="panel">
+          <h3>Visitor Trends</h3>
+          <canvas id="chartVisitorStatus"></canvas>
+        </div>
       </div>
-      <div class="panel">
-        <h4>Staff Status</h4>
-        <canvas id="chartStaffStatus" height="260"></canvas>
-      </div>
-      <div class="panel">
-        <h4>Visitor Status</h4>
-        <canvas id="chartVisitorStatus" height="260"></canvas>
-      </div>
-    </div>
 
-    <div class="panel" style="margin-top:16px;">
-      <h3>Recent</h3>
-      <ul id="recentList" class="recent-list"></ul>
+      <div class="panel" style="margin-top: 24px;">
+        <h3>Recent System Activity</h3>
+        <ul id="recentList" class="recent-list"></ul>
+      </div>
     </div>
   </main>
 
