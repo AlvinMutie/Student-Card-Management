@@ -450,7 +450,20 @@
       if (!id) return alert('Select a student');
       selectedStudent = allStudents.find(s => s.id == id);
       const student = selectedStudent;
-      const qr = await generateQRCode(student.adm);
+
+      // Create structured QR code data
+      const qrData = JSON.stringify({
+        school: 'MASENO SCHOOL',
+        name: student.name || 'N/A',
+        adm: student.adm || 'N/A',
+        class: student.class || 'N/A',
+        stream: student.stream || '',
+        house: student.house || 'N/A',
+        id: student.id || student.adm,
+        type: 'STUDENT_ID'
+      });
+
+      const qr = await generateQRCode(qrData);
 
       document.getElementById('idCard').innerHTML = getCardHTML(student, qr);
       document.getElementById('idCardWrapper').style.display = 'flex';
@@ -500,7 +513,19 @@
 
       let html = '';
       for (const s of allStudents) {
-        const qr = await generateQRCode(s.adm);
+        // Create structured QR code data for each student
+        const qrData = JSON.stringify({
+          school: 'MASENO SCHOOL',
+          name: s.name || 'N/A',
+          adm: s.adm || 'N/A',
+          class: s.class || 'N/A',
+          stream: s.stream || '',
+          house: s.house || 'N/A',
+          id: s.id || s.adm,
+          type: 'STUDENT_ID'
+        });
+
+        const qr = await generateQRCode(qrData);
         html += getCardHTML(s, qr);
       }
       container.innerHTML = html;
