@@ -335,17 +335,7 @@
               formData.append('photo', file);
 
               try {
-                const token = localStorage.getItem('sv_admin_token') || localStorage.getItem('sv_auth_token');
-                const res = await fetch(`/api/students/${student.id || student.adm}/photo`, {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': `Bearer ${token}`
-                  },
-                  body: formData
-                });
-
-                if (!res.ok) throw new Error('Upload failed');
-                const data = await res.json();
+                const data = await studentsAPI.uploadPhoto(student.id || student.adm, file);
                 if (data.success) {
                   alert('Photo uploaded successfully');
                   await loadStudents();

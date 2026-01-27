@@ -294,6 +294,27 @@ const studentsAPI = {
       method: 'DELETE',
     });
   },
+
+  async uploadPhoto(id, file) {
+    const formData = new FormData();
+    formData.append('photo', file);
+    const token = getAuthToken();
+    const url = `${API_BASE_URL}/students/${id}/photo`;
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.error || `Upload failed with status ${response.status}`);
+    }
+    return response.json();
+  },
 };
 
 // Parents API

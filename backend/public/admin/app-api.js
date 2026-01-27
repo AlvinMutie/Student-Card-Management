@@ -41,8 +41,19 @@
     try {
       const adminToken = localStorage.getItem('sv_admin_token');
       const authToken = localStorage.getItem('sv_auth_token');
+      const userData = JSON.parse(localStorage.getItem('sv_user_data') || '{}');
+
       if (!adminToken && !authToken) {
         location.href = '/';
+        return;
+      }
+
+      // Role-based redirection for Secretary
+      const currentPage = window.location.pathname.split('/').pop();
+      const secretaryAllowedPages = ['secretary_dashboard.html', 'secretary_visitors.html', 'secretary_settings.html', 'admin_login.html'];
+
+      if (userData.role === 'secretary' && !secretaryAllowedPages.includes(currentPage) && currentPage !== '') {
+        location.href = '/admin/secretary_dashboard.html';
       }
     } catch (e) {
       console.error('Error checking authentication:', e);
@@ -304,6 +315,36 @@
             if (student) {
               await showStudentCompleteData(student);
             }
+          });
+        });
+
+        tbody.querySelectorAll('.upload-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const studentId = this.getAttribute('data-student-id');
+            const student = allStudents.find(s => s.id == studentId);
+            if (!student) return;
+
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.onchange = async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+
+              const formData = new FormData();
+              formData.append('photo', file);
+
+              try {
+                const data = await studentsAPI.uploadPhoto(student.id || student.adm, file);
+                if (data.success) {
+                  alert('Photo uploaded successfully');
+                  await loadStudents();
+                }
+              } catch (err) {
+                alert('Error uploading photo: ' + err.message);
+              }
+            };
+            input.click();
           });
         });
       }

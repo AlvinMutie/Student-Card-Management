@@ -678,24 +678,48 @@ router.post('/:id/photo', authenticateToken, authorizeRole('admin'), upload.sing
       return res.status(400).json({ error: 'No photo uploaded' });
     }
 
-    // Determine if id is numeric (database ID) or alphanumeric (admission number)
-    const identifierIsNumeric = /^\d+$/.test(id);
-    const identifierColumn = identifierIsNumeric ? 'id' : 'adm';
-
-    // The photo_url should be accessible via the static file middleware
+    // Try to update by ID if numeric, otherwise by ADM. 
+    // If numeric but ID doesn't match, try ADM as well (numeric admission numbers are common).
+    const isNumeric = /^\d+$/.test(id);
+    let result;
     const photoUrl = `/uploads/students/${req.file.filename}`;
 
-    const result = await pool.query(
-      `UPDATE students 
-       SET photo_url = $1, updated_at = CURRENT_TIMESTAMP 
-       WHERE ${identifierColumn} = $2 
-       RETURNING *`,
-      [photoUrl, id]
-    );
+    if (isNumeric) {
+      // Try ID first
+      result = await pool.query(
+        `UPDATE students 
+         SET photo_url = $1, updated_at = CURRENT_TIMESTAMP 
+         WHERE id = $2 
+         RETURNING *`,
+        [photoUrl, id]
+      );
+
+      // If no match by ID, try match by ADM
+      if (result.rows.length === 0) {
+        result = await pool.query(
+          `UPDATE students 
+           SET photo_url = $1, updated_at = CURRENT_TIMESTAMP 
+           WHERE adm = $2 
+           RETURNING *`,
+          [photoUrl, id]
+        );
+      }
+    } else {
+      // Must be ADM
+      result = await pool.query(
+        `UPDATE students 
+         SET photo_url = $1, updated_at = CURRENT_TIMESTAMP 
+         WHERE adm = $2 
+         RETURNING *`,
+        [photoUrl, id]
+      );
+    }
 
     if (result.rows.length === 0) {
       // If we failed to update, delete the uploaded file to keep system clean
-      fs.unlinkSync(req.file.path);
+      if (fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
       return res.status(404).json({ error: 'Student not found' });
     }
 

@@ -138,7 +138,7 @@ function renderStudentsTable(list) {
         <td>${s.adm || ''}</td>
         <td>
           <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${s.localPhoto || STUDENT_PHOTO_PLACEHOLDER}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;" alt="Img">
+            <img src="${s.localPhoto || s.photo_url || STUDENT_PHOTO_PLACEHOLDER}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1;" alt="Img">
             <span style="font-weight:600; color:#334155;">${s.name || ''}</span>
           </div>
         </td>
@@ -1116,25 +1116,107 @@ function setProgressStatus(kind, percent, text, variant = 'info') {
 }
 
 // ---------- batch photo upload (match by admission number in filename) ----------
+// ---------- batch photo upload (match by admission number in filename) ----------
 function initPhotoBatchUpload() {
   const input = document.querySelector('#photoBatchInput');
+  const progressBar = document.querySelector('#uploadProgressBar');
+  const progressText = document.querySelector('#uploadProgressText');
+  const progressWrap = document.querySelector('#uploadProgressWrap');
+
   if (!input) return;
+
+  // Re-use existing progress UI helper if available, otherwise mock it locally
+  const updateProgress = (pct, msg, type = 'info') => {
+    if (typeof setProgressStatus === 'function') {
+      setProgressStatus('upload', pct, msg, type);
+      return;
+    }
+    // Fallback if setProgressStatus not found for 'upload'
+    if (progressWrap) {
+      progressWrap.style.display = pct > 0 ? 'flex' : 'none';
+      if (progressBar) {
+        progressBar.style.width = `${pct}%`;
+        progressBar.className = `progress-bar ${type}`;
+        progressBar.setAttribute('aria-valuenow', pct);
+      }
+      if (progressText) progressText.textContent = msg;
+    }
+  };
+
   input.addEventListener('change', async (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-    let matched = 0;
+
+    // 1. Map files to students
+    const toUpload = [];
     for (const file of files) {
-      const name = file.name.toLowerCase();
-      const admMatch = studentsCache.find((s) => name.includes((s.adm || '').toLowerCase()));
+      const fileName = file.name.toLowerCase();
+
+      // Use regex to find potential admission number in filename
+      // Matches alphanumeric strings that exist in our student cache
+      const admMatch = studentsCache.find((s) => {
+        const adm = (s.adm || '').toString().toLowerCase();
+        if (!adm) return false;
+
+        // Escape adm for regex use
+        const escapedAdm = adm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        // Look for adm as a whole word or surrounded by common delimiters
+        const regex = new RegExp(`(^|[^a-z0-9])${escapedAdm}([^a-z0-9]|$)`, 'i');
+        return regex.test(file.name);
+      });
+
       if (admMatch) {
-        const url = URL.createObjectURL(file);
-        photoBlobMap[admMatch.adm] = url;
-        admMatch.localPhoto = url;
-        matched++;
+        toUpload.push({ file, student: admMatch });
       }
     }
+
+    if (!toUpload.length) {
+      alert('No matching students found for selected photos. Ensure filenames contain admission numbers.');
+      e.target.value = '';
+      return;
+    }
+
+    if (!confirm(`Found ${toUpload.length} matches. Upload now?`)) {
+      e.target.value = '';
+      return;
+    }
+
+    // 2. Upload one by one
+    let successes = 0;
+    let failures = 0;
+
+    updateProgress(1, `Starting upload of ${toUpload.length} photos...`);
+
+    for (let i = 0; i < toUpload.length; i++) {
+      const { file, student } = toUpload[i];
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      try {
+        const data = await studentsAPI.uploadPhoto(student.id || student.adm, file);
+        if (data.success && data.photo_url) {
+          // Update cache immediately
+          student.photo_url = data.photo_url;
+          // Also update localPhoto for immediate feedback if we used it
+          student.localPhoto = data.photo_url;
+          successes++;
+        } else {
+          throw new Error(data.error || 'Unknown error');
+        }
+      } catch (err) {
+        console.error(`Upload failed for ${student.adm}:`, err);
+        failures++;
+      }
+
+      const pct = Math.round(((i + 1) / toUpload.length) * 100);
+      updateProgress(pct, `Uploaded ${i + 1}/${toUpload.length} (${failures} failed)`);
+    }
+
+    // 3. Finish
     renderStudentsTable(studentsCache);
-    alert(`Matched ${matched} photos by admission number.`);
+    updateProgress(100, `Done. Success: ${successes}, Failed: ${failures}`, 'success');
+    setTimeout(() => updateProgress(0, ''), 3000);
+    alert(`Batch upload complete.\nSuccess: ${successes}\nFailed: ${failures}`);
     e.target.value = '';
   });
 }

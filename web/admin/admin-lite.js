@@ -1193,20 +1193,7 @@ function initPhotoBatchUpload() {
       formData.append('photo', file);
 
       try {
-        // Use fetch directly as our API wrapper might not handle FormData yet
-        // Assuming /api/students/:id/photo endpoint exists
-        const token = localStorage.getItem('sv_admin_token') || localStorage.getItem('sv_auth_token');
-        const res = await fetch(`/api/students/${student.id || student.adm}/photo`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          body: formData
-        });
-
-        if (!res.ok) throw new Error(`Status ${res.status}`);
-
-        const data = await res.json();
+        const data = await studentsAPI.uploadPhoto(student.id || student.adm, file);
         if (data.success && data.photo_url) {
           // Update cache immediately
           student.photo_url = data.photo_url;
